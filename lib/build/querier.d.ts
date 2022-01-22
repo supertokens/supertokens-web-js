@@ -9,25 +9,37 @@ export default class Querier {
         queryParams?: Record<string, string> | undefined,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
-    ) => Promise<T>;
+    ) => Promise<{
+        json: T;
+        fetchResponse: Response;
+    }>;
     post: <T>(
         path: string,
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
-    ) => Promise<T>;
+    ) => Promise<{
+        json: T;
+        fetchResponse: Response;
+    }>;
     delete: <T>(
         path: string,
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
-    ) => Promise<T>;
+    ) => Promise<{
+        json: T;
+        fetchResponse: Response;
+    }>;
     put: <T>(
         path: string,
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
-    ) => Promise<T>;
+    ) => Promise<{
+        json: T;
+        fetchResponse: Response;
+    }>;
     fetch: (
         url: string,
         config: RequestInit,

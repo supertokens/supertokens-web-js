@@ -107,3 +107,14 @@ export function isTest(): boolean {
         return false;
     }
 }
+
+export function getQueryParams(param: string): string | undefined {
+    const urlParams = new URLSearchParams(getWindowOrThrow().location.search);
+    let queryParam = urlParams.get(param);
+
+    if (queryParam === null) {
+        return undefined;
+    }
+
+    return queryParam;
+}

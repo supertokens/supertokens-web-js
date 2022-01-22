@@ -15,7 +15,7 @@
 import RecipeModule from "./recipe/recipeModule";
 import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
-import { NormalisedConfig as NormalisedRecipeModuleConfig } from "./recipe/recipeModule/types";
+import { RecipeConfig } from "./recipe/recipeModule/types";
 
 /*
  * Recipe Module Manager Config Types.
@@ -30,12 +30,12 @@ export type SuperTokensConfig = {
     /*
      * List of recipes for authentication and session management.
      */
-    recipeList: CreateRecipeFunction<any, any, any, any>[];
+    recipeList: CreateRecipeFunction<any, any>[];
 };
 
-export type CreateRecipeFunction<T, S, R, N extends NormalisedRecipeModuleConfig<T, S, R>> = (
+export type CreateRecipeFunction<PreAPIHookContext, Config extends RecipeConfig<PreAPIHookContext>> = (
     appInfo: NormalisedAppInfo
-) => RecipeModule<T, S, R, N>;
+) => RecipeModule<PreAPIHookContext, Config>;
 
 export type AppInfoUserInput = {
     /*

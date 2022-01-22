@@ -32,7 +32,10 @@ export default class Querier {
         queryParams?: Record<string, string>,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
-    ): Promise<T> => {
+    ): Promise<{
+        json: T;
+        fetchResponse: Response;
+    }> => {
         const result = await this.fetch(
             this.getFullUrl(path, queryParams),
             {
@@ -42,7 +45,14 @@ export default class Querier {
             preAPIHook,
             postAPIHook
         );
-        return await result.json();
+
+        let fetchResponse = result.clone();
+        let json = await result.json();
+
+        return {
+            json,
+            fetchResponse,
+        };
     };
 
     post = async <T>(
@@ -50,7 +60,10 @@ export default class Querier {
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
-    ): Promise<T> => {
+    ): Promise<{
+        json: T;
+        fetchResponse: Response;
+    }> => {
         const result = await this.fetch(
             this.getFullUrl(path),
             {
@@ -60,7 +73,14 @@ export default class Querier {
             preAPIHook,
             postAPIHook
         );
-        return await result.json();
+
+        let fetchResponse = result.clone();
+        let json = await result.json();
+
+        return {
+            json,
+            fetchResponse,
+        };
     };
 
     delete = async <T>(
@@ -68,7 +88,10 @@ export default class Querier {
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
-    ): Promise<T> => {
+    ): Promise<{
+        json: T;
+        fetchResponse: Response;
+    }> => {
         const result = await this.fetch(
             this.getFullUrl(path),
             {
@@ -78,7 +101,14 @@ export default class Querier {
             preAPIHook,
             postAPIHook
         );
-        return await result.json();
+
+        let fetchResponse = result.clone();
+        let json = await result.json();
+
+        return {
+            json,
+            fetchResponse,
+        };
     };
 
     put = async <T>(
@@ -86,7 +116,10 @@ export default class Querier {
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
-    ): Promise<T> => {
+    ): Promise<{
+        json: T;
+        fetchResponse: Response;
+    }> => {
         const result = await this.fetch(
             this.getFullUrl(path),
             {
@@ -97,7 +130,13 @@ export default class Querier {
             postAPIHook
         );
 
-        return await result.json();
+        let fetchResponse = result.clone();
+        let json = await result.json();
+
+        return {
+            json,
+            fetchResponse,
+        };
     };
 
     fetch = async (

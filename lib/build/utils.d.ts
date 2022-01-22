@@ -6,3 +6,4 @@ export declare function getOriginOfPage(): NormalisedURLDomain;
 export declare function redirectWithHistory(to: string, history: any): void;
 export declare function normaliseInputAppInfoOrThrowError(appInfo: AppInfoUserInput): NormalisedAppInfo;
 export declare function isTest(): boolean;
+export declare function getQueryParams(param: string): string | undefined;

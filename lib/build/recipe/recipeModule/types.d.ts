@@ -1,23 +1,23 @@
 import { NormalisedAppInfo } from "../../types";
-export declare type UserInput<GetRedirectionURLContextType, PreAPIHookContextType, OnHandleEventContextType> = {
-    getRedirectionURL?: (context: GetRedirectionURLContextType) => Promise<string | undefined>;
-    preAPIHook?: (context: PreAPIHookContextType) => Promise<{
+export declare type RecipeConfig<PreAPIHookContext> = {
+    recipeId: string;
+    appInfo: NormalisedAppInfo;
+    preAPIHook?: (context: PreAPIHookContext) => Promise<{
         url: string;
         requestInit: RequestInit;
     }>;
-    onHandleEvent?: (context: OnHandleEventContextType) => void;
 };
-export declare type Config<GetRedirectionURLContextType, PreAPIHookContextType, OnHandleEventContextType> = {
+export declare type NormalisedRecipeConfig<PreAPIHookContext> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
-} & UserInput<GetRedirectionURLContextType, PreAPIHookContextType, OnHandleEventContextType>;
-export declare type NormalisedConfig<GetRedirectionURLContextType, PreAPIHookContextType, OnHandleEventContextType> = {
-    recipeId: string;
-    appInfo: NormalisedAppInfo;
-    getRedirectionURL: (context: GetRedirectionURLContextType) => Promise<string | undefined>;
-    preAPIHook: (context: PreAPIHookContextType) => Promise<{
+    preAPIHook: (context: PreAPIHookContext) => Promise<{
         url: string;
         requestInit: RequestInit;
     }>;
-    onHandleEvent: (context: OnHandleEventContextType) => void;
+};
+export declare type RecipeFunctionOptions = {
+    preAPIHook?: (input: { url: string; requestInit: RequestInit }) => Promise<{
+        url: string;
+        requestInit: RequestInit;
+    }>;
 };
