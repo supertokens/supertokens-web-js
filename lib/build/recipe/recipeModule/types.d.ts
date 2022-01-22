@@ -21,3 +21,7 @@ export declare type RecipeFunctionOptions = {
         requestInit: RequestInit;
     }>;
 };
+export declare type APIGeneralError = {
+    status: "GENERAL_ERROR";
+    message: string;
+};

@@ -1,7 +1,7 @@
 import Querier from "../../querier";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
-import { RecipeFunctionOptions } from "../recipeModule/types";
+import { APIGeneralError, RecipeFunctionOptions } from "../recipeModule/types";
 import { NormalisedInputType, RecipeInterface } from "./types";
 
 const EMAIL_VERIFY_PATH = "/user/email/verify";
@@ -30,7 +30,12 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 };
             }
 
-            const { json, fetchResponse } = await querier.post<{ status: string }>(
+            const { json, fetchResponse } = await querier.post<
+                | {
+                      status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
+                  }
+                | APIGeneralError
+            >(
                 EMAIL_VERIFY_PATH,
                 {
                     body: JSON.stringify({
@@ -54,6 +59,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     });
                 }
             );
+
+            if (json.status === "GENERAL_ERROR") {
+                throw new Error(json.message);
+            }
 
             if (json.status !== "OK" && json.status !== "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR") {
                 return {
@@ -85,7 +94,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            const { json, fetchResponse } = await querier.get<{ status: string; isVerified: boolean }>(
+            const { json, fetchResponse } = await querier.get<{ status: "OK"; isVerified: boolean } | APIGeneralError>(
                 EMAIL_VERIFY_PATH,
                 {},
                 undefined,
@@ -105,6 +114,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     });
                 }
             );
+
+            if (json.status === "GENERAL_ERROR") {
+                throw new Error(json.message);
+            }
 
             if (json.status !== "OK") {
                 return {
@@ -130,25 +143,30 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK" | "CUSTOM_RESPONSE";
             fetchResponse: Response;
         }> {
-            const { json, fetchResponse } = await querier.post<{ status: string }>(
-                SEND_VERIFY_EMAIL_PATH,
-                {},
-                async (context) => {
-                    let postRecipeHookContext = await config.preAPIHook({
-                        ...context,
-                        action: "SEND_VERIFY_EMAIL",
-                    });
+            const { json, fetchResponse } = await querier.post<
+                | {
+                      status: "OK" | "EMAIL_ALREADY_VERIFIED_ERROR";
+                  }
+                | APIGeneralError
+            >(SEND_VERIFY_EMAIL_PATH, {}, async (context) => {
+                let postRecipeHookContext = await config.preAPIHook({
+                    ...context,
+                    action: "SEND_VERIFY_EMAIL",
+                });
 
-                    if (options === undefined || options.preAPIHook === undefined) {
-                        return postRecipeHookContext;
-                    }
-
-                    return options.preAPIHook({
-                        url: postRecipeHookContext.url,
-                        requestInit: postRecipeHookContext.requestInit,
-                    });
+                if (options === undefined || options.preAPIHook === undefined) {
+                    return postRecipeHookContext;
                 }
-            );
+
+                return options.preAPIHook({
+                    url: postRecipeHookContext.url,
+                    requestInit: postRecipeHookContext.requestInit,
+                });
+            });
+
+            if (json.status === "GENERAL_ERROR") {
+                throw new Error((json as any).message);
+            }
 
             if (json.status !== "OK" && json.status !== "EMAIL_ALREADY_VERIFIED_ERROR") {
                 return {
