@@ -11,7 +11,8 @@
         "pretty": "npx pretty-quick .",
         "build-pretty": "npm run build && npm run pretty",
         "pack": "./node_modules/.bin/webpack -p",
-        "set-up-hooks": "cp hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit"
+        "set-up-hooks": "cp hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit",
+        "lint": "cd lib && npx tslint -c tslint.json './**/*.ts'"
     },
     "repository": {
         "type": "git",

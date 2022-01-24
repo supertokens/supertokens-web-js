@@ -25,7 +25,7 @@
         "no-var-keyword": true,
         "one-line": [true, "check-open-brace", "check-whitespace"],
         "quotemark": [true, "double"],
-        "semicolon": [true, "always"],
+        "semicolon": [true, "always", "strict-bound-class-methods"],
         "triple-equals": [true, "allow-null-check"],
         "typedef-whitespace": [
             true,
