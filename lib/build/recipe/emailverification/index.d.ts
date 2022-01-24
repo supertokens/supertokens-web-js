@@ -6,7 +6,7 @@ export default class RecipeWrapper {
     ): import("../../types").CreateRecipeFunction<PreAPIHookContext, import("./types").NormalisedInputType>;
     static verifyEmail(input: { token?: string; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "CUSTOM_RESPONSE" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-        fetchResponse?: Response;
+        fetchResponse: Response;
     }>;
     static sendVerificationEmail(input: { options?: RecipeFunctionOptions }): Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK" | "CUSTOM_RESPONSE";

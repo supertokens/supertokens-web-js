@@ -1,3 +1,17 @@
+/* Copyright (c) 2021, VRAI Labs and/or its affiliates. All rights reserved.
+ *
+ * This software is licensed under the Apache License, Version 2.0 (the
+ * "License") as published by the Apache Software Foundation.
+ *
+ * You may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
 import { SSR_ERROR } from "../../constants";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import RecipeModule from "../recipeModule";
@@ -5,7 +19,6 @@ import { InputType, NormalisedInputType, PreAPIHookContext, RecipeInterface } fr
 import { normaliseUserInput } from "./utils";
 import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
-import { RecipeFunctionOptions } from "../recipeModule/types";
 
 export default class Recipe implements RecipeModule<PreAPIHookContext, NormalisedInputType> {
     static instance?: Recipe;
@@ -43,43 +56,5 @@ export default class Recipe implements RecipeModule<PreAPIHookContext, Normalise
         }
 
         return Recipe.instance;
-    }
-
-    async verifyEmail({ token, options }: { token?: string; options?: RecipeFunctionOptions }): Promise<{
-        status: "OK" | "CUSTOM_RESPONSE" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-        fetchResponse?: Response;
-    }> {
-        return this.recipeImplementation.verifyEmail({
-            token,
-            config: this.config,
-            options,
-        });
-    }
-
-    async sendVerificationEmail({ options }: { options?: RecipeFunctionOptions }): Promise<{
-        status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK" | "CUSTOM_RESPONSE";
-        fetchResponse: Response;
-    }> {
-        return this.recipeImplementation.sendVerificationEmail({
-            config: this.config,
-            options,
-        });
-    }
-
-    async isEmailVerified({ options }: { options?: RecipeFunctionOptions }): Promise<
-        | {
-              status: "OK";
-              isVerified: boolean;
-              fetchResponse: Response;
-          }
-        | {
-              status: "CUSTOM_RESPONSE";
-              fetchResponse: Response;
-          }
-    > {
-        return this.recipeImplementation.isEmailVerified({
-            config: this.config,
-            options,
-        });
     }
 }

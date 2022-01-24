@@ -1,11 +1,23 @@
+/* Copyright (c) 2021, VRAI Labs and/or its affiliates. All rights reserved.
+ *
+ * This software is licensed under the Apache License, Version 2.0 (the
+ * "License") as published by the Apache Software Foundation.
+ *
+ * You may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
 import Querier from "../../querier";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
 import { APIGeneralError, RecipeFunctionOptions } from "../recipeModule/types";
 import { NormalisedInputType, RecipeInterface } from "./types";
-
-const EMAIL_VERIFY_PATH = "/user/email/verify";
-const SEND_VERIFY_EMAIL_PATH = "/user/email/verify/token";
+import { executePreAPIHooks } from "./utils";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
@@ -20,14 +32,12 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             options?: RecipeFunctionOptions;
         }): Promise<{
             status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR" | "OK" | "CUSTOM_RESPONSE";
-            fetchResponse?: Response;
+            fetchResponse: Response;
         }> {
             token = token === undefined ? getQueryParams("token") : token;
 
             if (token === undefined) {
-                return {
-                    status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR",
-                };
+                token = "";
             }
 
             const { json, fetchResponse } = await querier.post<
@@ -36,43 +46,32 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   }
                 | APIGeneralError
             >(
-                EMAIL_VERIFY_PATH,
+                "/user/email/verify",
                 {
                     body: JSON.stringify({
                         method: "token",
                         token,
                     }),
                 },
-                async (context) => {
-                    let postRecipeHookContext = await config.preAPIHook({
-                        ...context,
+                (context) => {
+                    return executePreAPIHooks({
+                        config,
+                        context,
                         action: "VERIFY_EMAIL",
-                    });
-
-                    if (options === undefined || options.preAPIHook === undefined) {
-                        return postRecipeHookContext;
-                    }
-
-                    return options.preAPIHook({
-                        url: postRecipeHookContext.url,
-                        requestInit: postRecipeHookContext.requestInit,
+                        options,
                     });
                 }
             );
 
-            if (json.status === "GENERAL_ERROR") {
-                throw new Error(json.message);
-            }
-
-            if (json.status !== "OK" && json.status !== "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR") {
+            if (json.status === "OK" || json.status === "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR") {
                 return {
-                    status: "CUSTOM_RESPONSE",
+                    status: json.status,
                     fetchResponse,
                 };
             }
 
             return {
-                status: json.status,
+                status: "CUSTOM_RESPONSE",
                 fetchResponse,
             };
         },
@@ -95,40 +94,29 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
               }
         > {
             const { json, fetchResponse } = await querier.get<{ status: "OK"; isVerified: boolean } | APIGeneralError>(
-                EMAIL_VERIFY_PATH,
+                "/user/email/verify",
                 {},
                 undefined,
-                async (context) => {
-                    let postRecipeHookContext = await config.preAPIHook({
-                        ...context,
+                (context) => {
+                    return executePreAPIHooks({
+                        config,
+                        context,
                         action: "IS_EMAIL_VERIFIED",
-                    });
-
-                    if (options === undefined || options.preAPIHook === undefined) {
-                        return postRecipeHookContext;
-                    }
-
-                    return options.preAPIHook({
-                        url: postRecipeHookContext.url,
-                        requestInit: postRecipeHookContext.requestInit,
+                        options,
                     });
                 }
             );
 
-            if (json.status === "GENERAL_ERROR") {
-                throw new Error(json.message);
-            }
-
-            if (json.status !== "OK") {
+            if (json.status === "OK") {
                 return {
-                    status: "CUSTOM_RESPONSE",
+                    status: "OK",
+                    isVerified: json.isVerified,
                     fetchResponse,
                 };
             }
 
             return {
-                status: "OK",
-                isVerified: json.isVerified,
+                status: "CUSTOM_RESPONSE",
                 fetchResponse,
             };
         },
@@ -148,35 +136,24 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                       status: "OK" | "EMAIL_ALREADY_VERIFIED_ERROR";
                   }
                 | APIGeneralError
-            >(SEND_VERIFY_EMAIL_PATH, {}, async (context) => {
-                let postRecipeHookContext = await config.preAPIHook({
-                    ...context,
+            >("/user/email/verify/token", { body: JSON.stringify({}) }, (context) => {
+                return executePreAPIHooks({
+                    config,
+                    context,
                     action: "SEND_VERIFY_EMAIL",
-                });
-
-                if (options === undefined || options.preAPIHook === undefined) {
-                    return postRecipeHookContext;
-                }
-
-                return options.preAPIHook({
-                    url: postRecipeHookContext.url,
-                    requestInit: postRecipeHookContext.requestInit,
+                    options,
                 });
             });
 
-            if (json.status === "GENERAL_ERROR") {
-                throw new Error((json as any).message);
-            }
-
-            if (json.status !== "OK" && json.status !== "EMAIL_ALREADY_VERIFIED_ERROR") {
+            if (json.status === "OK" || json.status === "EMAIL_ALREADY_VERIFIED_ERROR") {
                 return {
-                    status: "CUSTOM_RESPONSE",
+                    status: json.status,
                     fetchResponse,
                 };
             }
 
             return {
-                status: json.status,
+                status: "CUSTOM_RESPONSE",
                 fetchResponse,
             };
         },

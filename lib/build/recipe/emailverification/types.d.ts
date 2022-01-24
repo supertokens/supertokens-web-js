@@ -6,9 +6,6 @@ export declare type PreAPIHookContext = {
     url: string;
 };
 export declare type InputType = RecipeConfig<PreAPIHookContext> & {
-    mode?: "OFF" | "REQUIRED";
-    disableDefaultImplementation?: boolean;
-    signOut(): Promise<void>;
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
@@ -17,9 +14,6 @@ export declare type InputType = RecipeConfig<PreAPIHookContext> & {
     };
 };
 export declare type NormalisedInputType = NormalisedRecipeConfig<PreAPIHookContext> & {
-    mode: "OFF" | "REQUIRED";
-    disableDefaultImplementation: boolean;
-    signOut(): Promise<void>;
     override: {
         functions: (
             originalImplementation: RecipeInterface,
@@ -30,7 +24,7 @@ export declare type NormalisedInputType = NormalisedRecipeConfig<PreAPIHookConte
 export declare type RecipeInterface = {
     verifyEmail: (input: { token?: string; config: NormalisedInputType; options?: RecipeFunctionOptions }) => Promise<{
         status: "OK" | "CUSTOM_RESPONSE" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-        fetchResponse?: Response;
+        fetchResponse: Response;
     }>;
     sendVerificationEmail: (input: { config: NormalisedInputType; options?: RecipeFunctionOptions }) => Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK" | "CUSTOM_RESPONSE";

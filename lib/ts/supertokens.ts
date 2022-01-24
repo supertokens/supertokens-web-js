@@ -17,7 +17,6 @@ import { SSR_ERROR } from "./constants";
 import RecipeModule from "./recipe/recipeModule";
 import { NormalisedAppInfo, SuperTokensConfig } from "./types";
 import { isTest, normaliseInputAppInfoOrThrowError } from "./utils";
-import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
 
 export default class SuperTokens {
     /*
@@ -65,20 +64,6 @@ export default class SuperTokens {
         }
 
         return SuperTokens.instance;
-    }
-
-    getRecipeOrThrow<PreAPIHookContext, Config extends NormalisedRecipeConfig<PreAPIHookContext>>(
-        recipeId: string
-    ): RecipeModule<PreAPIHookContext, Config> {
-        const recipe = this.recipeList.find((recipe) => {
-            return recipe.config.recipeId === recipeId;
-        });
-
-        if (recipe === undefined) {
-            throw new Error(`Missing recipe: ${recipeId}`);
-        }
-
-        return recipe as RecipeModule<PreAPIHookContext, Config>;
     }
 
     static reset(): void {

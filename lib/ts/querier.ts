@@ -46,12 +46,11 @@ export default class Querier {
             postAPIHook
         );
 
-        let fetchResponse = result.clone();
-        let json = await result.json();
+        let json = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             json,
-            fetchResponse,
+            fetchResponse: result,
         };
     };
 
@@ -64,6 +63,10 @@ export default class Querier {
         json: T;
         fetchResponse: Response;
     }> => {
+        if (config.body === undefined) {
+            throw new Error("Post request must have a body");
+        }
+
         const result = await this.fetch(
             this.getFullUrl(path),
             {
@@ -74,12 +77,11 @@ export default class Querier {
             postAPIHook
         );
 
-        let fetchResponse = result.clone();
-        let json = await result.json();
+        let json = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             json,
-            fetchResponse,
+            fetchResponse: result,
         };
     };
 
@@ -102,12 +104,11 @@ export default class Querier {
             postAPIHook
         );
 
-        let fetchResponse = result.clone();
-        let json = await result.json();
+        let json = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             json,
-            fetchResponse,
+            fetchResponse: result,
         };
     };
 
@@ -130,12 +131,11 @@ export default class Querier {
             postAPIHook
         );
 
-        let fetchResponse = result.clone();
-        let json = await result.json();
+        let json = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             json,
-            fetchResponse,
+            fetchResponse: result,
         };
     };
 
@@ -209,5 +209,16 @@ export default class Querier {
 
         // If query params, add.
         return fullUrl + "?" + new URLSearchParams(queryParams);
+    };
+
+    getResponseJsonOrThrowGeneralError = async (response: Response): Promise<any> => {
+        let json = await response.json();
+
+        if (json.status === "GENERAL_ERROR") {
+            let message = json.message === undefined ? "No Error Message Provided" : json.message;
+            throw new Error(message);
+        }
+
+        return json;
     };
 }

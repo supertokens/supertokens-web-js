@@ -51,4 +51,5 @@ export default class Querier {
         requestInit: RequestInit;
     }>;
     getFullUrl: (pathStr: string, queryParams?: Record<string, string> | undefined) => string;
+    getResponseJsonOrThrowGeneralError: (response: Response) => Promise<any>;
 }
