@@ -58,7 +58,8 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                         action: "VERIFY_EMAIL",
                         options,
                     });
-                }
+                },
+                config.postAPIHook
             );
 
             return {
@@ -91,7 +92,8 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                         action: "IS_EMAIL_VERIFIED",
                         options,
                     });
-                }
+                },
+                config.postAPIHook
             );
 
             return {
@@ -123,7 +125,8 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                         action: "SEND_VERIFY_EMAIL",
                         options,
                     });
-                }
+                },
+                config.postAPIHook
             );
 
             return {

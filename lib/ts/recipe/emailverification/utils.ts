@@ -27,10 +27,17 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
         preAPIHook = async (context: PreAPIHookContext) => context;
     }
 
+    let postAPIHook = config.postAPIHook;
+
+    if (postAPIHook === undefined) {
+        postAPIHook = async ({ fetchResponse }) => fetchResponse;
+    }
+
     return {
         recipeId: config.recipeId,
         appInfo: config.appInfo,
         preAPIHook,
+        postAPIHook,
         override,
     };
 }

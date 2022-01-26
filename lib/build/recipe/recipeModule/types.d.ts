@@ -1,4 +1,4 @@
-import { NormalisedAppInfo } from "../../types";
+import { NormalisedAppInfo, PostAPIHookFunction } from "../../types";
 export declare type RecipeConfig<PreAPIHookContext> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
@@ -6,6 +6,7 @@ export declare type RecipeConfig<PreAPIHookContext> = {
         url: string;
         requestInit: RequestInit;
     }>;
+    postAPIHook?: PostAPIHookFunction;
 };
 export declare type NormalisedRecipeConfig<PreAPIHookContext> = {
     recipeId: string;
@@ -14,6 +15,7 @@ export declare type NormalisedRecipeConfig<PreAPIHookContext> = {
         url: string;
         requestInit: RequestInit;
     }>;
+    postAPIHook: PostAPIHookFunction;
 };
 export declare type RecipeFunctionOptions = {
     preAPIHook?: (input: { url: string; requestInit: RequestInit }) => Promise<{

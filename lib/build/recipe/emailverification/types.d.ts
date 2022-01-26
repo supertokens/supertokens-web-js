@@ -5,6 +5,11 @@ export declare type PreAPIHookContext = {
     requestInit: RequestInit;
     url: string;
 };
+export declare type PostAPIHookContext = {
+    requestInit: RequestInit;
+    url: string;
+    fetchResponse: Response;
+};
 export declare type InputType = RecipeConfig<PreAPIHookContext> & {
     override?: {
         functions?: (

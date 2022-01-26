@@ -109,5 +109,5 @@ export type PreAPIHookFunction = (context: {
 export type PostAPIHookFunction = (context: {
     requestInit: RequestInit;
     url: string;
-    response: Response;
+    fetchResponse: Response;
 }) => Promise<Response>;

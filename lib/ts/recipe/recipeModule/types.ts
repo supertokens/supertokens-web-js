@@ -12,18 +12,20 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { NormalisedAppInfo } from "../../types";
+import { NormalisedAppInfo, PostAPIHookFunction } from "../../types";
 
 export type RecipeConfig<PreAPIHookContext> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
     preAPIHook?: (context: PreAPIHookContext) => Promise<{ url: string; requestInit: RequestInit }>;
+    postAPIHook?: PostAPIHookFunction;
 };
 
 export type NormalisedRecipeConfig<PreAPIHookContext> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
     preAPIHook: (context: PreAPIHookContext) => Promise<{ url: string; requestInit: RequestInit }>;
+    postAPIHook: PostAPIHookFunction;
 };
 
 export type RecipeFunctionOptions = {

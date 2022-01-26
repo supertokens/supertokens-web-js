@@ -177,7 +177,7 @@ export default class Querier {
             : await postAPIHook({
                   requestInit,
                   url: modifiedUrl,
-                  response: result,
+                  fetchResponse: result,
               });
     };
 
