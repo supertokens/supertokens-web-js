@@ -33,7 +33,7 @@ export default class Querier {
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
-        json: T;
+        jsonBody: T;
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
@@ -46,10 +46,10 @@ export default class Querier {
             postAPIHook
         );
 
-        let json = await this.getResponseJsonOrThrowGeneralError(result);
+        let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
-            json,
+            jsonBody,
             fetchResponse: result,
         };
     };
@@ -60,7 +60,7 @@ export default class Querier {
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
-        json: T;
+        jsonBody: T;
         fetchResponse: Response;
     }> => {
         if (config.body === undefined) {
@@ -77,10 +77,10 @@ export default class Querier {
             postAPIHook
         );
 
-        let json = await this.getResponseJsonOrThrowGeneralError(result);
+        let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
-            json,
+            jsonBody,
             fetchResponse: result,
         };
     };
@@ -91,7 +91,7 @@ export default class Querier {
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
-        json: T;
+        jsonBody: T;
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
@@ -104,10 +104,10 @@ export default class Querier {
             postAPIHook
         );
 
-        let json = await this.getResponseJsonOrThrowGeneralError(result);
+        let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
-            json,
+            jsonBody,
             fetchResponse: result,
         };
     };
@@ -118,7 +118,7 @@ export default class Querier {
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
-        json: T;
+        jsonBody: T;
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
@@ -131,10 +131,10 @@ export default class Querier {
             postAPIHook
         );
 
-        let json = await this.getResponseJsonOrThrowGeneralError(result);
+        let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
-            json,
+            jsonBody,
             fetchResponse: result,
         };
     };

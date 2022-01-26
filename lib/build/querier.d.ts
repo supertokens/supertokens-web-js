@@ -10,7 +10,7 @@ export default class Querier {
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        json: T;
+        jsonBody: T;
         fetchResponse: Response;
     }>;
     post: <T>(
@@ -19,7 +19,7 @@ export default class Querier {
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        json: T;
+        jsonBody: T;
         fetchResponse: Response;
     }>;
     delete: <T>(
@@ -28,7 +28,7 @@ export default class Querier {
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        json: T;
+        jsonBody: T;
         fetchResponse: Response;
     }>;
     put: <T>(
@@ -37,7 +37,7 @@ export default class Querier {
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        json: T;
+        jsonBody: T;
         fetchResponse: Response;
     }>;
     fetch: (

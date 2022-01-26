@@ -32,8 +32,3 @@ export type RecipeFunctionOptions = {
         requestInit: RequestInit;
     }) => Promise<{ url: string; requestInit: RequestInit }>;
 };
-
-export type APIGeneralError = {
-    status: "GENERAL_ERROR";
-    message: string;
-};

@@ -41,24 +41,21 @@ export type NormalisedInputType = NormalisedRecipeConfig<PreAPIHookContext> & {
 
 export type RecipeInterface = {
     verifyEmail: (input: { token?: string; config: NormalisedInputType; options?: RecipeFunctionOptions }) => Promise<{
-        status: "OK" | "CUSTOM_RESPONSE" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
+        status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
+        jsonBody: any;
         fetchResponse: Response;
     }>;
 
     sendVerificationEmail: (input: { config: NormalisedInputType; options?: RecipeFunctionOptions }) => Promise<{
-        status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK" | "CUSTOM_RESPONSE";
+        status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
+        jsonBody: any;
         fetchResponse: Response;
     }>;
 
-    isEmailVerified: (input: { config: NormalisedInputType; options?: RecipeFunctionOptions }) => Promise<
-        | {
-              status: "OK";
-              isVerified: boolean;
-              fetchResponse: Response;
-          }
-        | {
-              status: "CUSTOM_RESPONSE";
-              fetchResponse: Response;
-          }
-    >;
+    isEmailVerified: (input: { config: NormalisedInputType; options?: RecipeFunctionOptions }) => Promise<{
+        status: "OK";
+        isVerified: boolean;
+        jsonBody: any;
+        fetchResponse: Response;
+    }>;
 };

@@ -15,7 +15,7 @@
 import Querier from "../../querier";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
-import { APIGeneralError, RecipeFunctionOptions } from "../recipeModule/types";
+import { RecipeFunctionOptions } from "../recipeModule/types";
 import { NormalisedInputType, RecipeInterface } from "./types";
 import { executePreAPIHooks } from "./utils";
 
@@ -31,7 +31,8 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             config: NormalisedInputType;
             options?: RecipeFunctionOptions;
         }): Promise<{
-            status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR" | "OK" | "CUSTOM_RESPONSE";
+            status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR" | "OK";
+            jsonBody: any;
             fetchResponse: Response;
         }> {
             token = token === undefined ? getQueryParams("token") : token;
@@ -40,12 +41,9 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 token = "";
             }
 
-            const { json, fetchResponse } = await querier.post<
-                | {
-                      status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-                  }
-                | APIGeneralError
-            >(
+            const { jsonBody, fetchResponse } = await querier.post<{
+                status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
+            }>(
                 "/user/email/verify",
                 {
                     body: JSON.stringify({
@@ -63,15 +61,9 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 }
             );
 
-            if (json.status === "OK" || json.status === "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR") {
-                return {
-                    status: json.status,
-                    fetchResponse,
-                };
-            }
-
             return {
-                status: "CUSTOM_RESPONSE",
+                status: jsonBody.status,
+                jsonBody,
                 fetchResponse,
             };
         },
@@ -82,18 +74,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }: {
             config: NormalisedInputType;
             options?: RecipeFunctionOptions;
-        }): Promise<
-            | {
-                  status: "OK";
-                  isVerified: boolean;
-                  fetchResponse: Response;
-              }
-            | {
-                  status: "CUSTOM_RESPONSE";
-                  fetchResponse: Response;
-              }
-        > {
-            const { json, fetchResponse } = await querier.get<{ status: "OK"; isVerified: boolean } | APIGeneralError>(
+        }): Promise<{
+            status: "OK";
+            isVerified: boolean;
+            jsonBody: any;
+            fetchResponse: Response;
+        }> {
+            const { jsonBody, fetchResponse } = await querier.get<{ status: "OK"; isVerified: boolean }>(
                 "/user/email/verify",
                 {},
                 undefined,
@@ -107,16 +94,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 }
             );
 
-            if (json.status === "OK") {
-                return {
-                    status: "OK",
-                    isVerified: json.isVerified,
-                    fetchResponse,
-                };
-            }
-
             return {
-                status: "CUSTOM_RESPONSE",
+                status: "OK",
+                isVerified: jsonBody.isVerified,
+                jsonBody,
                 fetchResponse,
             };
         },
@@ -128,32 +109,26 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             config: NormalisedInputType;
             options?: RecipeFunctionOptions;
         }): Promise<{
-            status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK" | "CUSTOM_RESPONSE";
+            status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
+            jsonBody: any;
             fetchResponse: Response;
         }> {
-            const { json, fetchResponse } = await querier.post<
-                | {
-                      status: "OK" | "EMAIL_ALREADY_VERIFIED_ERROR";
-                  }
-                | APIGeneralError
-            >("/user/email/verify/token", { body: JSON.stringify({}) }, (context) => {
-                return executePreAPIHooks({
-                    config,
-                    context,
-                    action: "SEND_VERIFY_EMAIL",
-                    options,
-                });
-            });
-
-            if (json.status === "OK" || json.status === "EMAIL_ALREADY_VERIFIED_ERROR") {
-                return {
-                    status: json.status,
-                    fetchResponse,
-                };
-            }
+            const { jsonBody, fetchResponse } = await querier.post<{ status: "OK" | "EMAIL_ALREADY_VERIFIED_ERROR" }>(
+                "/user/email/verify/token",
+                { body: JSON.stringify({}) },
+                (context) => {
+                    return executePreAPIHooks({
+                        config,
+                        context,
+                        action: "SEND_VERIFY_EMAIL",
+                        options,
+                    });
+                }
+            );
 
             return {
-                status: "CUSTOM_RESPONSE",
+                status: jsonBody.status,
+                jsonBody,
                 fetchResponse,
             };
         },
