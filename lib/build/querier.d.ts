@@ -6,6 +6,7 @@ export default class Querier {
     get: <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         queryParams?: Record<string, string> | undefined,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
@@ -16,6 +17,7 @@ export default class Querier {
     post: <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
@@ -25,6 +27,7 @@ export default class Querier {
     delete: <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
@@ -34,6 +37,7 @@ export default class Querier {
     put: <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
@@ -43,6 +47,7 @@ export default class Querier {
     fetch: (
         url: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<Response>;

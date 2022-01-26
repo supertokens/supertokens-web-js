@@ -21,8 +21,9 @@ export default class RecipeWrapper {
         return Recipe.init(config);
     }
 
-    static verifyEmail(input: { token?: string; options?: RecipeFunctionOptions }): Promise<{
-        status: "OK" | "CUSTOM_RESPONSE" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
+    static verifyEmail(input: { token?: string; userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+        status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
+        jsonBody: any;
         fetchResponse: Response;
     }> {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
@@ -31,11 +32,13 @@ export default class RecipeWrapper {
             token: input.token,
             options: input.options,
             config: recipeInstance.config,
+            userContext: input.userContext === undefined ? {} : input.userContext,
         });
     }
 
-    static sendVerificationEmail(input: { options?: RecipeFunctionOptions }): Promise<{
-        status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK" | "CUSTOM_RESPONSE";
+    static sendVerificationEmail(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+        status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
+        jsonBody: any;
         fetchResponse: Response;
     }> {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
@@ -43,25 +46,22 @@ export default class RecipeWrapper {
         return recipeInstance.recipeImplementation.sendVerificationEmail({
             options: input.options,
             config: recipeInstance.config,
+            userContext: input.userContext === undefined ? {} : input.userContext,
         });
     }
 
-    static isEmailVerified(input: { options?: RecipeFunctionOptions }): Promise<
-        | {
-              status: "OK";
-              isVerified: boolean;
-              fetchResponse: Response;
-          }
-        | {
-              status: "CUSTOM_RESPONSE";
-              fetchResponse: Response;
-          }
-    > {
+    static isEmailVerified(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+        status: "OK";
+        isVerified: boolean;
+        jsonBody: any;
+        fetchResponse: Response;
+    }> {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
         return recipeInstance.recipeImplementation.isEmailVerified({
             options: input.options,
             config: recipeInstance.config,
+            userContext: input.userContext === undefined ? {} : input.userContext,
         });
     }
 }

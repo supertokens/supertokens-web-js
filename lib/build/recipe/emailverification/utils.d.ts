@@ -6,6 +6,7 @@ export declare function executePreAPIHooks({
     context,
     action,
     options,
+    userContext,
 }: {
     config: NormalisedInputType;
     context: {
@@ -14,6 +15,7 @@ export declare function executePreAPIHooks({
     };
     action: "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
     options?: RecipeFunctionOptions;
+    userContext: any;
 }): Promise<{
     url: string;
     requestInit: RequestInit;

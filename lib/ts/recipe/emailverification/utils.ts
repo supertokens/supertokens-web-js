@@ -47,15 +47,18 @@ export async function executePreAPIHooks({
     context,
     action,
     options,
+    userContext,
 }: {
     config: NormalisedInputType;
     context: { requestInit: RequestInit; url: string };
     action: "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
     options?: RecipeFunctionOptions;
+    userContext: any;
 }): Promise<{ url: string; requestInit: RequestInit }> {
     let postRecipeHookContext = await config.preAPIHook({
         ...context,
         action,
+        userContext,
     });
 
     if (options === undefined || options.preAPIHook === undefined) {

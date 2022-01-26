@@ -26,10 +26,12 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             token,
             config,
             options,
+            userContext,
         }: {
             token?: string;
             config: NormalisedInputType;
             options?: RecipeFunctionOptions;
+            userContext: any;
         }): Promise<{
             status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR" | "OK";
             jsonBody: any;
@@ -51,12 +53,14 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                         token,
                     }),
                 },
+                userContext,
                 (context) => {
                     return executePreAPIHooks({
                         config,
                         context,
                         action: "VERIFY_EMAIL",
                         options,
+                        userContext,
                     });
                 },
                 config.postAPIHook
@@ -72,9 +76,11 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         isEmailVerified: async function ({
             config,
             options,
+            userContext,
         }: {
             config: NormalisedInputType;
             options?: RecipeFunctionOptions;
+            userContext: any;
         }): Promise<{
             status: "OK";
             isVerified: boolean;
@@ -85,12 +91,14 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/user/email/verify",
                 {},
                 undefined,
+                userContext,
                 (context) => {
                     return executePreAPIHooks({
                         config,
                         context,
                         action: "IS_EMAIL_VERIFIED",
                         options,
+                        userContext,
                     });
                 },
                 config.postAPIHook
@@ -107,9 +115,11 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         sendVerificationEmail: async function ({
             config,
             options,
+            userContext,
         }: {
             config: NormalisedInputType;
             options?: RecipeFunctionOptions;
+            userContext: any;
         }): Promise<{
             status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
             jsonBody: any;
@@ -118,12 +128,14 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             const { jsonBody, fetchResponse } = await querier.post<{ status: "OK" | "EMAIL_ALREADY_VERIFIED_ERROR" }>(
                 "/user/email/verify/token",
                 { body: JSON.stringify({}) },
+                userContext,
                 (context) => {
                     return executePreAPIHooks({
                         config,
                         context,
                         action: "SEND_VERIFY_EMAIL",
                         options,
+                        userContext,
                     });
                 },
                 config.postAPIHook

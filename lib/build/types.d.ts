@@ -36,4 +36,5 @@ export declare type PostAPIHookFunction = (context: {
     requestInit: RequestInit;
     url: string;
     fetchResponse: Response;
+    userContext: any;
 }) => Promise<Response>;

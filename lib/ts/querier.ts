@@ -29,6 +29,7 @@ export default class Querier {
     get = async <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         queryParams?: Record<string, string>,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
@@ -42,6 +43,7 @@ export default class Querier {
                 method: "GET",
                 ...config,
             },
+            userContext,
             preAPIHook,
             postAPIHook
         );
@@ -57,6 +59,7 @@ export default class Querier {
     post = async <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
@@ -73,6 +76,7 @@ export default class Querier {
                 method: "POST",
                 ...config,
             },
+            userContext,
             preAPIHook,
             postAPIHook
         );
@@ -88,6 +92,7 @@ export default class Querier {
     delete = async <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
@@ -100,6 +105,7 @@ export default class Querier {
                 method: "DELETE",
                 ...config,
             },
+            userContext,
             preAPIHook,
             postAPIHook
         );
@@ -115,6 +121,7 @@ export default class Querier {
     put = async <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
@@ -127,6 +134,7 @@ export default class Querier {
                 method: "PUT",
                 ...config,
             },
+            userContext,
             preAPIHook,
             postAPIHook
         );
@@ -142,6 +150,7 @@ export default class Querier {
     fetch = async (
         url: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<Response> => {
@@ -178,6 +187,7 @@ export default class Querier {
                   requestInit,
                   url: modifiedUrl,
                   fetchResponse: result,
+                  userContext,
               });
     };
 
