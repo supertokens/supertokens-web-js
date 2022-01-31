@@ -49,7 +49,7 @@ export default class Recipe implements RecipeModule<PreAPIHookContext, Normalise
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
             let error = "No instance of EmailVerification found. Make sure to call the EmailVerification.init method.";
-            checkForSSRErrorAndAppendIfNeeded(error);
+            error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);
         }
