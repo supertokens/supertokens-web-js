@@ -16,6 +16,7 @@
     },
     "rules": {
         "class-name": true,
+        "no-direct-window": true,
         "comment-format": [true, "check-space"],
         "indent": [true, "spaces"],
         "no-eval": true,
@@ -39,5 +40,6 @@
         ],
         "variable-name": [true, "ban-keywords"],
         "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"]
-    }
+    },
+    "rulesDirectory": ["../tslint-rules"]
 }
