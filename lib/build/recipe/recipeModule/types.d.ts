@@ -23,3 +23,8 @@ export declare type RecipeFunctionOptions = {
         requestInit: RequestInit;
     }>;
 };
+export declare type UserType = {
+    id: string;
+    email: string;
+    timeJoined: number;
+};

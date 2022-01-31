@@ -34,3 +34,9 @@ export type RecipeFunctionOptions = {
         requestInit: RequestInit;
     }) => Promise<{ url: string; requestInit: RequestInit }>;
 };
+
+export type UserType = {
+    id: string;
+    email: string;
+    timeJoined: number;
+};
