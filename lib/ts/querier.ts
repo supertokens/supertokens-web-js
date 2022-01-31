@@ -226,7 +226,7 @@ export default class Querier {
 
         if (json.status === "GENERAL_ERROR") {
             let message = json.message === undefined ? "No Error Message Provided" : json.message;
-            throw new Error(message);
+            throw new STGeneralError(message);
         }
 
         return json;
