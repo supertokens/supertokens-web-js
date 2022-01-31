@@ -55,7 +55,7 @@ export default class SuperTokens {
     static getInstanceOrThrow(): SuperTokens {
         if (SuperTokens.instance === undefined) {
             let error = "SuperTokens must be initialized before calling this method.";
-            checkForSSRErrorAndAppendIfNeeded(error);
+            error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw new Error(error);
         }

@@ -18,9 +18,9 @@ import { InputType, NormalisedInputType, PreAPIHookContext, RecipeInterface } fr
 import EmailVerificationRecipe from "../emailverification/recipe";
 import { normaliseUserInput } from "./utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
-import { SSR_ERROR } from "../../constants";
 import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
+import { checkForSSRErrorAndAppendIfNeeded } from "../../utils";
 
 export default class Recipe extends AuthRecipeWithEmailVerification<PreAPIHookContext, NormalisedInputType> {
     static instance?: Recipe;
@@ -57,11 +57,8 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAPIHookCo
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
             let error = "No instance of EmailPassword found. Make sure to call the EmailPassword.init method.";
+            error = checkForSSRErrorAndAppendIfNeeded(error);
 
-            // eslint-disable-next-line supertokens-auth-react/no-direct-window-object
-            if (typeof window === "undefined") {
-                error = error + SSR_ERROR;
-            }
             throw Error(error);
         }
 
