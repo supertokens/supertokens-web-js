@@ -39,39 +39,15 @@ export function appendQueryParamsToURL(stringUrl: string, queryParams?: Record<s
 }
 
 function getWindowOrThrow(): any {
-    // eslint-disable-next-line supertokens-auth-react/no-direct-window-object
     if (typeof window === "undefined") {
         throw new Error(WINDOW_UNDEFINED_ERROR);
     }
 
-    // eslint-disable-next-line supertokens-auth-react/no-direct-window-object
     return window;
-}
-
-export function redirectWithFullPageReload(to: string): void {
-    if (to.trim() === "") {
-        to = "/";
-    }
-    getWindowOrThrow().location.href = to;
 }
 
 export function getOriginOfPage(): NormalisedURLDomain {
     return new NormalisedURLDomain(getWindowOrThrow().location.origin);
-}
-
-export function redirectWithHistory(to: string, history: any): void {
-    if (to.trim() === "") {
-        to = "/";
-    }
-
-    if (history.push !== undefined) {
-        // we are using react-router-dom that is before v6
-        history.push(to);
-    } else {
-        // in react-router-dom v6, it is just navigate(to), and we are renaming
-        // naviagte to history, so it becomes history(to).
-        history(to);
-    }
 }
 
 function getNormalisedURLPathOrDefault(defaultPath: string, path?: string): NormalisedURLPath {

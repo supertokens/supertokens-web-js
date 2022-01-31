@@ -56,7 +56,7 @@ export default class SuperTokens {
     static getInstanceOrThrow(): SuperTokens {
         if (SuperTokens.instance === undefined) {
             let error = "SuperTokens must be initialized before calling this method.";
-            // eslint-disable-next-line supertokens-auth-react/no-direct-window-object
+
             if (typeof window === "undefined") {
                 error = error + SSR_ERROR;
             }
