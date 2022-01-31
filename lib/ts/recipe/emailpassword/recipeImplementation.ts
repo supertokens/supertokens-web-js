@@ -15,6 +15,7 @@
 
 import Querier from "../../querier";
 import { NormalisedAppInfo } from "../../types";
+import { getQueryParams } from "../../utils";
 import { RecipeFunctionOptions, UserType } from "../recipeModule/types";
 import { NormalisedInputType } from "./types";
 import { executePreAPIHooks } from "./utils";
@@ -53,7 +54,11 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            // TODO NEMI: Should this function validate form fields?
+            token = token === undefined ? getQueryParams("token") : token;
+
+            if (token === undefined) {
+                token = "";
+            }
 
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
@@ -127,7 +132,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            // TODO NEMI: Should this function validate form fields?
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
@@ -201,7 +205,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            // TODO NEMI: Should this function validate form fields?
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
@@ -282,7 +285,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            // TODO NEMI: Should this function validate form fields?
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
