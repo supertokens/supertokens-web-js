@@ -19,3 +19,4 @@ examples/
 .prettierignore
 docs/
 init.sh
+tslint-rules/

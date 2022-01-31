@@ -13,10 +13,9 @@
  * under the License.
  */
 
-import { SSR_ERROR } from "./constants";
 import RecipeModule from "./recipe/recipeModule";
 import { NormalisedAppInfo, SuperTokensConfig } from "./types";
-import { isTest, normaliseInputAppInfoOrThrowError } from "./utils";
+import { checkForSSRErrorAndAppendIfNeeded, isTest, normaliseInputAppInfoOrThrowError } from "./utils";
 
 export default class SuperTokens {
     /*
@@ -56,10 +55,8 @@ export default class SuperTokens {
     static getInstanceOrThrow(): SuperTokens {
         if (SuperTokens.instance === undefined) {
             let error = "SuperTokens must be initialized before calling this method.";
+            checkForSSRErrorAndAppendIfNeeded(error);
 
-            if (typeof window === "undefined") {
-                error = error + SSR_ERROR;
-            }
             throw new Error(error);
         }
 

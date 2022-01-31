@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { DEFAULT_API_BASE_PATH, DEFAULT_WEBSITE_BASE_PATH, WINDOW_UNDEFINED_ERROR } from "./constants";
+import { DEFAULT_API_BASE_PATH, DEFAULT_WEBSITE_BASE_PATH, SSR_ERROR, WINDOW_UNDEFINED_ERROR } from "./constants";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import NormalisedURLPath from "./normalisedURLPath";
 import { AppInfoUserInput, NormalisedAppInfo } from "./types";
@@ -39,10 +39,12 @@ export function appendQueryParamsToURL(stringUrl: string, queryParams?: Record<s
 }
 
 function getWindowOrThrow(): any {
+    // tslint:disable-next-line
     if (typeof window === "undefined") {
         throw new Error(WINDOW_UNDEFINED_ERROR);
     }
 
+    // tslint:disable-next-line
     return window;
 }
 
@@ -107,4 +109,13 @@ export function getQueryParams(param: string): string | undefined {
     }
 
     return queryParam;
+}
+
+export function checkForSSRErrorAndAppendIfNeeded(error: string): string {
+    // tslint:disable-next-line
+    if (typeof window === "undefined") {
+        error = error + SSR_ERROR;
+    }
+
+    return error;
 }

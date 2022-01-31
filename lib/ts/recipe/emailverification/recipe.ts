@@ -12,13 +12,14 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { SSR_ERROR } from "../../constants";
+
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import RecipeModule from "../recipeModule";
 import { InputType, NormalisedInputType, PreAPIHookContext, RecipeInterface } from "./types";
 import { normaliseUserInput } from "./utils";
 import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
+import { checkForSSRErrorAndAppendIfNeeded } from "../../utils";
 
 export default class Recipe implements RecipeModule<PreAPIHookContext, NormalisedInputType> {
     static instance?: Recipe;
@@ -48,10 +49,8 @@ export default class Recipe implements RecipeModule<PreAPIHookContext, Normalise
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
             let error = "No instance of EmailVerification found. Make sure to call the EmailVerification.init method.";
+            checkForSSRErrorAndAppendIfNeeded(error);
 
-            if (typeof window === "undefined") {
-                error = error + SSR_ERROR;
-            }
             throw Error(error);
         }
 
