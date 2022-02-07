@@ -1,4 +1,5 @@
-import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction } from "./types";
+import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction, RecipePreAPIHookContext } from "./types";
+import { NormalisedRecipeConfig, RecipeFunctionOptions } from "./recipe/recipeModule/types";
 export default class Querier {
     recipeId: string;
     appInfo: NormalisedAppInfo;
@@ -57,4 +58,15 @@ export default class Querier {
     }>;
     getFullUrl: (pathStr: string, queryParams?: Record<string, string> | undefined) => string;
     getResponseJsonOrThrowGeneralError: (response: Response) => Promise<any>;
+    static preparePreAPIHook: <Action>({
+        config,
+        action,
+        options,
+        userContext,
+    }: {
+        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>>;
+        action: Action;
+        options?: RecipeFunctionOptions | undefined;
+        userContext: any;
+    }) => PreAPIHookFunction;
 }

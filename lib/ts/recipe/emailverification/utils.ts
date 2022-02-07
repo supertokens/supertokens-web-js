@@ -12,7 +12,6 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { RecipeFunctionOptions } from ".";
 import { InputType, NormalisedInputType, PreAPIHookContext, RecipeInterface } from "./types";
 
 export function normaliseUserInput(config: InputType): NormalisedInputType {
@@ -40,33 +39,4 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
         postAPIHook,
         override,
     };
-}
-
-export async function executePreAPIHooks({
-    config,
-    context,
-    action,
-    options,
-    userContext,
-}: {
-    config: NormalisedInputType;
-    context: { requestInit: RequestInit; url: string };
-    action: "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
-    options?: RecipeFunctionOptions;
-    userContext: any;
-}): Promise<{ url: string; requestInit: RequestInit }> {
-    let postRecipeHookContext = await config.preAPIHook({
-        ...context,
-        action,
-        userContext,
-    });
-
-    if (options === undefined || options.preAPIHook === undefined) {
-        return postRecipeHookContext;
-    }
-
-    return options.preAPIHook({
-        url: postRecipeHookContext.url,
-        requestInit: postRecipeHookContext.requestInit,
-    });
 }

@@ -14,7 +14,8 @@
  */
 import NormalisedURLPath from "./normalisedURLPath";
 import { supported_fdi } from "./version";
-import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction } from "./types";
+import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction, RecipePreAPIHookContext } from "./types";
+import { NormalisedRecipeConfig, RecipeFunctionOptions } from "./recipe/recipeModule/types";
 
 export default class Querier {
     recipeId: string;
@@ -205,7 +206,10 @@ export default class Querier {
                 requestInit: context.requestInit,
             };
         }
-        const result = await context.preAPIHook({ url: context.url, requestInit: context.requestInit });
+        const result = await context.preAPIHook({
+            url: context.url,
+            requestInit: context.requestInit,
+        });
         return result;
     };
 
@@ -230,5 +234,34 @@ export default class Querier {
         }
 
         return json;
+    };
+
+    static preparePreAPIHook = <Action>({
+        config,
+        action,
+        options,
+        userContext,
+    }: {
+        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>>;
+        action: Action;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): PreAPIHookFunction => {
+        return async (context): Promise<{ url: string; requestInit: RequestInit }> => {
+            let postRecipeHookContext = await config.preAPIHook({
+                ...context,
+                action,
+                userContext,
+            });
+
+            if (options === undefined || options.preAPIHook === undefined) {
+                return postRecipeHookContext;
+            }
+
+            return options.preAPIHook({
+                url: postRecipeHookContext.url,
+                requestInit: postRecipeHookContext.requestInit,
+            });
+        };
     };
 }
