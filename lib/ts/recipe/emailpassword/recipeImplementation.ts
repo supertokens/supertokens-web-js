@@ -12,15 +12,14 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-
 import Querier from "../../querier";
+import { RecipeInterface } from "./types";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
 import { RecipeFunctionOptions, UserType } from "../recipeModule/types";
-import { NormalisedInputType } from "./types";
-import { executePreAPIHooks } from "./utils";
+import { NormalisedInputType, PreAPIAction } from "./types";
 
-export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo) {
+export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
     return {
         submitNewPassword: async function ({
@@ -41,8 +40,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }): Promise<
             | {
                   status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-                  jsonBody: any;
-                  fetchResponse: Response;
+                  networkResponse: {
+                      jsonBody: any;
+                      fetchResponse: Response;
+                  };
               }
             | {
                   status: "FIELD_ERROR";
@@ -50,8 +51,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                       id: string;
                       error: string;
                   }[];
-                  jsonBody: any;
-                  fetchResponse: Response;
+                  networkResponse: {
+                      jsonBody: any;
+                      fetchResponse: Response;
+                  };
               }
         > {
             token = token === undefined ? getQueryParams("token") : token;
@@ -75,15 +78,12 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/user/password/reset",
                 { body: JSON.stringify({ formFields, token, method: "token" }) },
                 userContext,
-                (context) => {
-                    return executePreAPIHooks({
-                        config,
-                        context,
-                        action: "SUBMIT_NEW_PASSWORD",
-                        options,
-                        userContext,
-                    });
-                },
+                Querier.preparePreAPIHook<PreAPIAction>({
+                    config,
+                    action: "SUBMIT_NEW_PASSWORD",
+                    options,
+                    userContext,
+                }),
                 config.postAPIHook
             );
 
@@ -91,15 +91,19 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 return {
                     status: "FIELD_ERROR",
                     formFields: jsonBody.formFields,
-                    jsonBody,
-                    fetchResponse,
+                    networkResponse: {
+                        jsonBody,
+                        fetchResponse,
+                    },
                 };
             }
 
             return {
                 status: jsonBody.status,
-                jsonBody,
-                fetchResponse,
+                networkResponse: {
+                    jsonBody,
+                    fetchResponse,
+                },
             };
         },
 
@@ -119,8 +123,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }): Promise<
             | {
                   status: "OK";
-                  jsonBody: any;
-                  fetchResponse: Response;
+                  networkResponse: {
+                      jsonBody: any;
+                      fetchResponse: Response;
+                  };
               }
             | {
                   status: "FIELD_ERROR";
@@ -128,8 +134,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                       id: string;
                       error: string;
                   }[];
-                  jsonBody: any;
-                  fetchResponse: Response;
+                  networkResponse: {
+                      jsonBody: any;
+                      fetchResponse: Response;
+                  };
               }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
@@ -147,15 +155,12 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/user/password/reset/token",
                 { body: JSON.stringify({ formFields }) },
                 userContext,
-                (context) => {
-                    return executePreAPIHooks({
-                        config,
-                        context,
-                        action: "SEND_RESET_PASSWORD_EMAIL",
-                        options,
-                        userContext,
-                    });
-                },
+                Querier.preparePreAPIHook<PreAPIAction>({
+                    config,
+                    action: "SEND_RESET_PASSWORD_EMAIL",
+                    options,
+                    userContext,
+                }),
                 config.postAPIHook
             );
 
@@ -163,15 +168,19 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 return {
                     status: "FIELD_ERROR",
                     formFields: jsonBody.formFields,
-                    jsonBody,
-                    fetchResponse,
+                    networkResponse: {
+                        jsonBody,
+                        fetchResponse,
+                    },
                 };
             }
 
             return {
                 status: jsonBody.status,
-                jsonBody,
-                fetchResponse,
+                networkResponse: {
+                    jsonBody,
+                    fetchResponse,
+                },
             };
         },
 
@@ -192,8 +201,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             | {
                   status: "OK";
                   user: UserType;
-                  jsonBody: any;
-                  fetchResponse: Response;
+                  networkResponse: {
+                      jsonBody: any;
+                      fetchResponse: Response;
+                  };
               }
             | {
                   status: "FIELD_ERROR";
@@ -201,8 +212,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                       id: string;
                       error: string;
                   }[];
-                  jsonBody: any;
-                  fetchResponse: Response;
+                  networkResponse: {
+                      jsonBody: any;
+                      fetchResponse: Response;
+                  };
               }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
@@ -221,15 +234,12 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/signup",
                 { body: JSON.stringify({ formFields }) },
                 userContext,
-                (context) => {
-                    return executePreAPIHooks({
-                        config,
-                        context,
-                        action: "EMAIL_PASSWORD_SIGN_UP",
-                        options,
-                        userContext,
-                    });
-                },
+                Querier.preparePreAPIHook<PreAPIAction>({
+                    config,
+                    action: "EMAIL_PASSWORD_SIGN_UP",
+                    options,
+                    userContext,
+                }),
                 config.postAPIHook
             );
 
@@ -237,16 +247,20 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 return {
                     status: "FIELD_ERROR",
                     formFields: jsonBody.formFields,
-                    jsonBody,
-                    fetchResponse,
+                    networkResponse: {
+                        jsonBody,
+                        fetchResponse,
+                    },
                 };
             }
 
             return {
                 status: jsonBody.status,
                 user: jsonBody.user,
-                jsonBody,
-                fetchResponse,
+                networkResponse: {
+                    jsonBody,
+                    fetchResponse,
+                },
             };
         },
 
@@ -267,8 +281,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             | {
                   status: "OK";
                   user: UserType;
-                  jsonBody: any;
-                  fetchResponse: Response;
+                  networkResponse: {
+                      jsonBody: any;
+                      fetchResponse: Response;
+                  };
               }
             | {
                   status: "FIELD_ERROR";
@@ -276,13 +292,17 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                       id: string;
                       error: string;
                   }[];
-                  jsonBody: any;
-                  fetchResponse: Response;
+                  networkResponse: {
+                      jsonBody: any;
+                      fetchResponse: Response;
+                  };
               }
             | {
                   status: "WRONG_CREDENTIALS_ERROR";
-                  jsonBody: any;
-                  fetchResponse: Response;
+                  networkResponse: {
+                      jsonBody: any;
+                      fetchResponse: Response;
+                  };
               }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
@@ -304,15 +324,12 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/signin",
                 { body: JSON.stringify({ formFields }) },
                 userContext,
-                (context) => {
-                    return executePreAPIHooks({
-                        config,
-                        context,
-                        action: "EMAIL_PASSWORD_SIGN_IN",
-                        options,
-                        userContext,
-                    });
-                },
+                Querier.preparePreAPIHook<PreAPIAction>({
+                    config,
+                    action: "EMAIL_PASSWORD_SIGN_IN",
+                    options,
+                    userContext,
+                }),
                 config.postAPIHook
             );
 
@@ -320,24 +337,30 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 return {
                     status: "FIELD_ERROR",
                     formFields: jsonBody.formFields,
-                    jsonBody,
-                    fetchResponse,
+                    networkResponse: {
+                        jsonBody,
+                        fetchResponse,
+                    },
                 };
             }
 
             if (jsonBody.status === "WRONG_CREDENTIALS_ERROR") {
                 return {
                     status: "WRONG_CREDENTIALS_ERROR",
-                    jsonBody,
-                    fetchResponse,
+                    networkResponse: {
+                        jsonBody,
+                        fetchResponse,
+                    },
                 };
             }
 
             return {
                 status: "OK",
                 user: jsonBody.user,
-                jsonBody,
-                fetchResponse,
+                networkResponse: {
+                    jsonBody,
+                    fetchResponse,
+                },
             };
         },
 
@@ -354,8 +377,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }): Promise<{
             status: "OK";
             doesExist: boolean;
-            jsonBody: any;
-            fetchResponse: Response;
+            networkResponse: {
+                jsonBody: any;
+                fetchResponse: Response;
+            };
         }> {
             let { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
@@ -365,23 +390,22 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 {},
                 userContext,
                 { email },
-                (context) => {
-                    return executePreAPIHooks({
-                        config,
-                        context,
-                        action: "EMAIL_EXISTS",
-                        options,
-                        userContext,
-                    });
-                },
+                Querier.preparePreAPIHook<PreAPIAction>({
+                    config,
+                    action: "EMAIL_PASSWORD_SIGN_IN",
+                    options,
+                    userContext,
+                }),
                 config.postAPIHook
             );
 
             return {
                 status: jsonBody.status,
                 doesExist: jsonBody.exists,
-                jsonBody,
-                fetchResponse,
+                networkResponse: {
+                    jsonBody,
+                    fetchResponse,
+                },
             };
         },
     };

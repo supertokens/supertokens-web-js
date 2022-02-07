@@ -13,11 +13,13 @@
  * under the License.
  */
 
+import { RecipePreAPIHookContext } from "../../types";
 import { InputType, NormalisedInputType } from "./types";
 
-export function normaliseAuthRecipeWithEmailVerificationConfig<PreAPIHookContext>(
-    config: InputType<PreAPIHookContext>
-): NormalisedInputType<PreAPIHookContext> {
+export function normaliseAuthRecipeWithEmailVerificationConfig<
+    Action,
+    PreAPIHookContext extends RecipePreAPIHookContext<Action>
+>(config: InputType<Action, PreAPIHookContext>): NormalisedInputType<Action, PreAPIHookContext> {
     let preAPIHook = config.preAPIHook;
 
     if (preAPIHook === undefined) {

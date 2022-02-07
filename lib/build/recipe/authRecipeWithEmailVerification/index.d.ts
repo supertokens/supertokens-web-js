@@ -1,13 +1,15 @@
 import RecipeModule from "../recipeModule";
 import EmailverificationRecipe from "../emailverification/recipe";
+import { RecipePreAPIHookContext } from "../../types";
 import { NormalisedInputType } from "./types";
 export default abstract class AuthRecipeWithEmailVerification<
-    PreAPIHookContext,
-    Config extends NormalisedInputType<PreAPIHookContext>
-> extends RecipeModule<PreAPIHookContext, Config> {
+    Action,
+    PreAPIHookContext extends RecipePreAPIHookContext<Action>,
+    NormalisedConfig extends NormalisedInputType<Action, PreAPIHookContext>
+> extends RecipeModule<Action, PreAPIHookContext, NormalisedConfig> {
     emailVerificationRecipe: EmailverificationRecipe;
     constructor(
-        config: Config,
+        config: NormalisedConfig,
         recipes: {
             emailVerification?: EmailverificationRecipe;
         }

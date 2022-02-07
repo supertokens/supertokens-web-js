@@ -1,7 +1,13 @@
 import { InputType, RecipeInterface, PreAPIHookContext, NormalisedInputType } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 export default class RecipeWrapper {
-    static init(config: InputType): import("../../types").CreateRecipeFunction<PreAPIHookContext, NormalisedInputType>;
+    static init(
+        config: InputType
+    ): import("../../types").CreateRecipeFunction<
+        import("./types").PreAPIAction,
+        PreAPIHookContext,
+        NormalisedInputType
+    >;
     static submitNewPassword(input: {
         formFields: {
             id: string;
@@ -14,8 +20,10 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-              jsonBody: any;
-              fetchResponse: Response;
+              networkResponse: {
+                  jsonBody: any;
+                  fetchResponse: Response;
+              };
           }
         | {
               status: "FIELD_ERROR";
@@ -23,8 +31,10 @@ export default class RecipeWrapper {
                   id: string;
                   error: string;
               }[];
-              jsonBody: any;
-              fetchResponse: Response;
+              networkResponse: {
+                  jsonBody: any;
+                  fetchResponse: Response;
+              };
           }
     >;
     static sendPasswordResetEmail(input: {
@@ -38,8 +48,10 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              jsonBody: any;
-              fetchResponse: Response;
+              networkResponse: {
+                  jsonBody: any;
+                  fetchResponse: Response;
+              };
           }
         | {
               status: "FIELD_ERROR";
@@ -47,8 +59,10 @@ export default class RecipeWrapper {
                   id: string;
                   error: string;
               }[];
-              jsonBody: any;
-              fetchResponse: Response;
+              networkResponse: {
+                  jsonBody: any;
+                  fetchResponse: Response;
+              };
           }
     >;
     static signUp(input: {
@@ -63,8 +77,10 @@ export default class RecipeWrapper {
         | {
               status: "OK";
               user: import("../recipeModule/types").UserType;
-              jsonBody: any;
-              fetchResponse: Response;
+              networkResponse: {
+                  jsonBody: any;
+                  fetchResponse: Response;
+              };
           }
         | {
               status: "FIELD_ERROR";
@@ -72,8 +88,10 @@ export default class RecipeWrapper {
                   id: string;
                   error: string;
               }[];
-              jsonBody: any;
-              fetchResponse: Response;
+              networkResponse: {
+                  jsonBody: any;
+                  fetchResponse: Response;
+              };
           }
     >;
     static signIn(input: {
@@ -88,8 +106,10 @@ export default class RecipeWrapper {
         | {
               status: "OK";
               user: import("../recipeModule/types").UserType;
-              jsonBody: any;
-              fetchResponse: Response;
+              networkResponse: {
+                  jsonBody: any;
+                  fetchResponse: Response;
+              };
           }
         | {
               status: "FIELD_ERROR";
@@ -97,13 +117,17 @@ export default class RecipeWrapper {
                   id: string;
                   error: string;
               }[];
-              jsonBody: any;
-              fetchResponse: Response;
+              networkResponse: {
+                  jsonBody: any;
+                  fetchResponse: Response;
+              };
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
-              jsonBody: any;
-              fetchResponse: Response;
+              networkResponse: {
+                  jsonBody: any;
+                  fetchResponse: Response;
+              };
           }
     >;
     static doesEmailExist(input: {
@@ -114,8 +138,10 @@ export default class RecipeWrapper {
     }): Promise<{
         status: "OK";
         doesExist: boolean;
-        jsonBody: any;
-        fetchResponse: Response;
+        networkResponse: {
+            jsonBody: any;
+            fetchResponse: Response;
+        };
     }>;
 }
 declare const init: typeof RecipeWrapper.init;
