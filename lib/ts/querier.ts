@@ -261,6 +261,7 @@ export default class Querier {
             return options.preAPIHook({
                 url: postRecipeHookContext.url,
                 requestInit: postRecipeHookContext.requestInit,
+                userContext,
             });
         };
     };

@@ -25,7 +25,7 @@ export declare type NormalisedRecipeConfig<Action, PreAPIHookContext extends Rec
  * API logic
  */
 export declare type RecipeFunctionOptions = {
-    preAPIHook?: (input: { url: string; requestInit: RequestInit }) => Promise<{
+    preAPIHook?: (input: { url: string; requestInit: RequestInit; userContext: any }) => Promise<{
         url: string;
         requestInit: RequestInit;
     }>;

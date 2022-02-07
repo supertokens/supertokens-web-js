@@ -39,5 +39,6 @@ export type RecipeFunctionOptions = {
     preAPIHook?: (input: {
         url: string;
         requestInit: RequestInit;
+        userContext: any;
     }) => Promise<{ url: string; requestInit: RequestInit }>;
 };
