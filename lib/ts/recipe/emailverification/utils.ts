@@ -12,30 +12,31 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { Config, NormalisedConfig } from "./types";
+import { InputType, NormalisedInputType, PreAPIHookContext, RecipeInterface } from "./types";
 
-export function normaliseRecipeModuleConfig<T, S, R>(config: Config<T, S, R>): NormalisedConfig<T, S, R> {
-    let { preAPIHook, onHandleEvent, getRedirectionURL } = config;
+export function normaliseUserInput(config: InputType): NormalisedInputType {
+    const override: any = {
+        functions: (originalImplementation: RecipeInterface) => originalImplementation,
+        ...config.override,
+    };
+
+    let preAPIHook = config.preAPIHook;
+
     if (preAPIHook === undefined) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        preAPIHook = async (context: any) => context;
+        preAPIHook = async (context: PreAPIHookContext) => context;
     }
 
-    if (onHandleEvent === undefined) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function
-        onHandleEvent = (_: unknown): void => {};
-    }
+    let postAPIHook = config.postAPIHook;
 
-    if (getRedirectionURL === undefined) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        getRedirectionURL = async (_: unknown): Promise<string | undefined> => undefined;
+    if (postAPIHook === undefined) {
+        postAPIHook = async ({ fetchResponse }) => fetchResponse;
     }
 
     return {
-        preAPIHook,
-        getRedirectionURL,
-        onHandleEvent,
         recipeId: config.recipeId,
         appInfo: config.appInfo,
+        preAPIHook,
+        postAPIHook,
+        override,
     };
 }

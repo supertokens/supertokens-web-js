@@ -13,11 +13,9 @@
  * under the License.
  */
 
-import { SSR_ERROR } from "./constants";
 import RecipeModule from "./recipe/recipeModule";
 import { NormalisedAppInfo, SuperTokensConfig } from "./types";
-import { isTest, normaliseInputAppInfoOrThrowError } from "./utils";
-import { NormalisedConfig as NormalisedRecipeModuleConfig } from "./recipe/recipeModule/types";
+import { checkForSSRErrorAndAppendIfNeeded, isTest, normaliseInputAppInfoOrThrowError } from "./utils";
 
 export default class SuperTokens {
     /*
@@ -29,7 +27,7 @@ export default class SuperTokens {
      * Instance Attributes.
      */
     appInfo: NormalisedAppInfo;
-    recipeList: RecipeModule<any, any, any, any>[] = [];
+    recipeList: RecipeModule<any, any, any>[] = [];
 
     constructor(config: SuperTokensConfig) {
         this.appInfo = normaliseInputAppInfoOrThrowError(config.appInfo);
@@ -57,28 +55,12 @@ export default class SuperTokens {
     static getInstanceOrThrow(): SuperTokens {
         if (SuperTokens.instance === undefined) {
             let error = "SuperTokens must be initialized before calling this method.";
-            // eslint-disable-next-line supertokens-auth-react/no-direct-window-object
-            if (typeof window === "undefined") {
-                error = error + SSR_ERROR;
-            }
+            error = checkForSSRErrorAndAppendIfNeeded(error);
+
             throw new Error(error);
         }
 
         return SuperTokens.instance;
-    }
-
-    getRecipeOrThrow<T, S, R, N extends NormalisedRecipeModuleConfig<T, S, R>>(
-        recipeId: string
-    ): RecipeModule<T, S, R, N> {
-        const recipe = this.recipeList.find((recipe) => {
-            return recipe.config.recipeId === recipeId;
-        });
-
-        if (recipe === undefined) {
-            throw new Error(`Missing recipe: ${recipeId}`);
-        }
-
-        return recipe as RecipeModule<T, S, R, N>;
     }
 
     static reset(): void {

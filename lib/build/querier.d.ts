@@ -1,4 +1,5 @@
-import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction } from "./types";
+import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction, RecipePreAPIHookContext } from "./types";
+import { NormalisedRecipeConfig, RecipeFunctionOptions } from "./recipe/recipeModule/types";
 export default class Querier {
     recipeId: string;
     appInfo: NormalisedAppInfo;
@@ -6,31 +7,48 @@ export default class Querier {
     get: <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         queryParams?: Record<string, string> | undefined,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
-    ) => Promise<T>;
+    ) => Promise<{
+        jsonBody: T;
+        fetchResponse: Response;
+    }>;
     post: <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
-    ) => Promise<T>;
+    ) => Promise<{
+        jsonBody: T;
+        fetchResponse: Response;
+    }>;
     delete: <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
-    ) => Promise<T>;
+    ) => Promise<{
+        jsonBody: T;
+        fetchResponse: Response;
+    }>;
     put: <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
-    ) => Promise<T>;
+    ) => Promise<{
+        jsonBody: T;
+        fetchResponse: Response;
+    }>;
     fetch: (
         url: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<Response>;
@@ -39,4 +57,16 @@ export default class Querier {
         requestInit: RequestInit;
     }>;
     getFullUrl: (pathStr: string, queryParams?: Record<string, string> | undefined) => string;
+    getResponseJsonOrThrowGeneralError: (response: Response) => Promise<any>;
+    static preparePreAPIHook: <Action>({
+        config,
+        action,
+        options,
+        userContext,
+    }: {
+        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>>;
+        action: Action;
+        options?: RecipeFunctionOptions | undefined;
+        userContext: any;
+    }) => PreAPIHookFunction;
 }

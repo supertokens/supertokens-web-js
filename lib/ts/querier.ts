@@ -14,7 +14,8 @@
  */
 import NormalisedURLPath from "./normalisedURLPath";
 import { supported_fdi } from "./version";
-import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction } from "./types";
+import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction, RecipePreAPIHookContext } from "./types";
+import { NormalisedRecipeConfig, RecipeFunctionOptions } from "./recipe/recipeModule/types";
 
 export default class Querier {
     recipeId: string;
@@ -29,80 +30,128 @@ export default class Querier {
     get = async <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         queryParams?: Record<string, string>,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
-    ): Promise<T> => {
+    ): Promise<{
+        jsonBody: T;
+        fetchResponse: Response;
+    }> => {
         const result = await this.fetch(
             this.getFullUrl(path, queryParams),
             {
                 method: "GET",
                 ...config,
             },
+            userContext,
             preAPIHook,
             postAPIHook
         );
-        return await result.json();
+
+        let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
+
+        return {
+            jsonBody,
+            fetchResponse: result,
+        };
     };
 
     post = async <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
-    ): Promise<T> => {
+    ): Promise<{
+        jsonBody: T;
+        fetchResponse: Response;
+    }> => {
+        if (config.body === undefined) {
+            throw new Error("Post request must have a body");
+        }
+
         const result = await this.fetch(
             this.getFullUrl(path),
             {
                 method: "POST",
                 ...config,
             },
+            userContext,
             preAPIHook,
             postAPIHook
         );
-        return await result.json();
+
+        let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
+
+        return {
+            jsonBody,
+            fetchResponse: result,
+        };
     };
 
     delete = async <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
-    ): Promise<T> => {
+    ): Promise<{
+        jsonBody: T;
+        fetchResponse: Response;
+    }> => {
         const result = await this.fetch(
             this.getFullUrl(path),
             {
                 method: "DELETE",
                 ...config,
             },
+            userContext,
             preAPIHook,
             postAPIHook
         );
-        return await result.json();
+
+        let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
+
+        return {
+            jsonBody,
+            fetchResponse: result,
+        };
     };
 
     put = async <T>(
         path: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
-    ): Promise<T> => {
+    ): Promise<{
+        jsonBody: T;
+        fetchResponse: Response;
+    }> => {
         const result = await this.fetch(
             this.getFullUrl(path),
             {
                 method: "PUT",
                 ...config,
             },
+            userContext,
             preAPIHook,
             postAPIHook
         );
 
-        return await result.json();
+        let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
+
+        return {
+            jsonBody,
+            fetchResponse: result,
+        };
     };
 
     fetch = async (
         url: string,
         config: RequestInit,
+        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<Response> => {
@@ -138,7 +187,8 @@ export default class Querier {
             : await postAPIHook({
                   requestInit,
                   url: modifiedUrl,
-                  response: result,
+                  fetchResponse: result,
+                  userContext,
               });
     };
 
@@ -156,7 +206,10 @@ export default class Querier {
                 requestInit: context.requestInit,
             };
         }
-        const result = await context.preAPIHook({ url: context.url, requestInit: context.requestInit });
+        const result = await context.preAPIHook({
+            url: context.url,
+            requestInit: context.requestInit,
+        });
         return result;
     };
 
@@ -170,5 +223,46 @@ export default class Querier {
 
         // If query params, add.
         return fullUrl + "?" + new URLSearchParams(queryParams);
+    };
+
+    getResponseJsonOrThrowGeneralError = async (response: Response): Promise<any> => {
+        let json = await response.json();
+
+        if (json.status === "GENERAL_ERROR") {
+            let message = json.message === undefined ? "No Error Message Provided" : json.message;
+            throw new Error(message);
+        }
+
+        return json;
+    };
+
+    static preparePreAPIHook = <Action>({
+        config,
+        action,
+        options,
+        userContext,
+    }: {
+        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>>;
+        action: Action;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): PreAPIHookFunction => {
+        return async (context): Promise<{ url: string; requestInit: RequestInit }> => {
+            let postRecipeHookContext = await config.preAPIHook({
+                ...context,
+                action,
+                userContext,
+            });
+
+            if (options === undefined || options.preAPIHook === undefined) {
+                return postRecipeHookContext;
+            }
+
+            return options.preAPIHook({
+                url: postRecipeHookContext.url,
+                requestInit: postRecipeHookContext.requestInit,
+                userContext,
+            });
+        };
     };
 }
