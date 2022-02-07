@@ -27,7 +27,7 @@ export default class SuperTokens {
      * Instance Attributes.
      */
     appInfo: NormalisedAppInfo;
-    recipeList: RecipeModule<any, any>[] = [];
+    recipeList: RecipeModule<any, any, any>[] = [];
 
     constructor(config: SuperTokensConfig) {
         this.appInfo = normaliseInputAppInfoOrThrowError(config.appInfo);

@@ -1,12 +1,13 @@
 import { NormalisedRecipeConfig, RecipeConfig, RecipeFunctionOptions } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
+export declare type PreAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
 export declare type PreAPIHookContext = {
-    action: "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
+    action: PreAPIHookAction;
     requestInit: RequestInit;
     url: string;
     userContext: any;
 };
-export declare type InputType = RecipeConfig<PreAPIHookContext> & {
+export declare type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext> & {
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
@@ -14,7 +15,7 @@ export declare type InputType = RecipeConfig<PreAPIHookContext> & {
         ) => RecipeInterface;
     };
 };
-export declare type NormalisedInputType = NormalisedRecipeConfig<PreAPIHookContext> & {
+export declare type NormalisedInputType = NormalisedRecipeConfig<PreAPIHookAction, PreAPIHookContext> & {
     override: {
         functions: (
             originalImplementation: RecipeInterface,
@@ -30,8 +31,10 @@ export declare type RecipeInterface = {
         userContext: any;
     }) => Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-        jsonBody: any;
-        fetchResponse: Response;
+        networkResponse: {
+            jsonBody: any;
+            fetchResponse: Response;
+        };
     }>;
     sendVerificationEmail: (input: {
         config: NormalisedInputType;
@@ -39,8 +42,10 @@ export declare type RecipeInterface = {
         userContext: any;
     }) => Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
-        jsonBody: any;
-        fetchResponse: Response;
+        networkResponse: {
+            jsonBody: any;
+            fetchResponse: Response;
+        };
     }>;
     isEmailVerified: (input: {
         config: NormalisedInputType;
@@ -49,7 +54,9 @@ export declare type RecipeInterface = {
     }) => Promise<{
         status: "OK";
         isVerified: boolean;
-        jsonBody: any;
-        fetchResponse: Response;
+        networkResponse: {
+            jsonBody: any;
+            fetchResponse: Response;
+        };
     }>;
 };

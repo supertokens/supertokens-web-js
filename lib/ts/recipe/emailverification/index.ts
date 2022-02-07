@@ -23,8 +23,10 @@ export default class RecipeWrapper {
 
     static verifyEmail(input: { token?: string; userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-        jsonBody: any;
-        fetchResponse: Response;
+        networkResponse: {
+            jsonBody: any;
+            fetchResponse: Response;
+        };
     }> {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
@@ -38,8 +40,10 @@ export default class RecipeWrapper {
 
     static sendVerificationEmail(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
-        jsonBody: any;
-        fetchResponse: Response;
+        networkResponse: {
+            jsonBody: any;
+            fetchResponse: Response;
+        };
     }> {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
@@ -53,8 +57,10 @@ export default class RecipeWrapper {
     static isEmailVerified(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK";
         isVerified: boolean;
-        jsonBody: any;
-        fetchResponse: Response;
+        networkResponse: {
+            jsonBody: any;
+            fetchResponse: Response;
+        };
     }> {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 

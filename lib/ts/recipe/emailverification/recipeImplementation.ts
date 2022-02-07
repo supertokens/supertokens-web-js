@@ -16,8 +16,7 @@ import Querier from "../../querier";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { NormalisedInputType, RecipeInterface } from "./types";
-import { executePreAPIHooks } from "./utils";
+import { NormalisedInputType, PreAPIHookAction, RecipeInterface } from "./types";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
@@ -34,8 +33,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             userContext: any;
         }): Promise<{
             status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR" | "OK";
-            jsonBody: any;
-            fetchResponse: Response;
+            networkResponse: {
+                jsonBody: any;
+                fetchResponse: Response;
+            };
         }> {
             token = token === undefined ? getQueryParams("token") : token;
 
@@ -54,22 +55,21 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     }),
                 },
                 userContext,
-                (context) => {
-                    return executePreAPIHooks({
-                        config,
-                        context,
-                        action: "VERIFY_EMAIL",
-                        options,
-                        userContext,
-                    });
-                },
+                Querier.preparePreAPIHook<PreAPIHookAction>({
+                    config,
+                    action: "VERIFY_EMAIL",
+                    options,
+                    userContext,
+                }),
                 config.postAPIHook
             );
 
             return {
                 status: jsonBody.status,
-                jsonBody,
-                fetchResponse,
+                networkResponse: {
+                    jsonBody,
+                    fetchResponse,
+                },
             };
         },
 
@@ -84,31 +84,32 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }): Promise<{
             status: "OK";
             isVerified: boolean;
-            jsonBody: any;
-            fetchResponse: Response;
+            networkResponse: {
+                jsonBody: any;
+                fetchResponse: Response;
+            };
         }> {
             const { jsonBody, fetchResponse } = await querier.get<{ status: "OK"; isVerified: boolean }>(
                 "/user/email/verify",
                 {},
                 undefined,
                 userContext,
-                (context) => {
-                    return executePreAPIHooks({
-                        config,
-                        context,
-                        action: "IS_EMAIL_VERIFIED",
-                        options,
-                        userContext,
-                    });
-                },
+                Querier.preparePreAPIHook<PreAPIHookAction>({
+                    config,
+                    action: "IS_EMAIL_VERIFIED",
+                    options,
+                    userContext,
+                }),
                 config.postAPIHook
             );
 
             return {
                 status: "OK",
                 isVerified: jsonBody.isVerified,
-                jsonBody,
-                fetchResponse,
+                networkResponse: {
+                    jsonBody,
+                    fetchResponse,
+                },
             };
         },
 
@@ -122,29 +123,30 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             userContext: any;
         }): Promise<{
             status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
-            jsonBody: any;
-            fetchResponse: Response;
+            networkResponse: {
+                jsonBody: any;
+                fetchResponse: Response;
+            };
         }> {
             const { jsonBody, fetchResponse } = await querier.post<{ status: "OK" | "EMAIL_ALREADY_VERIFIED_ERROR" }>(
                 "/user/email/verify/token",
                 { body: JSON.stringify({}) },
                 userContext,
-                (context) => {
-                    return executePreAPIHooks({
-                        config,
-                        context,
-                        action: "SEND_VERIFY_EMAIL",
-                        options,
-                        userContext,
-                    });
-                },
+                Querier.preparePreAPIHook<PreAPIHookAction>({
+                    config,
+                    action: "SEND_VERIFY_EMAIL",
+                    options,
+                    userContext,
+                }),
                 config.postAPIHook
             );
 
             return {
                 status: jsonBody.status,
-                jsonBody,
-                fetchResponse,
+                networkResponse: {
+                    jsonBody,
+                    fetchResponse,
+                },
             };
         },
     };
