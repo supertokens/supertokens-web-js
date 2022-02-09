@@ -12,18 +12,6 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-
-import { normaliseAuthRecipeWithEmailVerificationConfig } from "../authRecipeWithEmailVerification/utils";
-import { InputType, NormalisedInputType, RecipeInterface } from "./types";
-
-export function normaliseUserInput(config: InputType): NormalisedInputType {
-    let override = {
-        functions: (originalImplementation: RecipeInterface) => originalImplementation,
-        ...config.override,
-    };
-
-    return {
-        ...normaliseAuthRecipeWithEmailVerificationConfig(config),
-        override,
-    };
-}
+export * from "../../lib/build/recipe/emailverification";
+import * as _default from "../../lib/build/recipe/emailverification";
+export default _default;

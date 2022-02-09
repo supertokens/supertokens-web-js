@@ -13,17 +13,13 @@
  * under the License.
  */
 
-import { normaliseAuthRecipeWithEmailVerificationConfig } from "../authRecipeWithEmailVerification/utils";
-import { InputType, NormalisedInputType, RecipeInterface } from "./types";
-
-export function normaliseUserInput(config: InputType): NormalisedInputType {
-    let override = {
-        functions: (originalImplementation: RecipeInterface) => originalImplementation,
-        ...config.override,
-    };
-
-    return {
-        ...normaliseAuthRecipeWithEmailVerificationConfig(config),
-        override,
-    };
-}
+export * from "../lib/build/querier";
+/**
+ * 'export *' does not re-export a default.
+ * import Querier from "supertokens-web-js/querier";
+ * the above import statement won't be possible unless either
+ * - user add "esModuleInterop": true in their tsconfig.json file
+ * - we do the following change:
+ */
+import * as _default from "../lib/build/querier";
+export default _default;

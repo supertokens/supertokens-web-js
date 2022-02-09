@@ -13,17 +13,9 @@
  * under the License.
  */
 
-import { normaliseAuthRecipeWithEmailVerificationConfig } from "../authRecipeWithEmailVerification/utils";
-import { InputType, NormalisedInputType, RecipeInterface } from "./types";
-
-export function normaliseUserInput(config: InputType): NormalisedInputType {
-    let override = {
-        functions: (originalImplementation: RecipeInterface) => originalImplementation,
-        ...config.override,
-    };
-
-    return {
-        ...normaliseAuthRecipeWithEmailVerificationConfig(config),
-        override,
-    };
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
+exports.__esModule = true;
+__export(require("./lib/build/"));
