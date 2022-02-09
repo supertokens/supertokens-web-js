@@ -42,10 +42,7 @@ export declare type RecipeInterface = {
         userContext: any;
     }) => Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
     sendVerificationEmail: (input: {
         config: NormalisedInputType;
@@ -53,10 +50,7 @@ export declare type RecipeInterface = {
         userContext: any;
     }) => Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
     isEmailVerified: (input: {
         config: NormalisedInputType;
@@ -65,9 +59,6 @@ export declare type RecipeInterface = {
     }) => Promise<{
         status: "OK";
         isVerified: boolean;
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
 };

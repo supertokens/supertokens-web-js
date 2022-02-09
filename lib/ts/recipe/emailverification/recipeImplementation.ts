@@ -33,10 +33,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             userContext: any;
         }): Promise<{
             status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR" | "OK";
-            networkResponse: {
-                jsonBody: any;
-                fetchResponse: Response;
-            };
+            fetchResponse: Response;
         }> {
             token = token === undefined ? getQueryParams("token") : token;
 
@@ -69,10 +66,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
             return {
                 status: jsonBody.status,
-                networkResponse: {
-                    jsonBody,
-                    fetchResponse,
-                },
+                fetchResponse,
             };
         },
 
@@ -87,10 +81,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }): Promise<{
             status: "OK";
             isVerified: boolean;
-            networkResponse: {
-                jsonBody: any;
-                fetchResponse: Response;
-            };
+            fetchResponse: Response;
         }> {
             const { jsonBody, fetchResponse } = await querier.get<{ status: "OK"; isVerified: boolean }>(
                 "/user/email/verify",
@@ -112,10 +103,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             return {
                 status: "OK",
                 isVerified: jsonBody.isVerified,
-                networkResponse: {
-                    jsonBody,
-                    fetchResponse,
-                },
+                fetchResponse,
             };
         },
 
@@ -129,10 +117,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             userContext: any;
         }): Promise<{
             status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
-            networkResponse: {
-                jsonBody: any;
-                fetchResponse: Response;
-            };
+            fetchResponse: Response;
         }> {
             const { jsonBody, fetchResponse } = await querier.post<{ status: "OK" | "EMAIL_ALREADY_VERIFIED_ERROR" }>(
                 "/user/email/verify/token",
@@ -152,10 +137,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
             return {
                 status: jsonBody.status,
-                networkResponse: {
-                    jsonBody,
-                    fetchResponse,
-                },
+                fetchResponse,
             };
         },
     };
