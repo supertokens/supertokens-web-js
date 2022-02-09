@@ -16,10 +16,10 @@
 export * from "../lib/build/querier";
 /**
  * 'export *' does not re-export a default.
- * import Querier from "supertokens-web-js/querier";
+ * import Querier from "supertokens-web-js/utils/querier";
  * the above import statement won't be possible unless either
  * - user add "esModuleInterop": true in their tsconfig.json file
  * - we do the following change:
  */
-import * as _default from "../lib/build/querier";
+import _default from "../lib/build/querier";
 export default _default;

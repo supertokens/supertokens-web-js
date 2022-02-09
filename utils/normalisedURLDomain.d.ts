@@ -16,10 +16,10 @@
 export * from "../lib/build/normalisedURLDomain";
 /**
  * 'export *' does not re-export a default.
- * import NormalisedURLDomain from "supertokens-web-js/normalisedURLDomain";
+ * import NormalisedURLDomain from "supertokens-web-js/utils/normalisedURLDomain";
  * the above import statement won't be possible unless either
  * - user add "esModuleInterop": true in their tsconfig.json file
  * - we do the following change:
  */
-import * as _default from "../lib/build/normalisedURLDomain";
+import _default from "../lib/build/normalisedURLDomain";
 export default _default;
