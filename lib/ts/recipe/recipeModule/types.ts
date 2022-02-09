@@ -12,20 +12,28 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { NormalisedAppInfo, PostAPIHookFunction, RecipePreAPIHookContext } from "../../types";
+import { NormalisedAppInfo, RecipePostAPIHookContext, RecipePreAPIHookContext } from "../../types";
 
-export type RecipeConfig<Action, PreAPIHookContext extends RecipePreAPIHookContext<Action>> = {
+export type RecipeConfig<
+    Action,
+    PreAPIHookContext extends RecipePreAPIHookContext<Action>,
+    PostAPIHookContext extends RecipePostAPIHookContext<Action>
+> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
     preAPIHook?: (context: PreAPIHookContext) => Promise<{ url: string; requestInit: RequestInit }>;
-    postAPIHook?: PostAPIHookFunction;
+    postAPIHook?: (context: PostAPIHookContext) => Promise<void>;
 };
 
-export type NormalisedRecipeConfig<Action, PreAPIHookContext extends RecipePreAPIHookContext<Action>> = {
+export type NormalisedRecipeConfig<
+    Action,
+    PreAPIHookContext extends RecipePreAPIHookContext<Action>,
+    PostAPIHookContext extends RecipePostAPIHookContext<Action>
+> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
     preAPIHook: (context: PreAPIHookContext) => Promise<{ url: string; requestInit: RequestInit }>;
-    postAPIHook: PostAPIHookFunction;
+    postAPIHook: (context: PostAPIHookContext) => Promise<void>;
 };
 
 /**

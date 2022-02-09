@@ -14,7 +14,13 @@
  */
 import NormalisedURLPath from "./normalisedURLPath";
 import { supported_fdi } from "./version";
-import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction, RecipePreAPIHookContext } from "./types";
+import {
+    NormalisedAppInfo,
+    PostAPIHookFunction,
+    PreAPIHookFunction,
+    RecipePostAPIHookContext,
+    RecipePreAPIHookContext,
+} from "./types";
 import { NormalisedRecipeConfig, RecipeFunctionOptions } from "./recipe/recipeModule/types";
 
 export default class Querier {
@@ -49,11 +55,12 @@ export default class Querier {
             postAPIHook
         );
 
+        const fetchResponse = result.clone();
         let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             jsonBody,
-            fetchResponse: result,
+            fetchResponse,
         };
     };
 
@@ -82,11 +89,12 @@ export default class Querier {
             postAPIHook
         );
 
+        const fetchResponse = result.clone();
         let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             jsonBody,
-            fetchResponse: result,
+            fetchResponse,
         };
     };
 
@@ -111,11 +119,12 @@ export default class Querier {
             postAPIHook
         );
 
+        const fetchResponse = result.clone();
         let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             jsonBody,
-            fetchResponse: result,
+            fetchResponse,
         };
     };
 
@@ -140,11 +149,12 @@ export default class Querier {
             postAPIHook
         );
 
+        const fetchResponse = result.clone();
         let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             jsonBody,
-            fetchResponse: result,
+            fetchResponse,
         };
     };
 
@@ -182,14 +192,18 @@ export default class Querier {
             throw result;
         }
 
-        return postAPIHook === undefined
-            ? result
-            : await postAPIHook({
-                  requestInit,
-                  url: modifiedUrl,
-                  fetchResponse: result,
-                  userContext,
-              });
+        const reponseForPostAPI = result.clone();
+
+        if (postAPIHook !== undefined) {
+            await postAPIHook({
+                requestInit,
+                url,
+                fetchResponse: reponseForPostAPI,
+                userContext,
+            });
+        }
+
+        return result;
     };
 
     /*
@@ -242,7 +256,7 @@ export default class Querier {
         options,
         userContext,
     }: {
-        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>>;
+        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>, RecipePostAPIHookContext<Action>>;
         action: Action;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -262,6 +276,21 @@ export default class Querier {
                 url: postRecipeHookContext.url,
                 requestInit: postRecipeHookContext.requestInit,
                 userContext,
+            });
+        };
+    };
+
+    static preparePostAPIHook = <Action>({
+        config,
+        action,
+    }: {
+        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>, RecipePostAPIHookContext<Action>>;
+        action: Action;
+    }): PostAPIHookFunction => {
+        return async (context) => {
+            await config.postAPIHook({
+                ...context,
+                action,
             });
         };
     };

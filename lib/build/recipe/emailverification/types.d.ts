@@ -7,7 +7,14 @@ export declare type PreAPIHookContext = {
     url: string;
     userContext: any;
 };
-export declare type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext> & {
+export declare type PostAPIHookContext = {
+    action: PreAPIHookAction;
+    requestInit: RequestInit;
+    url: string;
+    fetchResponse: Response;
+    userContext: any;
+};
+export declare type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext, PostAPIHookContext> & {
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
@@ -15,7 +22,11 @@ export declare type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext
         ) => RecipeInterface;
     };
 };
-export declare type NormalisedInputType = NormalisedRecipeConfig<PreAPIHookAction, PreAPIHookContext> & {
+export declare type NormalisedInputType = NormalisedRecipeConfig<
+    PreAPIHookAction,
+    PreAPIHookContext,
+    PostAPIHookContext
+> & {
     override: {
         functions: (
             originalImplementation: RecipeInterface,

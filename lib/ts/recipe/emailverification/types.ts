@@ -24,7 +24,15 @@ export type PreAPIHookContext = {
     userContext: any;
 };
 
-export type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext> & {
+export type PostAPIHookContext = {
+    action: PreAPIHookAction;
+    requestInit: RequestInit;
+    url: string;
+    fetchResponse: Response;
+    userContext: any;
+};
+
+export type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext, PostAPIHookContext> & {
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
@@ -33,7 +41,7 @@ export type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext> & {
     };
 };
 
-export type NormalisedInputType = NormalisedRecipeConfig<PreAPIHookAction, PreAPIHookContext> & {
+export type NormalisedInputType = NormalisedRecipeConfig<PreAPIHookAction, PreAPIHookContext, PostAPIHookContext> & {
     override: {
         functions: (
             originalImplementation: RecipeInterface,

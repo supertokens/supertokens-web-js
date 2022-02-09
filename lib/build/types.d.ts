@@ -4,13 +4,14 @@ import NormalisedURLDomain from "./normalisedURLDomain";
 import { RecipeConfig } from "./recipe/recipeModule/types";
 export declare type SuperTokensConfig = {
     appInfo: AppInfoUserInput;
-    recipeList: CreateRecipeFunction<any, any, any>[];
+    recipeList: CreateRecipeFunction<any, any, any, any>[];
 };
 export declare type CreateRecipeFunction<
     Action,
     PreAPIHookContext extends RecipePreAPIHookContext<Action>,
-    Config extends RecipeConfig<Action, PreAPIHookContext>
-> = (appInfo: NormalisedAppInfo) => RecipeModule<Action, PreAPIHookContext, Config>;
+    PostAPIHookContext extends RecipePostAPIHookContext<Action>,
+    Config extends RecipeConfig<Action, PreAPIHookContext, PostAPIHookContext>
+> = (appInfo: NormalisedAppInfo) => RecipeModule<Action, PreAPIHookContext, PostAPIHookContext, Config>;
 export declare type AppInfoUserInput = {
     appName: string;
     apiDomain: string;
@@ -36,6 +37,13 @@ export declare type RecipePreAPIHookContext<Action> = {
     action: Action;
     userContext: any;
 };
+export declare type RecipePostAPIHookContext<Action> = {
+    action: Action;
+    requestInit: RequestInit;
+    url: string;
+    fetchResponse: Response;
+    userContext: any;
+};
 export declare type PreAPIHookFunction = (context: { requestInit: RequestInit; url: string }) => Promise<{
     url: string;
     requestInit: RequestInit;
@@ -45,4 +53,4 @@ export declare type PostAPIHookFunction = (context: {
     url: string;
     fetchResponse: Response;
     userContext: any;
-}) => Promise<Response>;
+}) => Promise<void>;

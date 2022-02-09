@@ -61,7 +61,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     options,
                     userContext,
                 }),
-                config.postAPIHook
+                Querier.preparePostAPIHook<PreAPIHookAction>({
+                    config,
+                    action: "VERIFY_EMAIL",
+                })
             );
 
             return {
@@ -100,7 +103,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     options,
                     userContext,
                 }),
-                config.postAPIHook
+                Querier.preparePostAPIHook<PreAPIHookAction>({
+                    config,
+                    action: "IS_EMAIL_VERIFIED",
+                })
             );
 
             return {
@@ -138,7 +144,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     options,
                     userContext,
                 }),
-                config.postAPIHook
+                Querier.preparePostAPIHook<PreAPIHookAction>({
+                    config,
+                    action: "SEND_VERIFY_EMAIL",
+                })
             );
 
             return {

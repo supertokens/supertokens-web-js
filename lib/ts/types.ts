@@ -30,14 +30,15 @@ export type SuperTokensConfig = {
     /*
      * List of recipes for authentication and session management.
      */
-    recipeList: CreateRecipeFunction<any, any, any>[];
+    recipeList: CreateRecipeFunction<any, any, any, any>[];
 };
 
 export type CreateRecipeFunction<
     Action,
     PreAPIHookContext extends RecipePreAPIHookContext<Action>,
-    Config extends RecipeConfig<Action, PreAPIHookContext>
-> = (appInfo: NormalisedAppInfo) => RecipeModule<Action, PreAPIHookContext, Config>;
+    PostAPIHookContext extends RecipePostAPIHookContext<Action>,
+    Config extends RecipeConfig<Action, PreAPIHookContext, PostAPIHookContext>
+> = (appInfo: NormalisedAppInfo) => RecipeModule<Action, PreAPIHookContext, PostAPIHookContext, Config>;
 
 export type AppInfoUserInput = {
     /*
@@ -110,6 +111,14 @@ export type RecipePreAPIHookContext<Action> = {
     userContext: any;
 };
 
+export type RecipePostAPIHookContext<Action> = {
+    action: Action;
+    requestInit: RequestInit;
+    url: string;
+    fetchResponse: Response;
+    userContext: any;
+};
+
 export type PreAPIHookFunction = (context: {
     requestInit: RequestInit;
     url: string;
@@ -120,4 +129,4 @@ export type PostAPIHookFunction = (context: {
     url: string;
     fetchResponse: Response;
     userContext: any;
-}) => Promise<Response>;
+}) => Promise<void>;

@@ -6,6 +6,7 @@ export default class RecipeWrapper {
     ): import("../../types").CreateRecipeFunction<
         import("./types").PreAPIHookAction,
         PreAPIHookContext,
+        import("./types").PostAPIHookContext,
         import("./types").NormalisedInputType
     >;
     static verifyEmail(input: { token?: string; userContext?: any; options?: RecipeFunctionOptions }): Promise<{

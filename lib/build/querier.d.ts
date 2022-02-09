@@ -1,4 +1,10 @@
-import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction, RecipePreAPIHookContext } from "./types";
+import {
+    NormalisedAppInfo,
+    PostAPIHookFunction,
+    PreAPIHookFunction,
+    RecipePostAPIHookContext,
+    RecipePreAPIHookContext,
+} from "./types";
 import { NormalisedRecipeConfig, RecipeFunctionOptions } from "./recipe/recipeModule/types";
 export default class Querier {
     recipeId: string;
@@ -64,9 +70,16 @@ export default class Querier {
         options,
         userContext,
     }: {
-        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>>;
+        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>, RecipePostAPIHookContext<Action>>;
         action: Action;
         options?: RecipeFunctionOptions | undefined;
         userContext: any;
     }) => PreAPIHookFunction;
+    static preparePostAPIHook: <Action>({
+        config,
+        action,
+    }: {
+        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>, RecipePostAPIHookContext<Action>>;
+        action: Action;
+    }) => PostAPIHookFunction;
 }

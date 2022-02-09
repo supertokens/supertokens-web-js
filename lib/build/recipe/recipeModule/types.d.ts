@@ -1,21 +1,29 @@
-import { NormalisedAppInfo, PostAPIHookFunction, RecipePreAPIHookContext } from "../../types";
-export declare type RecipeConfig<Action, PreAPIHookContext extends RecipePreAPIHookContext<Action>> = {
+import { NormalisedAppInfo, RecipePostAPIHookContext, RecipePreAPIHookContext } from "../../types";
+export declare type RecipeConfig<
+    Action,
+    PreAPIHookContext extends RecipePreAPIHookContext<Action>,
+    PostAPIHookContext extends RecipePostAPIHookContext<Action>
+> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
     preAPIHook?: (context: PreAPIHookContext) => Promise<{
         url: string;
         requestInit: RequestInit;
     }>;
-    postAPIHook?: PostAPIHookFunction;
+    postAPIHook?: (context: PostAPIHookContext) => Promise<void>;
 };
-export declare type NormalisedRecipeConfig<Action, PreAPIHookContext extends RecipePreAPIHookContext<Action>> = {
+export declare type NormalisedRecipeConfig<
+    Action,
+    PreAPIHookContext extends RecipePreAPIHookContext<Action>,
+    PostAPIHookContext extends RecipePostAPIHookContext<Action>
+> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
     preAPIHook: (context: PreAPIHookContext) => Promise<{
         url: string;
         requestInit: RequestInit;
     }>;
-    postAPIHook: PostAPIHookFunction;
+    postAPIHook: (context: PostAPIHookContext) => Promise<void>;
 };
 /**
  * For the options object passed to recipe functions, we do not need a postAPIHook.
