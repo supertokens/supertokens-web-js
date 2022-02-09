@@ -60,7 +60,7 @@
             "limit": "5kb"
         },
         {
-            "path": "recipe/emailverification",
+            "path": "recipe/emailverification/index.js",
             "limit": "15kb"
         }
     ]
