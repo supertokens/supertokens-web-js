@@ -1,4 +1,4 @@
-import { InputType, RecipeInterface, PreAPIHookContext, NormalisedInputType, PostAPIHookContext } from "./types";
+import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 export default class RecipeWrapper {
     static init(
@@ -10,7 +10,6 @@ export default class RecipeWrapper {
             value: string;
         }[];
         token?: string;
-        config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext?: any;
     }): Promise<
@@ -38,7 +37,6 @@ export default class RecipeWrapper {
             id: string;
             value: string;
         }[];
-        config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext?: any;
     }): Promise<
@@ -66,7 +64,6 @@ export default class RecipeWrapper {
             id: string;
             value: string;
         }[];
-        config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext?: any;
     }): Promise<
@@ -95,7 +92,6 @@ export default class RecipeWrapper {
             id: string;
             value: string;
         }[];
-        config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext?: any;
     }): Promise<
@@ -126,18 +122,26 @@ export default class RecipeWrapper {
               };
           }
     >;
-    static doesEmailExist(input: {
-        email: string;
-        config: NormalisedInputType;
-        options?: RecipeFunctionOptions;
-        userContext?: any;
-    }): Promise<{
+    static doesEmailExist(input: { email: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
         doesExist: boolean;
         networkResponse: {
             jsonBody: any;
             fetchResponse: Response;
         };
+    }>;
+    static verifyEmail(input: { token?: string; options?: RecipeFunctionOptions; userContext: any }): Promise<{
+        status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
+        fetchResponse: Response;
+    }>;
+    static sendVerificationEmail(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+        status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
+        fetchResponse: Response;
+    }>;
+    static isEmailVerified(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+        status: "OK";
+        isVerified: boolean;
+        fetchResponse: Response;
     }>;
 }
 declare const init: typeof RecipeWrapper.init;
@@ -146,6 +150,9 @@ declare const sendPasswordResetEmail: typeof RecipeWrapper.sendPasswordResetEmai
 declare const signUp: typeof RecipeWrapper.signUp;
 declare const signIn: typeof RecipeWrapper.signIn;
 declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
+declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
+declare const sendVerificationEmail: typeof RecipeWrapper.sendVerificationEmail;
+declare const isEmailVerified: typeof RecipeWrapper.isEmailVerified;
 export {
     init,
     submitNewPassword,
@@ -153,6 +160,9 @@ export {
     signUp,
     signIn,
     doesEmailExist,
+    verifyEmail,
+    sendVerificationEmail,
+    isEmailVerified,
     InputType,
     RecipeInterface,
     RecipeFunctionOptions,
