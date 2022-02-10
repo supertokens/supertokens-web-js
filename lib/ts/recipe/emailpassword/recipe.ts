@@ -14,7 +14,7 @@
  */
 
 import AuthRecipeWithEmailVerification from "../authRecipeWithEmailVerification";
-import { InputType, NormalisedInputType, PreAPIAction, PreAPIHookContext, RecipeInterface } from "./types";
+import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
 import EmailVerificationRecipe from "../emailverification/recipe";
 import { normaliseUserInput } from "./utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
@@ -22,11 +22,7 @@ import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded } from "../../utils";
 
-export default class Recipe extends AuthRecipeWithEmailVerification<
-    PreAPIAction,
-    PreAPIHookContext,
-    NormalisedInputType
-> {
+export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
     static RECIPE_ID = "emailpassword";
 
@@ -41,7 +37,7 @@ export default class Recipe extends AuthRecipeWithEmailVerification<
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 
-    static init(config?: InputType): CreateRecipeFunction<PreAPIAction, PreAPIHookContext, NormalisedInputType> {
+    static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction> {
         return (appInfo: NormalisedAppInfo) => {
             Recipe.instance = new Recipe(
                 {

@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { InputType, NormalisedInputType, PreAPIHookContext, RecipeInterface } from "./types";
+import { InputType, NormalisedInputType, RecipeInterface } from "./types";
 
 export function normaliseUserInput(config: InputType): NormalisedInputType {
     const override: any = {
@@ -23,7 +23,7 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
     let preAPIHook = config.preAPIHook;
 
     if (preAPIHook === undefined) {
-        preAPIHook = async (context: PreAPIHookContext) => context;
+        preAPIHook = async (context) => context;
     }
 
     let postAPIHook = config.postAPIHook;

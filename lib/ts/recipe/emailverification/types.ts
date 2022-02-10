@@ -12,25 +12,18 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { NormalisedRecipeConfig, RecipeConfig, RecipeFunctionOptions } from "../recipeModule/types";
+import {
+    NormalisedRecipeConfig,
+    RecipeConfig,
+    RecipeFunctionOptions,
+    RecipePreAPIHookContext,
+} from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 
 export type PreAndPostAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
 
-export type PreAPIHookContext = {
-    action: PreAndPostAPIHookAction;
-    requestInit: RequestInit;
-    url: string;
-    userContext: any;
-};
-
-export type PostAPIHookContext = {
-    action: PreAndPostAPIHookAction;
-    requestInit: RequestInit;
-    url: string;
-    fetchResponse: Response;
-    userContext: any;
-};
+export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
+export type PostAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 
 export type InputType = RecipeConfig<PreAndPostAPIHookAction> & {
     override?: {

@@ -18,19 +18,12 @@ import {
     InputType as EmailVerificationInputType,
     RecipeInterface as EmailVerificationRecipeInterface,
 } from "../emailverification/types";
-import { RecipePreAPIHookContext } from "../../types";
 
-export type InputType<Action, PreAPIHookContext extends RecipePreAPIHookContext<Action>> = RecipeConfig<
-    Action,
-    PreAPIHookContext
-> & {
+export type InputType<Action> = RecipeConfig<Action> & {
     emailVerificationFeature?: EmailVerificationInputType;
 };
 
-export type NormalisedInputType<
-    Action,
-    PreAPIHookContext extends RecipePreAPIHookContext<Action>
-> = NormalisedRecipeConfig<Action, PreAPIHookContext> & {
+export type NormalisedInputType<Action> = NormalisedRecipeConfig<Action> & {
     emailVerificationFeature?: EmailVerificationInputType;
     override?: {
         emailVerification?: {

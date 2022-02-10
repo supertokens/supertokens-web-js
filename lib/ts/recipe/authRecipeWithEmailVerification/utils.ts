@@ -12,24 +12,21 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-
-import { RecipePreAPIHookContext } from "../../types";
 import { InputType, NormalisedInputType } from "./types";
 
-export function normaliseAuthRecipeWithEmailVerificationConfig<
-    Action,
-    PreAPIHookContext extends RecipePreAPIHookContext<Action>
->(config: InputType<Action, PreAPIHookContext>): NormalisedInputType<Action, PreAPIHookContext> {
+export function normaliseAuthRecipeWithEmailVerificationConfig<Action>(
+    config: InputType<Action>
+): NormalisedInputType<Action> {
     let preAPIHook = config.preAPIHook;
 
     if (preAPIHook === undefined) {
-        preAPIHook = async (context: any) => context;
+        preAPIHook = async (context) => context;
     }
 
     let postAPIHook = config.postAPIHook;
 
     if (postAPIHook === undefined) {
-        postAPIHook = async ({ fetchResponse }) => fetchResponse;
+        postAPIHook = async () => {};
     }
 
     return {

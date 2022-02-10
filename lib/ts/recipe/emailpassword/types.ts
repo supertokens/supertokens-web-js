@@ -13,7 +13,7 @@
  * under the License.
  */
 
-import { UserType } from "../recipeModule/types";
+import { RecipePostAPIHookContext, RecipePreAPIHookContext, UserType } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
@@ -21,21 +21,17 @@ import {
     InputType as AuthRecipeInputType,
 } from "../authRecipeWithEmailVerification/types";
 
-export type PreAPIAction =
+export type PreAndPostAPIHookAction =
     | "EMAIL_PASSWORD_SIGN_UP"
     | "EMAIL_PASSWORD_SIGN_IN"
     | "SEND_RESET_PASSWORD_EMAIL"
     | "SUBMIT_NEW_PASSWORD"
     | "EMAIL_EXISTS";
 
-export type PreAPIHookContext = {
-    action: PreAPIAction;
-    requestInit: RequestInit;
-    url: string;
-    userContext: any;
-};
+export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
+export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
-export type InputType = AuthRecipeInputType<PreAPIAction, PreAPIHookContext> & {
+export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
@@ -44,7 +40,7 @@ export type InputType = AuthRecipeInputType<PreAPIAction, PreAPIHookContext> & {
     };
 };
 
-export type NormalisedInputType = NormalisedAuthRecipeType<PreAPIAction, PreAPIHookContext> & {
+export type NormalisedInputType = NormalisedAuthRecipeType<PreAndPostAPIHookAction> & {
     override: {
         functions: (
             originalImplementation: RecipeInterface,

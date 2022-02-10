@@ -58,6 +58,14 @@
         {
             "path": "lib/build/index.js",
             "limit": "5kb"
+        },
+        {
+            "path": "recipe/emailverification/index.js",
+            "limit": "50kb"
+        },
+        {
+            "path": "recipe/emailpassword/index.js",
+            "limit": "100kb"
         }
     ]
 }

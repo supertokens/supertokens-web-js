@@ -12,9 +12,10 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { InputType, RecipeInterface, PreAPIHookContext, NormalisedInputType } from "./types";
+import { InputType, RecipeInterface, PreAPIHookContext, NormalisedInputType, PostAPIHookContext } from "./types";
 import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
+import { getNormalisedUserContext } from "../../utils";
 
 export default class RecipeWrapper {
     static init(config: InputType) {
@@ -29,11 +30,14 @@ export default class RecipeWrapper {
         token?: string;
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }) {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
-        return recipeInstance.recipeImplementation.submitNewPassword(input);
+        return recipeInstance.recipeImplementation.submitNewPassword({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
     }
 
     static sendPasswordResetEmail(input: {
@@ -43,11 +47,14 @@ export default class RecipeWrapper {
         }[];
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }) {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
-        return recipeInstance.recipeImplementation.sendPasswordResetEmail(input);
+        return recipeInstance.recipeImplementation.sendPasswordResetEmail({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
     }
 
     static signUp(input: {
@@ -57,11 +64,14 @@ export default class RecipeWrapper {
         }[];
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }) {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
-        return recipeInstance.recipeImplementation.signUp(input);
+        return recipeInstance.recipeImplementation.signUp({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
     }
 
     static signIn(input: {
@@ -71,22 +81,28 @@ export default class RecipeWrapper {
         }[];
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }) {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
-        return recipeInstance.recipeImplementation.signIn(input);
+        return recipeInstance.recipeImplementation.signIn({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
     }
 
     static doesEmailExist(input: {
         email: string;
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }) {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
-        return recipeInstance.recipeImplementation.doesEmailExist(input);
+        return recipeInstance.recipeImplementation.doesEmailExist({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
     }
 }
 
@@ -108,4 +124,5 @@ export {
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,
+    PostAPIHookContext,
 };

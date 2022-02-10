@@ -119,3 +119,7 @@ export function checkForSSRErrorAndAppendIfNeeded(error: string): string {
 
     return error;
 }
+
+export function getNormalisedUserContext(userContext?: any) {
+    return userContext === undefined ? {} : userContext;
+}

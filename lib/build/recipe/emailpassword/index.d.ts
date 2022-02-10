@@ -1,13 +1,9 @@
-import { InputType, RecipeInterface, PreAPIHookContext, NormalisedInputType } from "./types";
+import { InputType, RecipeInterface, PreAPIHookContext, NormalisedInputType, PostAPIHookContext } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 export default class RecipeWrapper {
     static init(
         config: InputType
-    ): import("../../types").CreateRecipeFunction<
-        import("./types").PreAPIAction,
-        PreAPIHookContext,
-        NormalisedInputType
-    >;
+    ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
     static submitNewPassword(input: {
         formFields: {
             id: string;
@@ -16,7 +12,7 @@ export default class RecipeWrapper {
         token?: string;
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<
         | {
               status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
@@ -44,7 +40,7 @@ export default class RecipeWrapper {
         }[];
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<
         | {
               status: "OK";
@@ -72,7 +68,7 @@ export default class RecipeWrapper {
         }[];
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<
         | {
               status: "OK";
@@ -101,7 +97,7 @@ export default class RecipeWrapper {
         }[];
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<
         | {
               status: "OK";
@@ -134,7 +130,7 @@ export default class RecipeWrapper {
         email: string;
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<{
         status: "OK";
         doesExist: boolean;
@@ -161,4 +157,5 @@ export {
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,
+    PostAPIHookContext,
 };

@@ -17,7 +17,7 @@ import { RecipeInterface } from "./types";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
 import { RecipeFunctionOptions, UserType } from "../recipeModule/types";
-import { NormalisedInputType, PreAPIAction } from "./types";
+import { NormalisedInputType } from "./types";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
@@ -77,14 +77,17 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             >(
                 "/user/password/reset",
                 { body: JSON.stringify({ formFields, token, method: "token" }) },
-                userContext,
-                Querier.preparePreAPIHook<PreAPIAction>({
+                Querier.preparePreAPIHook({
                     config,
                     action: "SUBMIT_NEW_PASSWORD",
                     options,
                     userContext,
                 }),
-                config.postAPIHook
+                Querier.preparePostAPIHook({
+                    config,
+                    action: "SUBMIT_NEW_PASSWORD",
+                    userContext,
+                })
             );
 
             if (jsonBody.status === "FIELD_ERROR") {
@@ -154,14 +157,17 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             >(
                 "/user/password/reset/token",
                 { body: JSON.stringify({ formFields }) },
-                userContext,
-                Querier.preparePreAPIHook<PreAPIAction>({
+                Querier.preparePreAPIHook({
                     config,
                     action: "SEND_RESET_PASSWORD_EMAIL",
                     options,
                     userContext,
                 }),
-                config.postAPIHook
+                Querier.preparePostAPIHook({
+                    config,
+                    action: "SEND_RESET_PASSWORD_EMAIL",
+                    userContext,
+                })
             );
 
             if (jsonBody.status === "FIELD_ERROR") {
@@ -233,14 +239,17 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             >(
                 "/signup",
                 { body: JSON.stringify({ formFields }) },
-                userContext,
-                Querier.preparePreAPIHook<PreAPIAction>({
+                Querier.preparePreAPIHook({
                     config,
                     action: "EMAIL_PASSWORD_SIGN_UP",
                     options,
                     userContext,
                 }),
-                config.postAPIHook
+                Querier.preparePostAPIHook({
+                    config,
+                    action: "EMAIL_PASSWORD_SIGN_UP",
+                    userContext,
+                })
             );
 
             if (jsonBody.status === "FIELD_ERROR") {
@@ -323,14 +332,17 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             >(
                 "/signin",
                 { body: JSON.stringify({ formFields }) },
-                userContext,
-                Querier.preparePreAPIHook<PreAPIAction>({
+                Querier.preparePreAPIHook({
                     config,
                     action: "EMAIL_PASSWORD_SIGN_IN",
                     options,
                     userContext,
                 }),
-                config.postAPIHook
+                Querier.preparePostAPIHook({
+                    config,
+                    action: "EMAIL_PASSWORD_SIGN_IN",
+                    userContext,
+                })
             );
 
             if (jsonBody.status === "FIELD_ERROR") {
@@ -388,15 +400,18 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             }>(
                 "/signup/email/exists",
                 {},
-                userContext,
                 { email },
-                Querier.preparePreAPIHook<PreAPIAction>({
+                Querier.preparePreAPIHook({
                     config,
                     action: "EMAIL_PASSWORD_SIGN_IN",
                     options,
                     userContext,
                 }),
-                config.postAPIHook
+                Querier.preparePostAPIHook({
+                    config,
+                    action: "EMAIL_PASSWORD_SIGN_IN",
+                    userContext,
+                })
             );
 
             return {

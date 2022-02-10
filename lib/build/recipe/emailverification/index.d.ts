@@ -1,4 +1,4 @@
-import { InputType, RecipeInterface, PreAPIHookContext } from "./types";
+import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 export default class RecipeWrapper {
     static init(
@@ -31,4 +31,5 @@ export {
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,
+    PostAPIHookContext,
 };
