@@ -22,6 +22,16 @@ import {
     RecipeFunctionOptions,
 } from "./recipe/recipeModule/types";
 
+/**
+ * When network calls are made the Querier calls .clone() on the response before:
+ * 1. Calling the post API hook
+ * 2. Calling .json() when trying to read the body
+ *
+ * This is because the SDK needs to read the json body but we also want to allow users to read
+ * the json body themselves (either in the post api hook or from the result of recipe functions)
+ * for custom response handling. Since the body can only be read once we use .clone() to allow
+ * for multiple reads.
+ */
 export default class Querier {
     recipeId: string;
 

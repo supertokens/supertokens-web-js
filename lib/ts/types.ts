@@ -15,7 +15,6 @@
 import RecipeModule from "./recipe/recipeModule";
 import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
-import { RecipeConfig } from "./recipe/recipeModule/types";
 
 /*
  * Recipe Module Manager Config Types.
@@ -33,7 +32,7 @@ export type SuperTokensConfig = {
     recipeList: CreateRecipeFunction<any>[];
 };
 
-export type CreateRecipeFunction<Action> = (appInfo: NormalisedAppInfo) => RecipeModule<Action, RecipeConfig<Action>>;
+export type CreateRecipeFunction<Action> = (appInfo: NormalisedAppInfo) => RecipeModule<Action>;
 
 export type AppInfoUserInput = {
     /*

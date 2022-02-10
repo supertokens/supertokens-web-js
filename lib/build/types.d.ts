@@ -1,14 +1,11 @@
 import RecipeModule from "./recipe/recipeModule";
 import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
-import { RecipeConfig } from "./recipe/recipeModule/types";
 export declare type SuperTokensConfig = {
     appInfo: AppInfoUserInput;
     recipeList: CreateRecipeFunction<any>[];
 };
-export declare type CreateRecipeFunction<Action> = (
-    appInfo: NormalisedAppInfo
-) => RecipeModule<Action, RecipeConfig<Action>>;
+export declare type CreateRecipeFunction<Action> = (appInfo: NormalisedAppInfo) => RecipeModule<Action>;
 export declare type AppInfoUserInput = {
     appName: string;
     apiDomain: string;

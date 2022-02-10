@@ -14,10 +14,10 @@
  */
 import { RecipeConfig } from "./types";
 
-export default abstract class RecipeModule<Action, Config extends RecipeConfig<Action>> {
-    config: Config;
+export default abstract class RecipeModule<Action> {
+    config: RecipeConfig<Action>;
 
-    constructor(config: Config) {
+    constructor(config: RecipeConfig<Action>) {
         this.config = config;
     }
 }

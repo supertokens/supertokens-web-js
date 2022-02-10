@@ -21,7 +21,7 @@ import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded } from "../../utils";
 
-export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, NormalisedInputType> {
+export default class Recipe implements RecipeModule<PreAndPostAPIHookAction> {
     static instance?: Recipe;
     static RECIPE_ID = "emailverification";
 
