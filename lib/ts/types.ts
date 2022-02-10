@@ -15,7 +15,6 @@
 import RecipeModule from "./recipe/recipeModule";
 import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
-import { RecipeConfig } from "./recipe/recipeModule/types";
 
 /*
  * Recipe Module Manager Config Types.
@@ -30,14 +29,10 @@ export type SuperTokensConfig = {
     /*
      * List of recipes for authentication and session management.
      */
-    recipeList: CreateRecipeFunction<any, any, any>[];
+    recipeList: CreateRecipeFunction<any>[];
 };
 
-export type CreateRecipeFunction<
-    Action,
-    PreAPIHookContext extends RecipePreAPIHookContext<Action>,
-    Config extends RecipeConfig<Action, PreAPIHookContext>
-> = (appInfo: NormalisedAppInfo) => RecipeModule<Action, PreAPIHookContext, Config>;
+export type CreateRecipeFunction<Action> = (appInfo: NormalisedAppInfo) => RecipeModule<Action>;
 
 export type AppInfoUserInput = {
     /*
@@ -102,22 +97,3 @@ export type NormalisedAppInfo = {
      */
     websiteBasePath: NormalisedURLPath;
 };
-
-export type RecipePreAPIHookContext<Action> = {
-    requestInit: RequestInit;
-    url: string;
-    action: Action;
-    userContext: any;
-};
-
-export type PreAPIHookFunction = (context: {
-    requestInit: RequestInit;
-    url: string;
-}) => Promise<{ url: string; requestInit: RequestInit }>;
-
-export type PostAPIHookFunction = (context: {
-    requestInit: RequestInit;
-    url: string;
-    fetchResponse: Response;
-    userContext: any;
-}) => Promise<Response>;

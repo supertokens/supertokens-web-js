@@ -24,7 +24,7 @@
         "no-trailing-whitespace": true,
         "no-unsafe-finally": true,
         "no-var-keyword": true,
-        "one-line": [true, "check-open-brace", "check-whitespace"],
+        "one-line": [true, "check-whitespace"],
         "quotemark": [true, "double"],
         "semicolon": [true, "always", "strict-bound-class-methods"],
         "triple-equals": [true, "allow-null-check"],

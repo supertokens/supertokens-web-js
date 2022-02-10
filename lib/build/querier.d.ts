@@ -1,54 +1,64 @@
-import { NormalisedAppInfo, PostAPIHookFunction, PreAPIHookFunction, RecipePreAPIHookContext } from "./types";
-import { NormalisedRecipeConfig, RecipeFunctionOptions } from "./recipe/recipeModule/types";
+import { NormalisedAppInfo } from "./types";
+import {
+    NormalisedRecipeConfig,
+    PostAPIHookFunction,
+    PreAPIHookFunction,
+    RecipeFunctionOptions,
+} from "./recipe/recipeModule/types";
+/**
+ * When network calls are made the Querier calls .clone() on the response before:
+ * 1. Calling the post API hook
+ * 2. Calling .json() when trying to read the body
+ *
+ * This is because the SDK needs to read the json body but we also want to allow users to read
+ * the json body themselves (either in the post api hook or from the result of recipe functions)
+ * for custom response handling. Since the body can only be read once we use .clone() to allow
+ * for multiple reads.
+ */
 export default class Querier {
     recipeId: string;
     appInfo: NormalisedAppInfo;
     constructor(recipeId: string, appInfo: NormalisedAppInfo);
-    get: <T>(
+    get: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         queryParams?: Record<string, string> | undefined,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
-    post: <T>(
+    post: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
-    delete: <T>(
+    delete: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
-    put: <T>(
+    put: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
     fetch: (
         url: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<Response>;
@@ -64,9 +74,18 @@ export default class Querier {
         options,
         userContext,
     }: {
-        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>>;
+        config: NormalisedRecipeConfig<Action>;
         action: Action;
         options?: RecipeFunctionOptions | undefined;
         userContext: any;
     }) => PreAPIHookFunction;
+    static preparePostAPIHook: <Action>({
+        config,
+        action,
+        userContext,
+    }: {
+        config: NormalisedRecipeConfig<Action>;
+        action: Action;
+        userContext: any;
+    }) => PostAPIHookFunction;
 }

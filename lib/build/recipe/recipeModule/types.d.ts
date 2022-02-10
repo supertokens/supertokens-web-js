@@ -1,21 +1,43 @@
-import { NormalisedAppInfo, PostAPIHookFunction, RecipePreAPIHookContext } from "../../types";
-export declare type RecipeConfig<Action, PreAPIHookContext extends RecipePreAPIHookContext<Action>> = {
-    recipeId: string;
-    appInfo: NormalisedAppInfo;
-    preAPIHook?: (context: PreAPIHookContext) => Promise<{
-        url: string;
-        requestInit: RequestInit;
-    }>;
-    postAPIHook?: PostAPIHookFunction;
+import { NormalisedAppInfo } from "../../types";
+export declare type RecipePreAPIHookContext<Action> = {
+    requestInit: RequestInit;
+    url: string;
+    action: Action;
+    userContext: any;
 };
-export declare type NormalisedRecipeConfig<Action, PreAPIHookContext extends RecipePreAPIHookContext<Action>> = {
+export declare type RecipePostAPIHookContext<Action> = {
+    action: Action;
+    requestInit: RequestInit;
+    url: string;
+    fetchResponse: Response;
+    userContext: any;
+};
+export declare type PreAPIHookFunction = (context: { requestInit: RequestInit; url: string }) => Promise<{
+    url: string;
+    requestInit: RequestInit;
+}>;
+export declare type PostAPIHookFunction = (context: {
+    requestInit: RequestInit;
+    url: string;
+    fetchResponse: Response;
+}) => Promise<void>;
+export declare type RecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
-    preAPIHook: (context: PreAPIHookContext) => Promise<{
+    preAPIHook?: (context: RecipePreAPIHookContext<Action>) => Promise<{
         url: string;
         requestInit: RequestInit;
     }>;
-    postAPIHook: PostAPIHookFunction;
+    postAPIHook?: (context: RecipePostAPIHookContext<Action>) => Promise<void>;
+};
+export declare type NormalisedRecipeConfig<Action> = {
+    recipeId: string;
+    appInfo: NormalisedAppInfo;
+    preAPIHook: (context: RecipePreAPIHookContext<Action>) => Promise<{
+        url: string;
+        requestInit: RequestInit;
+    }>;
+    postAPIHook: (context: RecipePostAPIHookContext<Action>) => Promise<void>;
 };
 /**
  * For the options object passed to recipe functions, we do not need a postAPIHook.

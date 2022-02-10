@@ -3,32 +3,19 @@ import { RecipeFunctionOptions } from "../recipeModule/types";
 export default class RecipeWrapper {
     static init(
         config: InputType
-    ): import("../../types").CreateRecipeFunction<
-        import("./types").PreAPIHookAction,
-        PreAPIHookContext,
-        import("./types").NormalisedInputType
-    >;
+    ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
     static verifyEmail(input: { token?: string; userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
     static sendVerificationEmail(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
     static isEmailVerified(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK";
         isVerified: boolean;
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
 }
 declare const init: typeof RecipeWrapper.init;
