@@ -12,17 +12,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { RecipePreAPIHookContext } from "../../types";
 import { RecipeConfig } from "./types";
 
-export default abstract class RecipeModule<
-    Action,
-    PreAPIHookContext extends RecipePreAPIHookContext<Action>,
-    Config extends RecipeConfig<Action, PreAPIHookContext>
-> {
-    config: Config;
+export default abstract class RecipeModule<Action> {
+    config: RecipeConfig<Action>;
 
-    constructor(config: Config) {
+    constructor(config: RecipeConfig<Action>) {
         this.config = config;
     }
 }

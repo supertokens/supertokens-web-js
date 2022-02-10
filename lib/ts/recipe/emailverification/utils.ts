@@ -29,7 +29,7 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
     let postAPIHook = config.postAPIHook;
 
     if (postAPIHook === undefined) {
-        postAPIHook = async ({ fetchResponse }) => fetchResponse;
+        postAPIHook = async () => {};
     }
 
     return {

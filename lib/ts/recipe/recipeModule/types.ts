@@ -12,20 +12,46 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { NormalisedAppInfo, PostAPIHookFunction, RecipePreAPIHookContext } from "../../types";
+import { NormalisedAppInfo } from "../../types";
 
-export type RecipeConfig<Action, PreAPIHookContext extends RecipePreAPIHookContext<Action>> = {
-    recipeId: string;
-    appInfo: NormalisedAppInfo;
-    preAPIHook?: (context: PreAPIHookContext) => Promise<{ url: string; requestInit: RequestInit }>;
-    postAPIHook?: PostAPIHookFunction;
+export type RecipePreAPIHookContext<Action> = {
+    requestInit: RequestInit;
+    url: string;
+    action: Action;
+    userContext: any;
 };
 
-export type NormalisedRecipeConfig<Action, PreAPIHookContext extends RecipePreAPIHookContext<Action>> = {
+export type RecipePostAPIHookContext<Action> = {
+    action: Action;
+    requestInit: RequestInit;
+    url: string;
+    fetchResponse: Response;
+    userContext: any;
+};
+
+export type PreAPIHookFunction = (context: {
+    requestInit: RequestInit;
+    url: string;
+}) => Promise<{ url: string; requestInit: RequestInit }>;
+
+export type PostAPIHookFunction = (context: {
+    requestInit: RequestInit;
+    url: string;
+    fetchResponse: Response;
+}) => Promise<void>;
+
+export type RecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
-    preAPIHook: (context: PreAPIHookContext) => Promise<{ url: string; requestInit: RequestInit }>;
-    postAPIHook: PostAPIHookFunction;
+    preAPIHook?: (context: RecipePreAPIHookContext<Action>) => Promise<{ url: string; requestInit: RequestInit }>;
+    postAPIHook?: (context: RecipePostAPIHookContext<Action>) => Promise<void>;
+};
+
+export type NormalisedRecipeConfig<Action> = {
+    recipeId: string;
+    appInfo: NormalisedAppInfo;
+    preAPIHook: (context: RecipePreAPIHookContext<Action>) => Promise<{ url: string; requestInit: RequestInit }>;
+    postAPIHook: (context: RecipePostAPIHookContext<Action>) => Promise<void>;
 };
 
 /**

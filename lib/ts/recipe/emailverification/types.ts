@@ -15,16 +15,24 @@
 import { NormalisedRecipeConfig, RecipeConfig, RecipeFunctionOptions } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 
-export type PreAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
+export type PreAndPostAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
 
 export type PreAPIHookContext = {
-    action: PreAPIHookAction;
+    action: PreAndPostAPIHookAction;
     requestInit: RequestInit;
     url: string;
     userContext: any;
 };
 
-export type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext> & {
+export type PostAPIHookContext = {
+    action: PreAndPostAPIHookAction;
+    requestInit: RequestInit;
+    url: string;
+    fetchResponse: Response;
+    userContext: any;
+};
+
+export type InputType = RecipeConfig<PreAndPostAPIHookAction> & {
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
@@ -33,7 +41,7 @@ export type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext> & {
     };
 };
 
-export type NormalisedInputType = NormalisedRecipeConfig<PreAPIHookAction, PreAPIHookContext> & {
+export type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
     override: {
         functions: (
             originalImplementation: RecipeInterface,
@@ -50,10 +58,7 @@ export type RecipeInterface = {
         userContext: any;
     }) => Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
 
     sendVerificationEmail: (input: {
@@ -62,10 +67,7 @@ export type RecipeInterface = {
         userContext: any;
     }) => Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
 
     isEmailVerified: (input: {
@@ -75,9 +77,6 @@ export type RecipeInterface = {
     }) => Promise<{
         status: "OK";
         isVerified: boolean;
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
 };
