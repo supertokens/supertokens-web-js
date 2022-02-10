@@ -15,24 +15,24 @@
 import { NormalisedRecipeConfig, RecipeConfig, RecipeFunctionOptions } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 
-export type PreAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
+export type PreAndPostAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
 
 export type PreAPIHookContext = {
-    action: PreAPIHookAction;
+    action: PreAndPostAPIHookAction;
     requestInit: RequestInit;
     url: string;
     userContext: any;
 };
 
 export type PostAPIHookContext = {
-    action: PreAPIHookAction;
+    action: PreAndPostAPIHookAction;
     requestInit: RequestInit;
     url: string;
     fetchResponse: Response;
     userContext: any;
 };
 
-export type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext, PostAPIHookContext> & {
+export type InputType = RecipeConfig<PreAndPostAPIHookAction> & {
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
@@ -41,7 +41,7 @@ export type InputType = RecipeConfig<PreAPIHookAction, PreAPIHookContext, PostAP
     };
 };
 
-export type NormalisedInputType = NormalisedRecipeConfig<PreAPIHookAction, PreAPIHookContext, PostAPIHookContext> & {
+export type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
     override: {
         functions: (
             originalImplementation: RecipeInterface,

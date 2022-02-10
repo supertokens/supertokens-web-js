@@ -1,60 +1,54 @@
+import { NormalisedAppInfo } from "./types";
 import {
-    NormalisedAppInfo,
+    NormalisedRecipeConfig,
     PostAPIHookFunction,
     PreAPIHookFunction,
-    RecipePostAPIHookContext,
-    RecipePreAPIHookContext,
-} from "./types";
-import { NormalisedRecipeConfig, RecipeFunctionOptions } from "./recipe/recipeModule/types";
+    RecipeFunctionOptions,
+} from "./recipe/recipeModule/types";
 export default class Querier {
     recipeId: string;
     appInfo: NormalisedAppInfo;
     constructor(recipeId: string, appInfo: NormalisedAppInfo);
-    get: <T>(
+    get: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         queryParams?: Record<string, string> | undefined,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
-    post: <T>(
+    post: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
-    delete: <T>(
+    delete: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
-    put: <T>(
+    put: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
     fetch: (
         url: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction | undefined,
         postAPIHook?: PostAPIHookFunction | undefined
     ) => Promise<Response>;
@@ -70,7 +64,7 @@ export default class Querier {
         options,
         userContext,
     }: {
-        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>, RecipePostAPIHookContext<Action>>;
+        config: NormalisedRecipeConfig<Action>;
         action: Action;
         options?: RecipeFunctionOptions | undefined;
         userContext: any;
@@ -78,8 +72,10 @@ export default class Querier {
     static preparePostAPIHook: <Action>({
         config,
         action,
+        userContext,
     }: {
-        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>, RecipePostAPIHookContext<Action>>;
+        config: NormalisedRecipeConfig<Action>;
         action: Action;
+        userContext: any;
     }) => PostAPIHookFunction;
 }

@@ -16,7 +16,7 @@ import Querier from "../../querier";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { NormalisedInputType, PreAPIHookAction, RecipeInterface } from "./types";
+import { NormalisedInputType, RecipeInterface } from "./types";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
@@ -51,15 +51,15 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                         token,
                     }),
                 },
-                userContext,
-                Querier.preparePreAPIHook<PreAPIHookAction>({
+                Querier.preparePreAPIHook({
                     config,
                     action: "VERIFY_EMAIL",
                     options,
                     userContext,
                 }),
-                Querier.preparePostAPIHook<PreAPIHookAction>({
+                Querier.preparePostAPIHook({
                     config,
+                    userContext,
                     action: "VERIFY_EMAIL",
                 })
             );
@@ -87,15 +87,15 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/user/email/verify",
                 {},
                 undefined,
-                userContext,
-                Querier.preparePreAPIHook<PreAPIHookAction>({
+                Querier.preparePreAPIHook({
                     config,
                     action: "IS_EMAIL_VERIFIED",
                     options,
                     userContext,
                 }),
-                Querier.preparePostAPIHook<PreAPIHookAction>({
+                Querier.preparePostAPIHook({
                     config,
+                    userContext,
                     action: "IS_EMAIL_VERIFIED",
                 })
             );
@@ -122,15 +122,15 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             const { jsonBody, fetchResponse } = await querier.post<{ status: "OK" | "EMAIL_ALREADY_VERIFIED_ERROR" }>(
                 "/user/email/verify/token",
                 { body: JSON.stringify({}) },
-                userContext,
-                Querier.preparePreAPIHook<PreAPIHookAction>({
+                Querier.preparePreAPIHook({
                     config,
                     action: "SEND_VERIFY_EMAIL",
                     options,
                     userContext,
                 }),
-                Querier.preparePostAPIHook<PreAPIHookAction>({
+                Querier.preparePostAPIHook({
                     config,
+                    userContext,
                     action: "SEND_VERIFY_EMAIL",
                 })
             );

@@ -14,14 +14,13 @@
  */
 import NormalisedURLPath from "./normalisedURLPath";
 import { supported_fdi } from "./version";
+import { NormalisedAppInfo } from "./types";
 import {
-    NormalisedAppInfo,
+    NormalisedRecipeConfig,
     PostAPIHookFunction,
     PreAPIHookFunction,
-    RecipePostAPIHookContext,
-    RecipePreAPIHookContext,
-} from "./types";
-import { NormalisedRecipeConfig, RecipeFunctionOptions } from "./recipe/recipeModule/types";
+    RecipeFunctionOptions,
+} from "./recipe/recipeModule/types";
 
 export default class Querier {
     recipeId: string;
@@ -33,15 +32,14 @@ export default class Querier {
         this.appInfo = appInfo;
     }
 
-    get = async <T>(
+    get = async <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         queryParams?: Record<string, string>,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
@@ -50,28 +48,25 @@ export default class Querier {
                 method: "GET",
                 ...config,
             },
-            userContext,
             preAPIHook,
             postAPIHook
         );
 
-        const fetchResponse = result.clone();
         let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             jsonBody,
-            fetchResponse,
+            fetchResponse: result,
         };
     };
 
-    post = async <T>(
+    post = async <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }> => {
         if (config.body === undefined) {
@@ -84,28 +79,25 @@ export default class Querier {
                 method: "POST",
                 ...config,
             },
-            userContext,
             preAPIHook,
             postAPIHook
         );
 
-        const fetchResponse = result.clone();
         let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             jsonBody,
-            fetchResponse,
+            fetchResponse: result,
         };
     };
 
-    delete = async <T>(
+    delete = async <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
@@ -114,28 +106,25 @@ export default class Querier {
                 method: "DELETE",
                 ...config,
             },
-            userContext,
             preAPIHook,
             postAPIHook
         );
 
-        const fetchResponse = result.clone();
         let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             jsonBody,
-            fetchResponse,
+            fetchResponse: result,
         };
     };
 
-    put = async <T>(
+    put = async <JsonBodyType>(
         path: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<{
-        jsonBody: T;
+        jsonBody: JsonBodyType;
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
@@ -144,24 +133,21 @@ export default class Querier {
                 method: "PUT",
                 ...config,
             },
-            userContext,
             preAPIHook,
             postAPIHook
         );
 
-        const fetchResponse = result.clone();
         let jsonBody = await this.getResponseJsonOrThrowGeneralError(result);
 
         return {
             jsonBody,
-            fetchResponse,
+            fetchResponse: result,
         };
     };
 
     fetch = async (
         url: string,
         config: RequestInit,
-        userContext: any,
         preAPIHook?: PreAPIHookFunction,
         postAPIHook?: PostAPIHookFunction
     ): Promise<Response> => {
@@ -192,14 +178,13 @@ export default class Querier {
             throw result;
         }
 
-        const reponseForPostAPI = result.clone();
-
         if (postAPIHook !== undefined) {
+            const reponseForPostAPI = result.clone();
+
             await postAPIHook({
                 requestInit,
                 url,
                 fetchResponse: reponseForPostAPI,
-                userContext,
             });
         }
 
@@ -240,7 +225,7 @@ export default class Querier {
     };
 
     getResponseJsonOrThrowGeneralError = async (response: Response): Promise<any> => {
-        let json = await response.json();
+        let json = await response.clone().json();
 
         if (json.status === "GENERAL_ERROR") {
             let message = json.message === undefined ? "No Error Message Provided" : json.message;
@@ -256,7 +241,7 @@ export default class Querier {
         options,
         userContext,
     }: {
-        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>, RecipePostAPIHookContext<Action>>;
+        config: NormalisedRecipeConfig<Action>;
         action: Action;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -283,13 +268,16 @@ export default class Querier {
     static preparePostAPIHook = <Action>({
         config,
         action,
+        userContext,
     }: {
-        config: NormalisedRecipeConfig<Action, RecipePreAPIHookContext<Action>, RecipePostAPIHookContext<Action>>;
+        config: NormalisedRecipeConfig<Action>;
         action: Action;
+        userContext: any;
     }): PostAPIHookFunction => {
         return async (context) => {
             await config.postAPIHook({
                 ...context,
+                userContext,
                 action,
             });
         };
