@@ -13,13 +13,14 @@
  * under the License.
  */
 
-import { RecipePostAPIHookContext, RecipePreAPIHookContext, UserType } from "../recipeModule/types";
+import { RecipePostAPIHookContext, RecipePreAPIHookContext } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
     NormalisedInputType as NormalisedAuthRecipeType,
     InputType as AuthRecipeInputType,
 } from "../authRecipeWithEmailVerification/types";
+import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 
 export type PreAndPostAPIHookAction =
     | "EMAIL_PASSWORD_SIGN_UP"
@@ -31,11 +32,18 @@ export type PreAndPostAPIHookAction =
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
+export type UserType = {
+    id: string;
+    email: string;
+    timeJoined: number;
+};
+
 export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
     override?: {
+        emailVerification?: EmailVerificationOverride;
         functions?: (
             originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
+            builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
 };
@@ -44,7 +52,7 @@ export type NormalisedInputType = NormalisedAuthRecipeType<PreAndPostAPIHookActi
     override: {
         functions: (
             originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
+            builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
 };
@@ -62,10 +70,7 @@ export type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -73,10 +78,7 @@ export type RecipeInterface = {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
 
@@ -91,10 +93,7 @@ export type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -102,10 +101,7 @@ export type RecipeInterface = {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
 
@@ -121,10 +117,7 @@ export type RecipeInterface = {
         | {
               status: "OK";
               user: UserType;
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -132,10 +125,7 @@ export type RecipeInterface = {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
 
@@ -151,10 +141,7 @@ export type RecipeInterface = {
         | {
               status: "OK";
               user: UserType;
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -162,17 +149,11 @@ export type RecipeInterface = {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
 
@@ -184,9 +165,6 @@ export type RecipeInterface = {
     }) => Promise<{
         status: "OK";
         doesExist: boolean;
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
 };

@@ -1,10 +1,11 @@
-import { RecipePostAPIHookContext, RecipePreAPIHookContext, UserType } from "../recipeModule/types";
+import { RecipePostAPIHookContext, RecipePreAPIHookContext } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
     NormalisedInputType as NormalisedAuthRecipeType,
     InputType as AuthRecipeInputType,
 } from "../authRecipeWithEmailVerification/types";
+import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 export declare type PreAndPostAPIHookAction =
     | "EMAIL_PASSWORD_SIGN_UP"
     | "EMAIL_PASSWORD_SIGN_IN"
@@ -13,11 +14,17 @@ export declare type PreAndPostAPIHookAction =
     | "EMAIL_EXISTS";
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
+export declare type UserType = {
+    id: string;
+    email: string;
+    timeJoined: number;
+};
 export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
     override?: {
+        emailVerification?: EmailVerificationOverride;
         functions?: (
             originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
+            builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
 };
@@ -25,7 +32,7 @@ export declare type NormalisedInputType = NormalisedAuthRecipeType<PreAndPostAPI
     override: {
         functions: (
             originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
+            builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
 };
@@ -42,10 +49,7 @@ export declare type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -53,10 +57,7 @@ export declare type RecipeInterface = {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
     sendPasswordResetEmail: (input: {
@@ -70,10 +71,7 @@ export declare type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -81,10 +79,7 @@ export declare type RecipeInterface = {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
     signUp: (input: {
@@ -99,10 +94,7 @@ export declare type RecipeInterface = {
         | {
               status: "OK";
               user: UserType;
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -110,10 +102,7 @@ export declare type RecipeInterface = {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
     signIn: (input: {
@@ -128,10 +117,7 @@ export declare type RecipeInterface = {
         | {
               status: "OK";
               user: UserType;
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -139,17 +125,11 @@ export declare type RecipeInterface = {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
     doesEmailExist: (input: {
@@ -160,9 +140,6 @@ export declare type RecipeInterface = {
     }) => Promise<{
         status: "OK";
         doesExist: boolean;
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
 };

@@ -12,31 +12,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+import { normaliseRecipeModuleConfig } from "../recipeModule/utils";
 import { InputType, NormalisedInputType, RecipeInterface } from "./types";
 
 export function normaliseUserInput(config: InputType): NormalisedInputType {
-    const override: any = {
+    const override = {
         functions: (originalImplementation: RecipeInterface) => originalImplementation,
         ...config.override,
     };
 
-    let preAPIHook = config.preAPIHook;
-
-    if (preAPIHook === undefined) {
-        preAPIHook = async (context) => context;
-    }
-
-    let postAPIHook = config.postAPIHook;
-
-    if (postAPIHook === undefined) {
-        postAPIHook = async () => {};
-    }
-
     return {
-        recipeId: config.recipeId,
-        appInfo: config.appInfo,
-        preAPIHook,
-        postAPIHook,
+        ...normaliseRecipeModuleConfig(config),
         override,
     };
 }

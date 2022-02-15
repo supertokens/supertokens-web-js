@@ -13,10 +13,15 @@
  * under the License.
  */
 
-export default class STGeneralError extends Error {
-    isSuperTokensGeneralError = true;
+import RecipeModule from "../recipeModule";
+import { NormalisedRecipeConfig } from "../recipeModule/types";
 
-    constructor(message: string) {
-        super(message);
+// TODO NEMI: Add session recipe methods here
+export default abstract class AuthRecipe<
+    Action,
+    NormalisedConfig extends NormalisedRecipeConfig<Action>
+> extends RecipeModule<Action, NormalisedConfig> {
+    constructor(config: NormalisedConfig) {
+        super(config);
     }
 }

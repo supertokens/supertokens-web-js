@@ -12,12 +12,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { RecipeConfig } from "./types";
+import { NormalisedRecipeConfig } from "./types";
 
-export default abstract class RecipeModule<Action> {
-    config: RecipeConfig<Action>;
+export default abstract class RecipeModule<Action, NormalisedConfig extends NormalisedRecipeConfig<Action>> {
+    config: NormalisedConfig;
 
-    constructor(config: RecipeConfig<Action>) {
+    constructor(config: NormalisedConfig) {
         this.config = config;
     }
 }

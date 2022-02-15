@@ -12,11 +12,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+import { normaliseRecipeModuleConfig } from "../recipeModule/utils";
+import { InputType, NormalisedInputType } from "./types";
 
-export default class STGeneralError extends Error {
-    isSuperTokensGeneralError = true;
-
-    constructor(message: string) {
-        super(message);
-    }
+export function normaliseAuthRecipe<Action>(config: InputType<Action>): NormalisedInputType<Action> {
+    return normaliseRecipeModuleConfig(config);
 }

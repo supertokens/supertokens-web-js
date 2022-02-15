@@ -1,16 +1,11 @@
 import { NormalisedRecipeConfig, RecipeConfig } from "../recipeModule/types";
 import {
-    InputType as EmailVerificationInputType,
-    RecipeInterface as EmailVerificationRecipeInterface,
+    PreAndPostAPIHookAction as EmailVerificationAction,
+    InputTypeOverride as EmailVerificationOverride,
 } from "../emailverification/types";
-export declare type InputType<Action> = RecipeConfig<Action> & {
-    emailVerificationFeature?: EmailVerificationInputType;
-};
-export declare type NormalisedInputType<Action> = NormalisedRecipeConfig<Action> & {
-    emailVerificationFeature?: EmailVerificationInputType;
+export declare type InputType<Action> = RecipeConfig<EmailVerificationAction | Action>;
+export declare type NormalisedInputType<Action> = NormalisedRecipeConfig<EmailVerificationAction | Action> & {
     override?: {
-        emailVerification?: {
-            functions?: (originalImplementation: EmailVerificationRecipeInterface) => EmailVerificationRecipeInterface;
-        };
+        emailVerification?: EmailVerificationOverride;
     };
 };

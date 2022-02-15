@@ -12,11 +12,25 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+import { NormalisedRecipeConfig, RecipeConfig } from "./types";
 
-export default class STGeneralError extends Error {
-    isSuperTokensGeneralError = true;
+export function normaliseRecipeModuleConfig<Action>(config: RecipeConfig<Action>): NormalisedRecipeConfig<Action> {
+    let preAPIHook = config.preAPIHook;
 
-    constructor(message: string) {
-        super(message);
+    if (preAPIHook === undefined) {
+        preAPIHook = async (context) => context;
     }
+
+    let postAPIHook = config.postAPIHook;
+
+    if (postAPIHook === undefined) {
+        postAPIHook = async () => {};
+    }
+
+    return {
+        recipeId: config.recipeId,
+        appInfo: config.appInfo,
+        preAPIHook,
+        postAPIHook,
+    };
 }

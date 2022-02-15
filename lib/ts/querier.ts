@@ -21,6 +21,7 @@ import {
     PreAPIHookFunction,
     RecipeFunctionOptions,
 } from "./recipe/recipeModule/types";
+import STGeneralError from "./error";
 
 /**
  * When network calls are made the Querier calls .clone() on the response before:

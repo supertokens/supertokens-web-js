@@ -25,20 +25,22 @@ export type PreAndPostAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 
+export type InputTypeOverride = {
+    functions?: (
+        originalImplementation: RecipeInterface,
+        builder: OverrideableBuilder<RecipeInterface>
+    ) => RecipeInterface;
+};
+
 export type InputType = RecipeConfig<PreAndPostAPIHookAction> & {
-    override?: {
-        functions?: (
-            originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
-        ) => RecipeInterface;
-    };
+    override?: InputTypeOverride;
 };
 
 export type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
     override: {
         functions: (
             originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
+            builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
 };

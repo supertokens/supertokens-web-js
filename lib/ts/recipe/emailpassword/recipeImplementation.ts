@@ -16,8 +16,8 @@ import Querier from "../../querier";
 import { RecipeInterface } from "./types";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
-import { RecipeFunctionOptions, UserType } from "../recipeModule/types";
-import { NormalisedInputType } from "./types";
+import { RecipeFunctionOptions } from "../recipeModule/types";
+import { NormalisedInputType, UserType } from "./types";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
@@ -40,10 +40,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }): Promise<
             | {
                   status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-                  networkResponse: {
-                      jsonBody: any;
-                      fetchResponse: Response;
-                  };
+                  fetchResponse: Response;
               }
             | {
                   status: "FIELD_ERROR";
@@ -51,10 +48,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                       id: string;
                       error: string;
                   }[];
-                  networkResponse: {
-                      jsonBody: any;
-                      fetchResponse: Response;
-                  };
+                  fetchResponse: Response;
               }
         > {
             token = token === undefined ? getQueryParams("token") : token;
@@ -94,19 +88,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 return {
                     status: "FIELD_ERROR",
                     formFields: jsonBody.formFields,
-                    networkResponse: {
-                        jsonBody,
-                        fetchResponse,
-                    },
+                    fetchResponse,
                 };
             }
 
             return {
                 status: jsonBody.status,
-                networkResponse: {
-                    jsonBody,
-                    fetchResponse,
-                },
+                fetchResponse,
             };
         },
 
@@ -126,10 +114,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }): Promise<
             | {
                   status: "OK";
-                  networkResponse: {
-                      jsonBody: any;
-                      fetchResponse: Response;
-                  };
+                  fetchResponse: Response;
               }
             | {
                   status: "FIELD_ERROR";
@@ -137,10 +122,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                       id: string;
                       error: string;
                   }[];
-                  networkResponse: {
-                      jsonBody: any;
-                      fetchResponse: Response;
-                  };
+                  fetchResponse: Response;
               }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
@@ -174,19 +156,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 return {
                     status: "FIELD_ERROR",
                     formFields: jsonBody.formFields,
-                    networkResponse: {
-                        jsonBody,
-                        fetchResponse,
-                    },
+                    fetchResponse,
                 };
             }
 
             return {
                 status: jsonBody.status,
-                networkResponse: {
-                    jsonBody,
-                    fetchResponse,
-                },
+                fetchResponse,
             };
         },
 
@@ -207,10 +183,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             | {
                   status: "OK";
                   user: UserType;
-                  networkResponse: {
-                      jsonBody: any;
-                      fetchResponse: Response;
-                  };
+                  fetchResponse: Response;
               }
             | {
                   status: "FIELD_ERROR";
@@ -218,10 +191,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                       id: string;
                       error: string;
                   }[];
-                  networkResponse: {
-                      jsonBody: any;
-                      fetchResponse: Response;
-                  };
+                  fetchResponse: Response;
               }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
@@ -256,20 +226,14 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 return {
                     status: "FIELD_ERROR",
                     formFields: jsonBody.formFields,
-                    networkResponse: {
-                        jsonBody,
-                        fetchResponse,
-                    },
+                    fetchResponse,
                 };
             }
 
             return {
                 status: jsonBody.status,
                 user: jsonBody.user,
-                networkResponse: {
-                    jsonBody,
-                    fetchResponse,
-                },
+                fetchResponse,
             };
         },
 
@@ -290,10 +254,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             | {
                   status: "OK";
                   user: UserType;
-                  networkResponse: {
-                      jsonBody: any;
-                      fetchResponse: Response;
-                  };
+                  fetchResponse: Response;
               }
             | {
                   status: "FIELD_ERROR";
@@ -301,17 +262,11 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                       id: string;
                       error: string;
                   }[];
-                  networkResponse: {
-                      jsonBody: any;
-                      fetchResponse: Response;
-                  };
+                  fetchResponse: Response;
               }
             | {
                   status: "WRONG_CREDENTIALS_ERROR";
-                  networkResponse: {
-                      jsonBody: any;
-                      fetchResponse: Response;
-                  };
+                  fetchResponse: Response;
               }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
@@ -349,30 +304,21 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 return {
                     status: "FIELD_ERROR",
                     formFields: jsonBody.formFields,
-                    networkResponse: {
-                        jsonBody,
-                        fetchResponse,
-                    },
+                    fetchResponse,
                 };
             }
 
             if (jsonBody.status === "WRONG_CREDENTIALS_ERROR") {
                 return {
                     status: "WRONG_CREDENTIALS_ERROR",
-                    networkResponse: {
-                        jsonBody,
-                        fetchResponse,
-                    },
+                    fetchResponse,
                 };
             }
 
             return {
                 status: "OK",
                 user: jsonBody.user,
-                networkResponse: {
-                    jsonBody,
-                    fetchResponse,
-                },
+                fetchResponse,
             };
         },
 
@@ -389,10 +335,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }): Promise<{
             status: "OK";
             doesExist: boolean;
-            networkResponse: {
-                jsonBody: any;
-                fetchResponse: Response;
-            };
+            fetchResponse: Response;
         }> {
             let { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
@@ -417,10 +360,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             return {
                 status: jsonBody.status,
                 doesExist: jsonBody.exists,
-                networkResponse: {
-                    jsonBody,
-                    fetchResponse,
-                },
+                fetchResponse,
             };
         },
     };

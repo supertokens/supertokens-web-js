@@ -12,28 +12,11 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+import { normaliseAuthRecipe } from "../authRecipe/utils";
 import { InputType, NormalisedInputType } from "./types";
 
 export function normaliseAuthRecipeWithEmailVerificationConfig<Action>(
     config: InputType<Action>
 ): NormalisedInputType<Action> {
-    let preAPIHook = config.preAPIHook;
-
-    if (preAPIHook === undefined) {
-        preAPIHook = async (context) => context;
-    }
-
-    let postAPIHook = config.postAPIHook;
-
-    if (postAPIHook === undefined) {
-        postAPIHook = async () => {};
-    }
-
-    return {
-        recipeId: config.recipeId,
-        appInfo: config.appInfo,
-        preAPIHook,
-        postAPIHook,
-        emailVerificationFeature: config.emailVerificationFeature,
-    };
+    return normaliseAuthRecipe(config);
 }

@@ -1,4 +1,4 @@
-declare class STGeneralError extends Error {
-    isGeneralError: boolean;
+export default class STGeneralError extends Error {
+    isSuperTokensGeneralError: boolean;
     constructor(message: string);
 }

@@ -5,12 +5,11 @@ import { CreateRecipeFunction } from "../../types";
 export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
     static RECIPE_ID: string;
-    config: NormalisedInputType;
     recipeImplementation: RecipeInterface;
     constructor(
         config: InputType,
         recipes: {
-            emailVerification?: EmailVerificationRecipe;
+            emailVerification: EmailVerificationRecipe | undefined;
         }
     );
     static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction>;

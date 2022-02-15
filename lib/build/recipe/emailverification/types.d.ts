@@ -8,19 +8,20 @@ import OverrideableBuilder from "supertokens-js-override";
 export declare type PreAndPostAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
+export declare type InputTypeOverride = {
+    functions?: (
+        originalImplementation: RecipeInterface,
+        builder: OverrideableBuilder<RecipeInterface>
+    ) => RecipeInterface;
+};
 export declare type InputType = RecipeConfig<PreAndPostAPIHookAction> & {
-    override?: {
-        functions?: (
-            originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
-        ) => RecipeInterface;
-    };
+    override?: InputTypeOverride;
 };
 export declare type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
     override: {
         functions: (
             originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
+            builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
 };

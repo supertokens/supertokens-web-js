@@ -1,4 +1,4 @@
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
+import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserType } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 export default class RecipeWrapper {
     static init(
@@ -15,10 +15,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -26,10 +23,7 @@ export default class RecipeWrapper {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
     static sendPasswordResetEmail(input: {
@@ -42,10 +36,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -53,10 +44,7 @@ export default class RecipeWrapper {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
     static signUp(input: {
@@ -69,11 +57,8 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: import("../recipeModule/types").UserType;
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              user: UserType;
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -81,10 +66,7 @@ export default class RecipeWrapper {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
     static signIn(input: {
@@ -97,11 +79,8 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: import("../recipeModule/types").UserType;
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              user: UserType;
+              fetchResponse: Response;
           }
         | {
               status: "FIELD_ERROR";
@@ -109,26 +88,17 @@ export default class RecipeWrapper {
                   id: string;
                   error: string;
               }[];
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
-              networkResponse: {
-                  jsonBody: any;
-                  fetchResponse: Response;
-              };
+              fetchResponse: Response;
           }
     >;
     static doesEmailExist(input: { email: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
         doesExist: boolean;
-        networkResponse: {
-            jsonBody: any;
-            fetchResponse: Response;
-        };
+        fetchResponse: Response;
     }>;
     static verifyEmail(input: { token?: string; options?: RecipeFunctionOptions; userContext: any }): Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
@@ -163,6 +133,7 @@ export {
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
+    UserType,
     InputType,
     RecipeInterface,
     RecipeFunctionOptions,

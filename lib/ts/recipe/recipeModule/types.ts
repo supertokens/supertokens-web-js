@@ -68,9 +68,3 @@ export type RecipeFunctionOptions = {
         userContext: any;
     }) => Promise<{ url: string; requestInit: RequestInit }>;
 };
-
-export type UserType = {
-    id: string;
-    email: string;
-    timeJoined: number;
-};

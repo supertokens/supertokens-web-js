@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
+import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserType } from "./types";
 import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
@@ -30,7 +30,20 @@ export default class RecipeWrapper {
         token?: string;
         options?: RecipeFunctionOptions;
         userContext?: any;
-    }) {
+    }): Promise<
+        | {
+              status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "FIELD_ERROR";
+              formFields: {
+                  id: string;
+                  error: string;
+              }[];
+              fetchResponse: Response;
+          }
+    > {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
         return recipeInstance.recipeImplementation.submitNewPassword({
@@ -47,7 +60,20 @@ export default class RecipeWrapper {
         }[];
         options?: RecipeFunctionOptions;
         userContext?: any;
-    }) {
+    }): Promise<
+        | {
+              status: "OK";
+              fetchResponse: Response;
+          }
+        | {
+              status: "FIELD_ERROR";
+              formFields: {
+                  id: string;
+                  error: string;
+              }[];
+              fetchResponse: Response;
+          }
+    > {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
         return recipeInstance.recipeImplementation.sendPasswordResetEmail({
@@ -64,7 +90,21 @@ export default class RecipeWrapper {
         }[];
         options?: RecipeFunctionOptions;
         userContext?: any;
-    }) {
+    }): Promise<
+        | {
+              status: "OK";
+              user: UserType;
+              fetchResponse: Response;
+          }
+        | {
+              status: "FIELD_ERROR";
+              formFields: {
+                  id: string;
+                  error: string;
+              }[];
+              fetchResponse: Response;
+          }
+    > {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
         return recipeInstance.recipeImplementation.signUp({
@@ -81,7 +121,25 @@ export default class RecipeWrapper {
         }[];
         options?: RecipeFunctionOptions;
         userContext?: any;
-    }) {
+    }): Promise<
+        | {
+              status: "OK";
+              user: UserType;
+              fetchResponse: Response;
+          }
+        | {
+              status: "FIELD_ERROR";
+              formFields: {
+                  id: string;
+                  error: string;
+              }[];
+              fetchResponse: Response;
+          }
+        | {
+              status: "WRONG_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+    > {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
         return recipeInstance.recipeImplementation.signIn({
@@ -91,7 +149,11 @@ export default class RecipeWrapper {
         });
     }
 
-    static doesEmailExist(input: { email: string; options?: RecipeFunctionOptions; userContext?: any }) {
+    static doesEmailExist(input: { email: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
+        status: "OK";
+        doesExist: boolean;
+        fetchResponse: Response;
+    }> {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
         return recipeInstance.recipeImplementation.doesEmailExist({
@@ -162,6 +224,7 @@ export {
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
+    UserType,
     InputType,
     RecipeInterface,
     RecipeFunctionOptions,

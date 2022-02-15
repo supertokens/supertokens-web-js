@@ -13,10 +13,8 @@
  * under the License.
  */
 
-export default class STGeneralError extends Error {
-    isSuperTokensGeneralError = true;
+import { NormalisedRecipeConfig, RecipeConfig } from "../recipeModule/types";
 
-    constructor(message: string) {
-        super(message);
-    }
-}
+export type InputType<Action> = RecipeConfig<Action>;
+
+export type NormalisedInputType<Action> = NormalisedRecipeConfig<Action>;
