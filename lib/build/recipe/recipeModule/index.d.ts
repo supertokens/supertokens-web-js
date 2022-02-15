@@ -1,5 +1,5 @@
-import { RecipeConfig } from "./types";
-export default abstract class RecipeModule<Action> {
-    config: RecipeConfig<Action>;
-    constructor(config: RecipeConfig<Action>);
+import { NormalisedRecipeConfig } from "./types";
+export default abstract class RecipeModule<Action, NormalisedConfig extends NormalisedRecipeConfig<Action>> {
+    config: NormalisedConfig;
+    constructor(config: NormalisedConfig);
 }

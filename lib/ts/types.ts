@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, VRAI Labs and/or its affiliates. All rights reserved.
+/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
  * "License") as published by the Apache Software Foundation.
@@ -15,6 +15,7 @@
 import RecipeModule from "./recipe/recipeModule";
 import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
+import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
 
 /*
  * Recipe Module Manager Config Types.
@@ -32,7 +33,9 @@ export type SuperTokensConfig = {
     recipeList: CreateRecipeFunction<any>[];
 };
 
-export type CreateRecipeFunction<Action> = (appInfo: NormalisedAppInfo) => RecipeModule<Action>;
+export type CreateRecipeFunction<Action> = (
+    appInfo: NormalisedAppInfo
+) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 
 export type AppInfoUserInput = {
     /*

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, VRAI Labs and/or its affiliates. All rights reserved.
+/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
  * "License") as published by the Apache Software Foundation.
@@ -21,6 +21,7 @@ import {
     PreAPIHookFunction,
     RecipeFunctionOptions,
 } from "./recipe/recipeModule/types";
+import STGeneralError from "./error";
 
 /**
  * When network calls are made the Querier calls .clone() on the response before:
@@ -239,7 +240,7 @@ export default class Querier {
 
         if (json.status === "GENERAL_ERROR") {
             let message = json.message === undefined ? "No Error Message Provided" : json.message;
-            throw new Error(message);
+            throw new STGeneralError(message);
         }
 
         return json;

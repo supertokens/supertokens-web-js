@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, VRAI Labs and/or its affiliates. All rights reserved.
+/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
  * "License") as published by the Apache Software Foundation.
@@ -21,7 +21,7 @@ import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded } from "../../utils";
 
-export default class Recipe implements RecipeModule<PreAndPostAPIHookAction> {
+export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
     static RECIPE_ID = "emailverification";
 

@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, VRAI Labs and/or its affiliates. All rights reserved.
+/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
  * "License") as published by the Apache Software Foundation.
@@ -12,40 +12,35 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { NormalisedRecipeConfig, RecipeConfig, RecipeFunctionOptions } from "../recipeModule/types";
+import {
+    NormalisedRecipeConfig,
+    RecipeConfig,
+    RecipeFunctionOptions,
+    RecipePreAPIHookContext,
+} from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 
 export type PreAndPostAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
 
-export type PreAPIHookContext = {
-    action: PreAndPostAPIHookAction;
-    requestInit: RequestInit;
-    url: string;
-    userContext: any;
-};
+export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
+export type PostAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 
-export type PostAPIHookContext = {
-    action: PreAndPostAPIHookAction;
-    requestInit: RequestInit;
-    url: string;
-    fetchResponse: Response;
-    userContext: any;
+export type InputTypeOverride = {
+    functions?: (
+        originalImplementation: RecipeInterface,
+        builder: OverrideableBuilder<RecipeInterface>
+    ) => RecipeInterface;
 };
 
 export type InputType = RecipeConfig<PreAndPostAPIHookAction> & {
-    override?: {
-        functions?: (
-            originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
-        ) => RecipeInterface;
-    };
+    override?: InputTypeOverride;
 };
 
 export type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
     override: {
         functions: (
             originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
+            builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
 };

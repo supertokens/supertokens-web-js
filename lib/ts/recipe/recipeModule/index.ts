@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, VRAI Labs and/or its affiliates. All rights reserved.
+/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
  * "License") as published by the Apache Software Foundation.
@@ -12,12 +12,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { RecipeConfig } from "./types";
+import { NormalisedRecipeConfig } from "./types";
 
-export default abstract class RecipeModule<Action> {
-    config: RecipeConfig<Action>;
+export default abstract class RecipeModule<Action, NormalisedConfig extends NormalisedRecipeConfig<Action>> {
+    config: NormalisedConfig;
 
-    constructor(config: RecipeConfig<Action>) {
+    constructor(config: NormalisedConfig) {
         this.config = config;
     }
 }

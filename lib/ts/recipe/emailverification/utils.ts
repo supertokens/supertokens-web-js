@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, VRAI Labs and/or its affiliates. All rights reserved.
+/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
  * "License") as published by the Apache Software Foundation.
@@ -12,31 +12,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { InputType, NormalisedInputType, PreAPIHookContext, RecipeInterface } from "./types";
+import { normaliseRecipeModuleConfig } from "../recipeModule/utils";
+import { InputType, NormalisedInputType, RecipeInterface } from "./types";
 
 export function normaliseUserInput(config: InputType): NormalisedInputType {
-    const override: any = {
+    const override = {
         functions: (originalImplementation: RecipeInterface) => originalImplementation,
         ...config.override,
     };
 
-    let preAPIHook = config.preAPIHook;
-
-    if (preAPIHook === undefined) {
-        preAPIHook = async (context: PreAPIHookContext) => context;
-    }
-
-    let postAPIHook = config.postAPIHook;
-
-    if (postAPIHook === undefined) {
-        postAPIHook = async () => {};
-    }
-
     return {
-        recipeId: config.recipeId,
-        appInfo: config.appInfo,
-        preAPIHook,
-        postAPIHook,
+        ...normaliseRecipeModuleConfig(config),
         override,
     };
 }

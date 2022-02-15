@@ -1,4 +1,4 @@
-/* Copyright (c) 2021, VRAI Labs and/or its affiliates. All rights reserved.
+/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
  * "License") as published by the Apache Software Foundation.
@@ -27,7 +27,7 @@ export default class SuperTokens {
      * Instance Attributes.
      */
     appInfo: NormalisedAppInfo;
-    recipeList: RecipeModule<any>[] = [];
+    recipeList: RecipeModule<any, any>[] = [];
 
     constructor(config: SuperTokensConfig) {
         this.appInfo = normaliseInputAppInfoOrThrowError(config.appInfo);
