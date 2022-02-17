@@ -346,13 +346,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 { email },
                 Querier.preparePreAPIHook({
                     config,
-                    action: "EMAIL_PASSWORD_SIGN_IN",
+                    action: "EMAIL_EXISTS",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
                     config,
-                    action: "EMAIL_PASSWORD_SIGN_IN",
+                    action: "EMAIL_EXISTS",
                     userContext,
                 })
             );
