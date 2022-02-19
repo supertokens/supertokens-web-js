@@ -1,5 +1,6 @@
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserType } from "./types";
+import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
+import { UserType } from "../authRecipeWithEmailVerification/types";
 export default class RecipeWrapper {
     static init(
         config: InputType

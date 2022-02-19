@@ -48,8 +48,14 @@ function getWindowOrThrow(): any {
     return window;
 }
 
-export function getOriginOfPage(): NormalisedURLDomain {
-    return new NormalisedURLDomain(getWindowOrThrow().location.origin);
+function getWindowSafely(): any | undefined {
+    // tslint:disable-next-line
+    if (typeof window === "undefined") {
+        return undefined;
+    }
+
+    // tslint:disable-next-line
+    return window;
 }
 
 function getNormalisedURLPathOrDefault(defaultPath: string, path?: string): NormalisedURLPath {
@@ -101,7 +107,13 @@ export function isTest(): boolean {
 }
 
 export function getQueryParams(param: string): string | undefined {
-    const urlParams = new URLSearchParams(getWindowOrThrow().location.search);
+    let _window = getWindowSafely();
+
+    if (_window === undefined) {
+        return undefined;
+    }
+
+    const urlParams = new URLSearchParams(_window.location.search);
     let queryParam = urlParams.get(param);
 
     if (queryParam === null) {
@@ -122,4 +134,14 @@ export function checkForSSRErrorAndAppendIfNeeded(error: string): string {
 
 export function getNormalisedUserContext(userContext?: any) {
     return userContext === undefined ? {} : userContext;
+}
+
+// TODO NEMI: Remove this function when storage abstraction is implemented
+export function getSessionStorage(key: string): string {
+    return getWindowOrThrow().sessionStorage.getItem(key);
+}
+
+// TODO NEMI: Remove this function when storage abstraction is implemented
+export function setSessionStorage(key: string, value: string): void {
+    getWindowOrThrow().sessionStorage.setItem(key, value);
 }

@@ -17,7 +17,8 @@ import { RecipeInterface } from "./types";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { NormalisedInputType, UserType } from "./types";
+import { NormalisedInputType } from "./types";
+import { UserType } from ".";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);

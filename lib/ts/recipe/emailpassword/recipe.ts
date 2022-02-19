@@ -20,7 +20,7 @@ import { normaliseUserInput } from "./utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
-import { checkForSSRErrorAndAppendIfNeeded } from "../../utils";
+import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 
 export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -61,5 +61,13 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
         }
 
         return Recipe.instance;
+    }
+
+    static reset(): void {
+        if (!isTest()) {
+            return;
+        }
+        Recipe.instance = undefined;
+        return;
     }
 }

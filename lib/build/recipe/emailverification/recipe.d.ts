@@ -9,4 +9,5 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
     constructor(config: InputType);
     static init(config: InputType): CreateRecipeFunction<PreAndPostAPIHookAction>;
     static getInstanceOrThrow(): Recipe;
+    static reset(): void;
 }

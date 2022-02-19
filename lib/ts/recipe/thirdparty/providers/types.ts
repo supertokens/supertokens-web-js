@@ -12,23 +12,22 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+export type ProviderConfig = {
+    id: string;
 
-import { NormalisedRecipeConfig, RecipeConfig } from "../recipeModule/types";
-import {
-    PreAndPostAPIHookAction as EmailVerificationAction,
-    InputTypeOverride as EmailVerificationOverride,
-} from "../emailverification/types";
+    name: string;
 
-export type InputType<Action> = RecipeConfig<EmailVerificationAction | Action>;
-
-export type NormalisedInputType<Action> = NormalisedRecipeConfig<EmailVerificationAction | Action> & {
-    override?: {
-        emailVerification?: EmailVerificationOverride;
-    };
+    clientId?: string;
 };
 
-export type UserType = {
+export type BuiltInProviderConfig = {
+    clientId?: string;
+};
+
+export type CustomProviderConfig = {
     id: string;
-    email: string;
-    timeJoined: number;
+
+    name: string;
+
+    clientId?: string;
 };
