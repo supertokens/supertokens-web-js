@@ -20,7 +20,7 @@ export default class STGeneralError extends Error {
         super(message);
     }
 
-    static isGeneralError(err: any): boolean {
+    static isThisError(err: any): err is STGeneralError {
         return err.isSuperTokensGeneralError === true;
     }
 }
