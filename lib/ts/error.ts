@@ -19,4 +19,8 @@ export default class STGeneralError extends Error {
     constructor(message: string) {
         super(message);
     }
+
+    static isGeneralError(err: any): boolean {
+        return err.isSuperTokensGeneralError === true;
+    }
 }
