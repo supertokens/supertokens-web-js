@@ -1,11 +1,6 @@
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeFunctionOptions } from "../emailpassword";
 import { InputType, StateObject, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext } from "./types";
-import Apple from "./providers/apple";
-import Google from "./providers/google";
-import Facebook from "./providers/facebook";
-import Github from "./providers/github";
-import Twitter from "./providers/twitter";
 export default class Wrapper {
     static init(config: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     static getOAuthState(input?: { userContext?: any }): {
@@ -16,7 +11,7 @@ export default class Wrapper {
         status: "OK";
     };
     static getThirdPartyLoginRedirectURL(input: {
-        thirdPartyId: string;
+        thirdPartyProviderId: string;
         state?: StateObject;
         userContext?: any;
     }): Promise<
@@ -29,7 +24,7 @@ export default class Wrapper {
           }
     >;
     static getOAuthAuthorisationURL(input: {
-        thirdPartyId: string;
+        thirdPartyProviderId: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<{
@@ -37,7 +32,12 @@ export default class Wrapper {
         url: string;
         fetchResponse: Response;
     }>;
-    static signInAndUp(input: { thirdPartyId: string; userContext?: any; options?: RecipeFunctionOptions }): Promise<
+    static signInAndUp(input: {
+        thirdPartyProviderId: string;
+        thirdPartyProviderClientId?: string;
+        userContext?: any;
+        options?: RecipeFunctionOptions;
+    }): Promise<
         | {
               status: "OK";
               user: UserType;
@@ -54,11 +54,6 @@ export default class Wrapper {
               fetchResponse: Response;
           }
     >;
-    static Google: typeof Google;
-    static Apple: typeof Apple;
-    static Facebook: typeof Facebook;
-    static Github: typeof Github;
-    static Twitter: typeof Twitter;
 }
 declare const init: typeof Wrapper.init;
 declare const getOAuthState: typeof Wrapper.getOAuthState;
@@ -73,11 +68,6 @@ export {
     getThirdPartyLoginRedirectURL,
     getOAuthAuthorisationURL,
     signInAndUp,
-    Apple,
-    Google,
-    Github,
-    Facebook,
-    Twitter,
     PreAPIHookContext,
     PostAPIHookContext,
     PreAndPostAPIHookAction,

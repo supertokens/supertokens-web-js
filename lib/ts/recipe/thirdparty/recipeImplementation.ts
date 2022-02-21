@@ -20,6 +20,7 @@ import { appendQueryParamsToURL, getQueryParams, getSessionStorage, setSessionSt
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { NormalisedInputType, RecipeInterface, StateObject } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
+import { generateThirdPartyProviderState, getThirdPartyProviderRedirectURL } from "./utils";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
@@ -75,7 +76,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
 
         getThirdPartyLoginRedirectURL: async function (input: {
-            thirdPartyId: string;
+            thirdPartyProviderId: string;
             config: NormalisedInputType;
             state?: StateObject;
             userContext: any;
@@ -88,15 +89,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   url: string;
               }
         > {
-            const provider = input.config.signInAndUpFeature.providers.find((p) => p.id === input.thirdPartyId);
-            if (provider === undefined) {
-                return { status: "ERROR" };
-            }
-
             // 1. Generate state.
             const state =
                 input.state === undefined || input.state.state === undefined
-                    ? provider.generateState()
+                    ? generateThirdPartyProviderState()
                     : input.state.state;
 
             // 2. Store state in Session Storage.
@@ -109,7 +105,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                             : input.state.rid,
                     thirdPartyId:
                         input.state === undefined || input.state.thirdPartyId === undefined
-                            ? input.thirdPartyId
+                            ? input.thirdPartyProviderId
                             : input.state.thirdPartyId,
                     state,
                 },
@@ -119,7 +115,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
             // 3. Get Authorisation URL.
             const urlResponse = await this.getOAuthAuthorisationURL({
-                thirdPartyId: provider.id,
+                thirdPartyProviderId: input.thirdPartyProviderId,
                 config: input.config,
                 userContext: input.userContext,
             });
@@ -134,7 +130,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   })
                 : appendQueryParamsToURL(urlResponse.url, {
                       state,
-                      redirect_uri: provider.getRedirectURL(input.config.appInfo),
+                      redirect_uri: getThirdPartyProviderRedirectURL({
+                          providerId: input.thirdPartyProviderId,
+                          appInfo: input.config.appInfo,
+                      }),
                   });
 
             return {
@@ -144,7 +143,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
 
         getOAuthAuthorisationURL: async function (input: {
-            thirdPartyId: string;
+            thirdPartyProviderId: string;
             config: NormalisedInputType;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -159,7 +158,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             }>(
                 "/authorisationurl",
                 {},
-                { thirdPartyId: input.thirdPartyId },
+                { thirdPartyId: input.thirdPartyProviderId },
                 Querier.preparePreAPIHook({
                     config: input.config,
                     action: "GET_AUTHORISATION_URL",
@@ -181,7 +180,8 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
 
         signInAndUp: async function (input: {
-            thirdPartyId: string;
+            thirdPartyProviderId: string;
+            thirdPartyProviderClientId?: string;
             config: NormalisedInputType;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -202,8 +202,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            const provider = input.config.signInAndUpFeature.providers.find((p) => p.id === input.thirdPartyId);
-
             const stateFromStorage = this.getOAuthState({
                 userContext: input.userContext,
                 config: input.config,
@@ -216,15 +214,17 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             if (
                 getQueryParams("error") !== null ||
                 stateFromStorage === undefined ||
-                stateFromStorage.thirdPartyId !== input.thirdPartyId ||
+                stateFromStorage.thirdPartyId !== input.thirdPartyProviderId ||
                 stateFromStorage.state !== stateFromQueryParams ||
-                code === null ||
-                provider === undefined
+                code === null
             ) {
                 throw new STGeneralError("");
             }
 
-            const redirectURI = await provider.getRedirectURL(input.config.appInfo);
+            const redirectURI = getThirdPartyProviderRedirectURL({
+                providerId: input.thirdPartyProviderId,
+                appInfo: input.config.appInfo,
+            });
 
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
@@ -244,9 +244,9 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 {
                     body: JSON.stringify({
                         code,
-                        thirdPartyId: input.thirdPartyId,
+                        thirdPartyId: input.thirdPartyProviderId,
                         redirectURI,
-                        clientId: provider.clientId,
+                        clientId: input.thirdPartyProviderClientId,
                     }),
                 },
                 Querier.preparePreAPIHook({

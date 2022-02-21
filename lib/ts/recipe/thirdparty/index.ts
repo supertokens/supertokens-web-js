@@ -18,11 +18,6 @@ import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeFunctionOptions } from "../emailpassword";
 import Recipe from "./recipe";
 import { InputType, StateObject, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext } from "./types";
-import Apple from "./providers/apple";
-import Google from "./providers/google";
-import Facebook from "./providers/facebook";
-import Github from "./providers/github";
-import Twitter from "./providers/twitter";
 
 export default class Wrapper {
     static init(config: InputType) {
@@ -54,7 +49,7 @@ export default class Wrapper {
     }
 
     static getThirdPartyLoginRedirectURL(input: {
-        thirdPartyId: string;
+        thirdPartyProviderId: string;
         state?: StateObject;
         userContext?: any;
     }): Promise<
@@ -76,7 +71,7 @@ export default class Wrapper {
     }
 
     static getOAuthAuthorisationURL(input: {
-        thirdPartyId: string;
+        thirdPartyProviderId: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<{
@@ -93,7 +88,12 @@ export default class Wrapper {
         });
     }
 
-    static signInAndUp(input: { thirdPartyId: string; userContext?: any; options?: RecipeFunctionOptions }): Promise<
+    static signInAndUp(input: {
+        thirdPartyProviderId: string;
+        thirdPartyProviderClientId?: string;
+        userContext?: any;
+        options?: RecipeFunctionOptions;
+    }): Promise<
         | {
               status: "OK";
               user: UserType;
@@ -118,12 +118,6 @@ export default class Wrapper {
             userContext: getNormalisedUserContext(input.userContext),
         });
     }
-
-    static Google = Google;
-    static Apple = Apple;
-    static Facebook = Facebook;
-    static Github = Github;
-    static Twitter = Twitter;
 }
 
 const init = Wrapper.init;
@@ -140,11 +134,6 @@ export {
     getThirdPartyLoginRedirectURL,
     getOAuthAuthorisationURL,
     signInAndUp,
-    Apple,
-    Google,
-    Github,
-    Facebook,
-    Twitter,
     PreAPIHookContext,
     PostAPIHookContext,
     PreAndPostAPIHookAction,

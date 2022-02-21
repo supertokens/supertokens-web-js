@@ -12,20 +12,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+import NormalisedURLPath from "../../normalisedURLPath";
+import { NormalisedAppInfo } from "../../types";
 import { normaliseAuthRecipeWithEmailVerificationConfig } from "../authRecipeWithEmailVerification/utils";
-import Provider from "./providers";
-import Custom from "./providers/custom";
-import {
-    InputType,
-    NormalisedInputType,
-    RecipeInterface,
-    SignInUpFeatureInputType,
-    SignInUpFeatureNormalisedInputType,
-} from "./types";
+import { InputType, NormalisedInputType, RecipeInterface } from "./types";
 
 export function normaliseUserInput(config: InputType): NormalisedInputType {
-    const signInAndUpFeature: SignInUpFeatureNormalisedInputType = normaliseSignInUpFeature(config.signInAndUpFeature);
-
     const override: any = {
         functions: (originalImplementation: RecipeInterface) => originalImplementation,
         components: {},
@@ -34,41 +26,26 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
 
     return {
         ...normaliseAuthRecipeWithEmailVerificationConfig(config),
-        signInAndUpFeature,
         override,
     };
 }
 
-function normaliseSignInUpFeature(config: SignInUpFeatureInputType | undefined): SignInUpFeatureNormalisedInputType {
-    if (config === undefined) {
-        config = {};
-    }
+export function getThirdPartyProviderRedirectURL({
+    providerId,
+    appInfo,
+}: {
+    providerId: string;
+    appInfo: NormalisedAppInfo;
+}) {
+    const domain = appInfo.websiteDomain.getAsStringDangerous();
+    const callbackPath = new NormalisedURLPath(`/callback/${providerId}`);
+    const path = appInfo.websiteBasePath.appendPath(callbackPath).getAsStringDangerous();
+    return `${domain}${path}`;
+}
 
-    if (config.providers === undefined) {
-        config.providers = [];
-    }
-
-    if (config.providers.length === 0) {
-        throw new Error("ThirdParty signInAndUpFeature providers array cannot be empty.");
-    }
-
-    const providersWithCustom = config.providers.map((provider) => {
-        if (provider instanceof Provider) {
-            return provider;
-        }
-        return Custom.init(provider);
-    });
-
-    /*
-     * Make sure providers array is unique, filter duplicate values.
-     * First, create a new set with unique ids from the configs.
-     * Then map over those ids to find the first provider that matches from the configs.
-     */
-    const providers = Array.from(new Set(providersWithCustom.map((provider) => provider.id))).map(
-        (id) => providersWithCustom.find((provider) => provider.id === id) as Provider
+export function generateThirdPartyProviderState() {
+    // Generate state using algorithm described in https://github.com/supertokens/supertokens-auth-react/issues/154#issue-796867579
+    return `${1e20}`.replace(/[018]/g, (c) =>
+        (parseInt(c) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (parseInt(c) / 4)))).toString(16)
     );
-
-    return {
-        providers,
-    };
 }

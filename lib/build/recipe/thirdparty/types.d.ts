@@ -4,21 +4,12 @@ import {
     UserType,
 } from "../authRecipeWithEmailVerification/types";
 import { RecipePostAPIHookContext, RecipePreAPIHookContext, RecipeFunctionOptions } from "../recipeModule/types";
-import Provider from "./providers";
-import { CustomProviderConfig } from "./providers/types";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 import OverrideableBuilder from "supertokens-js-override";
 export declare type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP";
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
-export declare type SignInUpFeatureInputType = {
-    providers?: (Provider | CustomProviderConfig)[];
-};
-export declare type SignInUpFeatureNormalisedInputType = {
-    providers: Provider[];
-};
 export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
-    signInAndUpFeature?: SignInUpFeatureInputType;
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (
@@ -28,7 +19,6 @@ export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
     };
 };
 export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
-    signInAndUpFeature: SignInUpFeatureNormalisedInputType;
     override: {
         functions: (
             originalImplementation: RecipeInterface,
@@ -51,7 +41,7 @@ export declare type RecipeInterface = {
         status: "OK";
     };
     getThirdPartyLoginRedirectURL(input: {
-        thirdPartyId: string;
+        thirdPartyProviderId: string;
         config: NormalisedInputType;
         state?: StateObject;
         userContext: any;
@@ -65,7 +55,7 @@ export declare type RecipeInterface = {
           }
     >;
     getOAuthAuthorisationURL(input: {
-        thirdPartyId: string;
+        thirdPartyProviderId: string;
         config: NormalisedInputType;
         userContext: any;
         options?: RecipeFunctionOptions;
@@ -75,7 +65,8 @@ export declare type RecipeInterface = {
         fetchResponse: Response;
     }>;
     signInAndUp(input: {
-        thirdPartyId: string;
+        thirdPartyProviderId: string;
+        thirdPartyProviderClientId?: string;
         config: NormalisedInputType;
         userContext: any;
         options?: RecipeFunctionOptions;
