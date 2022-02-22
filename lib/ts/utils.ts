@@ -77,9 +77,6 @@ export function normaliseInputAppInfoOrThrowError(appInfo: AppInfoUserInput): No
     if (appInfo.appName === undefined) {
         throw new Error("Please provide your appName inside the appInfo object when calling supertokens.init");
     }
-    if (appInfo.websiteDomain === undefined) {
-        throw new Error("Please provide your websiteDomain inside the appInfo object when calling supertokens.init");
-    }
 
     let apiGatewayPath = new NormalisedURLPath("");
     if (appInfo.apiGatewayPath !== undefined) {
@@ -89,7 +86,6 @@ export function normaliseInputAppInfoOrThrowError(appInfo: AppInfoUserInput): No
     return {
         appName: appInfo.appName,
         apiDomain: new NormalisedURLDomain(appInfo.apiDomain),
-        websiteDomain: new NormalisedURLDomain(appInfo.websiteDomain),
         apiBasePath: apiGatewayPath.appendPath(
             getNormalisedURLPathOrDefault(DEFAULT_API_BASE_PATH, appInfo.apiBasePath)
         ),

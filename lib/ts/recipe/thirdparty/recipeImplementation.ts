@@ -20,7 +20,7 @@ import { appendQueryParamsToURL, getQueryParams, getSessionStorage, setSessionSt
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { NormalisedInputType, RecipeInterface, StateObject } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { generateThirdPartyProviderState, getThirdPartyProviderRedirectURL } from "./utils";
+import { generateThirdPartyProviderState } from "./utils";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
@@ -75,8 +75,9 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             };
         },
 
-        getThirdPartyLoginRedirectURL: async function (input: {
+        getThirdPartyLoginRedirectURLWithQueryParams: async function (input: {
             thirdPartyProviderId: string;
+            thirdPartyRedirectionURL: string;
             config: NormalisedInputType;
             state?: StateObject;
             userContext: any;
@@ -130,10 +131,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   })
                 : appendQueryParamsToURL(urlResponse.url, {
                       state,
-                      redirect_uri: getThirdPartyProviderRedirectURL({
-                          providerId: input.thirdPartyProviderId,
-                          appInfo: input.config.appInfo,
-                      }),
+                      redirect_uri: input.thirdPartyRedirectionURL,
                   });
 
             return {
@@ -182,6 +180,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         signInAndUp: async function (input: {
             thirdPartyProviderId: string;
             thirdPartyProviderClientId?: string;
+            thirdPartyRedirectionURL: string;
             config: NormalisedInputType;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -221,11 +220,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 throw new STGeneralError("");
             }
 
-            const redirectURI = getThirdPartyProviderRedirectURL({
-                providerId: input.thirdPartyProviderId,
-                appInfo: input.config.appInfo,
-            });
-
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
@@ -245,7 +239,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     body: JSON.stringify({
                         code,
                         thirdPartyId: input.thirdPartyProviderId,
-                        redirectURI,
+                        redirectURI: input.thirdPartyRedirectionURL,
                         clientId: input.thirdPartyProviderClientId,
                     }),
                 },

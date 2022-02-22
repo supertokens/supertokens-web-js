@@ -12,8 +12,6 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import NormalisedURLPath from "../../normalisedURLPath";
-import { NormalisedAppInfo } from "../../types";
 import { normaliseAuthRecipeWithEmailVerificationConfig } from "../authRecipeWithEmailVerification/utils";
 import { InputType, NormalisedInputType, RecipeInterface } from "./types";
 
@@ -28,19 +26,6 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
         ...normaliseAuthRecipeWithEmailVerificationConfig(config),
         override,
     };
-}
-
-export function getThirdPartyProviderRedirectURL({
-    providerId,
-    appInfo,
-}: {
-    providerId: string;
-    appInfo: NormalisedAppInfo;
-}) {
-    const domain = appInfo.websiteDomain.getAsStringDangerous();
-    const callbackPath = new NormalisedURLPath(`/callback/${providerId}`);
-    const path = appInfo.websiteBasePath.appendPath(callbackPath).getAsStringDangerous();
-    return `${domain}${path}`;
 }
 
 export function generateThirdPartyProviderState() {

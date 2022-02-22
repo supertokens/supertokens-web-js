@@ -10,8 +10,9 @@ export default class Wrapper {
     static setOAuthState(input: { state: StateObject; userContext?: any }): {
         status: "OK";
     };
-    static getThirdPartyLoginRedirectURL(input: {
+    static getThirdPartyLoginRedirectURLWithQueryParams(input: {
         thirdPartyProviderId: string;
+        thirdPartyRedirectionURL: string;
         state?: StateObject;
         userContext?: any;
     }): Promise<
@@ -34,6 +35,7 @@ export default class Wrapper {
     }>;
     static signInAndUp(input: {
         thirdPartyProviderId: string;
+        thirdPartyRedirectionURL: string;
         thirdPartyProviderClientId?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
@@ -58,14 +60,14 @@ export default class Wrapper {
 declare const init: typeof Wrapper.init;
 declare const getOAuthState: typeof Wrapper.getOAuthState;
 declare const setOAuthState: typeof Wrapper.setOAuthState;
-declare const getThirdPartyLoginRedirectURL: typeof Wrapper.getThirdPartyLoginRedirectURL;
+declare const getThirdPartyLoginRedirectURLWithQueryParams: typeof Wrapper.getThirdPartyLoginRedirectURLWithQueryParams;
 declare const getOAuthAuthorisationURL: typeof Wrapper.getOAuthAuthorisationURL;
 declare const signInAndUp: typeof Wrapper.signInAndUp;
 export {
     init,
     getOAuthState,
     setOAuthState,
-    getThirdPartyLoginRedirectURL,
+    getThirdPartyLoginRedirectURLWithQueryParams,
     getOAuthAuthorisationURL,
     signInAndUp,
     PreAPIHookContext,

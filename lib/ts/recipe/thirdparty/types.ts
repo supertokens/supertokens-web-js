@@ -61,8 +61,9 @@ export type RecipeInterface = {
         status: "OK";
     };
 
-    getThirdPartyLoginRedirectURL: (input: {
+    getThirdPartyLoginRedirectURLWithQueryParams: (input: {
         thirdPartyProviderId: string;
+        thirdPartyRedirectionURL: string;
         config: NormalisedInputType;
         state?: StateObject;
         userContext: any;
@@ -90,6 +91,7 @@ export type RecipeInterface = {
     signInAndUp: (input: {
         thirdPartyProviderId: string;
         thirdPartyProviderClientId?: string;
+        thirdPartyRedirectionURL: string;
         config: NormalisedInputType;
         userContext: any;
         options?: RecipeFunctionOptions;

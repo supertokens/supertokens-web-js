@@ -40,8 +40,9 @@ export declare type RecipeInterface = {
     setOAuthState: (input: { state: StateObject; config: NormalisedInputType; userContext: any }) => {
         status: "OK";
     };
-    getThirdPartyLoginRedirectURL: (input: {
+    getThirdPartyLoginRedirectURLWithQueryParams: (input: {
         thirdPartyProviderId: string;
+        thirdPartyRedirectionURL: string;
         config: NormalisedInputType;
         state?: StateObject;
         userContext: any;
@@ -67,6 +68,7 @@ export declare type RecipeInterface = {
     signInAndUp: (input: {
         thirdPartyProviderId: string;
         thirdPartyProviderClientId?: string;
+        thirdPartyRedirectionURL: string;
         config: NormalisedInputType;
         userContext: any;
         options?: RecipeFunctionOptions;
