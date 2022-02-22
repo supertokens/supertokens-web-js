@@ -48,8 +48,9 @@ export default class Wrapper {
         });
     }
 
-    static getThirdPartyLoginRedirectURL(input: {
+    static getThirdPartyLoginRedirectURLWithQueryParams(input: {
         thirdPartyProviderId: string;
+        thirdPartyRedirectionURL: string;
         state?: StateObject;
         userContext?: any;
     }): Promise<
@@ -63,7 +64,7 @@ export default class Wrapper {
     > {
         const recipeInstance = Recipe.getInstanceOrThrow();
 
-        return recipeInstance.recipeImplementation.getThirdPartyLoginRedirectURL({
+        return recipeInstance.recipeImplementation.getThirdPartyLoginRedirectURLWithQueryParams({
             ...input,
             config: recipeInstance.config,
             userContext: getNormalisedUserContext(input.userContext),
@@ -90,6 +91,7 @@ export default class Wrapper {
 
     static signInAndUp(input: {
         thirdPartyProviderId: string;
+        thirdPartyRedirectionURL: string;
         thirdPartyProviderClientId?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
@@ -123,7 +125,7 @@ export default class Wrapper {
 const init = Wrapper.init;
 const getOAuthState = Wrapper.getOAuthState;
 const setOAuthState = Wrapper.setOAuthState;
-const getThirdPartyLoginRedirectURL = Wrapper.getThirdPartyLoginRedirectURL;
+const getThirdPartyLoginRedirectURLWithQueryParams = Wrapper.getThirdPartyLoginRedirectURLWithQueryParams;
 const getOAuthAuthorisationURL = Wrapper.getOAuthAuthorisationURL;
 const signInAndUp = Wrapper.signInAndUp;
 
@@ -131,7 +133,7 @@ export {
     init,
     getOAuthState,
     setOAuthState,
-    getThirdPartyLoginRedirectURL,
+    getThirdPartyLoginRedirectURLWithQueryParams,
     getOAuthAuthorisationURL,
     signInAndUp,
     PreAPIHookContext,
