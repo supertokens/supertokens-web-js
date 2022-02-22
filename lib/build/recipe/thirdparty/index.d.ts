@@ -2,7 +2,7 @@ import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeFunctionOptions } from "../emailpassword";
 import { InputType, StateObject, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext } from "./types";
 export default class Wrapper {
-    static init(config: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
+    static init(config?: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     static getOAuthState(input?: { userContext?: any }): {
         status: "OK";
         state: StateObject | undefined;

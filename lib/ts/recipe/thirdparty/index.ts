@@ -20,7 +20,7 @@ import Recipe from "./recipe";
 import { InputType, StateObject, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext } from "./types";
 
 export default class Wrapper {
-    static init(config: InputType) {
+    static init(config?: InputType) {
         return Recipe.init(config);
     }
 

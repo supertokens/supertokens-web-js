@@ -19,7 +19,7 @@ import { getNormalisedUserContext } from "../../utils";
 import { UserType } from "../authRecipeWithEmailVerification/types";
 
 export default class RecipeWrapper {
-    static init(config: InputType) {
+    static init(config?: InputType) {
         return Recipe.init(config);
     }
 
