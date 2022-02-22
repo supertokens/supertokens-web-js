@@ -53,20 +53,20 @@ export type StateObject = {
 };
 
 export type RecipeInterface = {
-    getOAuthState(input: { userContext: any; config: NormalisedInputType }): {
+    getOAuthState: (input: { userContext: any; config: NormalisedInputType }) => {
         status: "OK";
         state: StateObject | undefined;
     };
-    setOAuthState(input: { state: StateObject; config: NormalisedInputType; userContext: any }): {
+    setOAuthState: (input: { state: StateObject; config: NormalisedInputType; userContext: any }) => {
         status: "OK";
     };
 
-    getThirdPartyLoginRedirectURL(input: {
+    getThirdPartyLoginRedirectURL: (input: {
         thirdPartyProviderId: string;
         config: NormalisedInputType;
         state?: StateObject;
         userContext: any;
-    }): Promise<
+    }) => Promise<
         | {
               status: "ERROR";
           }
@@ -76,24 +76,24 @@ export type RecipeInterface = {
           }
     >;
 
-    getOAuthAuthorisationURL(input: {
+    getOAuthAuthorisationURL: (input: {
         thirdPartyProviderId: string;
         config: NormalisedInputType;
         userContext: any;
         options?: RecipeFunctionOptions;
-    }): Promise<{
+    }) => Promise<{
         status: "OK";
         url: string;
         fetchResponse: Response;
     }>;
 
-    signInAndUp(input: {
+    signInAndUp: (input: {
         thirdPartyProviderId: string;
         thirdPartyProviderClientId?: string;
         config: NormalisedInputType;
         userContext: any;
         options?: RecipeFunctionOptions;
-    }): Promise<
+    }) => Promise<
         | {
               status: "OK";
               user: UserType;
