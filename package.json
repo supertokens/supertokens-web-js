@@ -61,11 +61,15 @@
         },
         {
             "path": "recipe/emailverification/index.js",
-            "limit": "10kb"
+            "limit": "6kb"
         },
         {
             "path": "recipe/emailpassword/index.js",
-            "limit": "10kb"
+            "limit": "8kb"
+        },
+        {
+            "path": "recipe/thirdparty/index.js",
+            "limit": "8kb"
         }
     ]
 }
