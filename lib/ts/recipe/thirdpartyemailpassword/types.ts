@@ -132,6 +132,7 @@ export type RecipeInterface = {
             | {
                   type: "thirdparty";
                   thirdPartyProviderId: string;
+                  thirdPartyRedirectionURL: string;
                   thirdPartyProviderClientId?: string;
                   config: NormalisedThirdPartyConfig;
                   userContext: any;
@@ -192,18 +193,14 @@ export type RecipeInterface = {
         status: "OK";
     };
 
-    getThirdPartyLoginRedirectURL: (input: {
+    getThirdPartyLoginRedirectURLWithQueryParams: (input: {
         thirdPartyProviderId: string;
+        thirdPartyRedirectionURL: string;
         config: NormalisedThirdPartyConfig;
         state?: StateObject;
         userContext: any;
-    }) => Promise<
-        | {
-              status: "ERROR";
-          }
-        | {
-              status: "OK";
-              url: string;
-          }
-    >;
+    }) => Promise<{
+        status: "OK";
+        url: string;
+    }>;
 };

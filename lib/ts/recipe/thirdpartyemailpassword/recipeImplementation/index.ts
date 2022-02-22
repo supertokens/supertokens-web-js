@@ -106,6 +106,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                       type: "thirdparty";
                       thirdPartyProviderId: string;
                       thirdPartyProviderClientId?: string;
+                      thirdPartyRedirectionURL: string;
                       config: NormalisedThirdPartyConfig;
                       userContext: any;
                       options?: RecipeFunctionOptions;
@@ -210,21 +211,17 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         } {
             return thirdPartyImpl.setOAuthState.bind(DerivedThirdParty(this))(input);
         },
-        getThirdPartyLoginRedirectURL: async function (input: {
+        getThirdPartyLoginRedirectURLWithQueryParams: async function (input: {
             thirdPartyProviderId: string;
+            thirdPartyRedirectionURL: string;
             config: NormalisedThirdPartyConfig;
             state?: StateObject;
             userContext: any;
-        }): Promise<
-            | {
-                  status: "ERROR";
-              }
-            | {
-                  status: "OK";
-                  url: string;
-              }
-        > {
-            return thirdPartyImpl.getThirdPartyLoginRedirectURL.bind(DerivedThirdParty(this))(input);
+        }): Promise<{
+            status: "OK";
+            url: string;
+        }> {
+            return thirdPartyImpl.getThirdPartyLoginRedirectURLWithQueryParams.bind(DerivedThirdParty(this))(input);
         },
     };
 }

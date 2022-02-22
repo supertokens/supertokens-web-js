@@ -21,8 +21,8 @@ export default function getRecipeImplementation(
     return {
         getOAuthAuthorisationURL: originalImplementation.getOAuthAuthorisationURL.bind(originalImplementation),
         getOAuthState: originalImplementation.getOAuthState.bind(originalImplementation),
-        getThirdPartyLoginRedirectURL:
-            originalImplementation.getThirdPartyLoginRedirectURL.bind(originalImplementation),
+        getThirdPartyLoginRedirectURLWithQueryParams:
+            originalImplementation.getThirdPartyLoginRedirectURLWithQueryParams.bind(originalImplementation),
         setOAuthState: originalImplementation.setOAuthState.bind(originalImplementation),
         signInAndUp: async function (input) {
             const response = await originalImplementation.signInAndUp({
