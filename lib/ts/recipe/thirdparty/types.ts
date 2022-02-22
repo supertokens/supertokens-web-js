@@ -67,6 +67,7 @@ export type RecipeInterface = {
         config: NormalisedInputType;
         state?: StateObject;
         userContext: any;
+        options?: RecipeFunctionOptions;
     }) => Promise<
         | {
               status: "ERROR";

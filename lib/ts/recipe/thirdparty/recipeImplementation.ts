@@ -81,6 +81,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             config: NormalisedInputType;
             state?: StateObject;
             userContext: any;
+            options?: RecipeFunctionOptions;
         }): Promise<
             | {
                   status: "ERROR";
@@ -119,6 +120,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 thirdPartyProviderId: input.thirdPartyProviderId,
                 config: input.config,
                 userContext: input.userContext,
+                options: input.options,
             });
 
             // for some third party providers, the redirect_uri is set on the backend itself (for example in the case of apple). In these cases, we don't set them here...
