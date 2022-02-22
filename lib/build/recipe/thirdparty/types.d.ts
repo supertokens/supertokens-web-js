@@ -47,15 +47,10 @@ export declare type RecipeInterface = {
         state?: StateObject;
         userContext: any;
         options?: RecipeFunctionOptions;
-    }) => Promise<
-        | {
-              status: "ERROR";
-          }
-        | {
-              status: "OK";
-              url: string;
-          }
-    >;
+    }) => Promise<{
+        status: "OK";
+        url: string;
+    }>;
     getOAuthAuthorisationURL: (input: {
         thirdPartyProviderId: string;
         config: NormalisedInputType;

@@ -82,15 +82,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             state?: StateObject;
             userContext: any;
             options?: RecipeFunctionOptions;
-        }): Promise<
-            | {
-                  status: "ERROR";
-              }
-            | {
-                  status: "OK";
-                  url: string;
-              }
-        > {
+        }): Promise<{
+            status: "OK";
+            url: string;
+        }> {
             // 1. Generate state.
             const state =
                 input.state === undefined || input.state.state === undefined
