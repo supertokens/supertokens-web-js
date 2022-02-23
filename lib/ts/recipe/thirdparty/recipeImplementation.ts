@@ -173,6 +173,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     stateFromStorage: stateFromStorage,
                     providerId: input.providerId,
                     config: input.config,
+                    userContext: input.userContext,
                 })
             ) {
                 throw new Error("Invalid 'state' recieved from provider");
@@ -243,6 +244,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             stateFromProvider: string | undefined;
             stateFromStorage: StateObject | undefined;
             providerId: string;
+            userContext: any;
         }): boolean {
             if (input.stateFromStorage === undefined || input.stateFromProvider === undefined) {
                 return false;

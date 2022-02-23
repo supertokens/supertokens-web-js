@@ -109,5 +109,6 @@ export type RecipeInterface = {
         stateFromStorage: StateObject | undefined;
         providerId: string;
         config: NormalisedInputType;
+        userContext: any;
     }) => boolean;
 };
