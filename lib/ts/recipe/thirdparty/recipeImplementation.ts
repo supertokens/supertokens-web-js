@@ -176,14 +176,19 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     providerId: input.providerId,
                 })
             ) {
-                // TODO NEMI: Better error message
-                throw new Error("Invalid auth state");
+                throw new Error("Invalid 'state' recieved from provider");
             }
 
             const code = input.authCode === undefined ? getQueryParams("code") : input.authCode;
 
-            if (getQueryParams("error") !== undefined || code === undefined) {
-                // TODO NEMI: This should have a better message. Also split this into two if conditions
+            if (code === undefined) {
+                throw new Error(
+                    "There is no 'code' present in query params and no 'authCode' was provided when calling signInUp"
+                );
+            }
+
+            if (getQueryParams("error") !== undefined) {
+                // TODO NEMI: This should have a better message
                 throw new Error("Something went Wrong");
             }
 
