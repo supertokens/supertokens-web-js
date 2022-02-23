@@ -47,6 +47,8 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
 
 export type StateObject = {
     stateForAuthProvider?: string;
+    thirdPartyId: string;
+    expiresAt: number;
 };
 
 export type RecipeInterface = {

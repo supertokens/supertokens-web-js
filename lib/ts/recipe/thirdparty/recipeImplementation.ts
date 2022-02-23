@@ -48,10 +48,8 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
 
         setStateAndOtherInfoToStorage: function (input: { state: StateObject; userContext: any }) {
-            const expiresAt = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
             const value = JSON.stringify({
                 ...input.state,
-                expiresAt,
             });
             setSessionStorage("supertokens-oauth-state", value);
         },
@@ -69,10 +67,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 config: input.config,
             });
 
+            const stateExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
             // 2. Store state in Session Storage.
             this.setStateAndOtherInfoToStorage<{}>({
                 state: {
                     stateForAuthProvider: stateToSendToAuthProvider,
+                    thirdPartyId: input.providerId,
+                    expiresAt: stateExpiry,
                 },
                 userContext: input.userContext,
                 config: input.config,
