@@ -76,11 +76,6 @@ export declare type RecipeInterface = {
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
               fetchResponse: Response;
           }
-        | {
-              status: "FIELD_ERROR";
-              error: string;
-              fetchResponse: Response;
-          }
     >;
     generateStateToSendToOAuthProvider: (input?: { userContext: any }) => string;
     verifyStateFromOAuthProvider: (input: {

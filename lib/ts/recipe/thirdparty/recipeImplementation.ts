@@ -158,11 +158,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   status: "NO_EMAIL_GIVEN_BY_PROVIDER";
                   fetchResponse: Response;
               }
-            | {
-                  status: "FIELD_ERROR";
-                  error: string;
-                  fetchResponse: Response;
-              }
         > {
             const stateFromStorage = this.getStateAndOtherInfoFromStorage<{}>({
                 userContext: input.userContext,

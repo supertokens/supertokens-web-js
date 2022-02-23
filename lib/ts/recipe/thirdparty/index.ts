@@ -55,11 +55,6 @@ export default class Wrapper {
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
               fetchResponse: Response;
           }
-        | {
-              status: "FIELD_ERROR";
-              error: string;
-              fetchResponse: Response;
-          }
     > {
         const recipeInstance = Recipe.getInstanceOrThrow();
 

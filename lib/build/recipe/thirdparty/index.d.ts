@@ -25,11 +25,6 @@ export default class Wrapper {
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
               fetchResponse: Response;
           }
-        | {
-              status: "FIELD_ERROR";
-              error: string;
-              fetchResponse: Response;
-          }
     >;
 }
 declare const init: typeof Wrapper.init;
