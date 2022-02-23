@@ -102,7 +102,7 @@ export type RecipeInterface = {
           }
     >;
 
-    generateStateToSendToOAuthProvider: (input?: { userContext: any; config: NormalisedInputType }) => string;
+    generateStateToSendToOAuthProvider: (input: { userContext: any; config: NormalisedInputType }) => string;
 
     verifyStateFromOAuthProvider: (input: {
         stateFromProvider: string | undefined;

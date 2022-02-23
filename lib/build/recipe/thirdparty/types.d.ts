@@ -77,7 +77,7 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    generateStateToSendToOAuthProvider: (input?: { userContext: any; config: NormalisedInputType }) => string;
+    generateStateToSendToOAuthProvider: (input: { userContext: any; config: NormalisedInputType }) => string;
     verifyStateFromOAuthProvider: (input: {
         stateFromProvider: string | undefined;
         stateFromStorage: StateObject | undefined;
