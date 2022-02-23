@@ -13,7 +13,6 @@
  * under the License.
  */
 
-import STGeneralError from "../../error";
 import Querier from "../../querier";
 import { NormalisedAppInfo } from "../../types";
 import { appendQueryParamsToURL, getQueryParams, getSessionStorage, setSessionStorage } from "../../utils";
@@ -21,98 +20,65 @@ import { UserType } from "../authRecipeWithEmailVerification/types";
 import { NormalisedInputType, RecipeInterface, StateObject } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { generateThirdPartyProviderState } from "./utils";
+import STGeneralError from "../../error";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
     return {
-        getOAuthState: function (): {
-            status: "OK";
-            state: StateObject | undefined;
-        } {
+        getStateAndOtherInfoFromStorage: function (): StateObject | undefined {
             try {
-                const state = JSON.parse(getSessionStorage("supertokens-oauth-state"));
+                const stateFromStorage = getSessionStorage("supertokens-oauth-state");
 
-                if (state === null) {
-                    return {
-                        status: "OK",
-                        state: undefined,
-                    };
+                if (stateFromStorage === undefined) {
+                    return undefined;
                 }
+
+                const state = JSON.parse(stateFromStorage);
 
                 if (Date.now() > state.expiresAt) {
-                    return {
-                        status: "OK",
-                        state: undefined,
-                    };
+                    return undefined;
                 }
 
-                return {
-                    status: "OK",
-                    state,
-                };
+                return undefined;
             } catch {
-                return {
-                    status: "OK",
-                    state: undefined,
-                };
+                return undefined;
             }
         },
 
-        setOAuthState: function (input: { state: StateObject; userContext: any }): {
-            status: "OK";
-        } {
+        setStateAndOtherInfoToStorage: function (input: { state: StateObject; userContext: any }) {
             const expiresAt = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
             const value = JSON.stringify({
-                redirectToPath: input.state.redirectToPath,
-                state: input.state.state,
-                thirdPartyId: input.state.thirdPartyId,
-                rid: input.state.rid,
+                ...input.state,
                 expiresAt,
             });
             setSessionStorage("supertokens-oauth-state", value);
-            return {
-                status: "OK",
-            };
         },
 
-        getThirdPartyLoginRedirectURLWithQueryParams: async function (input: {
-            thirdPartyProviderId: string;
-            thirdPartyRedirectionURL: string;
+        getLoginRedirectURLWithQueryParamsAndSetState: async function (input: {
+            providerId: string;
+            redirectionURL: string;
             config: NormalisedInputType;
-            state?: StateObject;
             userContext: any;
             options?: RecipeFunctionOptions;
-        }): Promise<{
-            status: "OK";
-            url: string;
-        }> {
+        }): Promise<string> {
             // 1. Generate state.
-            const state =
-                input.state === undefined || input.state.state === undefined
-                    ? generateThirdPartyProviderState()
-                    : input.state.state;
+            const stateToSendToAuthProvider = this.generateStateToSendToOAuthProvider({
+                userContext: input.userContext,
+            });
 
             // 2. Store state in Session Storage.
-            this.setOAuthState({
+            this.setStateAndOtherInfoToStorage({
                 state: {
-                    ...input.state,
-                    rid:
-                        input.state === undefined || input.state.rid === undefined
-                            ? input.config.recipeId
-                            : input.state.rid,
-                    thirdPartyId:
-                        input.state === undefined || input.state.thirdPartyId === undefined
-                            ? input.thirdPartyProviderId
-                            : input.state.thirdPartyId,
-                    state,
+                    thirdPartyId: input.providerId,
+                    stateForAuthProvider: stateToSendToAuthProvider,
                 },
                 userContext: input.userContext,
                 config: input.config,
             });
 
             // 3. Get Authorisation URL.
-            const urlResponse = await this.getOAuthAuthorisationURL({
-                thirdPartyProviderId: input.thirdPartyProviderId,
+            const urlResponse = await this.getOAuthAuthorisationURLFromBackend({
+                providerId: input.providerId,
                 config: input.config,
                 userContext: input.userContext,
                 options: input.options,
@@ -124,21 +90,18 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
             const urlWithState = alreadyContainsRedirectURI
                 ? appendQueryParamsToURL(urlResponse.url, {
-                      state,
+                      stateToSendToAuthProvider,
                   })
                 : appendQueryParamsToURL(urlResponse.url, {
-                      state,
-                      redirect_uri: input.thirdPartyRedirectionURL,
+                      stateToSendToAuthProvider,
+                      redirect_uri: input.redirectionURL,
                   });
 
-            return {
-                status: "OK",
-                url: urlWithState,
-            };
+            return urlWithState;
         },
 
-        getOAuthAuthorisationURL: async function (input: {
-            thirdPartyProviderId: string;
+        getOAuthAuthorisationURLFromBackend: async function (input: {
+            providerId: string;
             config: NormalisedInputType;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -153,7 +116,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             }>(
                 "/authorisationurl",
                 {},
-                { thirdPartyId: input.thirdPartyProviderId },
+                { thirdPartyId: input.providerId },
                 Querier.preparePreAPIHook({
                     config: input.config,
                     action: "GET_AUTHORISATION_URL",
@@ -175,9 +138,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
 
         signInAndUp: async function (input: {
-            thirdPartyProviderId: string;
-            thirdPartyProviderClientId?: string;
-            thirdPartyRedirectionURL: string;
+            providerId: string;
+            redirectionURL: string;
+            providerClientId?: string;
+            authCode?: string;
             config: NormalisedInputType;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -198,23 +162,29 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            const stateFromStorage = this.getOAuthState({
+            const stateFromStorage = this.getStateAndOtherInfoFromStorage({
                 userContext: input.userContext,
                 config: input.config,
-            }).state;
-
-            const code = getQueryParams("code");
+            });
 
             const stateFromQueryParams = getQueryParams("state");
 
             if (
-                getQueryParams("error") !== null ||
-                stateFromStorage === undefined ||
-                stateFromStorage.thirdPartyId !== input.thirdPartyProviderId ||
-                stateFromStorage.state !== stateFromQueryParams ||
-                code === null
+                !this.verifyStateFromOAuthProvider({
+                    stateFromProvider: stateFromQueryParams,
+                    stateFromStorage: stateFromStorage,
+                    providerId: input.providerId,
+                })
             ) {
-                throw new STGeneralError("");
+                // TODO NEMI: Better error message
+                throw new Error("Invalid auth state");
+            }
+
+            const code = input.authCode === undefined ? getQueryParams("code") : input.authCode;
+
+            if (getQueryParams("error") !== undefined || code === undefined) {
+                // TODO NEMI: This should have a better message. Also split this into two if conditions
+                throw new Error("Something went Wrong");
             }
 
             const { jsonBody, fetchResponse } = await querier.post<
@@ -235,9 +205,9 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 {
                     body: JSON.stringify({
                         code,
-                        thirdPartyId: input.thirdPartyProviderId,
-                        redirectURI: input.thirdPartyRedirectionURL,
-                        clientId: input.thirdPartyProviderClientId,
+                        thirdPartyId: input.providerId,
+                        redirectURI: input.redirectionURL,
+                        clientId: input.providerClientId,
                     }),
                 },
                 Querier.preparePreAPIHook({
@@ -253,10 +223,31 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 })
             );
 
+            if (jsonBody.status === "FIELD_ERROR") {
+                throw new STGeneralError(jsonBody.error);
+            }
+
             return {
                 ...jsonBody,
                 fetchResponse,
             };
+        },
+        generateStateToSendToOAuthProvider: function (): string {
+            return generateThirdPartyProviderState();
+        },
+        verifyStateFromOAuthProvider: function (input: {
+            stateFromProvider: string | undefined;
+            stateFromStorage: StateObject | undefined;
+            providerId: string;
+        }): boolean {
+            if (input.stateFromStorage === undefined || input.stateFromProvider === undefined) {
+                return false;
+            }
+
+            return (
+                input.stateFromProvider === input.stateFromStorage.stateForAuthProvider &&
+                input.stateFromStorage.thirdPartyId === input.providerId
+            );
         },
     };
 }

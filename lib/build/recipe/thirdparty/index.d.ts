@@ -1,42 +1,17 @@
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeFunctionOptions } from "../emailpassword";
-import { InputType, StateObject, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext } from "./types";
+import { InputType, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, StateObject } from "./types";
 export default class Wrapper {
     static init(config: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
-    static getOAuthState(input?: { userContext?: any }): {
-        status: "OK";
-        state: StateObject | undefined;
-    };
-    static setOAuthState(input: { state: StateObject; userContext?: any }): {
-        status: "OK";
-    };
-    static getThirdPartyLoginRedirectURLWithQueryParams(input: {
-        thirdPartyProviderId: string;
-        thirdPartyRedirectionURL: string;
-        state?: StateObject;
+    static getLoginRedirectURLWithQueryParamsAndSetState(input: {
+        providerId: string;
+        redirectionURL: string;
         userContext?: any;
-    }): Promise<
-        | {
-              status: "ERROR";
-          }
-        | {
-              status: "OK";
-              url: string;
-          }
-    >;
-    static getOAuthAuthorisationURL(input: {
-        thirdPartyProviderId: string;
-        userContext?: any;
-        options?: RecipeFunctionOptions;
-    }): Promise<{
-        status: "OK";
-        url: string;
-        fetchResponse: Response;
-    }>;
+    }): Promise<string>;
     static signInAndUp(input: {
-        thirdPartyProviderId: string;
-        thirdPartyRedirectionURL: string;
-        thirdPartyProviderClientId?: string;
+        providerId: string;
+        redirectionURL: string;
+        providerClientId?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<
@@ -58,18 +33,13 @@ export default class Wrapper {
     >;
 }
 declare const init: typeof Wrapper.init;
-declare const getOAuthState: typeof Wrapper.getOAuthState;
-declare const setOAuthState: typeof Wrapper.setOAuthState;
-declare const getThirdPartyLoginRedirectURLWithQueryParams: typeof Wrapper.getThirdPartyLoginRedirectURLWithQueryParams;
-declare const getOAuthAuthorisationURL: typeof Wrapper.getOAuthAuthorisationURL;
+declare const getLoginRedirectURLWithQueryParamsAndSetState: typeof Wrapper.getLoginRedirectURLWithQueryParamsAndSetState;
 declare const signInAndUp: typeof Wrapper.signInAndUp;
 export {
     init,
-    getOAuthState,
-    setOAuthState,
-    getThirdPartyLoginRedirectURLWithQueryParams,
-    getOAuthAuthorisationURL,
+    getLoginRedirectURLWithQueryParamsAndSetState,
     signInAndUp,
+    StateObject,
     PreAPIHookContext,
     PostAPIHookContext,
     PreAndPostAPIHookAction,

@@ -18,7 +18,6 @@ import { InputType, NormalisedInputType, RecipeInterface } from "./types";
 export function normaliseUserInput(config: InputType): NormalisedInputType {
     const override: any = {
         functions: (originalImplementation: RecipeInterface) => originalImplementation,
-        components: {},
         ...config.override,
     };
 

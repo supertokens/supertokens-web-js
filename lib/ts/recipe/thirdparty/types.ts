@@ -46,35 +46,32 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
 };
 
 export type StateObject = {
-    state?: string;
-    rid?: string;
-    thirdPartyId?: string;
-    redirectToPath?: string;
+    stateForAuthProvider: string;
+    thirdPartyId: string;
 };
 
 export type RecipeInterface = {
-    getOAuthState: (input: { userContext: any; config: NormalisedInputType }) => {
-        status: "OK";
-        state: StateObject | undefined;
-    };
-    setOAuthState: (input: { state: StateObject; config: NormalisedInputType; userContext: any }) => {
-        status: "OK";
-    };
-
-    getThirdPartyLoginRedirectURLWithQueryParams: (input: {
-        thirdPartyProviderId: string;
-        thirdPartyRedirectionURL: string;
+    getStateAndOtherInfoFromStorage: (input: {
+        userContext: any;
         config: NormalisedInputType;
-        state?: StateObject;
+    }) => StateObject | undefined;
+
+    setStateAndOtherInfoToStorage: (input: {
+        state: StateObject;
+        config: NormalisedInputType;
+        userContext: any;
+    }) => void;
+
+    getLoginRedirectURLWithQueryParamsAndSetState: (input: {
+        providerId: string;
+        redirectionURL: string;
+        config: NormalisedInputType;
         userContext: any;
         options?: RecipeFunctionOptions;
-    }) => Promise<{
-        status: "OK";
-        url: string;
-    }>;
+    }) => Promise<string>;
 
-    getOAuthAuthorisationURL: (input: {
-        thirdPartyProviderId: string;
+    getOAuthAuthorisationURLFromBackend: (input: {
+        providerId: string;
         config: NormalisedInputType;
         userContext: any;
         options?: RecipeFunctionOptions;
@@ -85,9 +82,10 @@ export type RecipeInterface = {
     }>;
 
     signInAndUp: (input: {
-        thirdPartyProviderId: string;
-        thirdPartyProviderClientId?: string;
-        thirdPartyRedirectionURL: string;
+        providerId: string;
+        redirectionURL: string;
+        providerClientId?: string;
+        authCode?: string;
         config: NormalisedInputType;
         userContext: any;
         options?: RecipeFunctionOptions;
@@ -108,4 +106,12 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
+
+    generateStateToSendToOAuthProvider: (input?: { userContext: any }) => string;
+
+    verifyStateFromOAuthProvider: (input: {
+        stateFromProvider: string | undefined;
+        stateFromStorage: StateObject | undefined;
+        providerId: string;
+    }) => boolean;
 };

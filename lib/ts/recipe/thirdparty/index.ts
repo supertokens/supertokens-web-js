@@ -17,72 +17,21 @@ import { getNormalisedUserContext } from "../../utils";
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeFunctionOptions } from "../emailpassword";
 import Recipe from "./recipe";
-import { InputType, StateObject, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext } from "./types";
+import { InputType, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, StateObject } from "./types";
 
 export default class Wrapper {
     static init(config: InputType) {
         return Recipe.init(config);
     }
 
-    static getOAuthState(input?: { userContext?: any }): {
-        status: "OK";
-        state: StateObject | undefined;
-    } {
-        const recipeInstance = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.recipeImplementation.getOAuthState({
-            userContext: getNormalisedUserContext(input?.userContext),
-            config: recipeInstance.config,
-        });
-    }
-
-    static setOAuthState(input: { state: StateObject; userContext?: any }): {
-        status: "OK";
-    } {
-        const recipeInstance = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.recipeImplementation.setOAuthState({
-            ...input,
-            userContext: getNormalisedUserContext(input.userContext),
-            config: recipeInstance.config,
-        });
-    }
-
-    static getThirdPartyLoginRedirectURLWithQueryParams(input: {
-        thirdPartyProviderId: string;
-        thirdPartyRedirectionURL: string;
-        state?: StateObject;
+    static getLoginRedirectURLWithQueryParamsAndSetState(input: {
+        providerId: string;
+        redirectionURL: string;
         userContext?: any;
-    }): Promise<
-        | {
-              status: "ERROR";
-          }
-        | {
-              status: "OK";
-              url: string;
-          }
-    > {
+    }): Promise<string> {
         const recipeInstance = Recipe.getInstanceOrThrow();
 
-        return recipeInstance.recipeImplementation.getThirdPartyLoginRedirectURLWithQueryParams({
-            ...input,
-            config: recipeInstance.config,
-            userContext: getNormalisedUserContext(input.userContext),
-        });
-    }
-
-    static getOAuthAuthorisationURL(input: {
-        thirdPartyProviderId: string;
-        userContext?: any;
-        options?: RecipeFunctionOptions;
-    }): Promise<{
-        status: "OK";
-        url: string;
-        fetchResponse: Response;
-    }> {
-        const recipeInstance = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.recipeImplementation.getOAuthAuthorisationURL({
+        return recipeInstance.recipeImplementation.getLoginRedirectURLWithQueryParamsAndSetState({
             ...input,
             config: recipeInstance.config,
             userContext: getNormalisedUserContext(input.userContext),
@@ -90,9 +39,9 @@ export default class Wrapper {
     }
 
     static signInAndUp(input: {
-        thirdPartyProviderId: string;
-        thirdPartyRedirectionURL: string;
-        thirdPartyProviderClientId?: string;
+        providerId: string;
+        redirectionURL: string;
+        providerClientId?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<
@@ -123,19 +72,14 @@ export default class Wrapper {
 }
 
 const init = Wrapper.init;
-const getOAuthState = Wrapper.getOAuthState;
-const setOAuthState = Wrapper.setOAuthState;
-const getThirdPartyLoginRedirectURLWithQueryParams = Wrapper.getThirdPartyLoginRedirectURLWithQueryParams;
-const getOAuthAuthorisationURL = Wrapper.getOAuthAuthorisationURL;
+const getLoginRedirectURLWithQueryParamsAndSetState = Wrapper.getLoginRedirectURLWithQueryParamsAndSetState;
 const signInAndUp = Wrapper.signInAndUp;
 
 export {
     init,
-    getOAuthState,
-    setOAuthState,
-    getThirdPartyLoginRedirectURLWithQueryParams,
-    getOAuthAuthorisationURL,
+    getLoginRedirectURLWithQueryParamsAndSetState,
     signInAndUp,
+    StateObject,
     PreAPIHookContext,
     PostAPIHookContext,
     PreAndPostAPIHookAction,
