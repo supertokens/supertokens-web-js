@@ -28,7 +28,7 @@ export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPo
 };
 export declare type StateObject = {
     stateForAuthProvider?: string;
-    thirdPartyId: string;
+    thirdPartyId?: string;
 };
 export declare type RecipeInterface = {
     getStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
