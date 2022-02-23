@@ -28,6 +28,7 @@ export default class Wrapper {
         providerId: string;
         redirectionURL: string;
         userContext?: any;
+        options?: RecipeFunctionOptions;
     }): Promise<string> {
         const recipeInstance = Recipe.getInstanceOrThrow();
 
@@ -43,6 +44,7 @@ export default class Wrapper {
         redirectionURL: string;
         providerClientId?: string;
         userContext?: any;
+        authCode?: string;
         options?: RecipeFunctionOptions;
     }): Promise<
         | {
