@@ -167,9 +167,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             const stateFromQueryParams = getQueryParams("state");
 
             if (
+                stateFromStorage === undefined ||
                 !this.verifyStateFromOAuthProvider({
                     stateFromProvider: stateFromQueryParams,
-                    stateFromStorage: stateFromStorage,
+                    stateFromStorage: stateFromStorage.stateForAuthProvider,
                     config: input.config,
                     userContext: input.userContext,
                 })
@@ -240,14 +241,14 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
         verifyStateFromOAuthProvider: function (input: {
             stateFromProvider: string | undefined;
-            stateFromStorage: StateObject | undefined;
+            stateFromStorage: string | undefined;
             userContext: any;
         }): boolean {
             if (input.stateFromStorage === undefined || input.stateFromProvider === undefined) {
                 return false;
             }
 
-            return input.stateFromProvider === input.stateFromStorage.stateForAuthProvider;
+            return input.stateFromProvider === input.stateFromStorage;
         },
     };
 }

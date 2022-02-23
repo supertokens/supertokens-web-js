@@ -105,7 +105,7 @@ export type RecipeInterface = {
 
     verifyStateFromOAuthProvider: (input: {
         stateFromProvider: string | undefined;
-        stateFromStorage: StateObject | undefined;
+        stateFromStorage: string | undefined;
         config: NormalisedInputType;
         userContext: any;
     }) => boolean;

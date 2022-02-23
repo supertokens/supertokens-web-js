@@ -79,7 +79,7 @@ export declare type RecipeInterface = {
     generateStateToSendToOAuthProvider: (input: { userContext: any; config: NormalisedInputType }) => string;
     verifyStateFromOAuthProvider: (input: {
         stateFromProvider: string | undefined;
-        stateFromStorage: StateObject | undefined;
+        stateFromStorage: string | undefined;
         config: NormalisedInputType;
         userContext: any;
     }) => boolean;
