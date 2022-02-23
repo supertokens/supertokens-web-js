@@ -51,13 +51,13 @@ export type StateObject = {
 };
 
 export type RecipeInterface = {
-    getStateAndOtherInfoFromStorage: (input: {
+    getStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
         userContext: any;
         config: NormalisedInputType;
-    }) => StateObject | undefined;
+    }) => (StateObject & CustomStateProperties) | undefined;
 
-    setStateAndOtherInfoToStorage: (input: {
-        state: StateObject;
+    setStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
+        state: StateObject & CustomStateProperties;
         config: NormalisedInputType;
         userContext: any;
     }) => void;

@@ -25,7 +25,9 @@ import STGeneralError from "../../error";
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
     return {
-        getStateAndOtherInfoFromStorage: function (): StateObject | undefined {
+        getStateAndOtherInfoFromStorage: function <CustomStateProperties>():
+            | (StateObject & CustomStateProperties)
+            | undefined {
             try {
                 const stateFromStorage = getSessionStorage("supertokens-oauth-state");
 
@@ -67,7 +69,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             });
 
             // 2. Store state in Session Storage.
-            this.setStateAndOtherInfoToStorage({
+            this.setStateAndOtherInfoToStorage<{}>({
                 state: {
                     thirdPartyId: input.providerId,
                     stateForAuthProvider: stateToSendToAuthProvider,
@@ -162,7 +164,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            const stateFromStorage = this.getStateAndOtherInfoFromStorage({
+            const stateFromStorage = this.getStateAndOtherInfoFromStorage<{}>({
                 userContext: input.userContext,
                 config: input.config,
             });

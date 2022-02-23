@@ -31,12 +31,12 @@ export declare type StateObject = {
     thirdPartyId: string;
 };
 export declare type RecipeInterface = {
-    getStateAndOtherInfoFromStorage: (input: {
+    getStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
         userContext: any;
         config: NormalisedInputType;
-    }) => StateObject | undefined;
-    setStateAndOtherInfoToStorage: (input: {
-        state: StateObject;
+    }) => (StateObject & CustomStateProperties) | undefined;
+    setStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
+        state: StateObject & CustomStateProperties;
         config: NormalisedInputType;
         userContext: any;
     }) => void;
