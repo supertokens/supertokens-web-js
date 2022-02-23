@@ -66,6 +66,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             // 1. Generate state.
             const stateToSendToAuthProvider = this.generateStateToSendToOAuthProvider({
                 userContext: input.userContext,
+                config: input.config,
             });
 
             // 2. Store state in Session Storage.
@@ -171,6 +172,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     stateFromProvider: stateFromQueryParams,
                     stateFromStorage: stateFromStorage,
                     providerId: input.providerId,
+                    config: input.config,
                 })
             ) {
                 throw new Error("Invalid 'state' recieved from provider");
