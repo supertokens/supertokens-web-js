@@ -47,7 +47,6 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
 
 export type StateObject = {
     stateForAuthProvider?: string;
-    thirdPartyId?: string;
 };
 
 export type RecipeInterface = {
@@ -107,7 +106,6 @@ export type RecipeInterface = {
     verifyStateFromOAuthProvider: (input: {
         stateFromProvider: string | undefined;
         stateFromStorage: StateObject | undefined;
-        providerId: string;
         config: NormalisedInputType;
         userContext: any;
     }) => boolean;

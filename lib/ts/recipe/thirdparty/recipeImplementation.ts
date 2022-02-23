@@ -72,7 +72,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             // 2. Store state in Session Storage.
             this.setStateAndOtherInfoToStorage<{}>({
                 state: {
-                    thirdPartyId: input.providerId,
                     stateForAuthProvider: stateToSendToAuthProvider,
                 },
                 userContext: input.userContext,
@@ -171,7 +170,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 !this.verifyStateFromOAuthProvider({
                     stateFromProvider: stateFromQueryParams,
                     stateFromStorage: stateFromStorage,
-                    providerId: input.providerId,
                     config: input.config,
                     userContext: input.userContext,
                 })
@@ -243,17 +241,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         verifyStateFromOAuthProvider: function (input: {
             stateFromProvider: string | undefined;
             stateFromStorage: StateObject | undefined;
-            providerId: string;
             userContext: any;
         }): boolean {
             if (input.stateFromStorage === undefined || input.stateFromProvider === undefined) {
                 return false;
             }
 
-            return (
-                input.stateFromProvider === input.stateFromStorage.stateForAuthProvider &&
-                input.stateFromStorage.thirdPartyId === input.providerId
-            );
+            return input.stateFromProvider === input.stateFromStorage.stateForAuthProvider;
         },
     };
 }
