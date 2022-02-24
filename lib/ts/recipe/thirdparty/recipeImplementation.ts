@@ -89,10 +89,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
             const urlWithState = alreadyContainsRedirectURI
                 ? appendQueryParamsToURL(urlResponse.url, {
-                      stateToSendToAuthProvider,
+                      state: stateToSendToAuthProvider,
                   })
                 : appendQueryParamsToURL(urlResponse.url, {
-                      stateToSendToAuthProvider,
+                      state: stateToSendToAuthProvider,
                       redirect_uri: input.redirectionURL,
                   });
 
