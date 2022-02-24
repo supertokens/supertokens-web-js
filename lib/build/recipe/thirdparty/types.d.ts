@@ -27,9 +27,11 @@ export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPo
     };
 };
 export declare type StateObject = {
-    stateForAuthProvider?: string;
-    thirdPartyId?: string;
     expiresAt: number;
+    providerId: string;
+    authCallbackURL: string;
+    stateForAuthProvider: string;
+    providerClientId?: string;
 };
 export declare type RecipeInterface = {
     getStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
@@ -46,6 +48,7 @@ export declare type RecipeInterface = {
         redirectionURL: string;
         config: NormalisedInputType;
         userContext: any;
+        providerClientId?: string;
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
     getOAuthAuthorisationURLFromBackend: (input: {
@@ -59,9 +62,6 @@ export declare type RecipeInterface = {
         fetchResponse: Response;
     }>;
     signInAndUp: (input: {
-        providerId: string;
-        redirectionURL: string;
-        providerClientId?: string;
         authCode?: string;
         config: NormalisedInputType;
         userContext: any;
@@ -79,10 +79,10 @@ export declare type RecipeInterface = {
           }
     >;
     generateStateToSendToOAuthProvider: (input: { userContext: any; config: NormalisedInputType }) => string;
-    verifyStateFromOAuthProvider: (input: {
-        stateFromProvider: string | undefined;
-        stateFromStorage: string | undefined;
+    verifyAndGetStateOrThrowError: (input: {
+        stateFromAuthProvider: string | undefined;
+        stateObjectFromStorage: StateObject | undefined;
         config: NormalisedInputType;
         userContext: any;
-    }) => boolean;
+    }) => Promise<StateObject>;
 };

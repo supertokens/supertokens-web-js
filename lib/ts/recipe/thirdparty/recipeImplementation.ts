@@ -19,7 +19,6 @@ import { appendQueryParamsToURL, getQueryParams, getSessionStorage, setSessionSt
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { NormalisedInputType, RecipeInterface, StateObject } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { generateThirdPartyProviderState } from "./utils";
 import STGeneralError from "../../error";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
@@ -29,19 +28,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             | (StateObject & CustomStateProperties)
             | undefined {
             try {
-                const stateFromStorage = getSessionStorage("supertokens-oauth-state");
+                const stateFromStorage = getSessionStorage("supertokens-oauth-state-2");
 
                 if (stateFromStorage === undefined) {
                     return undefined;
                 }
 
-                const state = JSON.parse(stateFromStorage);
-
-                if (Date.now() > state.expiresAt) {
-                    return undefined;
-                }
-
-                return undefined;
+                return JSON.parse(stateFromStorage);
             } catch {
                 return undefined;
             }
@@ -51,7 +44,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             const value = JSON.stringify({
                 ...input.state,
             });
-            setSessionStorage("supertokens-oauth-state", value);
+            setSessionStorage("supertokens-oauth-state-2", value);
         },
 
         getLoginRedirectURLWithQueryParamsAndSetState: async function (input: {
@@ -59,6 +52,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             redirectionURL: string;
             config: NormalisedInputType;
             userContext: any;
+            providerClientId?: string;
             options?: RecipeFunctionOptions;
         }): Promise<string> {
             // 1. Generate state.
@@ -72,8 +66,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             this.setStateAndOtherInfoToStorage<{}>({
                 state: {
                     stateForAuthProvider: stateToSendToAuthProvider,
-                    thirdPartyId: input.providerId,
+                    providerId: input.providerId,
                     expiresAt: stateExpiry,
+                    authCallbackURL: input.redirectionURL,
+                    providerClientId: input.providerClientId,
                 },
                 userContext: input.userContext,
                 config: input.config,
@@ -141,9 +137,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
 
         signInAndUp: async function (input: {
-            providerId: string;
-            redirectionURL: string;
-            providerClientId?: string;
             authCode?: string;
             config: NormalisedInputType;
             userContext: any;
@@ -167,17 +160,12 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
             const stateFromQueryParams = getQueryParams("state");
 
-            if (
-                stateFromStorage === undefined ||
-                !this.verifyStateFromOAuthProvider({
-                    stateFromProvider: stateFromQueryParams,
-                    stateFromStorage: stateFromStorage.stateForAuthProvider,
-                    config: input.config,
-                    userContext: input.userContext,
-                })
-            ) {
-                throw new Error("Invalid 'state' recieved from provider");
-            }
+            const verifiedState = await this.verifyAndGetStateOrThrowError({
+                stateFromAuthProvider: stateFromQueryParams,
+                stateObjectFromStorage: stateFromStorage,
+                config: input.config,
+                userContext: input.userContext,
+            });
 
             const code = input.authCode === undefined ? getQueryParams("code") : input.authCode;
 
@@ -187,9 +175,19 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 );
             }
 
-            if (getQueryParams("error") !== undefined) {
-                // TODO NEMI: This should have a better message
-                throw new Error("Something went Wrong");
+            const errorInQuery = getQueryParams("error");
+
+            if (errorInQuery !== undefined) {
+                /**
+                 * If an error occurs the auth provider will send an additional query param
+                 * 'error' which will be a code that represents what error occured. Since the
+                 * error is not end user friendly we throw a normal Javascript Error instead
+                 * of STGeneralError
+                 *
+                 * Explained in detail in the RFC:
+                 * https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+                 */
+                throw new Error(`Auth provider responded with error: ${errorInQuery}`);
             }
 
             const { jsonBody, fetchResponse } = await querier.post<
@@ -210,9 +208,9 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 {
                     body: JSON.stringify({
                         code,
-                        thirdPartyId: input.providerId,
-                        redirectURI: input.redirectionURL,
-                        clientId: input.providerClientId,
+                        thirdPartyId: verifiedState.providerId,
+                        redirectURI: verifiedState.authCallbackURL,
+                        clientId: verifiedState.providerClientId,
                     }),
                 },
                 Querier.preparePreAPIHook({
@@ -238,18 +236,36 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             };
         },
         generateStateToSendToOAuthProvider: function (): string {
-            return generateThirdPartyProviderState();
+            // Generate state using algorithm described in https://github.com/supertokens/supertokens-auth-react/issues/154#issue-796867579
+            return `${1e20}`.replace(/[018]/g, (c) =>
+                (parseInt(c) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (parseInt(c) / 4)))).toString(16)
+            );
         },
-        verifyStateFromOAuthProvider: function (input: {
-            stateFromProvider: string | undefined;
-            stateFromStorage: string | undefined;
+        verifyAndGetStateOrThrowError: async function (input: {
+            stateFromAuthProvider: string | undefined;
+            stateObjectFromStorage: StateObject | undefined;
             userContext: any;
-        }): boolean {
-            if (input.stateFromStorage === undefined || input.stateFromProvider === undefined) {
-                return false;
+        }): Promise<StateObject> {
+            if (
+                input.stateObjectFromStorage === undefined ||
+                input.stateObjectFromStorage.stateForAuthProvider === undefined
+            ) {
+                throw new Error("No valid auth state present in session storage");
             }
 
-            return input.stateFromProvider === input.stateFromStorage;
+            if (input.stateFromAuthProvider === undefined) {
+                throw new Error("No state recieved from auth provider");
+            }
+
+            if (input.stateObjectFromStorage.expiresAt < Date.now()) {
+                throw new Error("Auth state verification failed. The auth provider took too long to respond");
+            }
+
+            if (input.stateFromAuthProvider !== input.stateObjectFromStorage.stateForAuthProvider) {
+                throw new Error("Auth state verification failed. The auth provider responded with an invalid state");
+            }
+
+            return input.stateObjectFromStorage;
         },
     };
 }

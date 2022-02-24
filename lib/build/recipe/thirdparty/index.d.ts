@@ -6,17 +6,11 @@ export default class Wrapper {
     static getLoginRedirectURLWithQueryParamsAndSetState(input: {
         providerId: string;
         redirectionURL: string;
+        providerClientId?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string>;
-    static signInAndUp(input: {
-        providerId: string;
-        redirectionURL: string;
-        providerClientId?: string;
-        userContext?: any;
-        authCode?: string;
-        options?: RecipeFunctionOptions;
-    }): Promise<
+    static signInAndUp(input: { userContext?: any; authCode?: string; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
               user: UserType;

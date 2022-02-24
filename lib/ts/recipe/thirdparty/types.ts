@@ -46,9 +46,11 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
 };
 
 export type StateObject = {
-    stateForAuthProvider?: string;
-    thirdPartyId?: string;
     expiresAt: number;
+    providerId: string;
+    authCallbackURL: string;
+    stateForAuthProvider: string;
+    providerClientId?: string;
 };
 
 export type RecipeInterface = {
@@ -68,6 +70,7 @@ export type RecipeInterface = {
         redirectionURL: string;
         config: NormalisedInputType;
         userContext: any;
+        providerClientId?: string;
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
 
@@ -83,9 +86,6 @@ export type RecipeInterface = {
     }>;
 
     signInAndUp: (input: {
-        providerId: string;
-        redirectionURL: string;
-        providerClientId?: string;
         authCode?: string;
         config: NormalisedInputType;
         userContext: any;
@@ -105,10 +105,10 @@ export type RecipeInterface = {
 
     generateStateToSendToOAuthProvider: (input: { userContext: any; config: NormalisedInputType }) => string;
 
-    verifyStateFromOAuthProvider: (input: {
-        stateFromProvider: string | undefined;
-        stateFromStorage: string | undefined;
+    verifyAndGetStateOrThrowError: (input: {
+        stateFromAuthProvider: string | undefined;
+        stateObjectFromStorage: StateObject | undefined;
         config: NormalisedInputType;
         userContext: any;
-    }) => boolean;
+    }) => Promise<StateObject>;
 };
