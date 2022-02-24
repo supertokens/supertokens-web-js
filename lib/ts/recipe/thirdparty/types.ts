@@ -85,12 +85,7 @@ export type RecipeInterface = {
         fetchResponse: Response;
     }>;
 
-    signInAndUp: (input: {
-        authCode?: string;
-        config: NormalisedInputType;
-        userContext: any;
-        options?: RecipeFunctionOptions;
-    }) => Promise<
+    signInAndUp: (input: { config: NormalisedInputType; userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
               status: "OK";
               user: UserType;
@@ -111,4 +106,8 @@ export type RecipeInterface = {
         config: NormalisedInputType;
         userContext: any;
     }) => Promise<StateObject>;
+
+    getAuthCodeFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
+
+    getAuthErrorFromURL: (input: { config: NormalisedInputType; userContext: any }) => string | undefined;
 };

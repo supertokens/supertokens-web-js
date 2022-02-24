@@ -47,7 +47,6 @@ export type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction
 
 export type RecipeInterface = {
     verifyEmail: (input: {
-        token?: string;
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -74,4 +73,6 @@ export type RecipeInterface = {
         isVerified: boolean;
         fetchResponse: Response;
     }>;
+
+    getEmailVerificationTokenFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
 };

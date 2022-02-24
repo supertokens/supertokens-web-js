@@ -38,7 +38,6 @@ export declare type RecipeInterface = {
             id: string;
             value: string;
         }[];
-        token?: string;
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -138,4 +137,5 @@ export declare type RecipeInterface = {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
+    getSubmitPasswordTokenFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
 };

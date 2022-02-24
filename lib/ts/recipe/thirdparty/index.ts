@@ -40,7 +40,7 @@ export default class Wrapper {
         });
     }
 
-    static signInAndUp(input: { userContext?: any; authCode?: string; options?: RecipeFunctionOptions }): Promise<
+    static signInAndUp(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
               user: UserType;

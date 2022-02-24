@@ -10,7 +10,6 @@ export default class RecipeWrapper {
             id: string;
             value: string;
         }[];
-        token?: string;
         options?: RecipeFunctionOptions;
         userContext?: any;
     }): Promise<

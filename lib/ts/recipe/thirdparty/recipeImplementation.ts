@@ -137,7 +137,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
 
         signInAndUp: async function (input: {
-            authCode?: string;
             config: NormalisedInputType;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -167,21 +166,21 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 userContext: input.userContext,
             });
 
-            const code = input.authCode === undefined ? getQueryParams("code") : input.authCode;
+            const code = this.getAuthCodeFromURL({
+                userContext: input.userContext,
+                config: input.config,
+            });
 
-            if (code === undefined) {
-                throw new Error(
-                    "There is no 'code' present in query params and no 'authCode' was provided when calling signInUp"
-                );
-            }
-
-            const errorInQuery = getQueryParams("error");
+            const errorInQuery = this.getAuthErrorFromURL({
+                userContext: input.userContext,
+                config: input.config,
+            });
 
             if (errorInQuery !== undefined) {
                 /**
                  * If an error occurs the auth provider will send an additional query param
                  * 'error' which will be a code that represents what error occured. Since the
-                 * error is not end user friendly we throw a normal Javascript Error instead
+                 * error is not end-user friendly we throw a normal Javascript Error instead
                  * of STGeneralError
                  *
                  * Explained in detail in the RFC:
@@ -266,6 +265,22 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             }
 
             return input.stateObjectFromStorage;
+        },
+
+        getAuthCodeFromURL: function (): string {
+            const code = getQueryParams("code");
+
+            if (code === undefined) {
+                throw new Error(
+                    "There is no 'code' present in query params and no 'authCode' was provided when calling signInUp"
+                );
+            }
+
+            return code;
+        },
+
+        getAuthErrorFromURL: function (): string | undefined {
+            return getQueryParams("error");
         },
     };
 }

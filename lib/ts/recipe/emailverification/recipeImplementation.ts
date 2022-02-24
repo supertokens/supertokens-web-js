@@ -22,12 +22,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
     const querier = new Querier(recipeId, appInfo);
     return {
         verifyEmail: async function ({
-            token,
             config,
             options,
             userContext,
         }: {
-            token?: string;
             config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
@@ -35,11 +33,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR" | "OK";
             fetchResponse: Response;
         }> {
-            token = token === undefined ? getQueryParams("token") : token;
-
-            if (token === undefined) {
-                token = "";
-            }
+            const token = this.getEmailVerificationTokenFromURL({
+                config,
+                userContext,
+            });
 
             const { jsonBody, fetchResponse } = await querier.post<{
                 status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
@@ -139,6 +136,16 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 status: jsonBody.status,
                 fetchResponse,
             };
+        },
+
+        getEmailVerificationTokenFromURL: function (): string {
+            const token = getQueryParams("token");
+
+            if (token === undefined) {
+                return "";
+            }
+
+            return token;
         },
     };
 }

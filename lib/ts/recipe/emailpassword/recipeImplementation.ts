@@ -25,7 +25,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
     return {
         submitNewPassword: async function ({
             formFields,
-            token,
             config,
             options,
             userContext,
@@ -34,7 +33,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 id: string;
                 value: string;
             }[];
-            token?: string;
             config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
@@ -52,11 +50,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            token = token === undefined ? getQueryParams("token") : token;
-
-            if (token === undefined) {
-                token = "";
-            }
+            const token = this.getSubmitPasswordTokenFromURL({
+                config,
+                userContext,
+            });
 
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
@@ -363,6 +360,16 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 doesExist: jsonBody.exists,
                 fetchResponse,
             };
+        },
+
+        getSubmitPasswordTokenFromURL: function (): string {
+            const token = getQueryParams("token");
+
+            if (token === undefined) {
+                return "";
+            }
+
+            return token;
         },
     };
 }
