@@ -2,7 +2,7 @@ import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeFunctionOptions } from "../emailpassword";
 import { InputType, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, StateObject } from "./types";
 export default class Wrapper {
-    static init(config: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
+    static init(config?: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     static getAuthorizationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         redirectionURL: string;

@@ -3,7 +3,7 @@ import { RecipeFunctionOptions } from "../recipeModule/types";
 import { UserType } from "../authRecipeWithEmailVerification/types";
 export default class RecipeWrapper {
     static init(
-        config: InputType
+        config?: InputType
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
     static submitNewPassword(input: {
         formFields: {
