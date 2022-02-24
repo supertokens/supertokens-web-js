@@ -10,7 +10,7 @@ export default class Wrapper {
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string>;
-    static signInAndUp(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
+    static signInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
               user: UserType;

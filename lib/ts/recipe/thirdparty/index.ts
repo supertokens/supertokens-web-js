@@ -40,7 +40,7 @@ export default class Wrapper {
         });
     }
 
-    static signInAndUp(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
+    static signInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
               user: UserType;
@@ -57,7 +57,7 @@ export default class Wrapper {
         return recipeInstance.recipeImplementation.signInAndUp({
             ...input,
             config: recipeInstance.config,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 }
