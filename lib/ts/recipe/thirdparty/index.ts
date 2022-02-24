@@ -24,7 +24,7 @@ export default class Wrapper {
         return Recipe.init(config);
     }
 
-    static getLoginRedirectURLWithQueryParamsAndSetState(input: {
+    static getAuthorizationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         redirectionURL: string;
         providerClientId?: string;
@@ -33,7 +33,7 @@ export default class Wrapper {
     }): Promise<string> {
         const recipeInstance = Recipe.getInstanceOrThrow();
 
-        return recipeInstance.recipeImplementation.getLoginRedirectURLWithQueryParamsAndSetState({
+        return recipeInstance.recipeImplementation.getAuthorizationURLWithQueryParamsAndSetState({
             ...input,
             config: recipeInstance.config,
             userContext: getNormalisedUserContext(input.userContext),
@@ -63,12 +63,12 @@ export default class Wrapper {
 }
 
 const init = Wrapper.init;
-const getLoginRedirectURLWithQueryParamsAndSetState = Wrapper.getLoginRedirectURLWithQueryParamsAndSetState;
+const getAuthorizationURLWithQueryParamsAndSetState = Wrapper.getAuthorizationURLWithQueryParamsAndSetState;
 const signInAndUp = Wrapper.signInAndUp;
 
 export {
     init,
-    getLoginRedirectURLWithQueryParamsAndSetState,
+    getAuthorizationURLWithQueryParamsAndSetState,
     signInAndUp,
     StateObject,
     PreAPIHookContext,

@@ -47,7 +47,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             setSessionStorage("supertokens-oauth-state-2", value);
         },
 
-        getLoginRedirectURLWithQueryParamsAndSetState: async function (input: {
+        getAuthorizationURLWithQueryParamsAndSetState: async function (input: {
             providerId: string;
             redirectionURL: string;
             config: NormalisedInputType;
@@ -76,7 +76,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             });
 
             // 3. Get Authorisation URL.
-            const urlResponse = await this.getOAuthAuthorisationURLFromBackend({
+            const urlResponse = await this.getAuthorisationURLFromBackend({
                 providerId: input.providerId,
                 config: input.config,
                 userContext: input.userContext,
@@ -99,7 +99,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             return urlWithState;
         },
 
-        getOAuthAuthorisationURLFromBackend: async function (input: {
+        getAuthorisationURLFromBackend: async function (input: {
             providerId: string;
             config: NormalisedInputType;
             userContext: any;

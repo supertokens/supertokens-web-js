@@ -3,7 +3,7 @@ import { RecipeFunctionOptions } from "../emailpassword";
 import { InputType, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, StateObject } from "./types";
 export default class Wrapper {
     static init(config: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
-    static getLoginRedirectURLWithQueryParamsAndSetState(input: {
+    static getAuthorizationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         redirectionURL: string;
         providerClientId?: string;
@@ -24,11 +24,11 @@ export default class Wrapper {
     >;
 }
 declare const init: typeof Wrapper.init;
-declare const getLoginRedirectURLWithQueryParamsAndSetState: typeof Wrapper.getLoginRedirectURLWithQueryParamsAndSetState;
+declare const getAuthorizationURLWithQueryParamsAndSetState: typeof Wrapper.getAuthorizationURLWithQueryParamsAndSetState;
 declare const signInAndUp: typeof Wrapper.signInAndUp;
 export {
     init,
-    getLoginRedirectURLWithQueryParamsAndSetState,
+    getAuthorizationURLWithQueryParamsAndSetState,
     signInAndUp,
     StateObject,
     PreAPIHookContext,

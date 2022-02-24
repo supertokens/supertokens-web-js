@@ -65,7 +65,7 @@ export type RecipeInterface = {
         userContext: any;
     }) => void;
 
-    getLoginRedirectURLWithQueryParamsAndSetState: (input: {
+    getAuthorizationURLWithQueryParamsAndSetState: (input: {
         providerId: string;
         redirectionURL: string;
         config: NormalisedInputType;
@@ -74,7 +74,7 @@ export type RecipeInterface = {
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
 
-    getOAuthAuthorisationURLFromBackend: (input: {
+    getAuthorisationURLFromBackend: (input: {
         providerId: string;
         config: NormalisedInputType;
         userContext: any;
