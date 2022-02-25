@@ -50,7 +50,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            const token = this.getSubmitPasswordTokenFromURL({
+            const token = this.getResetPasswordTokenFromURL({
                 config,
                 userContext,
             });
@@ -362,7 +362,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             };
         },
 
-        getSubmitPasswordTokenFromURL: function (): string {
+        getResetPasswordTokenFromURL: function (): string {
             const token = getQueryParams("token");
 
             if (token === undefined) {

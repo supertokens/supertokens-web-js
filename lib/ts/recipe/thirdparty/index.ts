@@ -26,7 +26,7 @@ export default class Wrapper {
 
     static getAuthorizationURLWithQueryParamsAndSetState(input: {
         providerId: string;
-        redirectionURL: string;
+        authorisationURL: string;
         providerClientId?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;

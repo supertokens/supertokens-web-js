@@ -162,5 +162,5 @@ export type RecipeInterface = {
         fetchResponse: Response;
     }>;
 
-    getSubmitPasswordTokenFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
+    getResetPasswordTokenFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
 };

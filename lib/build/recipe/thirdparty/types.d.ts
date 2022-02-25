@@ -29,7 +29,7 @@ export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPo
 export declare type StateObject = {
     expiresAt: number;
     providerId: string;
-    authCallbackURL: string;
+    authorisationURL: string;
     stateForAuthProvider: string;
     providerClientId?: string;
 };
@@ -45,7 +45,7 @@ export declare type RecipeInterface = {
     }) => void;
     getAuthorizationURLWithQueryParamsAndSetState: (input: {
         providerId: string;
-        redirectionURL: string;
+        authorisationURL: string;
         config: NormalisedInputType;
         userContext: any;
         providerClientId?: string;
@@ -80,6 +80,7 @@ export declare type RecipeInterface = {
         config: NormalisedInputType;
         userContext: any;
     }) => Promise<StateObject & CustomStateProperties>;
-    getAuthCodeFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
+    getAuthCodeFromURL: (input: { config: NormalisedInputType; userContext: any }) => string | undefined;
     getAuthErrorFromURL: (input: { config: NormalisedInputType; userContext: any }) => string | undefined;
+    getAuthStateFromURL: (input: { config: NormalisedInputType; userContext: any }) => string | undefined;
 };

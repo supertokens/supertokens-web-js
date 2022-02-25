@@ -49,7 +49,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
         getAuthorizationURLWithQueryParamsAndSetState: async function (input: {
             providerId: string;
-            redirectionURL: string;
+            authorisationURL: string;
             config: NormalisedInputType;
             userContext: any;
             providerClientId?: string;
@@ -68,7 +68,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     stateForAuthProvider: stateToSendToAuthProvider,
                     providerId: input.providerId,
                     expiresAt: stateExpiry,
-                    authCallbackURL: input.redirectionURL,
+                    authorisationURL: input.authorisationURL,
                     providerClientId: input.providerClientId,
                 },
                 userContext: input.userContext,
@@ -93,7 +93,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   })
                 : appendQueryParamsToURL(urlResponse.url, {
                       state: stateToSendToAuthProvider,
-                      redirect_uri: input.redirectionURL,
+                      redirect_uri: input.authorisationURL,
                   });
 
             return urlWithState;
@@ -157,7 +157,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 config: input.config,
             });
 
-            const stateFromQueryParams = getQueryParams("state");
+            const stateFromQueryParams = this.getAuthStateFromURL({
+                config: input.config,
+                userContext: input.userContext,
+            });
 
             const verifiedState = await this.verifyAndGetStateOrThrowError({
                 stateFromAuthProvider: stateFromQueryParams,
@@ -208,7 +211,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     body: JSON.stringify({
                         code,
                         thirdPartyId: verifiedState.providerId,
-                        redirectURI: verifiedState.authCallbackURL,
+                        redirectURI: verifiedState.authorisationURL,
                         clientId: verifiedState.providerClientId,
                     }),
                 },
@@ -267,20 +270,16 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             return input.stateObjectFromStorage;
         },
 
-        getAuthCodeFromURL: function (): string {
-            const code = getQueryParams("code");
-
-            if (code === undefined) {
-                throw new Error(
-                    "There is no 'code' present in query params and no 'authCode' was provided when calling signInUp"
-                );
-            }
-
-            return code;
+        getAuthCodeFromURL: function (): string | undefined {
+            return getQueryParams("code");
         },
 
         getAuthErrorFromURL: function (): string | undefined {
             return getQueryParams("error");
+        },
+
+        getAuthStateFromURL: function (): string | undefined {
+            return getQueryParams("state");
         },
     };
 }
