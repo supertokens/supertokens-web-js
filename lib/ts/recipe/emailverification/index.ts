@@ -18,18 +18,17 @@ import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
 
 export default class RecipeWrapper {
-    static init(config: InputType) {
+    static init(config?: InputType) {
         return Recipe.init(config);
     }
 
-    static verifyEmail(input: { token?: string; userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static verifyEmail(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
         fetchResponse: Response;
     }> {
         let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
 
         return recipeInstance.recipeImplementation.verifyEmail({
-            token: input.token,
             options: input.options,
             config: recipeInstance.config,
             userContext: getNormalisedUserContext(input.userContext),

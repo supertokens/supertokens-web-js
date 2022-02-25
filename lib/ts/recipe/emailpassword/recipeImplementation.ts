@@ -17,14 +17,14 @@ import { RecipeInterface } from "./types";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { NormalisedInputType, UserType } from "./types";
+import { NormalisedInputType } from "./types";
+import { UserType } from ".";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
     return {
         submitNewPassword: async function ({
             formFields,
-            token,
             config,
             options,
             userContext,
@@ -33,7 +33,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 id: string;
                 value: string;
             }[];
-            token?: string;
             config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
@@ -51,11 +50,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   fetchResponse: Response;
               }
         > {
-            token = token === undefined ? getQueryParams("token") : token;
-
-            if (token === undefined) {
-                token = "";
-            }
+            const token = this.getResetPasswordTokenFromURL({
+                config,
+                userContext,
+            });
 
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
@@ -362,6 +360,16 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 doesExist: jsonBody.exists,
                 fetchResponse,
             };
+        },
+
+        getResetPasswordTokenFromURL: function (): string {
+            const token = getQueryParams("token");
+
+            if (token === undefined) {
+                return "";
+            }
+
+            return token;
         },
     };
 }

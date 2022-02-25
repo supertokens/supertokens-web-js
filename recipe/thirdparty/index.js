@@ -12,23 +12,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-
-import { NormalisedRecipeConfig, RecipeConfig } from "../recipeModule/types";
-import {
-    PreAndPostAPIHookAction as EmailVerificationAction,
-    InputTypeOverride as EmailVerificationOverride,
-} from "../emailverification/types";
-
-export type InputType<Action> = RecipeConfig<EmailVerificationAction | Action>;
-
-export type NormalisedInputType<Action> = NormalisedRecipeConfig<EmailVerificationAction | Action> & {
-    override?: {
-        emailVerification?: EmailVerificationOverride;
-    };
-};
-
-export type UserType = {
-    id: string;
-    email: string;
-    timeJoined: number;
-};
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+exports.__esModule = true;
+__export(require("../../lib/build/recipe/thirdparty"));

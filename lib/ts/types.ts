@@ -49,11 +49,6 @@ export type AppInfoUserInput = {
     apiDomain: string;
 
     /*
-     * The domain on which the application runs.
-     */
-    websiteDomain: string;
-
-    /*
      * The base path for SuperTokens middleware in the API.
      * Default to `/auth`
      */
@@ -82,11 +77,6 @@ export type NormalisedAppInfo = {
      * The API that connects with the application.
      */
     apiDomain: NormalisedURLDomain;
-
-    /*
-     * The domain on which the application runs.
-     */
-    websiteDomain: NormalisedURLDomain;
 
     /*
      * The base path for SuperTokens middleware in the API.

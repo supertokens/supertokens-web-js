@@ -13,34 +13,40 @@
  * under the License.
  */
 
-import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
-import RecipeModule from "../recipeModule";
+import AuthRecipeWithEmailVerification from "../authRecipeWithEmailVerification";
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
+import EmailVerificationRecipe from "../emailverification/recipe";
 import { normaliseUserInput } from "./utils";
-import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
+import RecipeImplementation from "./recipeImplementation";
+import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 
-export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, NormalisedInputType> {
+export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
-    static RECIPE_ID = "emailverification";
+    static RECIPE_ID = "thirdparty";
 
-    config: NormalisedInputType;
     recipeImplementation: RecipeInterface;
 
-    constructor(config: InputType) {
-        this.config = normaliseUserInput(config);
+    constructor(config: InputType, recipes: { emailVerification: EmailVerificationRecipe | undefined }) {
+        super(normaliseUserInput(config), recipes);
+
         const builder = new OverrideableBuilder(RecipeImplementation(this.config.recipeId, this.config.appInfo));
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 
     static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction> {
         return (appInfo: NormalisedAppInfo) => {
-            Recipe.instance = new Recipe({
-                ...config,
-                appInfo,
-                recipeId: Recipe.RECIPE_ID,
-            });
+            Recipe.instance = new Recipe(
+                {
+                    ...config,
+                    recipeId: Recipe.RECIPE_ID,
+                    appInfo,
+                },
+                {
+                    emailVerification: undefined,
+                }
+            );
 
             return Recipe.instance;
         };
@@ -48,7 +54,7 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
 
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
-            let error = "No instance of EmailVerification found. Make sure to call the EmailVerification.init method.";
+            let error = "No instance of EmailPassword found. Make sure to call the EmailPassword.init method.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);

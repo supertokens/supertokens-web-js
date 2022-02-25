@@ -12,23 +12,6 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-
-import { NormalisedRecipeConfig, RecipeConfig } from "../recipeModule/types";
-import {
-    PreAndPostAPIHookAction as EmailVerificationAction,
-    InputTypeOverride as EmailVerificationOverride,
-} from "../emailverification/types";
-
-export type InputType<Action> = RecipeConfig<EmailVerificationAction | Action>;
-
-export type NormalisedInputType<Action> = NormalisedRecipeConfig<EmailVerificationAction | Action> & {
-    override?: {
-        emailVerification?: EmailVerificationOverride;
-    };
-};
-
-export type UserType = {
-    id: string;
-    email: string;
-    timeJoined: number;
-};
+export * from "../../lib/build/recipe/thirdparty";
+import * as _default from "../../lib/build/recipe/thirdparty";
+export default _default;

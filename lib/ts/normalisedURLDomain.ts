@@ -34,7 +34,7 @@ function normaliseURLDomainOrThrowError(input: string, ignoreProtocol = false): 
     input = input.trim();
     try {
         if (!input.startsWith("http://") && !input.startsWith("https://")) {
-            throw new Error("converting to proper URL");
+            throw new Error("Error converting to proper URL");
         }
         const urlObj: URL = new URL(input);
         if (ignoreProtocol) {

@@ -17,8 +17,9 @@ import { RecipePostAPIHookContext, RecipePreAPIHookContext } from "../recipeModu
 import OverrideableBuilder from "supertokens-js-override";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
-    NormalisedInputType as NormalisedAuthRecipeType,
+    NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
+    UserType,
 } from "../authRecipeWithEmailVerification/types";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 
@@ -32,12 +33,6 @@ export type PreAndPostAPIHookAction =
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
-export type UserType = {
-    id: string;
-    email: string;
-    timeJoined: number;
-};
-
 export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
     override?: {
         emailVerification?: EmailVerificationOverride;
@@ -48,7 +43,7 @@ export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
     };
 };
 
-export type NormalisedInputType = NormalisedAuthRecipeType<PreAndPostAPIHookAction> & {
+export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     override: {
         functions: (
             originalImplementation: RecipeInterface,
@@ -63,7 +58,6 @@ export type RecipeInterface = {
             id: string;
             value: string;
         }[];
-        token?: string;
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -167,4 +161,6 @@ export type RecipeInterface = {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
+
+    getResetPasswordTokenFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
 };

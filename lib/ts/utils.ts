@@ -38,7 +38,7 @@ export function appendQueryParamsToURL(stringUrl: string, queryParams?: Record<s
     }
 }
 
-function getWindowOrThrow(): any {
+function getWindowOrThrow(): Window {
     // tslint:disable-next-line
     if (typeof window === "undefined") {
         throw new Error(WINDOW_UNDEFINED_ERROR);
@@ -46,10 +46,6 @@ function getWindowOrThrow(): any {
 
     // tslint:disable-next-line
     return window;
-}
-
-export function getOriginOfPage(): NormalisedURLDomain {
-    return new NormalisedURLDomain(getWindowOrThrow().location.origin);
 }
 
 function getNormalisedURLPathOrDefault(defaultPath: string, path?: string): NormalisedURLPath {
@@ -71,9 +67,6 @@ export function normaliseInputAppInfoOrThrowError(appInfo: AppInfoUserInput): No
     if (appInfo.appName === undefined) {
         throw new Error("Please provide your appName inside the appInfo object when calling supertokens.init");
     }
-    if (appInfo.websiteDomain === undefined) {
-        throw new Error("Please provide your websiteDomain inside the appInfo object when calling supertokens.init");
-    }
 
     let apiGatewayPath = new NormalisedURLPath("");
     if (appInfo.apiGatewayPath !== undefined) {
@@ -83,7 +76,6 @@ export function normaliseInputAppInfoOrThrowError(appInfo: AppInfoUserInput): No
     return {
         appName: appInfo.appName,
         apiDomain: new NormalisedURLDomain(appInfo.apiDomain),
-        websiteDomain: new NormalisedURLDomain(appInfo.websiteDomain),
         apiBasePath: apiGatewayPath.appendPath(
             getNormalisedURLPathOrDefault(DEFAULT_API_BASE_PATH, appInfo.apiBasePath)
         ),
@@ -122,4 +114,19 @@ export function checkForSSRErrorAndAppendIfNeeded(error: string): string {
 
 export function getNormalisedUserContext(userContext?: any) {
     return userContext === undefined ? {} : userContext;
+}
+
+// TODO NEMI: Remove this function when storage abstraction is implemented
+export function getSessionStorage(key: string): string | undefined {
+    const item = getWindowOrThrow().sessionStorage.getItem(key);
+
+    if (item === null) {
+        return undefined;
+    }
+    return item;
+}
+
+// TODO NEMI: Remove this function when storage abstraction is implemented
+export function setSessionStorage(key: string, value: string): void {
+    getWindowOrThrow().sessionStorage.setItem(key, value);
 }

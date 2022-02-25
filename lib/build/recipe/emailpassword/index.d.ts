@@ -1,15 +1,15 @@
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserType } from "./types";
+import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
+import { UserType } from "../authRecipeWithEmailVerification/types";
 export default class RecipeWrapper {
     static init(
-        config: InputType
+        config?: InputType
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
     static submitNewPassword(input: {
         formFields: {
             id: string;
             value: string;
         }[];
-        token?: string;
         options?: RecipeFunctionOptions;
         userContext?: any;
     }): Promise<

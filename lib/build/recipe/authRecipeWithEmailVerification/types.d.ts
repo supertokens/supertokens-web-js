@@ -9,3 +9,8 @@ export declare type NormalisedInputType<Action> = NormalisedRecipeConfig<EmailVe
         emailVerification?: EmailVerificationOverride;
     };
 };
+export declare type UserType = {
+    id: string;
+    email: string;
+    timeJoined: number;
+};

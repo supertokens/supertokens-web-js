@@ -12,7 +12,6 @@ export declare type CreateRecipeFunction<Action> = (
 export declare type AppInfoUserInput = {
     appName: string;
     apiDomain: string;
-    websiteDomain: string;
     apiBasePath?: string;
     websiteBasePath?: string;
     /**
@@ -24,7 +23,6 @@ export declare type AppInfoUserInput = {
 export declare type NormalisedAppInfo = {
     appName: string;
     apiDomain: NormalisedURLDomain;
-    websiteDomain: NormalisedURLDomain;
     apiBasePath: NormalisedURLPath;
     websiteBasePath: NormalisedURLPath;
 };

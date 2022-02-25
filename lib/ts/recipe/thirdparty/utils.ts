@@ -12,23 +12,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+import { normaliseAuthRecipeWithEmailVerificationConfig } from "../authRecipeWithEmailVerification/utils";
+import { InputType, NormalisedInputType, RecipeInterface } from "./types";
 
-import { NormalisedRecipeConfig, RecipeConfig } from "../recipeModule/types";
-import {
-    PreAndPostAPIHookAction as EmailVerificationAction,
-    InputTypeOverride as EmailVerificationOverride,
-} from "../emailverification/types";
-
-export type InputType<Action> = RecipeConfig<EmailVerificationAction | Action>;
-
-export type NormalisedInputType<Action> = NormalisedRecipeConfig<EmailVerificationAction | Action> & {
-    override?: {
-        emailVerification?: EmailVerificationOverride;
+export function normaliseUserInput(config: InputType): NormalisedInputType {
+    const override: any = {
+        functions: (originalImplementation: RecipeInterface) => originalImplementation,
+        ...config.override,
     };
-};
 
-export type UserType = {
-    id: string;
-    email: string;
-    timeJoined: number;
-};
+    return {
+        ...normaliseAuthRecipeWithEmailVerificationConfig(config),
+        override,
+    };
+}

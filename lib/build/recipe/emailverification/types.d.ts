@@ -27,7 +27,6 @@ export declare type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHo
 };
 export declare type RecipeInterface = {
     verifyEmail: (input: {
-        token?: string;
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -52,4 +51,5 @@ export declare type RecipeInterface = {
         isVerified: boolean;
         fetchResponse: Response;
     }>;
+    getEmailVerificationTokenFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
 };
