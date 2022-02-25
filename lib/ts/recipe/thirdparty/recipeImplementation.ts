@@ -240,11 +240,11 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 (parseInt(c) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (parseInt(c) / 4)))).toString(16)
             );
         },
-        verifyAndGetStateOrThrowError: async function (input: {
+        verifyAndGetStateOrThrowError: async function <CustomStateProperties>(input: {
             stateFromAuthProvider: string | undefined;
-            stateObjectFromStorage: StateObject | undefined;
+            stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
             userContext: any;
-        }): Promise<StateObject> {
+        }): Promise<StateObject & CustomStateProperties> {
             if (
                 input.stateObjectFromStorage === undefined ||
                 input.stateObjectFromStorage.stateForAuthProvider === undefined

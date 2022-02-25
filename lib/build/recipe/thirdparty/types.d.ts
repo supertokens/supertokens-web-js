@@ -74,12 +74,12 @@ export declare type RecipeInterface = {
           }
     >;
     generateStateToSendToOAuthProvider: (input: { userContext: any; config: NormalisedInputType }) => string;
-    verifyAndGetStateOrThrowError: (input: {
+    verifyAndGetStateOrThrowError: <CustomStateProperties>(input: {
         stateFromAuthProvider: string | undefined;
-        stateObjectFromStorage: StateObject | undefined;
+        stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
         config: NormalisedInputType;
         userContext: any;
-    }) => Promise<StateObject>;
+    }) => Promise<StateObject & CustomStateProperties>;
     getAuthCodeFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
     getAuthErrorFromURL: (input: { config: NormalisedInputType; userContext: any }) => string | undefined;
 };
