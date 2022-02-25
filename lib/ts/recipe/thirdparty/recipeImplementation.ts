@@ -270,8 +270,14 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             return input.stateObjectFromStorage;
         },
 
-        getAuthCodeFromURL: function (): string | undefined {
-            return getQueryParams("code");
+        getAuthCodeFromURL: function (): string {
+            const authCodeFromURL = getQueryParams("code");
+
+            if (authCodeFromURL === undefined) {
+                return "";
+            }
+
+            return authCodeFromURL;
         },
 
         getAuthErrorFromURL: function (): string | undefined {
