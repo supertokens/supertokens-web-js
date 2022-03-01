@@ -58,7 +58,6 @@ export type RecipeInterface = {
             id: string;
             value: string;
         }[];
-        token?: string;
         config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -162,4 +161,6 @@ export type RecipeInterface = {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
+
+    getResetPasswordTokenFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
 };

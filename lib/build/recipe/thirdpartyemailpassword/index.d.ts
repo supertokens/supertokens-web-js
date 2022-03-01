@@ -1,5 +1,4 @@
 import { RecipeFunctionOptions, UserType } from "../emailpassword";
-import { StateObject } from "../thirdparty/types";
 import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 export default class Wrapper {
     static init(
@@ -53,22 +52,10 @@ export default class Wrapper {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
-    static getOAuthAuthorisationURL(input: {
-        thirdPartyProviderId: string;
-        userContext?: any;
-        options?: RecipeFunctionOptions;
-    }): Promise<{
-        status: "OK";
-        url: string;
-        fetchResponse: Response;
-    }>;
     static signInAndUp(
         input:
             | {
                   type: "thirdparty";
-                  thirdPartyProviderId: string;
-                  thirdPartyRedirectionURL: string;
-                  thirdPartyProviderClientId?: string;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
@@ -109,54 +96,28 @@ export default class Wrapper {
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
               fetchResponse: Response;
           }
-        | {
-              type: "thirdparty";
-              status: "FIELD_ERROR";
-              error: string;
-              fetchResponse: Response;
-          }
     >;
-    static getOAuthState(input: { userContext?: any }): {
-        status: "OK";
-        state: StateObject | undefined;
-    };
-    static setOAuthState(input: { state: StateObject; userContext?: any }): {
-        status: "OK";
-    };
-    static getThirdPartyLoginRedirectURLWithQueryParams(input: {
-        thirdPartyProviderId: string;
-        thirdPartyRedirectionURL: string;
-        state?: StateObject;
+    static getAuthorizationURLWithQueryParamsAndSetState(input: {
+        providerId: string;
+        authorisationURL: string;
         userContext?: any;
-    }): Promise<
-        | {
-              status: "ERROR";
-          }
-        | {
-              status: "OK";
-              url: string;
-          }
-    >;
+        providerClientId?: string;
+        options?: RecipeFunctionOptions;
+    }): Promise<string>;
 }
 declare const init: typeof Wrapper.init;
 declare const submitNewPassword: typeof Wrapper.submitNewPassword;
 declare const sendPasswordResetEmail: typeof Wrapper.sendPasswordResetEmail;
 declare const doesEmailExist: typeof Wrapper.doesEmailExist;
-declare const getOAuthAuthorisationURL: typeof Wrapper.getOAuthAuthorisationURL;
 declare const signInAndUp: typeof Wrapper.signInAndUp;
-declare const getOAuthState: typeof Wrapper.getOAuthState;
-declare const setOAuthState: typeof Wrapper.setOAuthState;
-declare const getThirdPartyLoginRedirectURLWithQueryParams: typeof Wrapper.getThirdPartyLoginRedirectURLWithQueryParams;
+declare const getAuthorizationURLWithQueryParamsAndSetState: typeof Wrapper.getAuthorizationURLWithQueryParamsAndSetState;
 export {
     init,
     submitNewPassword,
     sendPasswordResetEmail,
     doesEmailExist,
-    getOAuthAuthorisationURL,
     signInAndUp,
-    getOAuthState,
-    setOAuthState,
-    getThirdPartyLoginRedirectURLWithQueryParams,
+    getAuthorizationURLWithQueryParamsAndSetState,
     UserType,
     InputType,
     RecipeInterface,

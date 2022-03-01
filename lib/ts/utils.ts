@@ -38,20 +38,10 @@ export function appendQueryParamsToURL(stringUrl: string, queryParams?: Record<s
     }
 }
 
-function getWindowOrThrow(): any {
+function getWindowOrThrow(): Window {
     // tslint:disable-next-line
     if (typeof window === "undefined") {
         throw new Error(WINDOW_UNDEFINED_ERROR);
-    }
-
-    // tslint:disable-next-line
-    return window;
-}
-
-function getWindowSafely(): any | undefined {
-    // tslint:disable-next-line
-    if (typeof window === "undefined") {
-        return undefined;
     }
 
     // tslint:disable-next-line
@@ -103,13 +93,7 @@ export function isTest(): boolean {
 }
 
 export function getQueryParams(param: string): string | undefined {
-    let _window = getWindowSafely();
-
-    if (_window === undefined) {
-        return undefined;
-    }
-
-    const urlParams = new URLSearchParams(_window.location.search);
+    const urlParams = new URLSearchParams(getWindowOrThrow().location.search);
     let queryParam = urlParams.get(param);
 
     if (queryParam === null) {
@@ -133,8 +117,13 @@ export function getNormalisedUserContext(userContext?: any) {
 }
 
 // TODO NEMI: Remove this function when storage abstraction is implemented
-export function getSessionStorage(key: string): string {
-    return getWindowOrThrow().sessionStorage.getItem(key);
+export function getSessionStorage(key: string): string | undefined {
+    const item = getWindowOrThrow().sessionStorage.getItem(key);
+
+    if (item === null) {
+        return undefined;
+    }
+    return item;
 }
 
 // TODO NEMI: Remove this function when storage abstraction is implemented

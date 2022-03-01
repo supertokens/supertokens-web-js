@@ -16,7 +16,6 @@ import EmailverificationRecipe from "../emailverification/recipe";
 import { NormalisedInputType } from "./types";
 import AuthRecipe from "../authRecipe";
 
-// TODO NEMI: Change this to extends AuthRecipe after session recipe is added
 export default abstract class AuthRecipeWithEmailVerification<
     Action,
     NormalisedConfig extends NormalisedInputType<Action>

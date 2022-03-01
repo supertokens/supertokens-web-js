@@ -44,7 +44,6 @@ export declare type RecipeInterface = {
             id: string;
             value: string;
         }[];
-        token?: string;
         config: NormalisedEmailPasswordConfig;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -94,8 +93,9 @@ export declare type RecipeInterface = {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
-    getOAuthAuthorisationURL: (input: {
-        thirdPartyProviderId: string;
+    getResetPasswordTokenFromURL: (input: { config: NormalisedEmailPasswordConfig; userContext: any }) => string;
+    getAuthorisationURLFromBackend: (input: {
+        providerId: string;
         config: NormalisedThirdPartyConfig;
         userContext: any;
         options?: RecipeFunctionOptions;
@@ -108,9 +108,6 @@ export declare type RecipeInterface = {
         input:
             | {
                   type: "thirdparty";
-                  thirdPartyProviderId: string;
-                  thirdPartyRedirectionURL: string;
-                  thirdPartyProviderClientId?: string;
                   config: NormalisedThirdPartyConfig;
                   userContext: any;
                   options?: RecipeFunctionOptions;
@@ -153,28 +150,32 @@ export declare type RecipeInterface = {
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
               fetchResponse: Response;
           }
-        | {
-              type: "thirdparty";
-              status: "FIELD_ERROR";
-              error: string;
-              fetchResponse: Response;
-          }
     >;
-    getOAuthState: (input: { userContext: any; config: NormalisedThirdPartyConfig }) => {
-        status: "OK";
-        state: StateObject | undefined;
-    };
-    setOAuthState: (input: { state: StateObject; config: NormalisedThirdPartyConfig; userContext: any }) => {
-        status: "OK";
-    };
-    getThirdPartyLoginRedirectURLWithQueryParams: (input: {
-        thirdPartyProviderId: string;
-        thirdPartyRedirectionURL: string;
-        config: NormalisedThirdPartyConfig;
-        state?: StateObject;
+    getStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
         userContext: any;
-    }) => Promise<{
-        status: "OK";
-        url: string;
-    }>;
+        config: NormalisedThirdPartyConfig;
+    }) => (StateObject & CustomStateProperties) | undefined;
+    setStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
+        state: StateObject & CustomStateProperties;
+        config: NormalisedThirdPartyConfig;
+        userContext: any;
+    }) => void;
+    getAuthorizationURLWithQueryParamsAndSetState: (input: {
+        providerId: string;
+        authorisationURL: string;
+        config: NormalisedThirdPartyConfig;
+        userContext: any;
+        providerClientId?: string;
+        options?: RecipeFunctionOptions;
+    }) => Promise<string>;
+    generateStateToSendToOAuthProvider: (input: { userContext: any; config: NormalisedThirdPartyConfig }) => string;
+    verifyAndGetStateOrThrowError: <CustomStateProperties>(input: {
+        stateFromAuthProvider: string | undefined;
+        stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
+        config: NormalisedThirdPartyConfig;
+        userContext: any;
+    }) => Promise<StateObject & CustomStateProperties>;
+    getAuthCodeFromURL: (input: { config: NormalisedThirdPartyConfig; userContext: any }) => string;
+    getAuthErrorFromURL: (input: { config: NormalisedThirdPartyConfig; userContext: any }) => string | undefined;
+    getAuthStateFromURL: (input: { config: NormalisedThirdPartyConfig; userContext: any }) => string | undefined;
 };

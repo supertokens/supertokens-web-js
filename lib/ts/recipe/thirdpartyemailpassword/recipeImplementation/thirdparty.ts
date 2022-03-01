@@ -19,11 +19,21 @@ export default function getRecipeImplementation(
     originalImplementation: ThirdPartyEmailPasswordRecipeInterface
 ): RecipeInterface {
     return {
-        getOAuthAuthorisationURL: originalImplementation.getOAuthAuthorisationURL.bind(originalImplementation),
-        getOAuthState: originalImplementation.getOAuthState.bind(originalImplementation),
-        getThirdPartyLoginRedirectURLWithQueryParams:
-            originalImplementation.getThirdPartyLoginRedirectURLWithQueryParams.bind(originalImplementation),
-        setOAuthState: originalImplementation.setOAuthState.bind(originalImplementation),
+        getAuthorisationURLFromBackend:
+            originalImplementation.getAuthorisationURLFromBackend.bind(originalImplementation),
+        getStateAndOtherInfoFromStorage:
+            originalImplementation.getStateAndOtherInfoFromStorage.bind(originalImplementation),
+        getAuthorizationURLWithQueryParamsAndSetState:
+            originalImplementation.getAuthorizationURLWithQueryParamsAndSetState.bind(originalImplementation),
+        setStateAndOtherInfoToStorage:
+            originalImplementation.setStateAndOtherInfoToStorage.bind(originalImplementation),
+        generateStateToSendToOAuthProvider:
+            originalImplementation.generateStateToSendToOAuthProvider.bind(originalImplementation),
+        getAuthCodeFromURL: originalImplementation.getAuthCodeFromURL.bind(originalImplementation),
+        getAuthErrorFromURL: originalImplementation.getAuthErrorFromURL.bind(originalImplementation),
+        getAuthStateFromURL: originalImplementation.getAuthStateFromURL.bind(originalImplementation),
+        verifyAndGetStateOrThrowError:
+            originalImplementation.verifyAndGetStateOrThrowError.bind(originalImplementation),
         signInAndUp: async function (input) {
             const response = await originalImplementation.signInAndUp({
                 type: "thirdparty",
@@ -36,12 +46,6 @@ export default function getRecipeImplementation(
                         status: "OK",
                         createdNewUser: response.createdNewUser,
                         user: response.user,
-                        fetchResponse: response.fetchResponse,
-                    };
-                } else if (response.status === "FIELD_ERROR") {
-                    return {
-                        status: "FIELD_ERROR",
-                        error: response.error,
                         fetchResponse: response.fetchResponse,
                     };
                 } else {

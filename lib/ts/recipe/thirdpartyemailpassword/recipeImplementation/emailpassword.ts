@@ -22,6 +22,7 @@ export default function getRecipeImplementation(
         doesEmailExist: originalImplementation.doesEmailExist.bind(originalImplementation),
         sendPasswordResetEmail: originalImplementation.sendPasswordResetEmail.bind(originalImplementation),
         submitNewPassword: originalImplementation.submitNewPassword.bind(originalImplementation),
+        getResetPasswordTokenFromURL: originalImplementation.getResetPasswordTokenFromURL.bind(originalImplementation),
         signIn: async function (input) {
             const response = await originalImplementation.signInAndUp({
                 type: "emailpassword",

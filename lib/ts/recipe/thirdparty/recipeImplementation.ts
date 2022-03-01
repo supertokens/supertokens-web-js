@@ -13,106 +13,71 @@
  * under the License.
  */
 
-import STGeneralError from "../../error";
 import Querier from "../../querier";
 import { NormalisedAppInfo } from "../../types";
 import { appendQueryParamsToURL, getQueryParams, getSessionStorage, setSessionStorage } from "../../utils";
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { NormalisedInputType, RecipeInterface, StateObject } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { generateThirdPartyProviderState } from "./utils";
+import STGeneralError from "../../error";
 
 export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
     return {
-        getOAuthState: function (): {
-            status: "OK";
-            state: StateObject | undefined;
-        } {
+        getStateAndOtherInfoFromStorage: function <CustomStateProperties>():
+            | (StateObject & CustomStateProperties)
+            | undefined {
             try {
-                const state = JSON.parse(getSessionStorage("supertokens-oauth-state"));
+                const stateFromStorage = getSessionStorage("supertokens-oauth-state-2");
 
-                if (state === null) {
-                    return {
-                        status: "OK",
-                        state: undefined,
-                    };
+                if (stateFromStorage === undefined) {
+                    return undefined;
                 }
 
-                if (Date.now() > state.expiresAt) {
-                    return {
-                        status: "OK",
-                        state: undefined,
-                    };
-                }
-
-                return {
-                    status: "OK",
-                    state,
-                };
+                return JSON.parse(stateFromStorage);
             } catch {
-                return {
-                    status: "OK",
-                    state: undefined,
-                };
+                return undefined;
             }
         },
 
-        setOAuthState: function (input: { state: StateObject; userContext: any }): {
-            status: "OK";
-        } {
-            const expiresAt = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
+        setStateAndOtherInfoToStorage: function (input: { state: StateObject; userContext: any }) {
             const value = JSON.stringify({
-                redirectToPath: input.state.redirectToPath,
-                state: input.state.state,
-                thirdPartyId: input.state.thirdPartyId,
-                rid: input.state.rid,
-                expiresAt,
+                ...input.state,
             });
-            setSessionStorage("supertokens-oauth-state", value);
-            return {
-                status: "OK",
-            };
+            setSessionStorage("supertokens-oauth-state-2", value);
         },
 
-        getThirdPartyLoginRedirectURLWithQueryParams: async function (input: {
-            thirdPartyProviderId: string;
-            thirdPartyRedirectionURL: string;
+        getAuthorizationURLWithQueryParamsAndSetState: async function (input: {
+            providerId: string;
+            authorisationURL: string;
             config: NormalisedInputType;
-            state?: StateObject;
             userContext: any;
+            providerClientId?: string;
             options?: RecipeFunctionOptions;
-        }): Promise<{
-            status: "OK";
-            url: string;
-        }> {
+        }): Promise<string> {
             // 1. Generate state.
-            const state =
-                input.state === undefined || input.state.state === undefined
-                    ? generateThirdPartyProviderState()
-                    : input.state.state;
+            const stateToSendToAuthProvider = this.generateStateToSendToOAuthProvider({
+                userContext: input.userContext,
+                config: input.config,
+            });
 
+            const stateExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
             // 2. Store state in Session Storage.
-            this.setOAuthState({
+            this.setStateAndOtherInfoToStorage<{}>({
                 state: {
-                    ...input.state,
-                    rid:
-                        input.state === undefined || input.state.rid === undefined
-                            ? input.config.recipeId
-                            : input.state.rid,
-                    thirdPartyId:
-                        input.state === undefined || input.state.thirdPartyId === undefined
-                            ? input.thirdPartyProviderId
-                            : input.state.thirdPartyId,
-                    state,
+                    stateForAuthProvider: stateToSendToAuthProvider,
+                    providerId: input.providerId,
+                    expiresAt: stateExpiry,
+                    authorisationURL: input.authorisationURL,
+                    providerClientId: input.providerClientId,
                 },
                 userContext: input.userContext,
                 config: input.config,
             });
 
             // 3. Get Authorisation URL.
-            const urlResponse = await this.getOAuthAuthorisationURL({
-                thirdPartyProviderId: input.thirdPartyProviderId,
+            const urlResponse = await this.getAuthorisationURLFromBackend({
+                providerId: input.providerId,
                 config: input.config,
                 userContext: input.userContext,
                 options: input.options,
@@ -124,21 +89,18 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
             const urlWithState = alreadyContainsRedirectURI
                 ? appendQueryParamsToURL(urlResponse.url, {
-                      state,
+                      state: stateToSendToAuthProvider,
                   })
                 : appendQueryParamsToURL(urlResponse.url, {
-                      state,
-                      redirect_uri: input.thirdPartyRedirectionURL,
+                      state: stateToSendToAuthProvider,
+                      redirect_uri: input.authorisationURL,
                   });
 
-            return {
-                status: "OK",
-                url: urlWithState,
-            };
+            return urlWithState;
         },
 
-        getOAuthAuthorisationURL: async function (input: {
-            thirdPartyProviderId: string;
+        getAuthorisationURLFromBackend: async function (input: {
+            providerId: string;
             config: NormalisedInputType;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -153,7 +115,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             }>(
                 "/authorisationurl",
                 {},
-                { thirdPartyId: input.thirdPartyProviderId },
+                { thirdPartyId: input.providerId },
                 Querier.preparePreAPIHook({
                     config: input.config,
                     action: "GET_AUTHORISATION_URL",
@@ -175,9 +137,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
 
         signInAndUp: async function (input: {
-            thirdPartyProviderId: string;
-            thirdPartyProviderClientId?: string;
-            thirdPartyRedirectionURL: string;
             config: NormalisedInputType;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -192,29 +151,45 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                   status: "NO_EMAIL_GIVEN_BY_PROVIDER";
                   fetchResponse: Response;
               }
-            | {
-                  status: "FIELD_ERROR";
-                  error: string;
-                  fetchResponse: Response;
-              }
         > {
-            const stateFromStorage = this.getOAuthState({
+            const stateFromStorage = this.getStateAndOtherInfoFromStorage<{}>({
                 userContext: input.userContext,
                 config: input.config,
-            }).state;
+            });
 
-            const code = getQueryParams("code");
+            const stateFromQueryParams = this.getAuthStateFromURL({
+                config: input.config,
+                userContext: input.userContext,
+            });
 
-            const stateFromQueryParams = getQueryParams("state");
+            const verifiedState = await this.verifyAndGetStateOrThrowError({
+                stateFromAuthProvider: stateFromQueryParams,
+                stateObjectFromStorage: stateFromStorage,
+                config: input.config,
+                userContext: input.userContext,
+            });
 
-            if (
-                getQueryParams("error") !== null ||
-                stateFromStorage === undefined ||
-                stateFromStorage.thirdPartyId !== input.thirdPartyProviderId ||
-                stateFromStorage.state !== stateFromQueryParams ||
-                code === null
-            ) {
-                throw new STGeneralError("");
+            const code = this.getAuthCodeFromURL({
+                userContext: input.userContext,
+                config: input.config,
+            });
+
+            const errorInQuery = this.getAuthErrorFromURL({
+                userContext: input.userContext,
+                config: input.config,
+            });
+
+            if (errorInQuery !== undefined) {
+                /**
+                 * If an error occurs the auth provider will send an additional query param
+                 * 'error' which will be a code that represents what error occured. Since the
+                 * error is not end-user friendly we throw a normal Javascript Error instead
+                 * of STGeneralError
+                 *
+                 * Explained in detail in the RFC:
+                 * https://datatracker.ietf.org/doc/html/rfc6749#section-4.1.2.1
+                 */
+                throw new Error(`Auth provider responded with error: ${errorInQuery}`);
             }
 
             const { jsonBody, fetchResponse } = await querier.post<
@@ -235,9 +210,9 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 {
                     body: JSON.stringify({
                         code,
-                        thirdPartyId: input.thirdPartyProviderId,
-                        redirectURI: input.thirdPartyRedirectionURL,
-                        clientId: input.thirdPartyProviderClientId,
+                        thirdPartyId: verifiedState.providerId,
+                        redirectURI: verifiedState.authorisationURL,
+                        clientId: verifiedState.providerClientId,
                     }),
                 },
                 Querier.preparePreAPIHook({
@@ -253,10 +228,64 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 })
             );
 
+            if (jsonBody.status === "FIELD_ERROR") {
+                throw new STGeneralError(jsonBody.error);
+            }
+
             return {
                 ...jsonBody,
                 fetchResponse,
             };
+        },
+        generateStateToSendToOAuthProvider: function (): string {
+            // Generate state using algorithm described in https://github.com/supertokens/supertokens-auth-react/issues/154#issue-796867579
+            return `${1e20}`.replace(/[018]/g, (c) =>
+                (parseInt(c) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (parseInt(c) / 4)))).toString(16)
+            );
+        },
+        verifyAndGetStateOrThrowError: async function <CustomStateProperties>(input: {
+            stateFromAuthProvider: string | undefined;
+            stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
+            userContext: any;
+        }): Promise<StateObject & CustomStateProperties> {
+            if (
+                input.stateObjectFromStorage === undefined ||
+                input.stateObjectFromStorage.stateForAuthProvider === undefined
+            ) {
+                throw new Error("No valid auth state present in session storage");
+            }
+
+            if (input.stateFromAuthProvider === undefined) {
+                throw new Error("No state recieved from auth provider");
+            }
+
+            if (input.stateObjectFromStorage.expiresAt < Date.now()) {
+                throw new Error("Auth state verification failed. The auth provider took too long to respond");
+            }
+
+            if (input.stateFromAuthProvider !== input.stateObjectFromStorage.stateForAuthProvider) {
+                throw new Error("Auth state verification failed. The auth provider responded with an invalid state");
+            }
+
+            return input.stateObjectFromStorage;
+        },
+
+        getAuthCodeFromURL: function (): string {
+            const authCodeFromURL = getQueryParams("code");
+
+            if (authCodeFromURL === undefined) {
+                return "";
+            }
+
+            return authCodeFromURL;
+        },
+
+        getAuthErrorFromURL: function (): string | undefined {
+            return getQueryParams("error");
+        },
+
+        getAuthStateFromURL: function (): string | undefined {
+            return getQueryParams("state");
         },
     };
 }

@@ -88,8 +88,16 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }> {
             return emailPasswordImpl.doesEmailExist.bind(DerivedEmailPassword(this))(input);
         },
-        getOAuthAuthorisationURL: async function (input: {
-            thirdPartyProviderId: string;
+
+        getResetPasswordTokenFromURL: function (input: {
+            config: NormalisedEmailPasswordConfig;
+            userContext: any;
+        }): string {
+            return emailPasswordImpl.getResetPasswordTokenFromURL.bind(DerivedEmailPassword(this))(input);
+        },
+
+        getAuthorisationURLFromBackend: async function (input: {
+            providerId: string;
             config: NormalisedThirdPartyConfig;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -98,15 +106,12 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             url: string;
             fetchResponse: Response;
         }> {
-            return thirdPartyImpl.getOAuthAuthorisationURL.bind(DerivedThirdParty(this))(input);
+            return thirdPartyImpl.getAuthorisationURLFromBackend.bind(DerivedThirdParty(this))(input);
         },
         signInAndUp: async function (
             input:
                 | {
                       type: "thirdparty";
-                      thirdPartyProviderId: string;
-                      thirdPartyProviderClientId?: string;
-                      thirdPartyRedirectionURL: string;
                       config: NormalisedThirdPartyConfig;
                       userContext: any;
                       options?: RecipeFunctionOptions;
@@ -147,12 +152,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             | {
                   type: "thirdparty";
                   status: "NO_EMAIL_GIVEN_BY_PROVIDER";
-                  fetchResponse: Response;
-              }
-            | {
-                  type: "thirdparty";
-                  status: "FIELD_ERROR";
-                  error: string;
                   fetchResponse: Response;
               }
         > {
@@ -200,28 +199,61 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 };
             }
         },
-        getOAuthState: function (input: { userContext: any; config: NormalisedThirdPartyConfig }): {
-            status: "OK";
-            state: StateObject | undefined;
-        } {
-            return thirdPartyImpl.getOAuthState.bind(DerivedThirdParty(this))(input);
-        },
-        setOAuthState: function (input: { state: StateObject; config: NormalisedThirdPartyConfig; userContext: any }): {
-            status: "OK";
-        } {
-            return thirdPartyImpl.setOAuthState.bind(DerivedThirdParty(this))(input);
-        },
-        getThirdPartyLoginRedirectURLWithQueryParams: async function (input: {
-            thirdPartyProviderId: string;
-            thirdPartyRedirectionURL: string;
-            config: NormalisedThirdPartyConfig;
-            state?: StateObject;
+        getStateAndOtherInfoFromStorage: function <CustomStateProperties>(input: {
             userContext: any;
-        }): Promise<{
-            status: "OK";
-            url: string;
-        }> {
-            return thirdPartyImpl.getThirdPartyLoginRedirectURLWithQueryParams.bind(DerivedThirdParty(this))(input);
+            config: NormalisedThirdPartyConfig;
+        }): (StateObject & CustomStateProperties) | undefined {
+            return thirdPartyImpl.getStateAndOtherInfoFromStorage.bind(DerivedThirdParty(this))(input);
+        },
+        setStateAndOtherInfoToStorage: function (input: {
+            state: StateObject;
+            config: NormalisedThirdPartyConfig;
+            userContext: any;
+        }): void {
+            return thirdPartyImpl.setStateAndOtherInfoToStorage.bind(DerivedThirdParty(this))(input);
+        },
+        getAuthorizationURLWithQueryParamsAndSetState: async function (input: {
+            providerId: string;
+            authorisationURL: string;
+            config: NormalisedThirdPartyConfig;
+            userContext: any;
+            providerClientId?: string;
+            options?: RecipeFunctionOptions;
+        }): Promise<string> {
+            return thirdPartyImpl.getAuthorizationURLWithQueryParamsAndSetState.bind(DerivedThirdParty(this))(input);
+        },
+
+        generateStateToSendToOAuthProvider: function (input: {
+            userContext: any;
+            config: NormalisedThirdPartyConfig;
+        }): string {
+            return thirdPartyImpl.generateStateToSendToOAuthProvider.bind(DerivedThirdParty(this))(input);
+        },
+
+        verifyAndGetStateOrThrowError: async function <CustomStateProperties>(input: {
+            stateFromAuthProvider: string | undefined;
+            stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
+            config: NormalisedThirdPartyConfig;
+            userContext: any;
+        }): Promise<StateObject & CustomStateProperties> {
+            return thirdPartyImpl.verifyAndGetStateOrThrowError.bind(DerivedThirdParty(this))(input);
+        },
+        getAuthCodeFromURL: function (input: { config: NormalisedThirdPartyConfig; userContext: any }): string {
+            return thirdPartyImpl.getAuthCodeFromURL.bind(DerivedThirdParty(this))(input);
+        },
+
+        getAuthErrorFromURL: function (input: {
+            config: NormalisedThirdPartyConfig;
+            userContext: any;
+        }): string | undefined {
+            return thirdPartyImpl.getAuthErrorFromURL.bind(DerivedThirdParty(this))(input);
+        },
+
+        getAuthStateFromURL: function (input: {
+            config: NormalisedThirdPartyConfig;
+            userContext: any;
+        }): string | undefined {
+            return thirdPartyImpl.getAuthStateFromURL.bind(DerivedThirdParty(this))(input);
         },
     };
 }
