@@ -1,6 +1,13 @@
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeFunctionOptions } from "../emailpassword";
-import { InputType, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, StateObject } from "./types";
+import {
+    InputType,
+    PreAndPostAPIHookAction,
+    PreAPIHookContext,
+    PostAPIHookContext,
+    StateObject,
+    RecipeInterface,
+} from "./types";
 export default class RecipeWrapper {
     static init(config?: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     static getAuthorizationURLWithQueryParamsAndSetState(input: {
@@ -49,6 +56,7 @@ export {
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
+    RecipeInterface,
     StateObject,
     PreAPIHookContext,
     PostAPIHookContext,

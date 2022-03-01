@@ -17,7 +17,14 @@ import { getNormalisedUserContext } from "../../utils";
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeFunctionOptions } from "../emailpassword";
 import Recipe from "./recipe";
-import { InputType, PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, StateObject } from "./types";
+import {
+    InputType,
+    PreAndPostAPIHookAction,
+    PreAPIHookContext,
+    PostAPIHookContext,
+    StateObject,
+    RecipeInterface,
+} from "./types";
 
 export default class RecipeWrapper {
     static init(config?: InputType) {
@@ -116,6 +123,7 @@ export {
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
+    RecipeInterface,
     StateObject,
     PreAPIHookContext,
     PostAPIHookContext,
