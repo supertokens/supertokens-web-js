@@ -1,6 +1,6 @@
 import { RecipeFunctionOptions, UserType } from "../emailpassword";
 import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
-export default class Wrapper {
+export default class RecipeWrapper {
     static init(
         config?: InputType
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
@@ -104,13 +104,29 @@ export default class Wrapper {
         providerClientId?: string;
         options?: RecipeFunctionOptions;
     }): Promise<string>;
+    static verifyEmail(input: { token?: string; options?: RecipeFunctionOptions; userContext: any }): Promise<{
+        status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
+        fetchResponse: Response;
+    }>;
+    static sendVerificationEmail(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+        status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
+        fetchResponse: Response;
+    }>;
+    static isEmailVerified(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+        status: "OK";
+        isVerified: boolean;
+        fetchResponse: Response;
+    }>;
 }
-declare const init: typeof Wrapper.init;
-declare const submitNewPassword: typeof Wrapper.submitNewPassword;
-declare const sendPasswordResetEmail: typeof Wrapper.sendPasswordResetEmail;
-declare const doesEmailExist: typeof Wrapper.doesEmailExist;
-declare const signInAndUp: typeof Wrapper.signInAndUp;
-declare const getAuthorizationURLWithQueryParamsAndSetState: typeof Wrapper.getAuthorizationURLWithQueryParamsAndSetState;
+declare const init: typeof RecipeWrapper.init;
+declare const submitNewPassword: typeof RecipeWrapper.submitNewPassword;
+declare const sendPasswordResetEmail: typeof RecipeWrapper.sendPasswordResetEmail;
+declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
+declare const signInAndUp: typeof RecipeWrapper.signInAndUp;
+declare const getAuthorizationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorizationURLWithQueryParamsAndSetState;
+declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
+declare const sendVerificationEmail: typeof RecipeWrapper.sendVerificationEmail;
+declare const isEmailVerified: typeof RecipeWrapper.isEmailVerified;
 export {
     init,
     submitNewPassword,
@@ -118,6 +134,9 @@ export {
     doesEmailExist,
     signInAndUp,
     getAuthorizationURLWithQueryParamsAndSetState,
+    verifyEmail,
+    sendVerificationEmail,
+    isEmailVerified,
     UserType,
     InputType,
     RecipeInterface,

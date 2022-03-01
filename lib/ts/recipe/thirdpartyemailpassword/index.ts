@@ -18,7 +18,7 @@ import { RecipeFunctionOptions, UserType } from "../emailpassword";
 import Recipe from "./recipe";
 import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 
-export default class Wrapper {
+export default class RecipeWrapper {
     static init(config?: InputType) {
         return Recipe.init(config);
     }
@@ -175,14 +175,57 @@ export default class Wrapper {
             userContext: getNormalisedUserContext(input.userContext),
         });
     }
+
+    static async verifyEmail(input: { token?: string; options?: RecipeFunctionOptions; userContext: any }): Promise<{
+        status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
+        fetchResponse: Response;
+    }> {
+        let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
+
+        return recipeInstance.emailVerificationRecipe.recipeImplementation.verifyEmail({
+            ...input,
+            config: recipeInstance.emailVerificationRecipe.config,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
+
+    static async sendVerificationEmail(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+        status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
+        fetchResponse: Response;
+    }> {
+        let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
+
+        return recipeInstance.emailVerificationRecipe.recipeImplementation.sendVerificationEmail({
+            ...input,
+            config: recipeInstance.emailVerificationRecipe.config,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
+
+    static async isEmailVerified(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+        status: "OK";
+        isVerified: boolean;
+        fetchResponse: Response;
+    }> {
+        let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
+
+        return recipeInstance.emailVerificationRecipe.recipeImplementation.isEmailVerified({
+            ...input,
+            config: recipeInstance.emailVerificationRecipe.config,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
 }
 
-const init = Wrapper.init;
-const submitNewPassword = Wrapper.submitNewPassword;
-const sendPasswordResetEmail = Wrapper.sendPasswordResetEmail;
-const doesEmailExist = Wrapper.doesEmailExist;
-const signInAndUp = Wrapper.signInAndUp;
-const getAuthorizationURLWithQueryParamsAndSetState = Wrapper.getAuthorizationURLWithQueryParamsAndSetState;
+const init = RecipeWrapper.init;
+const submitNewPassword = RecipeWrapper.submitNewPassword;
+const sendPasswordResetEmail = RecipeWrapper.sendPasswordResetEmail;
+const doesEmailExist = RecipeWrapper.doesEmailExist;
+const signInAndUp = RecipeWrapper.signInAndUp;
+const getAuthorizationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorizationURLWithQueryParamsAndSetState;
+const verifyEmail = RecipeWrapper.verifyEmail;
+const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
+const isEmailVerified = RecipeWrapper.isEmailVerified;
 
 export {
     init,
@@ -191,6 +234,9 @@ export {
     doesEmailExist,
     signInAndUp,
     getAuthorizationURLWithQueryParamsAndSetState,
+    verifyEmail,
+    sendVerificationEmail,
+    isEmailVerified,
     UserType,
     InputType,
     RecipeInterface,
