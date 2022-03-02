@@ -52,33 +52,42 @@ export default class RecipeWrapper {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
-    static signInAndUp(
-        input:
-            | {
-                  type: "thirdparty";
-                  userContext?: any;
-                  options?: RecipeFunctionOptions;
-              }
-            | {
-                  type: "emailpassword";
-                  isSignIn: boolean;
-                  formFields: {
-                      id: string;
-                      value: string;
-                  }[];
-                  options?: RecipeFunctionOptions;
-                  userContext?: any;
-              }
-    ): Promise<
+    static emailPasswordSignUp(input: {
+        formFields: {
+            id: string;
+            value: string;
+        }[];
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
         | {
-              type: "emailpassword" | "thirdparty";
               status: "OK";
               user: UserType;
-              createdNewUser: boolean;
               fetchResponse: Response;
           }
         | {
-              type: "emailpassword";
+              status: "FIELD_ERROR";
+              formFields: {
+                  id: string;
+                  error: string;
+              }[];
+              fetchResponse: Response;
+          }
+    >;
+    static emailPasswordSignIn(input: {
+        formFields: {
+            id: string;
+            value: string;
+        }[];
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
+        | {
+              status: "OK";
+              user: UserType;
+              fetchResponse: Response;
+          }
+        | {
               status: "FIELD_ERROR";
               formFields: {
                   id: string;
@@ -87,12 +96,18 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              type: "emailpassword";
               status: "WRONG_CREDENTIALS_ERROR";
               fetchResponse: Response;
           }
+    >;
+    static thirdPartySignInAndUp(input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
         | {
-              type: "thirdparty";
+              status: "OK";
+              user: UserType;
+              createdNewUser: boolean;
+              fetchResponse: Response;
+          }
+        | {
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
               fetchResponse: Response;
           }
@@ -122,7 +137,9 @@ declare const init: typeof RecipeWrapper.init;
 declare const submitNewPassword: typeof RecipeWrapper.submitNewPassword;
 declare const sendPasswordResetEmail: typeof RecipeWrapper.sendPasswordResetEmail;
 declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
-declare const signInAndUp: typeof RecipeWrapper.signInAndUp;
+declare const emailPasswordSignUp: typeof RecipeWrapper.emailPasswordSignUp;
+declare const emailPasswordSignIn: typeof RecipeWrapper.emailPasswordSignIn;
+declare const thirdPartySignInAndUp: typeof RecipeWrapper.thirdPartySignInAndUp;
 declare const getAuthorizationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorizationURLWithQueryParamsAndSetState;
 declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
 declare const sendVerificationEmail: typeof RecipeWrapper.sendVerificationEmail;
@@ -132,7 +149,9 @@ export {
     submitNewPassword,
     sendPasswordResetEmail,
     doesEmailExist,
-    signInAndUp,
+    emailPasswordSignUp,
+    emailPasswordSignIn,
+    thirdPartySignInAndUp,
     getAuthorizationURLWithQueryParamsAndSetState,
     verifyEmail,
     sendVerificationEmail,

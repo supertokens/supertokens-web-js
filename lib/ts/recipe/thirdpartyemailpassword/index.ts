@@ -98,33 +98,51 @@ export default class RecipeWrapper {
         });
     }
 
-    static signInAndUp(
-        input:
-            | {
-                  type: "thirdparty";
-                  userContext?: any;
-                  options?: RecipeFunctionOptions;
-              }
-            | {
-                  type: "emailpassword";
-                  isSignIn: boolean;
-                  formFields: {
-                      id: string;
-                      value: string;
-                  }[];
-                  options?: RecipeFunctionOptions;
-                  userContext?: any;
-              }
-    ): Promise<
+    static emailPasswordSignUp(input: {
+        formFields: {
+            id: string;
+            value: string;
+        }[];
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
         | {
-              type: "emailpassword" | "thirdparty";
               status: "OK";
               user: UserType;
-              createdNewUser: boolean;
               fetchResponse: Response;
           }
         | {
-              type: "emailpassword";
+              status: "FIELD_ERROR";
+              formFields: {
+                  id: string;
+                  error: string;
+              }[];
+              fetchResponse: Response;
+          }
+    > {
+        const recipeInstance = Recipe.getInstanceOrThrow();
+
+        return recipeInstance.recipeImplementation.emailPasswordSignUp({
+            ...input,
+            config: recipeInstance.emailPasswordRecipe.config,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
+
+    static emailPasswordSignIn(input: {
+        formFields: {
+            id: string;
+            value: string;
+        }[];
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
+        | {
+              status: "OK";
+              user: UserType;
+              fetchResponse: Response;
+          }
+        | {
               status: "FIELD_ERROR";
               formFields: {
                   id: string;
@@ -133,27 +151,34 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              type: "emailpassword";
               status: "WRONG_CREDENTIALS_ERROR";
               fetchResponse: Response;
           }
+    > {
+        const recipeInstance = Recipe.getInstanceOrThrow();
+
+        return recipeInstance.recipeImplementation.emailPasswordSignIn({
+            ...input,
+            config: recipeInstance.emailPasswordRecipe.config,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
+
+    static thirdPartySignInAndUp(input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
         | {
-              type: "thirdparty";
+              status: "OK";
+              user: UserType;
+              createdNewUser: boolean;
+              fetchResponse: Response;
+          }
+        | {
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
               fetchResponse: Response;
           }
     > {
         const recipeInstance = Recipe.getInstanceOrThrow();
 
-        if (input.type === "emailpassword") {
-            return recipeInstance.recipeImplementation.signInAndUp({
-                ...input,
-                config: recipeInstance.emailPasswordRecipe.config,
-                userContext: getNormalisedUserContext(input.userContext),
-            });
-        }
-
-        return recipeInstance.recipeImplementation.signInAndUp({
+        return recipeInstance.recipeImplementation.thirdPartySignInAndUp({
             ...input,
             config: recipeInstance.thirdPartyRecipe.config,
             userContext: getNormalisedUserContext(input.userContext),
@@ -221,7 +246,9 @@ const init = RecipeWrapper.init;
 const submitNewPassword = RecipeWrapper.submitNewPassword;
 const sendPasswordResetEmail = RecipeWrapper.sendPasswordResetEmail;
 const doesEmailExist = RecipeWrapper.doesEmailExist;
-const signInAndUp = RecipeWrapper.signInAndUp;
+const emailPasswordSignUp = RecipeWrapper.emailPasswordSignUp;
+const emailPasswordSignIn = RecipeWrapper.emailPasswordSignIn;
+const thirdPartySignInAndUp = RecipeWrapper.thirdPartySignInAndUp;
 const getAuthorizationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorizationURLWithQueryParamsAndSetState;
 const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
@@ -232,7 +259,9 @@ export {
     submitNewPassword,
     sendPasswordResetEmail,
     doesEmailExist,
-    signInAndUp,
+    emailPasswordSignUp,
+    emailPasswordSignIn,
+    thirdPartySignInAndUp,
     getAuthorizationURLWithQueryParamsAndSetState,
     verifyEmail,
     sendVerificationEmail,

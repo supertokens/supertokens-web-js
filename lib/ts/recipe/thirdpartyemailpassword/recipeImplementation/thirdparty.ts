@@ -34,29 +34,6 @@ export default function getRecipeImplementation(
         getAuthStateFromURL: originalImplementation.getAuthStateFromURL.bind(originalImplementation),
         verifyAndGetStateOrThrowError:
             originalImplementation.verifyAndGetStateOrThrowError.bind(originalImplementation),
-        signInAndUp: async function (input) {
-            const response = await originalImplementation.signInAndUp({
-                type: "thirdparty",
-                ...input,
-            });
-
-            if (response.type === "thirdparty") {
-                if (response.status === "OK") {
-                    return {
-                        status: "OK",
-                        createdNewUser: response.createdNewUser,
-                        user: response.user,
-                        fetchResponse: response.fetchResponse,
-                    };
-                } else {
-                    return {
-                        status: response.status,
-                        fetchResponse: response.fetchResponse,
-                    };
-                }
-            } else {
-                throw Error("Should never come here");
-            }
-        },
+        signInAndUp: originalImplementation.thirdPartySignInAndUp.bind(originalImplementation),
     };
 }

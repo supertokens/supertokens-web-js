@@ -89,6 +89,62 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             return emailPasswordImpl.doesEmailExist.bind(DerivedEmailPassword(this))(input);
         },
 
+        emailPasswordSignUp: async function (input: {
+            formFields: {
+                id: string;
+                value: string;
+            }[];
+            config: NormalisedEmailPasswordConfig;
+            options?: RecipeFunctionOptions;
+            userContext: any;
+        }): Promise<
+            | {
+                  status: "OK";
+                  user: UserType;
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "FIELD_ERROR";
+                  formFields: {
+                      id: string;
+                      error: string;
+                  }[];
+                  fetchResponse: Response;
+              }
+        > {
+            return emailPasswordImpl.signUp.bind(DerivedEmailPassword(this))(input);
+        },
+
+        emailPasswordSignIn: async function (input: {
+            formFields: {
+                id: string;
+                value: string;
+            }[];
+            config: NormalisedEmailPasswordConfig;
+            options?: RecipeFunctionOptions;
+            userContext: any;
+        }): Promise<
+            | {
+                  status: "OK";
+                  user: UserType;
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "FIELD_ERROR";
+                  formFields: {
+                      id: string;
+                      error: string;
+                  }[];
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "WRONG_CREDENTIALS_ERROR";
+                  fetchResponse: Response;
+              }
+        > {
+            return emailPasswordImpl.signIn.bind(DerivedEmailPassword(this))(input);
+        },
+
         getResetPasswordTokenFromURL: function (input: {
             config: NormalisedEmailPasswordConfig;
             userContext: any;
@@ -108,96 +164,23 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         }> {
             return thirdPartyImpl.getAuthorisationURLFromBackend.bind(DerivedThirdParty(this))(input);
         },
-        signInAndUp: async function (
-            input:
-                | {
-                      type: "thirdparty";
-                      config: NormalisedThirdPartyConfig;
-                      userContext: any;
-                      options?: RecipeFunctionOptions;
-                  }
-                | {
-                      type: "emailpassword";
-                      isSignIn: boolean;
-                      formFields: {
-                          id: string;
-                          value: string;
-                      }[];
-                      config: NormalisedEmailPasswordConfig;
-                      options?: RecipeFunctionOptions;
-                      userContext: any;
-                  }
-        ): Promise<
+        thirdPartySignInAndUp: async function (input: {
+            config: NormalisedThirdPartyConfig;
+            userContext: any;
+            options?: RecipeFunctionOptions;
+        }): Promise<
             | {
-                  type: "emailpassword" | "thirdparty";
                   status: "OK";
                   user: UserType;
                   createdNewUser: boolean;
                   fetchResponse: Response;
               }
             | {
-                  type: "emailpassword";
-                  status: "FIELD_ERROR";
-                  formFields: {
-                      id: string;
-                      error: string;
-                  }[];
-                  fetchResponse: Response;
-              }
-            | {
-                  type: "emailpassword";
-                  status: "WRONG_CREDENTIALS_ERROR";
-                  fetchResponse: Response;
-              }
-            | {
-                  type: "thirdparty";
                   status: "NO_EMAIL_GIVEN_BY_PROVIDER";
                   fetchResponse: Response;
               }
         > {
-            if (input.type === "emailpassword") {
-                if (input.isSignIn) {
-                    // User is signing in
-                    const response = await emailPasswordImpl.signIn.bind(DerivedEmailPassword(this))(input);
-
-                    if (response.status === "OK") {
-                        return {
-                            ...response,
-                            createdNewUser: false,
-                            type: "emailpassword",
-                        };
-                    }
-
-                    return {
-                        ...response,
-                        type: "emailpassword",
-                    };
-                } else {
-                    // User is signing up
-                    const response = await emailPasswordImpl.signUp.bind(DerivedEmailPassword(this))(input);
-
-                    if (response.status === "OK") {
-                        return {
-                            ...response,
-                            createdNewUser: true,
-                            type: "emailpassword",
-                        };
-                    } else {
-                        return {
-                            ...response,
-                            type: "emailpassword",
-                        };
-                    }
-                }
-            } else {
-                // Called for third party recipe
-                const response = await thirdPartyImpl.signInAndUp.bind(DerivedThirdParty(this))(input);
-
-                return {
-                    ...response,
-                    type: "thirdparty",
-                };
-            }
+            return thirdPartyImpl.signInAndUp.bind(DerivedThirdParty(this))(input);
         },
         getStateAndOtherInfoFromStorage: function <CustomStateProperties>(input: {
             userContext: any;

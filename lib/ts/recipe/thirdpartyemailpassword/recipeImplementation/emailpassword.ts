@@ -23,62 +23,7 @@ export default function getRecipeImplementation(
         sendPasswordResetEmail: originalImplementation.sendPasswordResetEmail.bind(originalImplementation),
         submitNewPassword: originalImplementation.submitNewPassword.bind(originalImplementation),
         getResetPasswordTokenFromURL: originalImplementation.getResetPasswordTokenFromURL.bind(originalImplementation),
-        signIn: async function (input) {
-            const response = await originalImplementation.signInAndUp({
-                type: "emailpassword",
-                isSignIn: true,
-                ...input,
-            });
-
-            if (response.type === "emailpassword") {
-                if (response.status === "OK") {
-                    return {
-                        status: "OK",
-                        user: response.user,
-                        fetchResponse: response.fetchResponse,
-                    };
-                } else if (response.status === "WRONG_CREDENTIALS_ERROR") {
-                    return {
-                        status: "WRONG_CREDENTIALS_ERROR",
-                        fetchResponse: response.fetchResponse,
-                    };
-                } else {
-                    return {
-                        status: "FIELD_ERROR",
-                        formFields: response.formFields,
-                        fetchResponse: response.fetchResponse,
-                    };
-                }
-            } else {
-                throw Error("Should never come here");
-            }
-        },
-        signUp: async function (input) {
-            const response = await originalImplementation.signInAndUp({
-                type: "emailpassword",
-                isSignIn: false,
-                ...input,
-            });
-
-            if (response.type === "emailpassword") {
-                if (response.status === "OK") {
-                    return {
-                        status: "OK",
-                        user: response.user,
-                        fetchResponse: response.fetchResponse,
-                    };
-                } else if (response.status === "WRONG_CREDENTIALS_ERROR") {
-                    throw Error("Should never come here");
-                } else {
-                    return {
-                        status: "FIELD_ERROR",
-                        formFields: response.formFields,
-                        fetchResponse: response.fetchResponse,
-                    };
-                }
-            } else {
-                throw Error("Should never come here");
-            }
-        },
+        signIn: originalImplementation.emailPasswordSignIn.bind(originalImplementation),
+        signUp: originalImplementation.emailPasswordSignUp.bind(originalImplementation),
     };
 }

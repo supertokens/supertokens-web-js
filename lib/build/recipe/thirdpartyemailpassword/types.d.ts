@@ -91,6 +91,56 @@ export declare type RecipeInterface = {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
+    emailPasswordSignUp: (input: {
+        formFields: {
+            id: string;
+            value: string;
+        }[];
+        config: NormalisedEmailPasswordConfig;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
+        | {
+              status: "OK";
+              user: UserType;
+              fetchResponse: Response;
+          }
+        | {
+              status: "FIELD_ERROR";
+              formFields: {
+                  id: string;
+                  error: string;
+              }[];
+              fetchResponse: Response;
+          }
+    >;
+    emailPasswordSignIn: (input: {
+        formFields: {
+            id: string;
+            value: string;
+        }[];
+        config: NormalisedEmailPasswordConfig;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
+        | {
+              status: "OK";
+              user: UserType;
+              fetchResponse: Response;
+          }
+        | {
+              status: "FIELD_ERROR";
+              formFields: {
+                  id: string;
+                  error: string;
+              }[];
+              fetchResponse: Response;
+          }
+        | {
+              status: "WRONG_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+    >;
     getResetPasswordTokenFromURL: (input: { config: NormalisedEmailPasswordConfig; userContext: any }) => string;
     getAuthorisationURLFromBackend: (input: {
         providerId: string;
@@ -102,49 +152,18 @@ export declare type RecipeInterface = {
         url: string;
         fetchResponse: Response;
     }>;
-    signInAndUp: (
-        input:
-            | {
-                  type: "thirdparty";
-                  config: NormalisedThirdPartyConfig;
-                  userContext: any;
-                  options?: RecipeFunctionOptions;
-              }
-            | {
-                  type: "emailpassword";
-                  isSignIn: boolean;
-                  formFields: {
-                      id: string;
-                      value: string;
-                  }[];
-                  config: NormalisedEmailPasswordConfig;
-                  options?: RecipeFunctionOptions;
-                  userContext: any;
-              }
-    ) => Promise<
+    thirdPartySignInAndUp: (input: {
+        config: NormalisedThirdPartyConfig;
+        userContext: any;
+        options?: RecipeFunctionOptions;
+    }) => Promise<
         | {
-              type: "emailpassword" | "thirdparty";
               status: "OK";
               user: UserType;
               createdNewUser: boolean;
               fetchResponse: Response;
           }
         | {
-              type: "emailpassword";
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
-        | {
-              type: "emailpassword";
-              status: "WRONG_CREDENTIALS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              type: "thirdparty";
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
               fetchResponse: Response;
           }
