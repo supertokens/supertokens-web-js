@@ -37,7 +37,6 @@ export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
 export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
-    disableEmailPassword?: boolean;
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (
@@ -48,7 +47,6 @@ export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
 };
 
 export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
-    disableEmailPassword: boolean;
     override: {
         functions: (
             originalImplementation: RecipeInterface,

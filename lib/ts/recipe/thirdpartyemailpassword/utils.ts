@@ -17,8 +17,6 @@ import { normaliseAuthRecipeWithEmailVerificationConfig } from "../authRecipeWit
 import { InputType, NormalisedInputType, RecipeInterface } from "./types";
 
 export function normaliseUserInput(config: InputType): NormalisedInputType {
-    const disableEmailPassword = config.disableEmailPassword === true;
-
     const override = {
         functions: (originalImplementation: RecipeInterface) => originalImplementation,
         ...config.override,
@@ -26,7 +24,6 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
 
     return {
         ...normaliseAuthRecipeWithEmailVerificationConfig(config),
-        disableEmailPassword,
         override,
     };
 }
