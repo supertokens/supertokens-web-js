@@ -175,5 +175,5 @@ export declare type RecipeInterface = {
     }) => Promise<StateObject & CustomStateProperties>;
     getAuthCodeFromURL: (input: { config: NormalisedThirdPartyConfig; userContext: any }) => string;
     getAuthErrorFromURL: (input: { config: NormalisedThirdPartyConfig; userContext: any }) => string | undefined;
-    getAuthStateFromURL: (input: { config: NormalisedThirdPartyConfig; userContext: any }) => string | undefined;
+    getAuthStateFromURL: (input: { config: NormalisedThirdPartyConfig; userContext: any }) => string;
 };

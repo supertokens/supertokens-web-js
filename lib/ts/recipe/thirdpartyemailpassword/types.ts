@@ -207,5 +207,5 @@ export type RecipeInterface = {
 
     getAuthErrorFromURL: (input: { config: NormalisedThirdPartyConfig; userContext: any }) => string | undefined;
 
-    getAuthStateFromURL: (input: { config: NormalisedThirdPartyConfig; userContext: any }) => string | undefined;
+    getAuthStateFromURL: (input: { config: NormalisedThirdPartyConfig; userContext: any }) => string;
 };

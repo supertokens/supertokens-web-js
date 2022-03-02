@@ -249,10 +249,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             return thirdPartyImpl.getAuthErrorFromURL.bind(DerivedThirdParty(this))(input);
         },
 
-        getAuthStateFromURL: function (input: {
-            config: NormalisedThirdPartyConfig;
-            userContext: any;
-        }): string | undefined {
+        getAuthStateFromURL: function (input: { config: NormalisedThirdPartyConfig; userContext: any }): string {
             return thirdPartyImpl.getAuthStateFromURL.bind(DerivedThirdParty(this))(input);
         },
     };

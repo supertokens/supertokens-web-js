@@ -284,8 +284,14 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             return getQueryParams("error");
         },
 
-        getAuthStateFromURL: function (): string | undefined {
-            return getQueryParams("state");
+        getAuthStateFromURL: function (): string {
+            const stateFromURL = getQueryParams("state");
+
+            if (stateFromURL === undefined) {
+                return "";
+            }
+
+            return stateFromURL;
         },
     };
 }

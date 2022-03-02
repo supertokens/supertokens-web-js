@@ -20,8 +20,8 @@ import ThirdPartyRecipe from "../thirdparty/recipe";
 import { normaliseUserInput } from "./utils";
 import OverrideableBuilder from "supertokens-js-override";
 import RecipeImplementation from "./recipeImplementation";
-import EmailPasswordImplementation from "./recipeImplementation/emailpassword";
-import ThirdPartyRecipeImplementation from "./recipeImplementation/thirdparty";
+import DerivedEmailPasswordImplementation from "./recipeImplementation/emailpassword";
+import DerivedThirdPartyRecipeImplementation from "./recipeImplementation/thirdparty";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 
@@ -33,7 +33,14 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
     emailPasswordRecipe: EmailPasswordRecipe;
     thirdPartyRecipe: ThirdPartyRecipe;
 
-    constructor(config: InputType, recipes: { emailVerification: EmailVerificationRecipe | undefined }) {
+    constructor(
+        config: InputType,
+        recipes: {
+            emailVerification: EmailVerificationRecipe | undefined;
+            thirdParty: ThirdPartyRecipe | undefined;
+            emailPassword: EmailPasswordRecipe | undefined;
+        }
+    ) {
         super(normaliseUserInput(config), recipes);
 
         const builder = new OverrideableBuilder(RecipeImplementation(this.config.recipeId, this.config.appInfo));
@@ -44,50 +51,57 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
          * We need this recipe instance so that we can pass the email password config when
          * calling recipe functions from index.ts
          */
-        this.emailPasswordRecipe = new EmailPasswordRecipe(
-            {
-                recipeId: this.config.recipeId,
-                appInfo: this.config.appInfo,
-                preAPIHook: config.preAPIHook,
-                postAPIHook: config.postAPIHook,
-                override: {
-                    emailVerification: config.override?.emailVerification,
-                    functions: function () {
-                        return EmailPasswordImplementation(_recipeImplementation);
-                    },
-                },
-            },
-            {
-                emailVerification: this.emailVerificationRecipe,
-            }
-        );
+        this.emailPasswordRecipe =
+            recipes.emailPassword === undefined
+                ? new EmailPasswordRecipe(
+                      {
+                          recipeId: this.config.recipeId,
+                          appInfo: this.config.appInfo,
+                          preAPIHook: config.preAPIHook,
+                          postAPIHook: config.postAPIHook,
+                          override: {
+                              emailVerification: config.override?.emailVerification,
+                              functions: function () {
+                                  return DerivedEmailPasswordImplementation(_recipeImplementation);
+                              },
+                          },
+                      },
+                      {
+                          emailVerification: this.emailVerificationRecipe,
+                      }
+                  )
+                : recipes.emailPassword;
 
         /**
          * We need this recipe instance so that we can pass the third party config when
          * calling recipe functions from index.ts
          */
-        this.thirdPartyRecipe = new ThirdPartyRecipe(
-            {
-                recipeId: this.config.recipeId,
-                appInfo: this.config.appInfo,
-                preAPIHook: config.preAPIHook,
-                postAPIHook: config.postAPIHook,
-                override: {
-                    emailVerification: config.override?.emailVerification,
-                    functions: function () {
-                        return ThirdPartyRecipeImplementation(_recipeImplementation);
-                    },
-                },
-            },
-            {
-                emailVerification: this.emailVerificationRecipe,
-            }
-        );
+        this.thirdPartyRecipe =
+            recipes.thirdParty === undefined
+                ? new ThirdPartyRecipe(
+                      {
+                          recipeId: this.config.recipeId,
+                          appInfo: this.config.appInfo,
+                          preAPIHook: config.preAPIHook,
+                          postAPIHook: config.postAPIHook,
+                          override: {
+                              emailVerification: config.override?.emailVerification,
+                              functions: function () {
+                                  return DerivedThirdPartyRecipeImplementation(_recipeImplementation);
+                              },
+                          },
+                      },
+                      {
+                          emailVerification: this.emailVerificationRecipe,
+                      }
+                  )
+                : recipes.thirdParty;
     }
 
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
-            let error = "No instance of EmailPassword found. Make sure to call the EmailPassword.init method.";
+            let error =
+                "No instance of ThirdPartyEmailPassword found. Make sure to call the ThirdPartyEmailPassword.init method.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);
@@ -106,6 +120,8 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
                 },
                 {
                     emailVerification: undefined,
+                    emailPassword: undefined,
+                    thirdParty: undefined,
                 }
             );
 

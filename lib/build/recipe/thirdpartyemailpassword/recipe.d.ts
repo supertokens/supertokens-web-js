@@ -14,6 +14,8 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
         config: InputType,
         recipes: {
             emailVerification: EmailVerificationRecipe | undefined;
+            thirdParty: ThirdPartyRecipe | undefined;
+            emailPassword: EmailPasswordRecipe | undefined;
         }
     );
     static getInstanceOrThrow(): Recipe;
