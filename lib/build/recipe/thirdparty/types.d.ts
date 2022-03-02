@@ -82,5 +82,5 @@ export declare type RecipeInterface = {
     }) => Promise<StateObject & CustomStateProperties>;
     getAuthCodeFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
     getAuthErrorFromURL: (input: { config: NormalisedInputType; userContext: any }) => string | undefined;
-    getAuthStateFromURL: (input: { config: NormalisedInputType; userContext: any }) => string | undefined;
+    getAuthStateFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
 };

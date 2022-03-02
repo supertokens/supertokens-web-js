@@ -70,6 +70,10 @@
         {
             "path": "recipe/thirdparty/index.js",
             "limit": "8kb"
+        },
+        {
+            "path": "recipe/thirdpartyemailpassword/index.js",
+            "limit": "10kb"
         }
     ]
 }
