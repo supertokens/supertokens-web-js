@@ -58,7 +58,7 @@ export default class RecipeWrapper {
             value: string;
         }[];
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<
         | {
               status: "OK";
@@ -80,7 +80,7 @@ export default class RecipeWrapper {
             value: string;
         }[];
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<
         | {
               status: "OK";
@@ -100,7 +100,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     >;
-    static thirdPartySignInAndUp(input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
+    static thirdPartySignInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
               user: UserType;

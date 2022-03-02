@@ -104,7 +104,7 @@ export default class RecipeWrapper {
             value: string;
         }[];
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<
         | {
               status: "OK";
@@ -135,7 +135,7 @@ export default class RecipeWrapper {
             value: string;
         }[];
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<
         | {
               status: "OK";
@@ -164,7 +164,7 @@ export default class RecipeWrapper {
         });
     }
 
-    static thirdPartySignInAndUp(input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
+    static thirdPartySignInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
               user: UserType;
@@ -181,7 +181,7 @@ export default class RecipeWrapper {
         return recipeInstance.recipeImplementation.thirdPartySignInAndUp({
             ...input,
             config: recipeInstance.thirdPartyRecipe.config,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 
