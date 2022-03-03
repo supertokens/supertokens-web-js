@@ -95,7 +95,7 @@ export default class Recipe extends RecipeModule<unknown, any> {
 
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
-            let error = "No instance of EmailVerification found. Make sure to call the EmailVerification.init method.";
+            let error = "No instance of Session found. Make sure to call the Session.init method.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);
