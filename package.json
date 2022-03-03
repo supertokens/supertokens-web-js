@@ -66,15 +66,15 @@
         },
         {
             "path": "recipe/emailpassword/index.js",
-            "limit": "8kb"
+            "limit": "15kb"
         },
         {
             "path": "recipe/thirdparty/index.js",
-            "limit": "8kb"
+            "limit": "15kb"
         },
         {
             "path": "recipe/thirdpartyemailpassword/index.js",
-            "limit": "10kb"
+            "limit": "17kb"
         },
         {
             "path": "recipe/session/index.js",
