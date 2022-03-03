@@ -11,7 +11,7 @@ export default class Recipe extends RecipeModule<unknown, any> {
     doesSessionExist: (input: { userContext: any }) => Promise<boolean>;
     signOut: (input: { userContext: any }) => Promise<void>;
     attemptRefreshingSession: () => Promise<boolean>;
-    static addAxiosInterceptors(input: { axiosInstance: any; userContext: any }): void;
+    static addAxiosInterceptors(axiosInstance: any, userContext: any): void;
     static getInstanceOrThrow(): Recipe;
     static reset(): void;
 }

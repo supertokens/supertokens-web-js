@@ -46,10 +46,7 @@ export default class RecipeWrapper {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     static addAxiosInterceptors(axiosInstance: any, userContext?: any): void {
-        return SessionRecipe.addAxiosInterceptors({
-            axiosInstance: axiosInstance,
-            userContext: getNormalisedUserContext(userContext),
-        });
+        return SessionRecipe.addAxiosInterceptors(axiosInstance, getNormalisedUserContext(userContext));
     }
 
     static signOut(input?: { userContext?: any }): Promise<void> {

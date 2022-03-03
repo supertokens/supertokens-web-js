@@ -89,8 +89,8 @@ export default class Recipe extends RecipeModule<unknown, any> {
         return SuperTokensWebsite.attemptRefreshingSession();
     };
 
-    static addAxiosInterceptors(input: { axiosInstance: any; userContext: any }): void {
-        return SuperTokensWebsite.addAxiosInterceptors(input.axiosInstance, input.userContext);
+    static addAxiosInterceptors(axiosInstance: any, userContext: any): void {
+        return SuperTokensWebsite.addAxiosInterceptors(axiosInstance, userContext);
     }
 
     static getInstanceOrThrow(): Recipe {
