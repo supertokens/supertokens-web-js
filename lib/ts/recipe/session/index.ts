@@ -15,6 +15,7 @@
 import { getNormalisedUserContext } from "../../utils";
 import SessionRecipe from "./recipe";
 import { InputType } from "./types";
+import { RecipeInterface } from "supertokens-website";
 
 export default class RecipeWrapper {
     static init(config?: InputType) {
@@ -57,3 +58,23 @@ export default class RecipeWrapper {
         });
     }
 }
+
+const init = RecipeWrapper.init;
+const getUserId = RecipeWrapper.getUserId;
+const getAccessTokenPayloadSecurely = RecipeWrapper.getAccessTokenPayloadSecurely;
+const attemptRefreshingSession = RecipeWrapper.attemptRefreshingSession;
+const doesSessionExist = RecipeWrapper.doesSessionExist;
+const addAxiosInterceptors = RecipeWrapper.addAxiosInterceptors;
+const signOut = RecipeWrapper.signOut;
+
+export {
+    init,
+    getUserId,
+    getAccessTokenPayloadSecurely,
+    attemptRefreshingSession,
+    doesSessionExist,
+    addAxiosInterceptors,
+    signOut,
+    RecipeInterface,
+    InputType,
+};
