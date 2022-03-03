@@ -31,6 +31,18 @@ export default class RecipeWrapper {
         return Recipe.init(config);
     }
 
+    static signOut(input?: { userContext?: any }) {
+        return Recipe.getInstanceOrThrow().signOut({
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    static doesSessionExist(input: { userContext: any }): Promise<boolean> {
+        return Recipe.getInstanceOrThrow().doesSessionExist({
+            userContext: input.userContext,
+        });
+    }
+
     static getAuthorizationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         authorisationURL: string;
@@ -116,6 +128,9 @@ const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
 
+const signOut = RecipeWrapper.signOut;
+const doesSessionExist = RecipeWrapper.doesSessionExist;
+
 export {
     init,
     getAuthorizationURLWithQueryParamsAndSetState,
@@ -123,6 +138,8 @@ export {
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
+    signOut,
+    doesSessionExist,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

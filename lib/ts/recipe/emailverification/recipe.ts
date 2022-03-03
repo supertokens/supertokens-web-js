@@ -34,7 +34,7 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 
-    static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction> {
+    static init(config: InputType): CreateRecipeFunction<PreAndPostAPIHookAction> {
         return (appInfo: NormalisedAppInfo) => {
             Recipe.instance = new Recipe({
                 ...config,

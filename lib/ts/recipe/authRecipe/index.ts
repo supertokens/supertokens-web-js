@@ -15,6 +15,7 @@
 
 import RecipeModule from "../recipeModule";
 import { NormalisedRecipeConfig } from "../recipeModule/types";
+import Session from "../session/recipe";
 
 // TODO NEMI: Add session recipe methods here
 export default abstract class AuthRecipe<
@@ -24,4 +25,16 @@ export default abstract class AuthRecipe<
     constructor(config: NormalisedConfig) {
         super(config);
     }
+
+    signOut = async (input: { userContext: any }): Promise<void> => {
+        return await Session.getInstanceOrThrow().signOut({
+            userContext: input.userContext,
+        });
+    };
+
+    doesSessionExist = async (input: { userContext: any }): Promise<boolean> => {
+        return await Session.getInstanceOrThrow().doesSessionExist({
+            userContext: input.userContext,
+        });
+    };
 }

@@ -5,4 +5,6 @@ export default abstract class AuthRecipe<
     NormalisedConfig extends NormalisedRecipeConfig<Action>
 > extends RecipeModule<Action, NormalisedConfig> {
     constructor(config: NormalisedConfig);
+    signOut: (input: { userContext: any }) => Promise<void>;
+    doesSessionExist: (input: { userContext: any }) => Promise<boolean>;
 }

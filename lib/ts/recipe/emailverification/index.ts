@@ -18,7 +18,7 @@ import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
 
 export default class RecipeWrapper {
-    static init(config?: InputType) {
+    static init(config: InputType) {
         return Recipe.init(config);
     }
 
