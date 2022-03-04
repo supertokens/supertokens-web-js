@@ -36,24 +36,20 @@ export declare type StateObject = {
 export declare type RecipeInterface = {
     getStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
         userContext: any;
-        config: NormalisedInputType;
     }) => (StateObject & CustomStateProperties) | undefined;
     setStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
         state: StateObject & CustomStateProperties;
-        config: NormalisedInputType;
         userContext: any;
     }) => void;
     getAuthorizationURLWithQueryParamsAndSetState: (input: {
         providerId: string;
         authorisationURL: string;
-        config: NormalisedInputType;
         userContext: any;
         providerClientId?: string;
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
     getAuthorisationURLFromBackend: (input: {
         providerId: string;
-        config: NormalisedInputType;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
@@ -61,7 +57,7 @@ export declare type RecipeInterface = {
         url: string;
         fetchResponse: Response;
     }>;
-    signInAndUp: (input: { config: NormalisedInputType; userContext: any; options?: RecipeFunctionOptions }) => Promise<
+    signInAndUp: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
               status: "OK";
               user: UserType;
@@ -73,14 +69,13 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    generateStateToSendToOAuthProvider: (input: { userContext: any; config: NormalisedInputType }) => string;
+    generateStateToSendToOAuthProvider: (input: { userContext: any }) => string;
     verifyAndGetStateOrThrowError: <CustomStateProperties>(input: {
         stateFromAuthProvider: string | undefined;
         stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
-        config: NormalisedInputType;
         userContext: any;
     }) => Promise<StateObject & CustomStateProperties>;
-    getAuthCodeFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
-    getAuthErrorFromURL: (input: { config: NormalisedInputType; userContext: any }) => string | undefined;
-    getAuthStateFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
+    getAuthCodeFromURL: (input: { userContext: any }) => string;
+    getAuthErrorFromURL: (input: { userContext: any }) => string | undefined;
+    getAuthStateFromURL: (input: { userContext: any }) => string;
 };

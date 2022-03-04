@@ -29,15 +29,15 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     >;
-    static verifyEmail(input: { token?: string; options?: RecipeFunctionOptions; userContext: any }): Promise<{
+    static verifyEmail(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
         fetchResponse: Response;
     }>;
-    static sendVerificationEmail(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+    static sendVerificationEmail(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
         fetchResponse: Response;
     }>;
-    static isEmailVerified(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+    static isEmailVerified(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
         isVerified: boolean;
         fetchResponse: Response;

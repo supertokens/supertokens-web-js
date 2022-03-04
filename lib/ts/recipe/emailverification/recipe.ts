@@ -30,7 +30,14 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
 
     constructor(config: InputType) {
         this.config = normaliseUserInput(config);
-        const builder = new OverrideableBuilder(RecipeImplementation(this.config.recipeId, this.config.appInfo));
+        const builder = new OverrideableBuilder(
+            RecipeImplementation(
+                this.config.recipeId,
+                this.config.appInfo,
+                this.config.preAPIHook,
+                this.config.postAPIHook
+            )
+        );
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 

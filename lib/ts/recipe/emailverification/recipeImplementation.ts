@@ -15,18 +15,21 @@
 import Querier from "../../querier";
 import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
-import { RecipeFunctionOptions } from "../recipeModule/types";
-import { NormalisedInputType, RecipeInterface } from "./types";
+import { RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../recipeModule/types";
+import { PreAndPostAPIHookAction, RecipeInterface } from "./types";
 
-export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
+export default function getRecipeImplementation(
+    recipeId: string,
+    appInfo: NormalisedAppInfo,
+    preAPIHook: RecipePreAPIHookFunction<PreAndPostAPIHookAction>,
+    postAPIHook: RecipePostAPIHookFunction<PreAndPostAPIHookAction>
+): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
     return {
         verifyEmail: async function ({
-            config,
             options,
             userContext,
         }: {
-            config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
         }): Promise<{
@@ -34,7 +37,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             fetchResponse: Response;
         }> {
             const token = this.getEmailVerificationTokenFromURL({
-                config,
                 userContext,
             });
 
@@ -49,13 +51,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     }),
                 },
                 Querier.preparePreAPIHook({
-                    config,
+                    recipePreAPIHook: preAPIHook,
                     action: "VERIFY_EMAIL",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    config,
+                    recipePostAPIHook: postAPIHook,
                     userContext,
                     action: "VERIFY_EMAIL",
                 })
@@ -68,11 +70,9 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
 
         isEmailVerified: async function ({
-            config,
             options,
             userContext,
         }: {
-            config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
         }): Promise<{
@@ -85,13 +85,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 {},
                 undefined,
                 Querier.preparePreAPIHook({
-                    config,
+                    recipePreAPIHook: preAPIHook,
                     action: "IS_EMAIL_VERIFIED",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    config,
+                    recipePostAPIHook: postAPIHook,
                     userContext,
                     action: "IS_EMAIL_VERIFIED",
                 })
@@ -105,11 +105,9 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         },
 
         sendVerificationEmail: async function ({
-            config,
             options,
             userContext,
         }: {
-            config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
         }): Promise<{
@@ -120,13 +118,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/user/email/verify/token",
                 { body: JSON.stringify({}) },
                 Querier.preparePreAPIHook({
-                    config,
+                    recipePreAPIHook: preAPIHook,
                     action: "SEND_VERIFY_EMAIL",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    config,
+                    recipePostAPIHook: postAPIHook,
                     userContext,
                     action: "SEND_VERIFY_EMAIL",
                 })

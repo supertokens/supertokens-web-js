@@ -38,7 +38,6 @@ export declare type RecipeInterface = {
             id: string;
             value: string;
         }[];
-        config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
@@ -60,7 +59,6 @@ export declare type RecipeInterface = {
             id: string;
             value: string;
         }[];
-        config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
@@ -82,7 +80,6 @@ export declare type RecipeInterface = {
             id: string;
             value: string;
         }[];
-        config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
@@ -105,7 +102,6 @@ export declare type RecipeInterface = {
             id: string;
             value: string;
         }[];
-        config: NormalisedInputType;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
@@ -127,15 +123,10 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    doesEmailExist: (input: {
-        email: string;
-        config: NormalisedInputType;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => Promise<{
+    doesEmailExist: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<{
         status: "OK";
         doesExist: boolean;
         fetchResponse: Response;
     }>;
-    getResetPasswordTokenFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
+    getResetPasswordTokenFromURL: (input: { userContext: any }) => string;
 };

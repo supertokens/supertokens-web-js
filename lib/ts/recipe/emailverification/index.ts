@@ -22,43 +22,34 @@ export default class RecipeWrapper {
         return Recipe.init(config);
     }
 
-    static verifyEmail(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static verifyEmail(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
         fetchResponse: Response;
     }> {
-        let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.recipeImplementation.verifyEmail({
-            options: input.options,
-            config: recipeInstance.config,
-            userContext: getNormalisedUserContext(input.userContext),
+        return Recipe.getInstanceOrThrow().recipeImplementation.verifyEmail({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 
-    static sendVerificationEmail(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static sendVerificationEmail(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
         fetchResponse: Response;
     }> {
-        let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.recipeImplementation.sendVerificationEmail({
-            options: input.options,
-            config: recipeInstance.config,
-            userContext: getNormalisedUserContext(input.userContext),
+        return Recipe.getInstanceOrThrow().recipeImplementation.sendVerificationEmail({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 
-    static isEmailVerified(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static isEmailVerified(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK";
         isVerified: boolean;
         fetchResponse: Response;
     }> {
-        let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.recipeImplementation.isEmailVerified({
-            options: input.options,
-            config: recipeInstance.config,
-            userContext: getNormalisedUserContext(input.userContext),
+        return Recipe.getInstanceOrThrow().recipeImplementation.isEmailVerified({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 }

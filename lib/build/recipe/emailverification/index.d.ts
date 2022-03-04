@@ -4,15 +4,15 @@ export default class RecipeWrapper {
     static init(
         config?: InputType
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
-    static verifyEmail(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static verifyEmail(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
         fetchResponse: Response;
     }>;
-    static sendVerificationEmail(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static sendVerificationEmail(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
         fetchResponse: Response;
     }>;
-    static isEmailVerified(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static isEmailVerified(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK";
         isVerified: boolean;
         fetchResponse: Response;

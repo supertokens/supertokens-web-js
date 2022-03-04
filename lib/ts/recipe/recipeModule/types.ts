@@ -40,18 +40,24 @@ export type PostAPIHookFunction = (context: {
     fetchResponse: Response;
 }) => Promise<void>;
 
+export type RecipePreAPIHookFunction<Action> = (
+    context: RecipePreAPIHookContext<Action>
+) => Promise<{ url: string; requestInit: RequestInit }>;
+
+export type RecipePostAPIHookFunction<Action> = (context: RecipePostAPIHookContext<Action>) => Promise<void>;
+
 export type RecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
-    preAPIHook?: (context: RecipePreAPIHookContext<Action>) => Promise<{ url: string; requestInit: RequestInit }>;
-    postAPIHook?: (context: RecipePostAPIHookContext<Action>) => Promise<void>;
+    preAPIHook?: RecipePreAPIHookFunction<Action>;
+    postAPIHook?: RecipePostAPIHookFunction<Action>;
 };
 
 export type NormalisedRecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
-    preAPIHook: (context: RecipePreAPIHookContext<Action>) => Promise<{ url: string; requestInit: RequestInit }>;
-    postAPIHook: (context: RecipePostAPIHookContext<Action>) => Promise<void>;
+    preAPIHook: RecipePreAPIHookFunction<Action>;
+    postAPIHook: RecipePostAPIHookFunction<Action>;
 };
 
 /**
