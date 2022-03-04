@@ -1,9 +1,10 @@
 import { NormalisedAppInfo } from "./types";
 import {
-    NormalisedRecipeConfig,
     PostAPIHookFunction,
     PreAPIHookFunction,
     RecipeFunctionOptions,
+    RecipePostAPIHookFunction,
+    RecipePreAPIHookFunction,
 } from "./recipe/recipeModule/types";
 /**
  * When network calls are made the Querier calls .clone() on the response before:
@@ -69,22 +70,22 @@ export default class Querier {
     getFullUrl: (pathStr: string, queryParams?: Record<string, string> | undefined) => string;
     getResponseJsonOrThrowGeneralError: (response: Response) => Promise<any>;
     static preparePreAPIHook: <Action>({
-        config,
+        recipePreAPIHook,
         action,
         options,
         userContext,
     }: {
-        config: NormalisedRecipeConfig<Action>;
+        recipePreAPIHook: RecipePreAPIHookFunction<Action>;
         action: Action;
         options?: RecipeFunctionOptions | undefined;
         userContext: any;
     }) => PreAPIHookFunction;
     static preparePostAPIHook: <Action>({
-        config,
+        recipePostAPIHook,
         action,
         userContext,
     }: {
-        config: NormalisedRecipeConfig<Action>;
+        recipePostAPIHook: RecipePostAPIHookFunction<Action>;
         action: Action;
         userContext: any;
     }) => PostAPIHookFunction;

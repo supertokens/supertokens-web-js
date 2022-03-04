@@ -26,30 +26,18 @@ export declare type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHo
     };
 };
 export declare type RecipeInterface = {
-    verifyEmail: (input: {
-        config: NormalisedInputType;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => Promise<{
+    verifyEmail: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
         fetchResponse: Response;
     }>;
-    sendVerificationEmail: (input: {
-        config: NormalisedInputType;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => Promise<{
+    sendVerificationEmail: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
         fetchResponse: Response;
     }>;
-    isEmailVerified: (input: {
-        config: NormalisedInputType;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => Promise<{
+    isEmailVerified: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
         status: "OK";
         isVerified: boolean;
         fetchResponse: Response;
     }>;
-    getEmailVerificationTokenFromURL: (input: { config: NormalisedInputType; userContext: any }) => string;
+    getEmailVerificationTokenFromURL: (input: { userContext: any }) => string;
 };

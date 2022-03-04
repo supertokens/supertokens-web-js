@@ -14,14 +14,20 @@
  */
 
 import Querier from "../../querier";
-import { NormalisedAppInfo } from "../../types";
 import { appendQueryParamsToURL, getQueryParams, getSessionStorage, setSessionStorage } from "../../utils";
 import { UserType } from "../authRecipeWithEmailVerification/types";
-import { NormalisedInputType, RecipeInterface, StateObject } from "./types";
-import { RecipeFunctionOptions } from "../recipeModule/types";
+import { RecipeInterface, StateObject } from "./types";
+import { RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../recipeModule/types";
 import STGeneralError from "../../error";
+import { NormalisedAppInfo } from "../../types";
+import { PreAndPostAPIHookAction } from "./types";
 
-export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
+export default function getRecipeImplementation(
+    recipeId: string,
+    appInfo: NormalisedAppInfo,
+    preAPIHook: RecipePreAPIHookFunction<PreAndPostAPIHookAction>,
+    postAPIHook: RecipePostAPIHookFunction<PreAndPostAPIHookAction>
+): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
     return {
         getStateAndOtherInfoFromStorage: function <CustomStateProperties>():
@@ -50,7 +56,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         getAuthorizationURLWithQueryParamsAndSetState: async function (input: {
             providerId: string;
             authorisationURL: string;
-            config: NormalisedInputType;
             userContext: any;
             providerClientId?: string;
             options?: RecipeFunctionOptions;
@@ -58,7 +63,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             // 1. Generate state.
             const stateToSendToAuthProvider = this.generateStateToSendToOAuthProvider({
                 userContext: input.userContext,
-                config: input.config,
             });
 
             const stateExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
@@ -72,13 +76,11 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     providerClientId: input.providerClientId,
                 },
                 userContext: input.userContext,
-                config: input.config,
             });
 
             // 3. Get Authorisation URL.
             const urlResponse = await this.getAuthorisationURLFromBackend({
                 providerId: input.providerId,
-                config: input.config,
                 userContext: input.userContext,
                 options: input.options,
             });
@@ -101,7 +103,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
         getAuthorisationURLFromBackend: async function (input: {
             providerId: string;
-            config: NormalisedInputType;
             userContext: any;
             options?: RecipeFunctionOptions;
         }): Promise<{
@@ -117,13 +118,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 {},
                 { thirdPartyId: input.providerId },
                 Querier.preparePreAPIHook({
-                    config: input.config,
+                    recipePreAPIHook: preAPIHook,
                     action: "GET_AUTHORISATION_URL",
                     options: input.options,
                     userContext: input.userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    config: input.config,
+                    recipePostAPIHook: postAPIHook,
                     action: "GET_AUTHORISATION_URL",
                     userContext: input.userContext,
                 })
@@ -136,11 +137,7 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
             };
         },
 
-        signInAndUp: async function (input: {
-            config: NormalisedInputType;
-            userContext: any;
-            options?: RecipeFunctionOptions;
-        }): Promise<
+        signInAndUp: async function (input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
             | {
                   status: "OK";
                   user: UserType;
@@ -154,29 +151,24 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
         > {
             const stateFromStorage = this.getStateAndOtherInfoFromStorage<{}>({
                 userContext: input.userContext,
-                config: input.config,
             });
 
             const stateFromQueryParams = this.getAuthStateFromURL({
-                config: input.config,
                 userContext: input.userContext,
             });
 
             const verifiedState = await this.verifyAndGetStateOrThrowError({
                 stateFromAuthProvider: stateFromQueryParams,
                 stateObjectFromStorage: stateFromStorage,
-                config: input.config,
                 userContext: input.userContext,
             });
 
             const code = this.getAuthCodeFromURL({
                 userContext: input.userContext,
-                config: input.config,
             });
 
             const errorInQuery = this.getAuthErrorFromURL({
                 userContext: input.userContext,
-                config: input.config,
             });
 
             if (errorInQuery !== undefined) {
@@ -216,13 +208,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                     }),
                 },
                 Querier.preparePreAPIHook({
-                    config: input.config,
+                    recipePreAPIHook: preAPIHook,
                     action: "THIRD_PARTY_SIGN_IN_UP",
                     options: input.options,
                     userContext: input.userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    config: input.config,
+                    recipePostAPIHook: postAPIHook,
                     action: "THIRD_PARTY_SIGN_IN_UP",
                     userContext: input.userContext,
                 })

@@ -31,7 +31,14 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
     constructor(config: InputType, recipes: { emailVerification: EmailVerificationRecipe | undefined }) {
         super(normaliseUserInput(config), recipes);
 
-        const builder = new OverrideableBuilder(RecipeImplementation(this.config.recipeId, this.config.appInfo));
+        const builder = new OverrideableBuilder(
+            RecipeImplementation(
+                this.config.recipeId,
+                this.config.appInfo,
+                this.config.preAPIHook,
+                this.config.postAPIHook
+            )
+        );
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 

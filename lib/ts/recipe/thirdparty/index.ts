@@ -50,11 +50,8 @@ export default class RecipeWrapper {
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
-        const recipeInstance = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.recipeImplementation.getAuthorizationURLWithQueryParamsAndSetState({
+        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorizationURLWithQueryParamsAndSetState({
             ...input,
-            config: recipeInstance.config,
             userContext: getNormalisedUserContext(input.userContext),
         });
     }
@@ -71,52 +68,40 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     > {
-        const recipeInstance = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.recipeImplementation.signInAndUp({
+        return Recipe.getInstanceOrThrow().recipeImplementation.signInAndUp({
             ...input,
-            config: recipeInstance.config,
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 
-    static async verifyEmail(input: { token?: string; options?: RecipeFunctionOptions; userContext: any }): Promise<{
+    static async verifyEmail(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
         fetchResponse: Response;
     }> {
-        let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.emailVerificationRecipe.recipeImplementation.verifyEmail({
+        return Recipe.getInstanceOrThrow().emailVerificationRecipe.recipeImplementation.verifyEmail({
             ...input,
-            config: recipeInstance.emailVerificationRecipe.config,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 
-    static async sendVerificationEmail(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+    static async sendVerificationEmail(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
         fetchResponse: Response;
     }> {
-        let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.emailVerificationRecipe.recipeImplementation.sendVerificationEmail({
+        return Recipe.getInstanceOrThrow().emailVerificationRecipe.recipeImplementation.sendVerificationEmail({
             ...input,
-            config: recipeInstance.emailVerificationRecipe.config,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 
-    static async isEmailVerified(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+    static async isEmailVerified(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
         isVerified: boolean;
         fetchResponse: Response;
     }> {
-        let recipeInstance: Recipe = Recipe.getInstanceOrThrow();
-
-        return recipeInstance.emailVerificationRecipe.recipeImplementation.isEmailVerified({
+        return Recipe.getInstanceOrThrow().emailVerificationRecipe.recipeImplementation.isEmailVerified({
             ...input,
-            config: recipeInstance.emailVerificationRecipe.config,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 }

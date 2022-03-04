@@ -21,23 +21,22 @@ export declare type PostAPIHookFunction = (context: {
     url: string;
     fetchResponse: Response;
 }) => Promise<void>;
+export declare type RecipePreAPIHookFunction<Action> = (context: RecipePreAPIHookContext<Action>) => Promise<{
+    url: string;
+    requestInit: RequestInit;
+}>;
+export declare type RecipePostAPIHookFunction<Action> = (context: RecipePostAPIHookContext<Action>) => Promise<void>;
 export declare type RecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
-    preAPIHook?: (context: RecipePreAPIHookContext<Action>) => Promise<{
-        url: string;
-        requestInit: RequestInit;
-    }>;
-    postAPIHook?: (context: RecipePostAPIHookContext<Action>) => Promise<void>;
+    preAPIHook?: RecipePreAPIHookFunction<Action>;
+    postAPIHook?: RecipePostAPIHookFunction<Action>;
 };
 export declare type NormalisedRecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
-    preAPIHook: (context: RecipePreAPIHookContext<Action>) => Promise<{
-        url: string;
-        requestInit: RequestInit;
-    }>;
-    postAPIHook: (context: RecipePostAPIHookContext<Action>) => Promise<void>;
+    preAPIHook: RecipePreAPIHookFunction<Action>;
+    postAPIHook: RecipePostAPIHookFunction<Action>;
 };
 /**
  * For the options object passed to recipe functions, we do not need a postAPIHook.

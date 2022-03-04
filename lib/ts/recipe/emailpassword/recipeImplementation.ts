@@ -13,19 +13,22 @@
  * under the License.
  */
 import Querier from "../../querier";
-import { RecipeInterface } from "./types";
-import { NormalisedAppInfo } from "../../types";
+import { PreAndPostAPIHookAction, RecipeInterface } from "./types";
 import { getQueryParams } from "../../utils";
-import { RecipeFunctionOptions } from "../recipeModule/types";
-import { NormalisedInputType } from "./types";
+import { RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../recipeModule/types";
 import { UserType } from ".";
+import { NormalisedAppInfo } from "../../types";
 
-export default function getRecipeImplementation(recipeId: string, appInfo: NormalisedAppInfo): RecipeInterface {
+export default function getRecipeImplementation(
+    recipeId: string,
+    appInfo: NormalisedAppInfo,
+    preAPIHook: RecipePreAPIHookFunction<PreAndPostAPIHookAction>,
+    postAPIHook: RecipePostAPIHookFunction<PreAndPostAPIHookAction>
+): RecipeInterface {
     const querier = new Querier(recipeId, appInfo);
     return {
         submitNewPassword: async function ({
             formFields,
-            config,
             options,
             userContext,
         }: {
@@ -33,7 +36,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 id: string;
                 value: string;
             }[];
-            config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
         }): Promise<
@@ -51,7 +53,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
               }
         > {
             const token = this.getResetPasswordTokenFromURL({
-                config,
                 userContext,
             });
 
@@ -70,13 +71,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/user/password/reset",
                 { body: JSON.stringify({ formFields, token, method: "token" }) },
                 Querier.preparePreAPIHook({
-                    config,
+                    recipePreAPIHook: preAPIHook,
                     action: "SUBMIT_NEW_PASSWORD",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    config,
+                    recipePostAPIHook: postAPIHook,
                     action: "SUBMIT_NEW_PASSWORD",
                     userContext,
                 })
@@ -98,7 +99,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
         sendPasswordResetEmail: async function ({
             formFields,
-            config,
             options,
             userContext,
         }: {
@@ -106,7 +106,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 id: string;
                 value: string;
             }[];
-            config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
         }): Promise<
@@ -138,13 +137,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/user/password/reset/token",
                 { body: JSON.stringify({ formFields }) },
                 Querier.preparePreAPIHook({
-                    config,
+                    recipePreAPIHook: preAPIHook,
                     action: "SEND_RESET_PASSWORD_EMAIL",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    config,
+                    recipePostAPIHook: postAPIHook,
                     action: "SEND_RESET_PASSWORD_EMAIL",
                     userContext,
                 })
@@ -166,7 +165,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
         signUp: async function ({
             formFields,
-            config,
             options,
             userContext,
         }: {
@@ -174,7 +172,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 id: string;
                 value: string;
             }[];
-            config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
         }): Promise<
@@ -208,13 +205,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/signup",
                 { body: JSON.stringify({ formFields }) },
                 Querier.preparePreAPIHook({
-                    config,
+                    recipePreAPIHook: preAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_UP",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    config,
+                    recipePostAPIHook: postAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_UP",
                     userContext,
                 })
@@ -237,7 +234,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
         signIn: async function ({
             formFields,
-            config,
             options,
             userContext,
         }: {
@@ -245,7 +241,6 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 id: string;
                 value: string;
             }[];
-            config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
         }): Promise<
@@ -286,13 +281,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 "/signin",
                 { body: JSON.stringify({ formFields }) },
                 Querier.preparePreAPIHook({
-                    config,
+                    recipePreAPIHook: preAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_IN",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    config,
+                    recipePostAPIHook: postAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_IN",
                     userContext,
                 })
@@ -322,12 +317,10 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
 
         doesEmailExist: async function ({
             email,
-            config,
             options,
             userContext,
         }: {
             email: string;
-            config: NormalisedInputType;
             options?: RecipeFunctionOptions;
             userContext: any;
         }): Promise<{
@@ -343,13 +336,13 @@ export default function getRecipeImplementation(recipeId: string, appInfo: Norma
                 {},
                 { email },
                 Querier.preparePreAPIHook({
-                    config,
+                    recipePreAPIHook: preAPIHook,
                     action: "EMAIL_EXISTS",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    config,
+                    recipePostAPIHook: postAPIHook,
                     action: "EMAIL_EXISTS",
                     userContext,
                 })
