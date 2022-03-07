@@ -16,10 +16,11 @@ import NormalisedURLPath from "./normalisedURLPath";
 import { supported_fdi } from "./version";
 import { NormalisedAppInfo } from "./types";
 import {
-    NormalisedRecipeConfig,
     PostAPIHookFunction,
     PreAPIHookFunction,
     RecipeFunctionOptions,
+    RecipePostAPIHookFunction,
+    RecipePreAPIHookFunction,
 } from "./recipe/recipeModule/types";
 import STGeneralError from "./error";
 
@@ -247,18 +248,18 @@ export default class Querier {
     };
 
     static preparePreAPIHook = <Action>({
-        config,
+        recipePreAPIHook,
         action,
         options,
         userContext,
     }: {
-        config: NormalisedRecipeConfig<Action>;
+        recipePreAPIHook: RecipePreAPIHookFunction<Action>;
         action: Action;
         options?: RecipeFunctionOptions;
         userContext: any;
     }): PreAPIHookFunction => {
         return async (context): Promise<{ url: string; requestInit: RequestInit }> => {
-            let postRecipeHookContext = await config.preAPIHook({
+            let postRecipeHookContext = await recipePreAPIHook({
                 ...context,
                 action,
                 userContext,
@@ -277,16 +278,16 @@ export default class Querier {
     };
 
     static preparePostAPIHook = <Action>({
-        config,
+        recipePostAPIHook,
         action,
         userContext,
     }: {
-        config: NormalisedRecipeConfig<Action>;
+        recipePostAPIHook: RecipePostAPIHookFunction<Action>;
         action: Action;
         userContext: any;
     }): PostAPIHookFunction => {
         return async (context) => {
-            await config.postAPIHook({
+            await recipePostAPIHook({
                 ...context,
                 userContext,
                 action,
