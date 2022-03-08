@@ -28,6 +28,12 @@ export declare type InputType = {
         url: string;
         requestInit: RequestInit;
     }>;
+    postAPIHook?: (context: {
+        action: "SIGN_OUT" | "REFRESH_SESSION";
+        requestInit: RequestInit;
+        url: string;
+        fetchResponse: Response;
+    }) => Promise<void>;
     onHandleEvent?: (event: RecipeEvent) => void;
     override?: {
         functions?: (
