@@ -29,12 +29,6 @@ export default class RecipeWrapper {
         });
     }
 
-    static doesSessionExist(input: { userContext: any }): Promise<boolean> {
-        return Recipe.getInstanceOrThrow().doesSessionExist({
-            userContext: input.userContext,
-        });
-    }
-
     static submitNewPassword(input: {
         formFields: {
             id: string;
@@ -202,7 +196,6 @@ const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
 const signOut = RecipeWrapper.signOut;
-const doesSessionExist = RecipeWrapper.doesSessionExist;
 
 export {
     init,
@@ -215,7 +208,6 @@ export {
     sendVerificationEmail,
     isEmailVerified,
     signOut,
-    doesSessionExist,
     UserType,
     InputType,
     RecipeInterface,

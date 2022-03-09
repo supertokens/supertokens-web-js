@@ -37,12 +37,6 @@ export default class RecipeWrapper {
         });
     }
 
-    static doesSessionExist(input: { userContext: any }): Promise<boolean> {
-        return Recipe.getInstanceOrThrow().doesSessionExist({
-            userContext: input.userContext,
-        });
-    }
-
     static getAuthorizationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         authorisationURL: string;
@@ -114,7 +108,6 @@ const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
 
 const signOut = RecipeWrapper.signOut;
-const doesSessionExist = RecipeWrapper.doesSessionExist;
 
 export {
     init,
@@ -124,7 +117,6 @@ export {
     sendVerificationEmail,
     isEmailVerified,
     signOut,
-    doesSessionExist,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

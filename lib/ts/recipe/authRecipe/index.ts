@@ -31,10 +31,4 @@ export default abstract class AuthRecipe<
             userContext: input.userContext,
         });
     };
-
-    doesSessionExist = async (input: { userContext: any }): Promise<boolean> => {
-        return await Session.getInstanceOrThrow().doesSessionExist({
-            userContext: input.userContext,
-        });
-    };
 }
