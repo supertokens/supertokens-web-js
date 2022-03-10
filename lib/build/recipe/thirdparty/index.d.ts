@@ -10,6 +10,7 @@ import {
 } from "./types";
 export default class RecipeWrapper {
     static init(config?: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
+    static signOut(input?: { userContext?: any }): Promise<void>;
     static getAuthorizationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         authorisationURL: string;
@@ -49,6 +50,7 @@ declare const signInAndUp: typeof RecipeWrapper.signInAndUp;
 declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
 declare const sendVerificationEmail: typeof RecipeWrapper.sendVerificationEmail;
 declare const isEmailVerified: typeof RecipeWrapper.isEmailVerified;
+declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
     getAuthorizationURLWithQueryParamsAndSetState,
@@ -56,6 +58,7 @@ export {
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
+    signOut,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

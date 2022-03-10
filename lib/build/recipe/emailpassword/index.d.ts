@@ -5,6 +5,7 @@ export default class RecipeWrapper {
     static init(
         config?: InputType
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
+    static signOut(input?: { userContext?: any }): Promise<void>;
     static submitNewPassword(input: {
         formFields: {
             id: string;
@@ -123,6 +124,7 @@ declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
 declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
 declare const sendVerificationEmail: typeof RecipeWrapper.sendVerificationEmail;
 declare const isEmailVerified: typeof RecipeWrapper.isEmailVerified;
+declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
     submitNewPassword,
@@ -133,6 +135,7 @@ export {
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
+    signOut,
     UserType,
     InputType,
     RecipeInterface,

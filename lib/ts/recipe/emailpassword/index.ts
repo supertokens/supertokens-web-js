@@ -23,6 +23,12 @@ export default class RecipeWrapper {
         return Recipe.init(config);
     }
 
+    static signOut(input?: { userContext?: any }) {
+        return Recipe.getInstanceOrThrow().signOut({
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
     static submitNewPassword(input: {
         formFields: {
             id: string;
@@ -189,6 +195,7 @@ const doesEmailExist = RecipeWrapper.doesEmailExist;
 const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
+const signOut = RecipeWrapper.signOut;
 
 export {
     init,
@@ -200,6 +207,7 @@ export {
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
+    signOut,
     UserType,
     InputType,
     RecipeInterface,

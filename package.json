@@ -35,7 +35,8 @@
     },
     "homepage": "https://github.com/supertokens/supertokens-web-js#readme",
     "dependencies": {
-        "supertokens-js-override": "0.0.4"
+        "supertokens-js-override": "0.0.4",
+        "supertokens-website": "github:supertokens/supertokens-website#add-post-api-hook"
     },
     "devDependencies": {
         "@babel/core": "^7.15.5",
@@ -65,15 +66,19 @@
         },
         {
             "path": "recipe/emailpassword/index.js",
-            "limit": "8kb"
+            "limit": "15kb"
         },
         {
             "path": "recipe/thirdparty/index.js",
-            "limit": "8kb"
+            "limit": "16kb"
         },
         {
             "path": "recipe/thirdpartyemailpassword/index.js",
-            "limit": "10kb"
+            "limit": "17kb"
+        },
+        {
+            "path": "recipe/session/index.js",
+            "limit": "13kb"
         }
     ]
 }

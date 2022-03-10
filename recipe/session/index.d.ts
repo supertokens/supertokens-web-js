@@ -12,23 +12,6 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-
-import RecipeModule from "../recipeModule";
-import { NormalisedRecipeConfig } from "../recipeModule/types";
-import Session from "../session/recipe";
-
-// TODO NEMI: Add session recipe methods here
-export default abstract class AuthRecipe<
-    Action,
-    NormalisedConfig extends NormalisedRecipeConfig<Action>
-> extends RecipeModule<Action, NormalisedConfig> {
-    constructor(config: NormalisedConfig) {
-        super(config);
-    }
-
-    signOut = async (input: { userContext: any }): Promise<void> => {
-        return await Session.getInstanceOrThrow().signOut({
-            userContext: input.userContext,
-        });
-    };
-}
+export * from "../../lib/build/recipe/session";
+import * as _default from "../../lib/build/recipe/session";
+export default _default;
