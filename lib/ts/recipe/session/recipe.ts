@@ -44,7 +44,6 @@ export default class Recipe extends RecipeModule<unknown, any> {
                     return config.preAPIHook(context);
                 }
             },
-            postAPIHook: config.postAPIHook,
             apiDomain: config.appInfo.apiDomain.getAsStringDangerous(),
             apiBasePath: config.appInfo.apiBasePath.getAsStringDangerous(),
         });
