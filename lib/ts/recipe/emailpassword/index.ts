@@ -158,7 +158,14 @@ export default class RecipeWrapper {
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
         fetchResponse: Response;
     }> {
-        return Recipe.getInstanceOrThrow().emailVerificationRecipe.recipeImplementation.verifyEmail({
+        /**
+         * We do it this way here because prettier behaves in a weird way without it.
+         * If you return directly, build-pretty will succeed but pretty-check will fail
+         * when you try to commit and you will have to run pretty manually every time
+         */
+        const emailVerificationRecipeImpl = Recipe.getInstanceOrThrow().emailVerificationRecipe.recipeImplementation;
+
+        return emailVerificationRecipeImpl.verifyEmail({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
         });
@@ -179,7 +186,14 @@ export default class RecipeWrapper {
         isVerified: boolean;
         fetchResponse: Response;
     }> {
-        return Recipe.getInstanceOrThrow().emailVerificationRecipe.recipeImplementation.isEmailVerified({
+        /**
+         * We do it this way here because prettier behaves in a weird way without it.
+         * If you return directly, build-pretty will succeed but pretty-check will fail
+         * when you try to commit and you will have to run pretty manually every time
+         */
+        const emailVerificationRecipeImpl = Recipe.getInstanceOrThrow().emailVerificationRecipe.recipeImplementation;
+
+        return emailVerificationRecipeImpl.isEmailVerified({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
         });

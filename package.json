@@ -9,7 +9,7 @@
         "build": "cd lib && rm -rf build && npx tsc -p tsconfig.json",
         "pretty-check": "npx pretty-quick --check .",
         "pretty": "npx pretty-quick .",
-        "build-pretty": "npm run build && npm run pretty",
+        "build-pretty": "npm run build && npm run pretty && npm run pretty",
         "pack": "./node_modules/.bin/webpack -p",
         "set-up-hooks": "cp hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit",
         "lint": "cd lib && npx tslint -c tslint.json './**/*.ts'"
@@ -36,7 +36,7 @@
     "homepage": "https://github.com/supertokens/supertokens-web-js#readme",
     "dependencies": {
         "supertokens-js-override": "0.0.4",
-        "supertokens-website": "github:supertokens/supertokens-website#add-post-api-hook"
+        "supertokens-website": "github:supertokens/supertokens-website#user-context-changes"
     },
     "devDependencies": {
         "@babel/core": "^7.15.5",
