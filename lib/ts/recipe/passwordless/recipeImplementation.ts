@@ -50,7 +50,7 @@ export default function getRecipeImplementation(
 
             if ("phoneNumber" in input) {
                 bodyObj = {
-                    email: input.phoneNumber,
+                    phoneNumber: input.phoneNumber,
                 };
             }
 
