@@ -82,7 +82,7 @@
         },
         {
             "path": "recipe/passwordless/index.js",
-            "limit": "10kb"
+            "limit": "15kb"
         }
     ]
 }
