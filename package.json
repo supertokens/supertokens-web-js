@@ -81,7 +81,7 @@
             "limit": "13kb"
         },
         {
-            "path": "recipe/session/index.js",
+            "path": "recipe/passwordless/index.js",
             "limit": "10kb"
         }
     ]
