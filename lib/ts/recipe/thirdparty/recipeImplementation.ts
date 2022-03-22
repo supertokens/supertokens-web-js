@@ -14,29 +14,28 @@
  */
 
 import Querier from "../../querier";
-import { appendQueryParamsToURL, getQueryParams, getSessionStorage, setSessionStorage } from "../../utils";
+import { appendQueryParamsToURL, getQueryParams } from "../../utils";
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeInterface, StateObject } from "./types";
-import { RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../recipeModule/types";
+import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
-import { NormalisedAppInfo } from "../../types";
 import { PreAndPostAPIHookAction } from "./types";
+import { normaliseStorageHandlerInput } from "../recipeModule/utils";
 
 export default function getRecipeImplementation(
-    recipeId: string,
-    appInfo: NormalisedAppInfo,
-    preAPIHook: RecipePreAPIHookFunction<PreAndPostAPIHookAction>,
-    postAPIHook: RecipePostAPIHookFunction<PreAndPostAPIHookAction>
+    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
-    const querier = new Querier(recipeId, appInfo);
-    return {
-        getStateAndOtherInfoFromStorage: function <CustomStateProperties>():
-            | (StateObject & CustomStateProperties)
-            | undefined {
-            try {
-                const stateFromStorage = getSessionStorage("supertokens-oauth-state-2");
+    const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
+    const storageHandlers = normaliseStorageHandlerInput(recipeImplInput.storageHandlerInput);
 
-                if (stateFromStorage === undefined) {
+    return {
+        getStateAndOtherInfoFromStorage: async function <CustomStateProperties>(): Promise<
+            (StateObject & CustomStateProperties) | undefined
+        > {
+            try {
+                const stateFromStorage = await storageHandlers.sessionStorage.getItem("supertokens-oauth-state-2");
+
+                if (stateFromStorage === null) {
                     return undefined;
                 }
 
@@ -46,11 +45,11 @@ export default function getRecipeImplementation(
             }
         },
 
-        setStateAndOtherInfoToStorage: function (input: { state: StateObject; userContext: any }) {
+        setStateAndOtherInfoToStorage: async function (input: { state: StateObject; userContext: any }): Promise<void> {
             const value = JSON.stringify({
                 ...input.state,
             });
-            setSessionStorage("supertokens-oauth-state-2", value);
+            await storageHandlers.sessionStorage.setItem("supertokens-oauth-state-2", value);
         },
 
         getAuthorizationURLWithQueryParamsAndSetState: async function (input: {
@@ -67,7 +66,7 @@ export default function getRecipeImplementation(
 
             const stateExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
             // 2. Store state in Session Storage.
-            this.setStateAndOtherInfoToStorage<{}>({
+            await this.setStateAndOtherInfoToStorage<{}>({
                 state: {
                     stateForAuthProvider: stateToSendToAuthProvider,
                     providerId: input.providerId,
@@ -118,13 +117,13 @@ export default function getRecipeImplementation(
                 {},
                 { thirdPartyId: input.providerId },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "GET_AUTHORISATION_URL",
                     options: input.options,
                     userContext: input.userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "GET_AUTHORISATION_URL",
                     userContext: input.userContext,
                 })
@@ -149,7 +148,7 @@ export default function getRecipeImplementation(
                   fetchResponse: Response;
               }
         > {
-            const stateFromStorage = this.getStateAndOtherInfoFromStorage<{}>({
+            const stateFromStorage = await this.getStateAndOtherInfoFromStorage<{}>({
                 userContext: input.userContext,
             });
 
@@ -208,13 +207,13 @@ export default function getRecipeImplementation(
                     }),
                 },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "THIRD_PARTY_SIGN_IN_UP",
                     options: input.options,
                     userContext: input.userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "THIRD_PARTY_SIGN_IN_UP",
                     userContext: input.userContext,
                 })

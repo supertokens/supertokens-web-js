@@ -113,18 +113,8 @@ export declare type RecipeInterface = {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
-    getLoginAttemptInfo: <CustomAttemptInfoProperties>(input: { userContext: any }) =>
-        | Promise<
-              | undefined
-              | ({
-                    deviceId: string;
-                    preAuthSessionId: string;
-                    contactInfo: string;
-                    contactMethod: "EMAIL" | "PHONE";
-                    flowType: PasswordlessFlowType;
-                    lastResend: number;
-                } & CustomAttemptInfoProperties)
-          >
+    getLoginAttemptInfo: <CustomAttemptInfoProperties>(input: { userContext: any }) => Promise<
+        | undefined
         | ({
               deviceId: string;
               preAuthSessionId: string;
@@ -133,7 +123,7 @@ export declare type RecipeInterface = {
               flowType: PasswordlessFlowType;
               lastResend: number;
           } & CustomAttemptInfoProperties)
-        | undefined;
+    >;
     setLoginAttemptInfo: <CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
@@ -144,6 +134,6 @@ export declare type RecipeInterface = {
             lastResend: number;
         } & CustomStateProperties;
         userContext: any;
-    }) => Promise<void> | void;
-    clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void> | void;
+    }) => Promise<void>;
+    clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void>;
 };

@@ -13,18 +13,14 @@
  * under the License.
  */
 import Querier from "../../querier";
-import { NormalisedAppInfo } from "../../types";
 import { getQueryParams } from "../../utils";
-import { RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../recipeModule/types";
+import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction, RecipeInterface } from "./types";
 
 export default function getRecipeImplementation(
-    recipeId: string,
-    appInfo: NormalisedAppInfo,
-    preAPIHook: RecipePreAPIHookFunction<PreAndPostAPIHookAction>,
-    postAPIHook: RecipePostAPIHookFunction<PreAndPostAPIHookAction>
+    recipeImpleInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
-    const querier = new Querier(recipeId, appInfo);
+    const querier = new Querier(recipeImpleInput.recipeId, recipeImpleInput.appInfo);
     return {
         verifyEmail: async function ({
             options,
@@ -51,13 +47,13 @@ export default function getRecipeImplementation(
                     }),
                 },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImpleInput.preAPIHook,
                     action: "VERIFY_EMAIL",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImpleInput.postAPIHook,
                     userContext,
                     action: "VERIFY_EMAIL",
                 })
@@ -85,13 +81,13 @@ export default function getRecipeImplementation(
                 {},
                 undefined,
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImpleInput.preAPIHook,
                     action: "IS_EMAIL_VERIFIED",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImpleInput.postAPIHook,
                     userContext,
                     action: "IS_EMAIL_VERIFIED",
                 })
@@ -118,13 +114,13 @@ export default function getRecipeImplementation(
                 "/user/email/verify/token",
                 { body: JSON.stringify({}) },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImpleInput.preAPIHook,
                     action: "SEND_VERIFY_EMAIL",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImpleInput.postAPIHook,
                     userContext,
                     action: "SEND_VERIFY_EMAIL",
                 })

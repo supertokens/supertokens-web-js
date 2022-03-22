@@ -1,4 +1,4 @@
-import { NormalisedAppInfo } from "../../types";
+import { NormalisedAppInfo, StorageHandlerInput } from "../../types";
 export declare type RecipePreAPIHookContext<Action> = {
     requestInit: RequestInit;
     url: string;
@@ -29,12 +29,14 @@ export declare type RecipePostAPIHookFunction<Action> = (context: RecipePostAPIH
 export declare type RecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
+    storageHandlerInput?: StorageHandlerInput;
     preAPIHook?: RecipePreAPIHookFunction<Action>;
     postAPIHook?: RecipePostAPIHookFunction<Action>;
 };
 export declare type NormalisedRecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
+    storageHandlerInput?: StorageHandlerInput;
     preAPIHook: RecipePreAPIHookFunction<Action>;
     postAPIHook: RecipePostAPIHookFunction<Action>;
 };
@@ -50,4 +52,11 @@ export declare type RecipeFunctionOptions = {
         url: string;
         requestInit: RequestInit;
     }>;
+};
+export declare type RecipeImplementationInput<PrePostAPIHookAction> = {
+    recipeId: string;
+    appInfo: NormalisedAppInfo;
+    preAPIHook: RecipePreAPIHookFunction<PrePostAPIHookAction>;
+    postAPIHook: RecipePostAPIHookFunction<PrePostAPIHookAction>;
+    storageHandlerInput?: StorageHandlerInput;
 };

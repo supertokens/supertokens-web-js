@@ -13,7 +13,6 @@
  * under the License.
  */
 
-import { NormalisedAppInfo } from "../../../types";
 import { PreAndPostAPIHookAction, RecipeInterface } from "../types";
 import EmailPasswordImplementation from "../../emailpassword/recipeImplementation";
 import ThirdPartyImplementation from "../../thirdparty/recipeImplementation";
@@ -21,16 +20,13 @@ import DerivedEmailPassword from "./emailpassword";
 import DerivedThirdParty from "./thirdparty";
 import { StateObject } from "../../thirdparty/types";
 import { RecipeFunctionOptions, UserType } from "../../emailpassword";
-import { RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../../recipeModule/types";
+import { RecipeImplementationInput } from "../../recipeModule/types";
 
 export default function getRecipeImplementation(
-    recipeId: string,
-    appInfo: NormalisedAppInfo,
-    preAPIHook: RecipePreAPIHookFunction<PreAndPostAPIHookAction>,
-    postAPIHook: RecipePostAPIHookFunction<PreAndPostAPIHookAction>
+    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
-    const emailPasswordImpl = EmailPasswordImplementation(recipeId, appInfo, preAPIHook, postAPIHook);
-    const thirdPartyImpl = ThirdPartyImplementation(recipeId, appInfo, preAPIHook, postAPIHook);
+    const emailPasswordImpl = EmailPasswordImplementation(recipeImplInput);
+    const thirdPartyImpl = ThirdPartyImplementation(recipeImplInput);
 
     return {
         submitNewPassword: async function (input: {
@@ -174,12 +170,12 @@ export default function getRecipeImplementation(
         > {
             return thirdPartyImpl.signInAndUp.bind(DerivedThirdParty(this))(input);
         },
-        getStateAndOtherInfoFromStorage: function <CustomStateProperties>(input: {
+        getStateAndOtherInfoFromStorage: async function <CustomStateProperties>(input: {
             userContext: any;
-        }): (StateObject & CustomStateProperties) | undefined {
+        }): Promise<(StateObject & CustomStateProperties) | undefined> {
             return thirdPartyImpl.getStateAndOtherInfoFromStorage.bind(DerivedThirdParty(this))(input);
         },
-        setStateAndOtherInfoToStorage: function (input: { state: StateObject; userContext: any }): void {
+        setStateAndOtherInfoToStorage: async function (input: { state: StateObject; userContext: any }): Promise<void> {
             return thirdPartyImpl.setStateAndOtherInfoToStorage.bind(DerivedThirdParty(this))(input);
         },
         getAuthorizationURLWithQueryParamsAndSetState: async function (input: {

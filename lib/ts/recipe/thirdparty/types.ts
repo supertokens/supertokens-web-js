@@ -56,12 +56,12 @@ export type StateObject = {
 export type RecipeInterface = {
     getStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
         userContext: any;
-    }) => (StateObject & CustomStateProperties) | undefined;
+    }) => Promise<(StateObject & CustomStateProperties) | undefined>;
 
     setStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
         state: StateObject & CustomStateProperties;
         userContext: any;
-    }) => void;
+    }) => Promise<void>;
 
     getAuthorizationURLWithQueryParamsAndSetState: (input: {
         providerId: string;

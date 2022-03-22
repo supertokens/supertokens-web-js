@@ -13,7 +13,7 @@
  * under the License.
  */
 
-import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
+import { CreateRecipeFunction, NormalisedAppInfo, StorageHandlerInput } from "../../types";
 import RecipeModule from "../recipeModule";
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
 import { normaliseUserInput } from "./utils";
@@ -31,22 +31,24 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
     constructor(config: InputType) {
         this.config = normaliseUserInput(config);
         const builder = new OverrideableBuilder(
-            RecipeImplementation(
-                this.config.recipeId,
-                this.config.appInfo,
-                this.config.preAPIHook,
-                this.config.postAPIHook
-            )
+            RecipeImplementation({
+                recipeId: this.config.recipeId,
+                appInfo: this.config.appInfo,
+                preAPIHook: this.config.preAPIHook,
+                postAPIHook: this.config.postAPIHook,
+                storageHandlerInput: this.config.storageHandlerInput,
+            })
         );
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 
     static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo) => {
+        return (appInfo: NormalisedAppInfo, storageHandlerInput?: StorageHandlerInput) => {
             Recipe.instance = new Recipe({
                 ...config,
                 appInfo,
                 recipeId: Recipe.RECIPE_ID,
+                storageHandlerInput,
             });
 
             return Recipe.instance;

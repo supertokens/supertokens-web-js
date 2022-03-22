@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { NormalisedAppInfo } from "../../types";
+import { NormalisedAppInfo, StorageHandlerInput } from "../../types";
 
 export type RecipePreAPIHookContext<Action> = {
     requestInit: RequestInit;
@@ -49,6 +49,7 @@ export type RecipePostAPIHookFunction<Action> = (context: RecipePostAPIHookConte
 export type RecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
+    storageHandlerInput?: StorageHandlerInput;
     preAPIHook?: RecipePreAPIHookFunction<Action>;
     postAPIHook?: RecipePostAPIHookFunction<Action>;
 };
@@ -56,6 +57,7 @@ export type RecipeConfig<Action> = {
 export type NormalisedRecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
+    storageHandlerInput?: StorageHandlerInput;
     preAPIHook: RecipePreAPIHookFunction<Action>;
     postAPIHook: RecipePostAPIHookFunction<Action>;
 };
@@ -73,4 +75,12 @@ export type RecipeFunctionOptions = {
         requestInit: RequestInit;
         userContext: any;
     }) => Promise<{ url: string; requestInit: RequestInit }>;
+};
+
+export type RecipeImplementationInput<PrePostAPIHookAction> = {
+    recipeId: string;
+    appInfo: NormalisedAppInfo;
+    preAPIHook: RecipePreAPIHookFunction<PrePostAPIHookAction>;
+    postAPIHook: RecipePostAPIHookFunction<PrePostAPIHookAction>;
+    storageHandlerInput?: StorageHandlerInput;
 };

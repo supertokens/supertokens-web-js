@@ -17,7 +17,7 @@ import AuthRecipeWithEmailVerification from "../authRecipeWithEmailVerification"
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
 import EmailVerificationRecipe from "../emailverification/recipe";
 import { normaliseUserInput } from "./utils";
-import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
+import { CreateRecipeFunction, NormalisedAppInfo, StorageHandlerInput } from "../../types";
 import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
@@ -32,23 +32,25 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
         super(normaliseUserInput(config), recipes);
 
         const builder = new OverrideableBuilder(
-            RecipeImplementation(
-                this.config.recipeId,
-                this.config.appInfo,
-                this.config.preAPIHook,
-                this.config.postAPIHook
-            )
+            RecipeImplementation({
+                recipeId: this.config.recipeId,
+                appInfo: this.config.appInfo,
+                preAPIHook: this.config.preAPIHook,
+                postAPIHook: this.config.postAPIHook,
+                storageHandlerInput: this.config.storageHandlerInput,
+            })
         );
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 
     static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo) => {
+        return (appInfo: NormalisedAppInfo, storageHandlerInput?: StorageHandlerInput) => {
             Recipe.instance = new Recipe(
                 {
                     ...config,
                     recipeId: Recipe.RECIPE_ID,
                     appInfo,
+                    storageHandlerInput,
                 },
                 {
                     emailVerification: undefined,

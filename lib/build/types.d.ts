@@ -2,12 +2,15 @@ import RecipeModule from "./recipe/recipeModule";
 import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
+import { StorageHandler } from "./common/storage/types";
 export declare type SuperTokensConfig = {
     appInfo: AppInfoUserInput;
     recipeList: CreateRecipeFunction<any>[];
+    storageHandlers?: StorageHandlerInput;
 };
 export declare type CreateRecipeFunction<Action> = (
-    appInfo: NormalisedAppInfo
+    appInfo: NormalisedAppInfo,
+    storageHandlers?: StorageHandlerInput
 ) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 export declare type AppInfoUserInput = {
     appName: string;
@@ -25,4 +28,12 @@ export declare type NormalisedAppInfo = {
     apiDomain: NormalisedURLDomain;
     apiBasePath: NormalisedURLPath;
     websiteBasePath: NormalisedURLPath;
+};
+export declare type StorageHandlerInput = {
+    sessionStorage?: StorageHandler;
+    localStorage?: StorageHandler;
+};
+export declare type NormalisedStorageHandlers = {
+    sessionStorage: StorageHandler;
+    localStorage: StorageHandler;
 };

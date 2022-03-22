@@ -130,18 +130,8 @@ export type RecipeInterface = {
     }>;
 
     // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
-    getLoginAttemptInfo: <CustomAttemptInfoProperties>(input: { userContext: any }) =>
-        | Promise<
-              | undefined
-              | ({
-                    deviceId: string;
-                    preAuthSessionId: string;
-                    contactInfo: string;
-                    contactMethod: "EMAIL" | "PHONE";
-                    flowType: PasswordlessFlowType;
-                    lastResend: number;
-                } & CustomAttemptInfoProperties)
-          >
+    getLoginAttemptInfo: <CustomAttemptInfoProperties>(input: { userContext: any }) => Promise<
+        | undefined
         | ({
               deviceId: string;
               preAuthSessionId: string;
@@ -150,7 +140,7 @@ export type RecipeInterface = {
               flowType: PasswordlessFlowType;
               lastResend: number;
           } & CustomAttemptInfoProperties)
-        | undefined;
+    >;
 
     // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
     setLoginAttemptInfo: <CustomStateProperties>(input: {
@@ -163,8 +153,8 @@ export type RecipeInterface = {
             lastResend: number;
         } & CustomStateProperties;
         userContext: any;
-    }) => Promise<void> | void;
+    }) => Promise<void>;
 
     // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
-    clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void> | void;
+    clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void>;
 };

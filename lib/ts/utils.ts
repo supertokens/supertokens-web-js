@@ -38,7 +38,7 @@ export function appendQueryParamsToURL(stringUrl: string, queryParams?: Record<s
     }
 }
 
-function getWindowOrThrow(): Window {
+export function getWindowOrThrow(): Window {
     // tslint:disable-next-line
     if (typeof window === "undefined") {
         throw new Error(WINDOW_UNDEFINED_ERROR);
@@ -114,38 +114,4 @@ export function checkForSSRErrorAndAppendIfNeeded(error: string): string {
 
 export function getNormalisedUserContext(userContext?: any) {
     return userContext === undefined ? {} : userContext;
-}
-
-// TODO NEMI: Remove this function when storage abstraction is implemented
-export function getSessionStorage(key: string): string | undefined {
-    const item = getWindowOrThrow().sessionStorage.getItem(key);
-
-    if (item === null) {
-        return undefined;
-    }
-    return item;
-}
-
-// TODO NEMI: Remove this function when storage abstraction is implemented
-export function setSessionStorage(key: string, value: string): void {
-    getWindowOrThrow().sessionStorage.setItem(key, value);
-}
-
-// TODO NEMI: Remove this function when storage abstraction is implemented
-export function getLocalStorage(key: string): string | null {
-    const res = getWindowOrThrow().localStorage.getItem(key);
-    if (res === null || res === undefined) {
-        return null;
-    }
-    return res;
-}
-
-// TODO NEMI: Remove this function when storage abstraction is implemented
-export function setLocalStorage(key: string, value: string): void {
-    getWindowOrThrow().localStorage.setItem(key, value);
-}
-
-// TODO NEMI: Remove this function when storage abstraction is implemented
-export function removeFromLocalStorage(key: string): void {
-    getWindowOrThrow().localStorage.removeItem(key);
 }
