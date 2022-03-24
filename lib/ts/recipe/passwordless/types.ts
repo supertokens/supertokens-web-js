@@ -72,12 +72,7 @@ export type RecipeInterface = {
         fetchResponse: Response;
     }>;
 
-    resendCode: (input: {
-        deviceId: string;
-        preAuthSessionId: string;
-        userContext: any;
-        options?: RecipeFunctionOptions;
-    }) => Promise<{
+    resendCode: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }>;
@@ -86,14 +81,10 @@ export type RecipeInterface = {
         input:
             | {
                   userInputCode: string;
-                  deviceId: string;
-                  preAuthSessionId: string;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
             | {
-                  preAuthSessionId: string;
-                  linkCode: string;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
@@ -113,6 +104,8 @@ export type RecipeInterface = {
         | { status: "RESTART_FLOW_ERROR"; fetchResponse: Response }
     >;
 
+    getLinkCodeFromURL: (input: { userContext: any }) => string;
+
     doesEmailExist: (input: { email: string; userContext: any; options?: RecipeFunctionOptions }) => Promise<{
         status: "OK";
         doesExist: boolean;
@@ -130,26 +123,26 @@ export type RecipeInterface = {
     }>;
 
     // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
-    getLoginAttemptInfo: <CustomAttemptInfoProperties>(input: { userContext: any }) =>
+    getLoginAttemptInfo: <CustomLoginAttemptInfoProperties>(input: { userContext: any }) =>
         | Promise<
               | undefined
               | ({
                     deviceId: string;
                     preAuthSessionId: string;
-                    contactInfo: string;
-                    contactMethod: "EMAIL" | "PHONE";
                     flowType: PasswordlessFlowType;
-                    lastResend: number;
-                } & CustomAttemptInfoProperties)
+                    // contactInfo: string;
+                    // contactMethod: "EMAIL" | "PHONE";
+                    // lastResend: number;
+                } & CustomLoginAttemptInfoProperties)
           >
         | ({
               deviceId: string;
               preAuthSessionId: string;
-              contactInfo: string;
-              contactMethod: "EMAIL" | "PHONE";
               flowType: PasswordlessFlowType;
-              lastResend: number;
-          } & CustomAttemptInfoProperties)
+              //   contactInfo: string;
+              //   contactMethod: "EMAIL" | "PHONE";
+              //   lastResend: number;
+          } & CustomLoginAttemptInfoProperties)
         | undefined;
 
     // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
@@ -157,10 +150,10 @@ export type RecipeInterface = {
         attemptInfo: {
             deviceId: string;
             preAuthSessionId: string;
-            contactInfo: string;
-            contactMethod: "EMAIL" | "PHONE";
             flowType: PasswordlessFlowType;
-            lastResend: number;
+            // contactInfo: string;
+            // contactMethod: "EMAIL" | "PHONE";
+            // lastResend: number;
         } & CustomStateProperties;
         userContext: any;
     }) => Promise<void> | void;

@@ -57,12 +57,7 @@ export declare type RecipeInterface = {
         flowType: PasswordlessFlowType;
         fetchResponse: Response;
     }>;
-    resendCode: (input: {
-        deviceId: string;
-        preAuthSessionId: string;
-        userContext: any;
-        options?: RecipeFunctionOptions;
-    }) => Promise<{
+    resendCode: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }>;
@@ -70,14 +65,10 @@ export declare type RecipeInterface = {
         input:
             | {
                   userInputCode: string;
-                  deviceId: string;
-                  preAuthSessionId: string;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
             | {
-                  preAuthSessionId: string;
-                  linkCode: string;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
@@ -99,6 +90,7 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
+    getLinkCodeFromURL: (input: { userContext: any }) => string;
     doesEmailExist: (input: { email: string; userContext: any; options?: RecipeFunctionOptions }) => Promise<{
         status: "OK";
         doesExist: boolean;
@@ -113,35 +105,26 @@ export declare type RecipeInterface = {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
-    getLoginAttemptInfo: <CustomAttemptInfoProperties>(input: { userContext: any }) =>
+    getLoginAttemptInfo: <CustomLoginAttemptInfoProperties>(input: { userContext: any }) =>
         | Promise<
               | undefined
               | ({
                     deviceId: string;
                     preAuthSessionId: string;
-                    contactInfo: string;
-                    contactMethod: "EMAIL" | "PHONE";
                     flowType: PasswordlessFlowType;
-                    lastResend: number;
-                } & CustomAttemptInfoProperties)
+                } & CustomLoginAttemptInfoProperties)
           >
         | ({
               deviceId: string;
               preAuthSessionId: string;
-              contactInfo: string;
-              contactMethod: "EMAIL" | "PHONE";
               flowType: PasswordlessFlowType;
-              lastResend: number;
-          } & CustomAttemptInfoProperties)
+          } & CustomLoginAttemptInfoProperties)
         | undefined;
     setLoginAttemptInfo: <CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
             preAuthSessionId: string;
-            contactInfo: string;
-            contactMethod: "EMAIL" | "PHONE";
             flowType: PasswordlessFlowType;
-            lastResend: number;
         } & CustomStateProperties;
         userContext: any;
     }) => Promise<void> | void;

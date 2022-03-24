@@ -149,3 +149,8 @@ export function setLocalStorage(key: string, value: string): void {
 export function removeFromLocalStorage(key: string): void {
     getWindowOrThrow().localStorage.removeItem(key);
 }
+
+export function getHashFromLocation(): string {
+    // By default it is returned with the "#" at the beginning, we cut that off here.
+    return getWindowOrThrow().location.hash.substring(1);
+}
