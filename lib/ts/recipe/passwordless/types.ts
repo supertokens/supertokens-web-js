@@ -72,7 +72,12 @@ export type RecipeInterface = {
         fetchResponse: Response;
     }>;
 
-    resendCode: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<{
+    resendCode: (input: {
+        userContext: any;
+        deviceId: string;
+        preAuthSessionId: string;
+        options?: RecipeFunctionOptions;
+    }) => Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }>;
@@ -81,10 +86,14 @@ export type RecipeInterface = {
         input:
             | {
                   userInputCode: string;
+                  deviceId: string;
+                  preAuthSessionId: string;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
             | {
+                  preAuthSessionId: string;
+                  linkCode: string;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
@@ -105,6 +114,8 @@ export type RecipeInterface = {
     >;
 
     getLinkCodeFromURL: (input: { userContext: any }) => string;
+
+    getPreAuthSessionIdFromURL: (input: { userContext: any }) => string;
 
     doesEmailExist: (input: { email: string; userContext: any; options?: RecipeFunctionOptions }) => Promise<{
         status: "OK";
@@ -160,4 +171,17 @@ export type RecipeInterface = {
 
     // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
     clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void> | void;
+
+    didLoginAttemptInfoChangeAfterResend: (input: {
+        attemptInfoBeforeResend: {
+            deviceId: string;
+            preAuthSessionId: string;
+            flowType: PasswordlessFlowType;
+        };
+        attemptInfoAfterResend: {
+            deviceId: string;
+            preAuthSessionId: string;
+            flowType: PasswordlessFlowType;
+        };
+    }) => boolean;
 };

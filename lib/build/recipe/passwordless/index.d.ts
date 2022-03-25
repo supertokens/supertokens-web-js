@@ -11,7 +11,7 @@ export default class RecipeWrapper {
     static init(
         config?: InputType
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
-    static createCode(
+    static createCodeAndSetState(
         input:
             | {
                   email: string;
@@ -30,12 +30,7 @@ export default class RecipeWrapper {
         flowType: PasswordlessFlowType;
         fetchResponse: Response;
     }>;
-    static resendCode(input: {
-        deviceId: string;
-        preAuthSessionId: string;
-        userContext?: any;
-        options?: RecipeFunctionOptions;
-    }): Promise<{
+    static resendCodeAndUpdateState(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }>;
@@ -43,14 +38,10 @@ export default class RecipeWrapper {
         input:
             | {
                   userInputCode: string;
-                  deviceId: string;
-                  preAuthSessionId: string;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
             | {
-                  preAuthSessionId: string;
-                  linkCode: string;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
@@ -89,16 +80,16 @@ export default class RecipeWrapper {
     static signOut(input?: { userContext?: any }): Promise<void>;
 }
 declare const init: typeof RecipeWrapper.init;
-declare const createCode: typeof RecipeWrapper.createCode;
-declare const resendCode: typeof RecipeWrapper.resendCode;
+declare const createCodeAndSetState: typeof RecipeWrapper.createCodeAndSetState;
+declare const resendCodeAndUpdateState: typeof RecipeWrapper.resendCodeAndUpdateState;
 declare const consumeCode: typeof RecipeWrapper.consumeCode;
 declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
 declare const doesPhoneNumberExist: typeof RecipeWrapper.doesPhoneNumberExist;
 declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
-    createCode,
-    resendCode,
+    createCodeAndSetState,
+    resendCodeAndUpdateState,
     consumeCode,
     doesEmailExist,
     doesPhoneNumberExist,

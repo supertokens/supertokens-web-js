@@ -15,7 +15,13 @@
 
 import Querier from "../../querier";
 import { NormalisedAppInfo } from "../../types";
-import { getHashFromLocation, getLocalStorage, removeFromLocalStorage, setLocalStorage } from "../../utils";
+import {
+    getHashFromLocation,
+    getLocalStorage,
+    getQueryParams,
+    removeFromLocalStorage,
+    setLocalStorage,
+} from "../../utils";
 import { RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../recipeModule/types";
 import { PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY } from "./constants";
 import { PreAndPostAPIHookAction, RecipeInterface, PasswordlessFlowType, PasswordlessUser } from "./types";
@@ -75,38 +81,23 @@ export default function getRecipeImplementation(
                 })
             );
 
-            await this.setLoginAttemptInfo({
-                attemptInfo: {
-                    deviceId: jsonBody.deviceId,
-                    preAuthSessionId: jsonBody.preAuthSessionId,
-                    flowType: jsonBody.flowType,
-                },
-                userContext: input.userContext,
-            });
-
             return {
                 ...jsonBody,
                 fetchResponse,
             };
         },
-        resendCode: async function (input: { userContext: any; options?: RecipeFunctionOptions }): Promise<{
+        resendCode: async function (input: {
+            deviceId: string;
+            preAuthSessionId: string;
+            userContext: any;
+            options?: RecipeFunctionOptions;
+        }): Promise<{
             status: "OK" | "RESTART_FLOW_ERROR";
             fetchResponse: Response;
         }> {
-            const previousAttempInfo = await this.getLoginAttemptInfo({
-                userContext: input.userContext,
-            });
-
-            if (previousAttempInfo === undefined) {
-                throw new Error(
-                    "No information for the previous attempt found, " +
-                        "createCode must be called once before trying to resend"
-                );
-            }
-
             const bodyObj = {
-                deviceId: previousAttempInfo.deviceId,
-                preAuthSessionId: previousAttempInfo.preAuthSessionId,
+                deviceId: input.deviceId,
+                preAuthSessionId: input.preAuthSessionId,
             };
 
             const { jsonBody, fetchResponse } = await querier.post<{
@@ -136,10 +127,14 @@ export default function getRecipeImplementation(
             input:
                 | {
                       userInputCode: string;
+                      deviceId: string;
+                      preAuthSessionId: string;
                       userContext: any;
                       options?: RecipeFunctionOptions;
                   }
                 | {
+                      preAuthSessionId: string;
+                      linkCode: string;
                       userContext: any;
                       options?: RecipeFunctionOptions;
                   }
@@ -158,32 +153,17 @@ export default function getRecipeImplementation(
               }
             | { status: "RESTART_FLOW_ERROR"; fetchResponse: Response }
         > {
-            const attemptInfoFromStorage = await this.getLoginAttemptInfo({
-                userContext: input.userContext,
-            });
-
-            if (attemptInfoFromStorage === undefined) {
-                throw new Error(
-                    "No information found for a login attempt, " +
-                        "createCode must be called once before trying to consume the code"
-                );
-            }
-
             let bodyObj;
             if ("userInputCode" in input) {
                 bodyObj = {
                     userInputCode: input.userInputCode,
-                    deviceId: attemptInfoFromStorage.deviceId,
-                    preAuthSessionId: attemptInfoFromStorage.preAuthSessionId,
+                    deviceId: input.deviceId,
+                    preAuthSessionId: input.preAuthSessionId,
                 };
             } else {
-                const linkCode = this.getLinkCodeFromURL({
-                    userContext: input.userContext,
-                });
-
                 bodyObj = {
-                    linkCode,
-                    preAuthSessionId: attemptInfoFromStorage.preAuthSessionId,
+                    linkCode: input.linkCode,
+                    preAuthSessionId: input.preAuthSessionId,
                 };
             }
 
@@ -228,6 +208,15 @@ export default function getRecipeImplementation(
         },
         getLinkCodeFromURL: function () {
             return getHashFromLocation();
+        },
+        getPreAuthSessionIdFromURL: function () {
+            const idFromQuery = getQueryParams("preAuthSessionId");
+
+            if (idFromQuery === undefined) {
+                return "";
+            }
+
+            return idFromQuery;
         },
         doesEmailExist: async function (input: {
             email: string;
@@ -345,6 +334,9 @@ export default function getRecipeImplementation(
         },
         clearLoginAttemptInfo: function (): Promise<void> | void {
             removeFromLocalStorage(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
+        },
+        didLoginAttemptInfoChangeAfterResend: function (input): boolean {
+            return input.attemptInfoAfterResend.deviceId === input.attemptInfoBeforeResend.deviceId;
         },
     };
 }

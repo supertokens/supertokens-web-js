@@ -30,7 +30,7 @@ export default class RecipeWrapper {
         return Recipe.init(config);
     }
 
-    static createCode(
+    static async createCodeAndSetState(
         input:
             | { email: string; userContext?: any; options?: RecipeFunctionOptions }
             | { phoneNumber: string; userContext?: any; options?: RecipeFunctionOptions }
@@ -41,39 +41,83 @@ export default class RecipeWrapper {
         flowType: PasswordlessFlowType;
         fetchResponse: Response;
     }> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.createCode({
+        const recipe: Recipe = Recipe.getInstanceOrThrow();
+        const normalisedUserContext = getNormalisedUserContext(input.userContext);
+
+        const createCodeResponse = await recipe.recipeImplementation.createCode({
             ...input,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext: normalisedUserContext,
         });
+
+        await recipe.recipeImplementation.setLoginAttemptInfo({
+            attemptInfo: {
+                deviceId: createCodeResponse.deviceId,
+                preAuthSessionId: createCodeResponse.preAuthSessionId,
+                flowType: createCodeResponse.flowType,
+            },
+            userContext: normalisedUserContext,
+        });
+
+        return createCodeResponse;
     }
 
-    static resendCode(input: {
-        deviceId: string;
-        preAuthSessionId: string;
-        userContext?: any;
-        options?: RecipeFunctionOptions;
-    }): Promise<{
+    static async resendCodeAndUpdateState(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.resendCode({
-            ...input,
-            userContext: getNormalisedUserContext(input.userContext),
+        const recipe: Recipe = Recipe.getInstanceOrThrow();
+        const normalisedUserContext = getNormalisedUserContext(input.userContext);
+
+        const previousAttemptInfo = await recipe.recipeImplementation.getLoginAttemptInfo({
+            userContext: normalisedUserContext,
         });
+
+        if (previousAttemptInfo === undefined) {
+            throw new Error(
+                "No information for the previous attempt found, " +
+                    "createCode must be called once before trying to resend"
+            );
+        }
+
+        const resendCodeResponse = await recipe.recipeImplementation.resendCode({
+            ...input,
+            userContext: normalisedUserContext,
+            deviceId: previousAttemptInfo.deviceId,
+            preAuthSessionId: previousAttemptInfo.preAuthSessionId,
+        });
+
+        if (resendCodeResponse.status === "OK") {
+            const currentLoginAttemptInfo = await recipe.recipeImplementation.getLoginAttemptInfo({
+                userContext: normalisedUserContext,
+            });
+
+            if (
+                currentLoginAttemptInfo !== undefined &&
+                recipe.recipeImplementation.didLoginAttemptInfoChangeAfterResend({
+                    attemptInfoBeforeResend: previousAttemptInfo,
+                    attemptInfoAfterResend: currentLoginAttemptInfo,
+                })
+            ) {
+                await recipe.recipeImplementation.setLoginAttemptInfo({
+                    attemptInfo: {
+                        ...currentLoginAttemptInfo,
+                    },
+                    userContext: normalisedUserContext,
+                });
+            }
+        }
+
+        return resendCodeResponse;
     }
 
-    static consumeCode(
+    static async consumeCode(
         input:
             | {
                   userInputCode: string;
-                  deviceId: string;
-                  preAuthSessionId: string;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
             | {
-                  preAuthSessionId: string;
-                  linkCode: string;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
@@ -92,9 +136,56 @@ export default class RecipeWrapper {
           }
         | { status: "RESTART_FLOW_ERROR"; fetchResponse: Response }
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.consumeCode({
-            ...input,
-            userContext: getNormalisedUserContext(input.userContext),
+        const recipe: Recipe = Recipe.getInstanceOrThrow();
+        const normalisedUserContext = getNormalisedUserContext(input.userContext);
+
+        const attemptInfoFromStorage = await recipe.recipeImplementation.getLoginAttemptInfo({
+            userContext: normalisedUserContext,
+        });
+
+        if (attemptInfoFromStorage === undefined) {
+            throw new Error(
+                "No information found for a login attempt, " +
+                    "createCode must be called once before trying to consume the code"
+            );
+        }
+
+        let additionalParams:
+            | {
+                  userInputCode: string;
+                  deviceId: string;
+                  preAuthSessionId: string;
+              }
+            | {
+                  linkCode: string;
+                  preAuthSessionId: string;
+              };
+
+        if ("userInputCode" in input) {
+            additionalParams = {
+                userInputCode: input.userInputCode,
+                deviceId: attemptInfoFromStorage.deviceId,
+                preAuthSessionId: attemptInfoFromStorage.preAuthSessionId,
+            };
+        } else {
+            const linkCode = recipe.recipeImplementation.getLinkCodeFromURL({
+                userContext: input.userContext,
+            });
+
+            const preAuthSessionId = recipe.recipeImplementation.getPreAuthSessionIdFromURL({
+                userContext: input.userContext,
+            });
+
+            additionalParams = {
+                linkCode,
+                preAuthSessionId,
+            };
+        }
+
+        return recipe.recipeImplementation.consumeCode({
+            userContext: normalisedUserContext,
+            options: input.options,
+            ...additionalParams,
         });
     }
 
@@ -132,8 +223,8 @@ export default class RecipeWrapper {
 }
 
 const init = RecipeWrapper.init;
-const createCode = RecipeWrapper.createCode;
-const resendCode = RecipeWrapper.resendCode;
+const createCodeAndSetState = RecipeWrapper.createCodeAndSetState;
+const resendCodeAndUpdateState = RecipeWrapper.resendCodeAndUpdateState;
 const consumeCode = RecipeWrapper.consumeCode;
 const doesEmailExist = RecipeWrapper.doesEmailExist;
 const doesPhoneNumberExist = RecipeWrapper.doesPhoneNumberExist;
@@ -141,8 +232,8 @@ const signOut = RecipeWrapper.signOut;
 
 export {
     init,
-    createCode,
-    resendCode,
+    createCodeAndSetState,
+    resendCodeAndUpdateState,
     consumeCode,
     doesEmailExist,
     doesPhoneNumberExist,
