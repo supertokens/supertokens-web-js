@@ -141,18 +141,12 @@ export type RecipeInterface = {
                     deviceId: string;
                     preAuthSessionId: string;
                     flowType: PasswordlessFlowType;
-                    // contactInfo: string;
-                    // contactMethod: "EMAIL" | "PHONE";
-                    // lastResend: number;
                 } & CustomLoginAttemptInfoProperties)
           >
         | ({
               deviceId: string;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
-              //   contactInfo: string;
-              //   contactMethod: "EMAIL" | "PHONE";
-              //   lastResend: number;
           } & CustomLoginAttemptInfoProperties)
         | undefined;
 
@@ -162,26 +156,10 @@ export type RecipeInterface = {
             deviceId: string;
             preAuthSessionId: string;
             flowType: PasswordlessFlowType;
-            // contactInfo: string;
-            // contactMethod: "EMAIL" | "PHONE";
-            // lastResend: number;
         } & CustomStateProperties;
         userContext: any;
     }) => Promise<void> | void;
 
     // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
     clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void> | void;
-
-    didLoginAttemptInfoChangeAfterResend: (input: {
-        attemptInfoBeforeResend: {
-            deviceId: string;
-            preAuthSessionId: string;
-            flowType: PasswordlessFlowType;
-        };
-        attemptInfoAfterResend: {
-            deviceId: string;
-            preAuthSessionId: string;
-            flowType: PasswordlessFlowType;
-        };
-    }) => boolean;
 };

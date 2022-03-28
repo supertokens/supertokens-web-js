@@ -139,16 +139,4 @@ export declare type RecipeInterface = {
         userContext: any;
     }) => Promise<void> | void;
     clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void> | void;
-    didLoginAttemptInfoChangeAfterResend: (input: {
-        attemptInfoBeforeResend: {
-            deviceId: string;
-            preAuthSessionId: string;
-            flowType: PasswordlessFlowType;
-        };
-        attemptInfoAfterResend: {
-            deviceId: string;
-            preAuthSessionId: string;
-            flowType: PasswordlessFlowType;
-        };
-    }) => boolean;
 };

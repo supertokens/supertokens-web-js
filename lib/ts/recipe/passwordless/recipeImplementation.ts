@@ -335,8 +335,5 @@ export default function getRecipeImplementation(
         clearLoginAttemptInfo: function (): Promise<void> | void {
             removeFromLocalStorage(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
         },
-        didLoginAttemptInfoChangeAfterResend: function (input): boolean {
-            return input.attemptInfoAfterResend.deviceId === input.attemptInfoBeforeResend.deviceId;
-        },
     };
 }

@@ -11,7 +11,7 @@ export default class RecipeWrapper {
     static init(
         config?: InputType
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
-    static createCodeAndSetState(
+    static createCode(
         input:
             | {
                   email: string;
@@ -30,7 +30,7 @@ export default class RecipeWrapper {
         flowType: PasswordlessFlowType;
         fetchResponse: Response;
     }>;
-    static resendCodeAndUpdateState(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static resendCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }>;
@@ -80,8 +80,8 @@ export default class RecipeWrapper {
     static signOut(input?: { userContext?: any }): Promise<void>;
 }
 declare const init: typeof RecipeWrapper.init;
-declare const createCodeAndSetState: typeof RecipeWrapper.createCodeAndSetState;
-declare const resendCodeAndUpdateState: typeof RecipeWrapper.resendCodeAndUpdateState;
+declare const createCodeAndSetState: typeof RecipeWrapper.createCode;
+declare const resendCodeAndUpdateState: typeof RecipeWrapper.resendCode;
 declare const consumeCode: typeof RecipeWrapper.consumeCode;
 declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
 declare const doesPhoneNumberExist: typeof RecipeWrapper.doesPhoneNumberExist;
