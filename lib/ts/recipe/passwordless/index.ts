@@ -72,6 +72,11 @@ export default class RecipeWrapper {
             userContext: normalisedUserContext,
         });
 
+        /**
+         * If previousAttemptInfo is undefined then local storage was probably cleared by another tab.
+         * In this case we use empty strings when calling the API because we want to
+         * return "RESTART_FLOW_ERROR"
+         */
         return recipe.recipeImplementation.resendCode({
             ...input,
             userContext: normalisedUserContext,
@@ -124,6 +129,14 @@ export default class RecipeWrapper {
             const attemptInfoFromStorage = await recipe.recipeImplementation.getLoginAttemptInfo({
                 userContext: normalisedUserContext,
             });
+
+            /**
+             * If attemptInfoFromStorage is undefined then local storage was probably cleared by another tab.
+             * In this case we use empty strings when calling the API because we want to
+             * return "RESTART_FLOW_ERROR"
+             *
+             * Note: We dont do this for the linkCode flow because that does not depend on local storage.
+             */
 
             additionalParams = {
                 userInputCode: input.userInputCode,
@@ -186,8 +199,8 @@ export default class RecipeWrapper {
 }
 
 const init = RecipeWrapper.init;
-const createCodeAndSetState = RecipeWrapper.createCode;
-const resendCodeAndUpdateState = RecipeWrapper.resendCode;
+const createCode = RecipeWrapper.createCode;
+const resendCode = RecipeWrapper.resendCode;
 const consumeCode = RecipeWrapper.consumeCode;
 const doesEmailExist = RecipeWrapper.doesEmailExist;
 const doesPhoneNumberExist = RecipeWrapper.doesPhoneNumberExist;
@@ -195,8 +208,8 @@ const signOut = RecipeWrapper.signOut;
 
 export {
     init,
-    createCodeAndSetState,
-    resendCodeAndUpdateState,
+    createCode,
+    resendCode,
     consumeCode,
     doesEmailExist,
     doesPhoneNumberExist,

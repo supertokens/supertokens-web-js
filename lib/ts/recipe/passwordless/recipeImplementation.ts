@@ -305,7 +305,7 @@ export default function getRecipeImplementation(
             | undefined {
             const storedInfo = getLocalStorage(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
 
-            if (storedInfo === null) {
+            if (storedInfo === undefined) {
                 return undefined;
             }
 

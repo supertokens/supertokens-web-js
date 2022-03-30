@@ -132,10 +132,10 @@ export function setSessionStorage(key: string, value: string): void {
 }
 
 // TODO NEMI: Remove this function when storage abstraction is implemented
-export function getLocalStorage(key: string): string | null {
+export function getLocalStorage(key: string): string | undefined {
     const res = getWindowOrThrow().localStorage.getItem(key);
-    if (res === null || res === undefined) {
-        return null;
+    if (res === null) {
+        return undefined;
     }
     return res;
 }

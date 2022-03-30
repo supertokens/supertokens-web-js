@@ -80,16 +80,16 @@ export default class RecipeWrapper {
     static signOut(input?: { userContext?: any }): Promise<void>;
 }
 declare const init: typeof RecipeWrapper.init;
-declare const createCodeAndSetState: typeof RecipeWrapper.createCode;
-declare const resendCodeAndUpdateState: typeof RecipeWrapper.resendCode;
+declare const createCode: typeof RecipeWrapper.createCode;
+declare const resendCode: typeof RecipeWrapper.resendCode;
 declare const consumeCode: typeof RecipeWrapper.consumeCode;
 declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
 declare const doesPhoneNumberExist: typeof RecipeWrapper.doesPhoneNumberExist;
 declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
-    createCodeAndSetState,
-    resendCodeAndUpdateState,
+    createCode,
+    resendCode,
     consumeCode,
     doesEmailExist,
     doesPhoneNumberExist,
