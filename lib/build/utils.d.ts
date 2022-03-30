@@ -7,3 +7,7 @@ export declare function checkForSSRErrorAndAppendIfNeeded(error: string): string
 export declare function getNormalisedUserContext(userContext?: any): any;
 export declare function getSessionStorage(key: string): string | undefined;
 export declare function setSessionStorage(key: string, value: string): void;
+export declare function getLocalStorage(key: string): string | undefined;
+export declare function setLocalStorage(key: string, value: string): void;
+export declare function removeFromLocalStorage(key: string): void;
+export declare function getHashFromLocation(): string;

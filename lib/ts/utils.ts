@@ -130,3 +130,27 @@ export function getSessionStorage(key: string): string | undefined {
 export function setSessionStorage(key: string, value: string): void {
     getWindowOrThrow().sessionStorage.setItem(key, value);
 }
+
+// TODO NEMI: Remove this function when storage abstraction is implemented
+export function getLocalStorage(key: string): string | undefined {
+    const res = getWindowOrThrow().localStorage.getItem(key);
+    if (res === null) {
+        return undefined;
+    }
+    return res;
+}
+
+// TODO NEMI: Remove this function when storage abstraction is implemented
+export function setLocalStorage(key: string, value: string): void {
+    getWindowOrThrow().localStorage.setItem(key, value);
+}
+
+// TODO NEMI: Remove this function when storage abstraction is implemented
+export function removeFromLocalStorage(key: string): void {
+    getWindowOrThrow().localStorage.removeItem(key);
+}
+
+export function getHashFromLocation(): string {
+    // By default it is returned with the "#" at the beginning, we cut that off here.
+    return getWindowOrThrow().location.hash.substring(1);
+}
