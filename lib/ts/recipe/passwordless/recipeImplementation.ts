@@ -14,6 +14,7 @@
  */
 
 import Querier from "../../querier";
+import { getHashFromLocation, getQueryParams } from "../../utils";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { normaliseStorageHandlerInput } from "../recipeModule/utils";
 import { PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY } from "./constants";
@@ -151,8 +152,7 @@ export default function getRecipeImplementation(
                     deviceId: input.deviceId,
                     preAuthSessionId: input.preAuthSessionId,
                 };
-            }
-            if ("linkCode" in input) {
+            } else {
                 bodyObj = {
                     linkCode: input.linkCode,
                     preAuthSessionId: input.preAuthSessionId,
@@ -197,6 +197,18 @@ export default function getRecipeImplementation(
                 ...jsonBody,
                 fetchResponse,
             };
+        },
+        getLinkCodeFromURL: function () {
+            return getHashFromLocation();
+        },
+        getPreAuthSessionIdFromURL: function () {
+            const idFromQuery = getQueryParams("preAuthSessionId");
+
+            if (idFromQuery === undefined) {
+                return "";
+            }
+
+            return idFromQuery;
         },
         doesEmailExist: async function (input: {
             email: string;
@@ -248,7 +260,7 @@ export default function getRecipeImplementation(
             }>(
                 "/signup/phoneNumber/exists",
                 {},
-                { email: input.phoneNumber },
+                { phoneNumber: input.phoneNumber },
                 Querier.preparePreAPIHook({
                     recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "PHONE_NUMBER_EXISTS",
@@ -268,20 +280,17 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        getLoginAttemptInfo: async function <CustomAttemptInfoProperties>(): Promise<
+        getLoginAttemptInfo: async function <CustomLoginAttemptInfoProperties>(): Promise<
             | undefined
             | ({
                   deviceId: string;
                   preAuthSessionId: string;
-                  contactInfo: string;
-                  contactMethod: "EMAIL" | "PHONE";
                   flowType: PasswordlessFlowType;
-                  lastResend: number;
-              } & CustomAttemptInfoProperties)
+              } & CustomLoginAttemptInfoProperties)
         > {
             const storedInfo = await storageHandlers.localStorage.getItem(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
 
-            if (!storedInfo) {
+            if (storedInfo === null) {
                 return undefined;
             }
 
@@ -295,10 +304,7 @@ export default function getRecipeImplementation(
             attemptInfo: {
                 deviceId: string;
                 preAuthSessionId: string;
-                contactInfo: string;
-                contactMethod: "EMAIL" | "PHONE";
                 flowType: PasswordlessFlowType;
-                lastResend: number;
             } & CustomStateProperties;
             userContext: any;
         }): Promise<void> {

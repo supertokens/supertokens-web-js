@@ -30,12 +30,7 @@ export default class RecipeWrapper {
         flowType: PasswordlessFlowType;
         fetchResponse: Response;
     }>;
-    static resendCode(input: {
-        deviceId: string;
-        preAuthSessionId: string;
-        userContext?: any;
-        options?: RecipeFunctionOptions;
-    }): Promise<{
+    static resendCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }>;
@@ -43,14 +38,10 @@ export default class RecipeWrapper {
         input:
             | {
                   userInputCode: string;
-                  deviceId: string;
-                  preAuthSessionId: string;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
             | {
-                  preAuthSessionId: string;
-                  linkCode: string;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }

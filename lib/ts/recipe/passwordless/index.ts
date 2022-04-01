@@ -30,7 +30,7 @@ export default class RecipeWrapper {
         return Recipe.init(config);
     }
 
-    static createCode(
+    static async createCode(
         input:
             | { email: string; userContext?: any; options?: RecipeFunctionOptions }
             | { phoneNumber: string; userContext?: any; options?: RecipeFunctionOptions }
@@ -41,39 +41,58 @@ export default class RecipeWrapper {
         flowType: PasswordlessFlowType;
         fetchResponse: Response;
     }> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.createCode({
+        const recipe: Recipe = Recipe.getInstanceOrThrow();
+        const normalisedUserContext = getNormalisedUserContext(input.userContext);
+
+        const createCodeResponse = await recipe.recipeImplementation.createCode({
             ...input,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext: normalisedUserContext,
         });
+
+        await recipe.recipeImplementation.setLoginAttemptInfo({
+            attemptInfo: {
+                deviceId: createCodeResponse.deviceId,
+                preAuthSessionId: createCodeResponse.preAuthSessionId,
+                flowType: createCodeResponse.flowType,
+            },
+            userContext: normalisedUserContext,
+        });
+
+        return createCodeResponse;
     }
 
-    static resendCode(input: {
-        deviceId: string;
-        preAuthSessionId: string;
-        userContext?: any;
-        options?: RecipeFunctionOptions;
-    }): Promise<{
+    static async resendCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.resendCode({
+        const recipe: Recipe = Recipe.getInstanceOrThrow();
+        const normalisedUserContext = getNormalisedUserContext(input.userContext);
+
+        const previousAttemptInfo = await recipe.recipeImplementation.getLoginAttemptInfo({
+            userContext: normalisedUserContext,
+        });
+
+        /**
+         * If previousAttemptInfo is undefined then local storage was probably cleared by another tab.
+         * In this case we use empty strings when calling the API because we want to
+         * return "RESTART_FLOW_ERROR"
+         */
+        return recipe.recipeImplementation.resendCode({
             ...input,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext: normalisedUserContext,
+            deviceId: previousAttemptInfo === undefined ? "" : previousAttemptInfo.deviceId,
+            preAuthSessionId: previousAttemptInfo === undefined ? "" : previousAttemptInfo.preAuthSessionId,
         });
     }
 
-    static consumeCode(
+    static async consumeCode(
         input:
             | {
                   userInputCode: string;
-                  deviceId: string;
-                  preAuthSessionId: string;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
             | {
-                  preAuthSessionId: string;
-                  linkCode: string;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
@@ -92,9 +111,57 @@ export default class RecipeWrapper {
           }
         | { status: "RESTART_FLOW_ERROR"; fetchResponse: Response }
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.consumeCode({
-            ...input,
-            userContext: getNormalisedUserContext(input.userContext),
+        const recipe: Recipe = Recipe.getInstanceOrThrow();
+        const normalisedUserContext = getNormalisedUserContext(input.userContext);
+
+        let additionalParams:
+            | {
+                  userInputCode: string;
+                  deviceId: string;
+                  preAuthSessionId: string;
+              }
+            | {
+                  linkCode: string;
+                  preAuthSessionId: string;
+              };
+
+        if ("userInputCode" in input) {
+            const attemptInfoFromStorage = await recipe.recipeImplementation.getLoginAttemptInfo({
+                userContext: normalisedUserContext,
+            });
+
+            /**
+             * If attemptInfoFromStorage is undefined then local storage was probably cleared by another tab.
+             * In this case we use empty strings when calling the API because we want to
+             * return "RESTART_FLOW_ERROR"
+             *
+             * Note: We dont do this for the linkCode flow because that does not depend on local storage.
+             */
+
+            additionalParams = {
+                userInputCode: input.userInputCode,
+                deviceId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.deviceId,
+                preAuthSessionId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.preAuthSessionId,
+            };
+        } else {
+            const linkCode = recipe.recipeImplementation.getLinkCodeFromURL({
+                userContext: input.userContext,
+            });
+
+            const preAuthSessionId = recipe.recipeImplementation.getPreAuthSessionIdFromURL({
+                userContext: input.userContext,
+            });
+
+            additionalParams = {
+                linkCode,
+                preAuthSessionId,
+            };
+        }
+
+        return recipe.recipeImplementation.consumeCode({
+            userContext: normalisedUserContext,
+            options: input.options,
+            ...additionalParams,
         });
     }
 

@@ -58,9 +58,9 @@ export declare type RecipeInterface = {
         fetchResponse: Response;
     }>;
     resendCode: (input: {
+        userContext: any;
         deviceId: string;
         preAuthSessionId: string;
-        userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
@@ -99,6 +99,8 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
+    getLinkCodeFromURL: (input: { userContext: any }) => string;
+    getPreAuthSessionIdFromURL: (input: { userContext: any }) => string;
     doesEmailExist: (input: { email: string; userContext: any; options?: RecipeFunctionOptions }) => Promise<{
         status: "OK";
         doesExist: boolean;
@@ -113,25 +115,19 @@ export declare type RecipeInterface = {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
-    getLoginAttemptInfo: <CustomAttemptInfoProperties>(input: { userContext: any }) => Promise<
+    getLoginAttemptInfo: <CustomLoginAttemptInfoProperties>(input: { userContext: any }) => Promise<
         | undefined
         | ({
               deviceId: string;
               preAuthSessionId: string;
-              contactInfo: string;
-              contactMethod: "EMAIL" | "PHONE";
               flowType: PasswordlessFlowType;
-              lastResend: number;
-          } & CustomAttemptInfoProperties)
+          } & CustomLoginAttemptInfoProperties)
     >;
     setLoginAttemptInfo: <CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
             preAuthSessionId: string;
-            contactInfo: string;
-            contactMethod: "EMAIL" | "PHONE";
             flowType: PasswordlessFlowType;
-            lastResend: number;
         } & CustomStateProperties;
         userContext: any;
     }) => Promise<void>;
