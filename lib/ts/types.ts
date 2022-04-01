@@ -95,9 +95,11 @@ export type NormalisedAppInfo = {
     websiteBasePath: NormalisedURLPath;
 };
 
+export type StorageHandlerFunction = (original: StorageHandler) => StorageHandler;
+
 export type StorageHandlerInput = {
-    sessionStorage?: StorageHandler;
-    localStorage?: StorageHandler;
+    sessionStorage?: StorageHandlerFunction;
+    localStorage?: StorageHandlerFunction;
 };
 
 export type NormalisedStorageHandlers = {

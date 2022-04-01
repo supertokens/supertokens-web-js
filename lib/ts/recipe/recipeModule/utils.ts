@@ -14,7 +14,7 @@
  */
 import getDefaultLocalStorageHandler from "../../common/storage/defaultLocalStorageHandler";
 import getDefaultSessionStorageHandler from "../../common/storage/defaultSessionStorageHandler";
-import { NormalisedStorageHandlers, StorageHandlerInput } from "../../types";
+import { NormalisedStorageHandlers, StorageHandlerFunction, StorageHandlerInput } from "../../types";
 import { NormalisedRecipeConfig, RecipeConfig } from "./types";
 
 export function normaliseRecipeModuleConfig<Action>(config: RecipeConfig<Action>): NormalisedRecipeConfig<Action> {
@@ -40,9 +40,21 @@ export function normaliseRecipeModuleConfig<Action>(config: RecipeConfig<Action>
 }
 
 export function normaliseStorageHandlerInput(storageHandlerInput?: StorageHandlerInput): NormalisedStorageHandlers {
+    let localStorageFunction: StorageHandlerFunction = (original) => original;
+    let sessionStorageFunction: StorageHandlerFunction = (original) => original;
+
+    if (storageHandlerInput !== undefined) {
+        if (storageHandlerInput.localStorage !== undefined) {
+            localStorageFunction = storageHandlerInput.localStorage;
+        }
+
+        if (storageHandlerInput.sessionStorage !== undefined) {
+            sessionStorageFunction = storageHandlerInput.sessionStorage;
+        }
+    }
+
     return {
-        localStorage: getDefaultLocalStorageHandler(),
-        sessionStorage: getDefaultSessionStorageHandler(),
-        ...storageHandlerInput,
+        localStorage: localStorageFunction(getDefaultLocalStorageHandler()),
+        sessionStorage: sessionStorageFunction(getDefaultSessionStorageHandler()),
     };
 }

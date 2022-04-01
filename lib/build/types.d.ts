@@ -29,9 +29,10 @@ export declare type NormalisedAppInfo = {
     apiBasePath: NormalisedURLPath;
     websiteBasePath: NormalisedURLPath;
 };
+export declare type StorageHandlerFunction = (original: StorageHandler) => StorageHandler;
 export declare type StorageHandlerInput = {
-    sessionStorage?: StorageHandler;
-    localStorage?: StorageHandler;
+    sessionStorage?: StorageHandlerFunction;
+    localStorage?: StorageHandlerFunction;
 };
 export declare type NormalisedStorageHandlers = {
     sessionStorage: StorageHandler;
