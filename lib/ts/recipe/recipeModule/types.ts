@@ -46,13 +46,16 @@ export type RecipePreAPIHookFunction<Action> = (
 
 export type RecipePostAPIHookFunction<Action> = (context: RecipePostAPIHookContext<Action>) => Promise<void>;
 
-export type RecipeConfig<Action> = {
-    recipeId: string;
-    appInfo: NormalisedAppInfo;
+export type UserInput<Action> = {
     storageHandlerInput?: StorageHandlerInput;
     preAPIHook?: RecipePreAPIHookFunction<Action>;
     postAPIHook?: RecipePostAPIHookFunction<Action>;
 };
+
+export type RecipeConfig<Action> = {
+    recipeId: string;
+    appInfo: NormalisedAppInfo;
+} & UserInput<Action>;
 
 export type NormalisedRecipeConfig<Action> = {
     recipeId: string;

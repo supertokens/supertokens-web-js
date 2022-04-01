@@ -3,6 +3,7 @@ import {
     RecipeConfig,
     RecipeFunctionOptions,
     RecipePreAPIHookContext,
+    UserInput as RecipeModuleUserInput,
 } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 export declare type PreAndPostAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
@@ -14,9 +15,10 @@ export declare type InputTypeOverride = {
         builder: OverrideableBuilder<RecipeInterface>
     ) => RecipeInterface;
 };
-export declare type InputType = RecipeConfig<PreAndPostAPIHookAction> & {
+export declare type UserInput = {
     override?: InputTypeOverride;
-};
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
+export declare type InputType = RecipeConfig<PreAndPostAPIHookAction> & UserInput;
 export declare type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
     override: {
         functions: (

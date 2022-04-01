@@ -3,13 +3,18 @@ import {
     InputType as AuthRecipeInputType,
     UserType,
 } from "../authRecipeWithEmailVerification/types";
-import { RecipePostAPIHookContext, RecipePreAPIHookContext, RecipeFunctionOptions } from "../recipeModule/types";
+import {
+    RecipePostAPIHookContext,
+    RecipePreAPIHookContext,
+    RecipeFunctionOptions,
+    UserInput as RecipeModuleUserInput,
+} from "../recipeModule/types";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 import OverrideableBuilder from "supertokens-js-override";
 export declare type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP";
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
-export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
+export declare type UserInput = {
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (
@@ -17,7 +22,8 @@ export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
             builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
-};
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
+export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     override: {
         functions: (

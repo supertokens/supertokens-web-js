@@ -4,6 +4,7 @@ import {
     RecipeFunctionOptions,
     RecipePostAPIHookContext,
     RecipePreAPIHookContext,
+    UserInput as RecipeModuleUserInput,
 } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 export declare type PreAndPostAPIHookAction =
@@ -14,14 +15,15 @@ export declare type PreAndPostAPIHookAction =
     | "PHONE_NUMBER_EXISTS";
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
-export declare type InputType = RecipeConfig<PreAndPostAPIHookAction> & {
+export declare type UserInput = {
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
             builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
-};
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
+export declare type InputType = RecipeConfig<PreAndPostAPIHookAction> & UserInput;
 export declare type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
     override: {
         functions: (

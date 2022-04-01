@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
+import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserInput } from "./types";
 import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
@@ -64,7 +64,7 @@ export {
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
-    InputType,
+    UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,

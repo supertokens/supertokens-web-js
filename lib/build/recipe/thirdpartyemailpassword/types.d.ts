@@ -1,5 +1,9 @@
 import { PreAndPostAPIHookAction as EmailPasswordPreAndPostAPIHookAction } from "../emailpassword/types";
-import { RecipePostAPIHookContext, RecipePreAPIHookContext } from "../recipeModule/types";
+import {
+    RecipePostAPIHookContext,
+    RecipePreAPIHookContext,
+    UserInput as RecipeModuleUserInput,
+} from "../recipeModule/types";
 import { PreAndPostAPIHookAction as ThirdPartyPreAndPostAPIHookAction, StateObject } from "../thirdparty/types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
@@ -12,7 +16,7 @@ import { InputTypeOverride as EmailVerificationOverride } from "../emailverifica
 export declare type PreAndPostAPIHookAction = EmailPasswordPreAndPostAPIHookAction | ThirdPartyPreAndPostAPIHookAction;
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
-export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
+export declare type UserInput = {
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (
@@ -20,7 +24,8 @@ export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
             builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
-};
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
+export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     override: {
         functions: (

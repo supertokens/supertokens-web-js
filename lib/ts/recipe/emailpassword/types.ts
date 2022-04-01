@@ -13,7 +13,11 @@
  * under the License.
  */
 
-import { RecipePostAPIHookContext, RecipePreAPIHookContext } from "../recipeModule/types";
+import {
+    RecipePostAPIHookContext,
+    RecipePreAPIHookContext,
+    UserInput as RecipeModuleUserInput,
+} from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
@@ -33,7 +37,7 @@ export type PreAndPostAPIHookAction =
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
-export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
+export type UserInput = {
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (
@@ -41,7 +45,9 @@ export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
             builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
-};
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
+
+export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 
 export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     override: {

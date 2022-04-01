@@ -1,4 +1,4 @@
-import { InputType } from "./types";
+import { InputType, UserInput } from "./types";
 import { RecipeInterface } from "supertokens-website";
 export default class RecipeWrapper {
     static init(config?: InputType): import("../../types").CreateRecipeFunction<unknown>;
@@ -25,5 +25,5 @@ export {
     addAxiosInterceptors,
     signOut,
     RecipeInterface,
-    InputType,
+    UserInput,
 };

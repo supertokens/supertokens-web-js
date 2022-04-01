@@ -14,7 +14,7 @@
  */
 import { getNormalisedUserContext } from "../../utils";
 import SessionRecipe from "./recipe";
-import { InputType } from "./types";
+import { InputType, UserInput } from "./types";
 import { RecipeInterface } from "supertokens-website";
 
 export default class RecipeWrapper {
@@ -73,5 +73,5 @@ export {
     addAxiosInterceptors,
     signOut,
     RecipeInterface,
-    InputType,
+    UserInput,
 };

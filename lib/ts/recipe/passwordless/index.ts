@@ -23,6 +23,7 @@ import {
     PostAPIHookContext,
     PreAPIHookContext,
     RecipeInterface,
+    UserInput,
 } from "./types";
 
 export default class RecipeWrapper {
@@ -215,7 +216,7 @@ export {
     doesPhoneNumberExist,
     signOut,
     PasswordlessUser,
-    InputType,
+    UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,

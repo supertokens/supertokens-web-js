@@ -29,9 +29,7 @@ export type RecipeEvent =
           userContext: any;
       };
 
-export type InputType = {
-    recipeId: string;
-    appInfo: NormalisedAppInfo;
+export type UserInput = {
     apiDomain?: string;
     apiBasePath?: string;
     sessionScope?: string;
@@ -58,3 +56,8 @@ export type InputType = {
         ) => RecipeInterface;
     };
 };
+
+export type InputType = {
+    recipeId: string;
+    appInfo: NormalisedAppInfo;
+} & UserInput;

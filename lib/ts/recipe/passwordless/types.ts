@@ -19,6 +19,7 @@ import {
     RecipeFunctionOptions,
     RecipePostAPIHookContext,
     RecipePreAPIHookContext,
+    UserInput as RecipeModuleUserInput,
 } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 
@@ -32,14 +33,16 @@ export type PreAndPostAPIHookAction =
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
-export type InputType = RecipeConfig<PreAndPostAPIHookAction> & {
+export type UserInput = {
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
             builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
-};
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
+
+export type InputType = RecipeConfig<PreAndPostAPIHookAction> & UserInput;
 
 export type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
     override: {

@@ -1,4 +1,4 @@
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
+import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserInput } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { UserType } from "../authRecipeWithEmailVerification/types";
 export default class RecipeWrapper {
@@ -137,7 +137,7 @@ export {
     isEmailVerified,
     signOut,
     UserType,
-    InputType,
+    UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,
