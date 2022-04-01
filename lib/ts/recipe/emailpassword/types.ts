@@ -24,10 +24,12 @@ import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
     UserType,
+    PreAndPostAPIHookAction as AuthRecipePreAndPostAPIHookAction,
 } from "../authRecipeWithEmailVerification/types";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 
 export type PreAndPostAPIHookAction =
+    | AuthRecipePreAndPostAPIHookAction
     | "EMAIL_PASSWORD_SIGN_UP"
     | "EMAIL_PASSWORD_SIGN_IN"
     | "SEND_RESET_PASSWORD_EMAIL"

@@ -17,7 +17,6 @@ import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import Recipe from "./recipe";
 import {
-    InputType,
     PasswordlessFlowType,
     PasswordlessUser,
     PostAPIHookContext,
@@ -27,7 +26,7 @@ import {
 } from "./types";
 
 export default class RecipeWrapper {
-    static init(config?: InputType) {
+    static init(config?: UserInput) {
         return Recipe.init(config);
     }
 

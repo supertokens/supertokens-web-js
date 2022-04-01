@@ -14,7 +14,7 @@
  */
 import RecipeModule from "../recipeModule";
 import SuperTokensWebsite from "supertokens-website";
-import { InputType } from "./types";
+import { InputType, UserInput } from "./types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 
@@ -49,7 +49,7 @@ export default class Recipe extends RecipeModule<unknown, any> {
         });
     }
 
-    static init(config?: InputType): CreateRecipeFunction<unknown> {
+    static init(config?: UserInput): CreateRecipeFunction<unknown> {
         // TODO NEMI: Change supertokens-website to accept storage handlers (DO NOT MERGE WITH THIS TODO)
         return (appInfo: NormalisedAppInfo) => {
             Recipe.instance = new Recipe({

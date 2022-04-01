@@ -16,7 +16,7 @@
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import AuthRecipe from "../authRecipe";
-import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
+import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface, UserInput } from "./types";
 import { normaliseUserInput } from "./utils";
 import RecipeImplementation from "./recipeImplementation";
 import { CreateRecipeFunction, NormalisedAppInfo, StorageHandlerInput } from "../../types";
@@ -43,7 +43,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 
-    static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction> {
+    static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
         return (appInfo: NormalisedAppInfo, storageHandlerInput?: StorageHandlerInput) => {
             Recipe.instance = new Recipe({
                 ...config,

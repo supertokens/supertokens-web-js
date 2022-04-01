@@ -19,9 +19,11 @@ import {
     InputTypeOverride as EmailVerificationOverride,
 } from "../emailverification/types";
 
-export type InputType<Action> = RecipeConfig<EmailVerificationAction | Action>;
+export type InputType<Action> = RecipeConfig<PreAndPostAPIHookAction | Action>;
 
-export type NormalisedInputType<Action> = NormalisedRecipeConfig<EmailVerificationAction | Action> & {
+export type PreAndPostAPIHookAction = EmailVerificationAction;
+
+export type NormalisedInputType<Action> = NormalisedRecipeConfig<PreAndPostAPIHookAction | Action> & {
     override?: {
         emailVerification?: EmailVerificationOverride;
     };

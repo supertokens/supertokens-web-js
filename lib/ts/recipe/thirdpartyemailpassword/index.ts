@@ -16,10 +16,10 @@
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions, UserType } from "../emailpassword";
 import Recipe from "./recipe";
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
+import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 
 export default class RecipeWrapper {
-    static init(config?: InputType) {
+    static init(config?: UserInput) {
         return Recipe.init(config);
     }
 
@@ -246,7 +246,7 @@ export {
     isEmailVerified,
     signOut,
     UserType,
-    InputType,
+    UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,

@@ -16,6 +16,7 @@ import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
     UserType,
+    PreAndPostAPIHookAction as AuthRecipePreAndPostAPIHookAction,
 } from "../authRecipeWithEmailVerification/types";
 import {
     RecipePostAPIHookContext,
@@ -26,7 +27,10 @@ import {
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 import OverrideableBuilder from "supertokens-js-override";
 
-export type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP";
+export type PreAndPostAPIHookAction =
+    | AuthRecipePreAndPostAPIHookAction
+    | "GET_AUTHORISATION_URL"
+    | "THIRD_PARTY_SIGN_IN_UP";
 
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;

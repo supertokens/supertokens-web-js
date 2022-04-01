@@ -1,6 +1,5 @@
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
-    InputType,
     PasswordlessFlowType,
     PasswordlessUser,
     PostAPIHookContext,
@@ -10,7 +9,7 @@ import {
 } from "./types";
 export default class RecipeWrapper {
     static init(
-        config?: InputType
+        config?: UserInput
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
     static createCode(
         input:

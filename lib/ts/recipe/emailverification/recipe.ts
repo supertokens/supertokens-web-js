@@ -20,6 +20,7 @@ import { normaliseUserInput } from "./utils";
 import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
+import { UserInput } from "./types";
 
 export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -42,7 +43,7 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 
-    static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction> {
+    static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
         return (appInfo: NormalisedAppInfo, storageHandlerInput?: StorageHandlerInput) => {
             Recipe.instance = new Recipe({
                 ...config,

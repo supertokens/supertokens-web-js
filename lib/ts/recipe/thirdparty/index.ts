@@ -18,16 +18,16 @@ import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeFunctionOptions } from "../emailpassword";
 import Recipe from "./recipe";
 import {
-    InputType,
     PreAndPostAPIHookAction,
     PreAPIHookContext,
     PostAPIHookContext,
     StateObject,
     RecipeInterface,
+    UserInput,
 } from "./types";
 
 export default class RecipeWrapper {
-    static init(config?: InputType) {
+    static init(config?: UserInput) {
         return Recipe.init(config);
     }
 
@@ -122,5 +122,5 @@ export {
     PreAPIHookContext,
     PostAPIHookContext,
     PreAndPostAPIHookAction,
-    InputType,
+    UserInput,
 };

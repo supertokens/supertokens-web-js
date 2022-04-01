@@ -12,13 +12,13 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserInput } from "./types";
+import { RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserInput } from "./types";
 import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
 
 export default class RecipeWrapper {
-    static init(config?: InputType) {
+    static init(config?: UserInput) {
         return Recipe.init(config);
     }
 
