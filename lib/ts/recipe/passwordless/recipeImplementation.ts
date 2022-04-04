@@ -288,13 +288,15 @@ export default function getRecipeImplementation(
                   flowType: PasswordlessFlowType;
               } & CustomLoginAttemptInfoProperties)
         > {
-            const storedInfo = await storageHandlers.localStorage.getItem(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
-
-            if (storedInfo === null) {
-                return undefined;
-            }
-
             try {
+                const storedInfo = await storageHandlers.localStorage.getItem(
+                    PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY
+                );
+
+                if (storedInfo === null) {
+                    return undefined;
+                }
+
                 return JSON.parse(storedInfo);
             } catch (ex) {
                 return undefined;
@@ -308,7 +310,7 @@ export default function getRecipeImplementation(
             } & CustomStateProperties;
             userContext: any;
         }): Promise<void> {
-            storageHandlers.localStorage.setItem(
+            await storageHandlers.localStorage.setItem(
                 PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY,
                 JSON.stringify({
                     // This can make future changes/migrations a lot cleaner

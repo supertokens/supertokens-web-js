@@ -61,12 +61,12 @@ export default class RecipeWrapper {
         return createCodeResponse;
     }
 
-    static async resendCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static async resendCode(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }> {
         const recipe: Recipe = Recipe.getInstanceOrThrow();
-        const normalisedUserContext = getNormalisedUserContext(input.userContext);
+        const normalisedUserContext = getNormalisedUserContext(input?.userContext);
 
         const previousAttemptInfo = await recipe.recipeImplementation.getLoginAttemptInfo({
             userContext: normalisedUserContext,
