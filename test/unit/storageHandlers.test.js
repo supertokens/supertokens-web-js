@@ -25,9 +25,9 @@ describe("Storage Abstraction tests", function () {
                                 return {
                                     ...original,
                                     generateStateToSendToOAuthProvider: () => "state",
-                                    getAuthStateFromURL: () => {
-                                        throw new Error("Expected error during tests");
-                                    },
+                                    // getAuthStateFromURL: () => {
+                                    //     throw new Error("Expected error during tests");
+                                    // },
                                 };
                             },
                         },
@@ -37,14 +37,14 @@ describe("Storage Abstraction tests", function () {
                     sessionStorage: (original) => {
                         return {
                             ...original,
-                            getItem: async function (key) {
-                                storageLogs.push(`GET_ITEM ${key}`);
+                            getItemSync: function (key) {
+                                storageLogs.push(`GET_ITEM_SYNC ${key}`);
                                 /**
                                  * When fetching from storage in sign in up, errors are handled by
                                  * returning undefined. In this case  we make getAuthStateFromURL
                                  *  throw an error
                                  */
-                                throw new Error("Unexpected error");
+                                throw new Error("Expected error during tests");
                             },
                             setItem: async function (key, _) {
                                 storageLogs.push(`SET_ITEM ${key}`);
@@ -76,7 +76,10 @@ describe("Storage Abstraction tests", function () {
                 }
             }
 
-            assert.deepEqual(storageLogs, ["SET_ITEM supertokens-oauth-state-2", "GET_ITEM supertokens-oauth-state-2"]);
+            assert.deepEqual(storageLogs, [
+                "SET_ITEM supertokens-oauth-state-2",
+                "GET_ITEM_SYNC supertokens-oauth-state-2",
+            ]);
         });
 
         it("Test that recipe functions use default handlers", async function () {
@@ -86,16 +89,20 @@ describe("Storage Abstraction tests", function () {
              */
             global.window = {
                 sessionStorage: {
-                    getItem: async function (key) {
+                    /**
+                     * In this test because we rely on default Window APIs, when getStateAndOtherInfoFromStorage
+                     * calls getItemSync it will internally call sessionStorage.getItem
+                     */
+                    getItem: function (key) {
                         storageLogs.push(`GET_ITEM_GLOBAL ${key}`);
                         /**
                          * When fetching from storage in sign in up, errors are handled by
                          * returning undefined. In this case  we make getAuthStateFromURL
                          *  throw an error
                          */
-                        throw new Error("Unexpected error");
+                        throw new Error("Expected error during tests");
                     },
-                    setItem: async function (key, _) {
+                    setItem: function (key, _) {
                         storageLogs.push(`SET_ITEM_GLOBAL ${key}`);
                         throw new Error("Expected error during tests");
                     },
@@ -114,9 +121,6 @@ describe("Storage Abstraction tests", function () {
                                 return {
                                     ...original,
                                     generateStateToSendToOAuthProvider: () => "state",
-                                    getAuthStateFromURL: () => {
-                                        throw new Error("Expected error during tests");
-                                    },
                                 };
                             },
                         },
@@ -165,9 +169,6 @@ describe("Storage Abstraction tests", function () {
                             functions: function (original) {
                                 return {
                                     ...original,
-                                    resendCode: () => {
-                                        throw new Error("Expected error during tests");
-                                    },
                                     createCode: () => {
                                         return {};
                                     },
@@ -182,12 +183,7 @@ describe("Storage Abstraction tests", function () {
                             ...original,
                             getItem: async function (key) {
                                 storageLogs.push(`GET_ITEM ${key}`);
-                                /**
-                                 * When fetching from storage in sign in up, errors are handled by
-                                 * returning undefined. In this case  we make getAuthStateFromURL
-                                 *  throw an error
-                                 */
-                                throw new Error("Unexpected error");
+                                throw new Error("Expected error during tests");
                             },
                             setItem: async function (key, _) {
                                 storageLogs.push(`SET_ITEM ${key}`);
@@ -231,16 +227,16 @@ describe("Storage Abstraction tests", function () {
              */
             global.window = {
                 localStorage: {
-                    getItem: async function (key) {
+                    getItem: function (key) {
                         storageLogs.push(`GET_ITEM_GLOBAL ${key}`);
                         /**
                          * When fetching from storage in sign in up, errors are handled by
                          * returning undefined. In this case  we make getAuthStateFromURL
                          *  throw an error
                          */
-                        throw new Error("Unexpected error");
+                        throw new Error("Expected error during tests");
                     },
-                    setItem: async function (key, _) {
+                    setItem: function (key, _) {
                         storageLogs.push(`SET_ITEM_GLOBAL ${key}`);
                         throw new Error("Expected error during tests");
                     },
@@ -258,9 +254,6 @@ describe("Storage Abstraction tests", function () {
                             functions: function (original) {
                                 return {
                                     ...original,
-                                    resendCode: () => {
-                                        throw new Error("Expected error during tests");
-                                    },
                                     createCode: () => {
                                         return {};
                                     },

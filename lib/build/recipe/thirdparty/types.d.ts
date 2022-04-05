@@ -46,7 +46,7 @@ export declare type StateObject = {
 export declare type RecipeInterface = {
     getStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
         userContext: any;
-    }) => Promise<(StateObject & CustomStateProperties) | undefined>;
+    }) => (StateObject & CustomStateProperties) | undefined;
     setStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
         state: StateObject & CustomStateProperties;
         userContext: any;

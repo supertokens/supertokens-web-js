@@ -29,16 +29,24 @@ export default function getRecipeImplementation(
     const storageHandlers = normaliseStorageHandlerInput(recipeImplInput.storageHandlerInput);
 
     return {
-        getStateAndOtherInfoFromStorage: async function <CustomStateProperties>(): Promise<
-            (StateObject & CustomStateProperties) | undefined
-        > {
+        getStateAndOtherInfoFromStorage: function <CustomStateProperties>():
+            | (StateObject & CustomStateProperties)
+            | undefined {
+            /**
+             * This function can also be used to decide which flow to use in the UI
+             * (For example routing in supertokens-auth-react), which means we can
+             * not make this an async function.
+             *
+             * To allow for this and allow for storage functions to be async where
+             * possible we call the sync version of getItem here
+             */
+            const stateFromStorage = storageHandlers.sessionStorage.getItemSync("supertokens-oauth-state-2");
+
+            if (stateFromStorage === null) {
+                return undefined;
+            }
+
             try {
-                const stateFromStorage = await storageHandlers.sessionStorage.getItem("supertokens-oauth-state-2");
-
-                if (stateFromStorage === null) {
-                    return undefined;
-                }
-
                 return JSON.parse(stateFromStorage);
             } catch {
                 return undefined;
@@ -148,7 +156,7 @@ export default function getRecipeImplementation(
                   fetchResponse: Response;
               }
         > {
-            const stateFromStorage = await this.getStateAndOtherInfoFromStorage<{}>({
+            const stateFromStorage = this.getStateAndOtherInfoFromStorage<{}>({
                 userContext: input.userContext,
             });
 

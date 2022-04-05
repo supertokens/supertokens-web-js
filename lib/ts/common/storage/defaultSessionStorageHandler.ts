@@ -33,5 +33,21 @@ export default function getDefaultSessionStorageHandler(): StorageHandler {
         setItem: async function (key: string, value: string) {
             return getWindowOrThrow().sessionStorage.setItem(key, value);
         },
+
+        keySync: function (index: number) {
+            return getWindowOrThrow().sessionStorage.key(index);
+        },
+        clearSync: function () {
+            return getWindowOrThrow().sessionStorage.clear();
+        },
+        getItemSync: function (key: string) {
+            return getWindowOrThrow().sessionStorage.getItem(key);
+        },
+        removeItemSync: function (key: string) {
+            return getWindowOrThrow().sessionStorage.removeItem(key);
+        },
+        setItemSync: function (key: string, value: string) {
+            return getWindowOrThrow().sessionStorage.setItem(key, value);
+        },
     };
 }

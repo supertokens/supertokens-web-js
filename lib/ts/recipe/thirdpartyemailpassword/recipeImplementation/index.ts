@@ -170,9 +170,9 @@ export default function getRecipeImplementation(
         > {
             return thirdPartyImpl.signInAndUp.bind(DerivedThirdParty(this))(input);
         },
-        getStateAndOtherInfoFromStorage: async function <CustomStateProperties>(input: {
+        getStateAndOtherInfoFromStorage: function <CustomStateProperties>(input: {
             userContext: any;
-        }): Promise<(StateObject & CustomStateProperties) | undefined> {
+        }): (StateObject & CustomStateProperties) | undefined {
             return thirdPartyImpl.getStateAndOtherInfoFromStorage.bind(DerivedThirdParty(this))(input);
         },
         setStateAndOtherInfoToStorage: async function (input: { state: StateObject; userContext: any }): Promise<void> {

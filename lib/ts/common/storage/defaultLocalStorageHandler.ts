@@ -33,5 +33,20 @@ export default function getDefaultLocalStorageHandler(): StorageHandler {
         setItem: async function (key: string, value: string) {
             return getWindowOrThrow().localStorage.setItem(key, value);
         },
+        keySync: function (index: number) {
+            return getWindowOrThrow().localStorage.key(index);
+        },
+        clearSync: function () {
+            return getWindowOrThrow().localStorage.clear();
+        },
+        getItemSync: function (key: string) {
+            return getWindowOrThrow().localStorage.getItem(key);
+        },
+        removeItemSync: function (key: string) {
+            return getWindowOrThrow().localStorage.removeItem(key);
+        },
+        setItemSync: function (key: string, value: string) {
+            return getWindowOrThrow().localStorage.setItem(key, value);
+        },
     };
 }

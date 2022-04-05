@@ -288,15 +288,13 @@ export default function getRecipeImplementation(
                   flowType: PasswordlessFlowType;
               } & CustomLoginAttemptInfoProperties)
         > {
+            const storedInfo = await storageHandlers.localStorage.getItem(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
+
+            if (storedInfo === null) {
+                return undefined;
+            }
+
             try {
-                const storedInfo = await storageHandlers.localStorage.getItem(
-                    PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY
-                );
-
-                if (storedInfo === null) {
-                    return undefined;
-                }
-
                 return JSON.parse(storedInfo);
             } catch (ex) {
                 return undefined;
