@@ -65,4 +65,5 @@ export {
     PostAPIHookContext,
     PreAndPostAPIHookAction,
     InputType,
+    UserType,
 };

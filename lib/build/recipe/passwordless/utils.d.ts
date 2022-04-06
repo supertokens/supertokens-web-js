@@ -1,2 +1,63 @@
-import { InputType, NormalisedInputType } from "./types";
+import { RecipeFunctionOptions } from "../recipeModule/types";
+import { InputType, NormalisedInputType, PasswordlessFlowType, PasswordlessUser, RecipeInterface } from "./types";
 export declare function normaliseUserInput(config: InputType): NormalisedInputType;
+export declare function createCode(
+    input:
+        | {
+              email: string;
+              userContext?: any;
+              options?: RecipeFunctionOptions;
+              recipeImplementation: RecipeInterface;
+          }
+        | {
+              phoneNumber: string;
+              userContext?: any;
+              options?: RecipeFunctionOptions;
+              recipeImplementation: RecipeInterface;
+          }
+): Promise<{
+    status: "OK";
+    deviceId: string;
+    preAuthSessionId: string;
+    flowType: PasswordlessFlowType;
+    fetchResponse: Response;
+}>;
+export declare function resendCode(input: {
+    userContext?: any;
+    options?: RecipeFunctionOptions;
+    recipeImplementation: RecipeInterface;
+}): Promise<{
+    status: "OK" | "RESTART_FLOW_ERROR";
+    fetchResponse: Response;
+}>;
+export declare function consumeCode(
+    input:
+        | {
+              userInputCode: string;
+              userContext?: any;
+              options?: RecipeFunctionOptions;
+              recipeImplementation: RecipeInterface;
+          }
+        | {
+              userContext?: any;
+              options?: RecipeFunctionOptions;
+              recipeImplementation: RecipeInterface;
+          }
+): Promise<
+    | {
+          status: "OK";
+          createdUser: boolean;
+          user: PasswordlessUser;
+          fetchResponse: Response;
+      }
+    | {
+          status: "INCORRECT_USER_INPUT_CODE_ERROR" | "EXPIRED_USER_INPUT_CODE_ERROR";
+          failedCodeInputAttemptCount: number;
+          maximumCodeInputAttempts: number;
+          fetchResponse: Response;
+      }
+    | {
+          status: "RESTART_FLOW_ERROR";
+          fetchResponse: Response;
+      }
+>;
