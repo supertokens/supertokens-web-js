@@ -2,7 +2,7 @@ import { RecipeFunctionOptions } from "../recipeModule/types";
 import { InputType, NormalisedInputType, PasswordlessFlowType, PasswordlessUser, RecipeInterface } from "./types";
 export declare function normaliseUserInput(config: InputType): NormalisedInputType;
 /**
- * These functions are helper functions so that the logic can be exposed fomr both
+ * These functions are helper functions so that the logic can be exposed from both
  * passwordless and thirdpartypasswordless recipes without having to duplicate code
  */
 export declare function createCode(
