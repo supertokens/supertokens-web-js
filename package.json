@@ -86,7 +86,7 @@
         },
         {
             "path": "recipe/thirdpartypasswordless/index.js",
-            "limit": "15kb"
+            "limit": "18kb"
         }
     ]
 }
