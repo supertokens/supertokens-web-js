@@ -113,7 +113,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     >;
-    static getAuthorizationURLWithQueryParamsAndSetState(input: {
+    static getAuthorisationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         authorisationURL: string;
         userContext?: any;
@@ -141,7 +141,7 @@ declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
 declare const emailPasswordSignUp: typeof RecipeWrapper.emailPasswordSignUp;
 declare const emailPasswordSignIn: typeof RecipeWrapper.emailPasswordSignIn;
 declare const thirdPartySignInAndUp: typeof RecipeWrapper.thirdPartySignInAndUp;
-declare const getAuthorizationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorizationURLWithQueryParamsAndSetState;
+declare const getAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
 declare const sendVerificationEmail: typeof RecipeWrapper.sendVerificationEmail;
 declare const isEmailVerified: typeof RecipeWrapper.isEmailVerified;
@@ -154,7 +154,7 @@ export {
     emailPasswordSignUp,
     emailPasswordSignIn,
     thirdPartySignInAndUp,
-    getAuthorizationURLWithQueryParamsAndSetState,
+    getAuthorisationURLWithQueryParamsAndSetState,
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,

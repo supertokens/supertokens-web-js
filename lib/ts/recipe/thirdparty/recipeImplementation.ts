@@ -53,7 +53,7 @@ export default function getRecipeImplementation(
             setSessionStorage("supertokens-oauth-state-2", value);
         },
 
-        getAuthorizationURLWithQueryParamsAndSetState: async function (input: {
+        getAuthorisationURLWithQueryParamsAndSetState: async function (input: {
             providerId: string;
             authorisationURL: string;
             userContext: any;

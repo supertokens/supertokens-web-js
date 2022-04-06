@@ -30,6 +30,11 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
     };
 }
 
+/**
+ * These functions are helper functions so that the logic can be exposed fomr both
+ * passwordless and thirdpartypasswordless recipes without having to duplicate code
+ */
+
 export async function createCode(
     input:
         | { email: string; userContext?: any; options?: RecipeFunctionOptions; recipeImplementation: RecipeInterface }

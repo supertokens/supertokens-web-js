@@ -76,16 +76,16 @@ export type RecipeInterface = {
           }
     >;
 
-    getStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
+    getThirdPartyStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
         userContext: any;
     }) => (StateObject & CustomStateProperties) | undefined;
 
-    setStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
+    setThirdPartyStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
         state: StateObject & CustomStateProperties;
         userContext: any;
     }) => void;
 
-    getAuthorizationURLWithQueryParamsAndSetState: (input: {
+    getThirdPartyAuthorisationURLWithQueryParamsAndSetState: (input: {
         providerId: string;
         authorisationURL: string;
         userContext: any;
@@ -93,21 +93,21 @@ export type RecipeInterface = {
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
 
-    generateStateToSendToOAuthProvider: (input: { userContext: any }) => string;
+    generateThirdPartyStateToSendToOAuthProvider: (input: { userContext: any }) => string;
 
-    verifyAndGetStateOrThrowError: <CustomStateProperties>(input: {
+    verifyAndGetThirdPartyStateOrThrowError: <CustomStateProperties>(input: {
         stateFromAuthProvider: string | undefined;
         stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
         userContext: any;
     }) => Promise<StateObject & CustomStateProperties>;
 
-    getAuthCodeFromURL: (input: { userContext: any }) => string;
+    getThirdPartyAuthCodeFromURL: (input: { userContext: any }) => string;
 
-    getAuthErrorFromURL: (input: { userContext: any }) => string | undefined;
+    getThirdPartyAuthErrorFromURL: (input: { userContext: any }) => string | undefined;
 
-    getAuthStateFromURL: (input: { userContext: any }) => string;
+    getThirdPartyAuthStateFromURL: (input: { userContext: any }) => string;
 
-    createCode: (
+    createPasswordlessCode: (
         input:
             | { email: string; userContext: any; options?: RecipeFunctionOptions }
             | { phoneNumber: string; userContext: any; options?: RecipeFunctionOptions }
@@ -119,7 +119,7 @@ export type RecipeInterface = {
         fetchResponse: Response;
     }>;
 
-    resendCode: (input: {
+    resendPasswordlessCode: (input: {
         userContext: any;
         deviceId: string;
         preAuthSessionId: string;
@@ -129,7 +129,7 @@ export type RecipeInterface = {
         fetchResponse: Response;
     }>;
 
-    consumeCode: (
+    consumePasswordlessCode: (
         input:
             | {
                   userInputCode: string;

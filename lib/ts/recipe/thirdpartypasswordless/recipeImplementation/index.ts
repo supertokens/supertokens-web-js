@@ -61,34 +61,34 @@ export default function getRecipeImplementation(
             return thirdPartyImpl.signInAndUp.bind(DerivedThirdParty(this))(input);
         },
 
-        getStateAndOtherInfoFromStorage: function <CustomStateProperties>(input: {
+        getThirdPartyStateAndOtherInfoFromStorage: function <CustomStateProperties>(input: {
             userContext: any;
         }): (StateObject & CustomStateProperties) | undefined {
             return thirdPartyImpl.getStateAndOtherInfoFromStorage.bind(DerivedThirdParty(this))(input);
         },
 
-        setStateAndOtherInfoToStorage: function <CustomStateProperties>(input: {
+        setThirdPartyStateAndOtherInfoToStorage: function <CustomStateProperties>(input: {
             state: StateObject & CustomStateProperties;
             userContext: any;
         }): void {
             return thirdPartyImpl.setStateAndOtherInfoToStorage.bind(DerivedThirdParty(this))(input);
         },
 
-        getAuthorizationURLWithQueryParamsAndSetState: async function (input: {
+        getThirdPartyAuthorisationURLWithQueryParamsAndSetState: async function (input: {
             providerId: string;
             authorisationURL: string;
             userContext: any;
             providerClientId?: string;
             options?: RecipeFunctionOptions;
         }): Promise<string> {
-            return thirdPartyImpl.getAuthorizationURLWithQueryParamsAndSetState.bind(DerivedThirdParty(this))(input);
+            return thirdPartyImpl.getAuthorisationURLWithQueryParamsAndSetState.bind(DerivedThirdParty(this))(input);
         },
 
-        generateStateToSendToOAuthProvider: function (input: { userContext: any }): string {
+        generateThirdPartyStateToSendToOAuthProvider: function (input: { userContext: any }): string {
             return thirdPartyImpl.generateStateToSendToOAuthProvider.bind(DerivedThirdParty(this))(input);
         },
 
-        verifyAndGetStateOrThrowError: async function <CustomStateProperties>(input: {
+        verifyAndGetThirdPartyStateOrThrowError: async function <CustomStateProperties>(input: {
             stateFromAuthProvider: string | undefined;
             stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
             userContext: any;
@@ -96,19 +96,19 @@ export default function getRecipeImplementation(
             return thirdPartyImpl.verifyAndGetStateOrThrowError.bind(DerivedThirdParty(this))(input);
         },
 
-        getAuthCodeFromURL: function (input: { userContext: any }): string {
+        getThirdPartyAuthCodeFromURL: function (input: { userContext: any }): string {
             return thirdPartyImpl.getAuthCodeFromURL.bind(DerivedThirdParty(this))(input);
         },
 
-        getAuthErrorFromURL: function (input: { userContext: any }): string | undefined {
+        getThirdPartyAuthErrorFromURL: function (input: { userContext: any }): string | undefined {
             return thirdPartyImpl.getAuthErrorFromURL.bind(DerivedThirdParty(this))(input);
         },
 
-        getAuthStateFromURL: function (input: { userContext: any }): string {
+        getThirdPartyAuthStateFromURL: function (input: { userContext: any }): string {
             return thirdPartyImpl.getAuthStateFromURL.bind(DerivedThirdParty(this))(input);
         },
 
-        createCode: async function (
+        createPasswordlessCode: async function (
             input:
                 | { email: string; userContext: any; options?: RecipeFunctionOptions }
                 | { phoneNumber: string; userContext: any; options?: RecipeFunctionOptions }
@@ -122,7 +122,7 @@ export default function getRecipeImplementation(
             return passwordlessImpl.createCode.bind(DerivedPasswordless(this))(input);
         },
 
-        resendCode: async function (input: {
+        resendPasswordlessCode: async function (input: {
             userContext: any;
             deviceId: string;
             preAuthSessionId: string;
@@ -134,7 +134,7 @@ export default function getRecipeImplementation(
             return passwordlessImpl.resendCode.bind(DerivedPasswordless(this))(input);
         },
 
-        consumeCode: async function (
+        consumePasswordlessCode: async function (
             input:
                 | {
                       userInputCode: string;

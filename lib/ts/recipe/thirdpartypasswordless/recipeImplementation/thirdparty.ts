@@ -22,18 +22,18 @@ export default function getRecipeImplementation(
         getAuthorisationURLFromBackend:
             originalImplementation.getAuthorisationURLFromBackend.bind(originalImplementation),
         getStateAndOtherInfoFromStorage:
-            originalImplementation.getStateAndOtherInfoFromStorage.bind(originalImplementation),
-        getAuthorizationURLWithQueryParamsAndSetState:
-            originalImplementation.getAuthorizationURLWithQueryParamsAndSetState.bind(originalImplementation),
+            originalImplementation.getThirdPartyStateAndOtherInfoFromStorage.bind(originalImplementation),
+        getAuthorisationURLWithQueryParamsAndSetState:
+            originalImplementation.getThirdPartyAuthorisationURLWithQueryParamsAndSetState.bind(originalImplementation),
         setStateAndOtherInfoToStorage:
-            originalImplementation.setStateAndOtherInfoToStorage.bind(originalImplementation),
+            originalImplementation.setThirdPartyStateAndOtherInfoToStorage.bind(originalImplementation),
         generateStateToSendToOAuthProvider:
-            originalImplementation.generateStateToSendToOAuthProvider.bind(originalImplementation),
-        getAuthCodeFromURL: originalImplementation.getAuthCodeFromURL.bind(originalImplementation),
-        getAuthErrorFromURL: originalImplementation.getAuthErrorFromURL.bind(originalImplementation),
-        getAuthStateFromURL: originalImplementation.getAuthStateFromURL.bind(originalImplementation),
+            originalImplementation.generateThirdPartyStateToSendToOAuthProvider.bind(originalImplementation),
+        getAuthCodeFromURL: originalImplementation.getThirdPartyAuthCodeFromURL.bind(originalImplementation),
+        getAuthErrorFromURL: originalImplementation.getThirdPartyAuthErrorFromURL.bind(originalImplementation),
+        getAuthStateFromURL: originalImplementation.getThirdPartyAuthStateFromURL.bind(originalImplementation),
         verifyAndGetStateOrThrowError:
-            originalImplementation.verifyAndGetStateOrThrowError.bind(originalImplementation),
+            originalImplementation.verifyAndGetThirdPartyStateOrThrowError.bind(originalImplementation),
         signInAndUp: originalImplementation.thirdPartySignInAndUp.bind(originalImplementation),
     };
 }

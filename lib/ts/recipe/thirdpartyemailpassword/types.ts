@@ -183,7 +183,7 @@ export type RecipeInterface = {
         userContext: any;
     }) => void;
 
-    getAuthorizationURLWithQueryParamsAndSetState: (input: {
+    getAuthorisationURLWithQueryParamsAndSetState: (input: {
         providerId: string;
         authorisationURL: string;
         userContext: any;

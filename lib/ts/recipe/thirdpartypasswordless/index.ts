@@ -51,20 +51,22 @@ export default class RecipeWrapper {
         });
     }
 
-    static getAuthorizationURLWithQueryParamsAndSetState(input: {
+    static getThirdPartyAuthorisationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         authorisationURL: string;
         userContext?: any;
         providerClientId?: string;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorizationURLWithQueryParamsAndSetState({
-            ...input,
-            userContext: getNormalisedUserContext(input.userContext),
-        });
+        return Recipe.getInstanceOrThrow().recipeImplementation.getThirdPartyAuthorisationURLWithQueryParamsAndSetState(
+            {
+                ...input,
+                userContext: getNormalisedUserContext(input.userContext),
+            }
+        );
     }
 
-    static async createCode(
+    static async createPasswordlessCode(
         input:
             | { email: string; userContext?: any; options?: RecipeFunctionOptions }
             | { phoneNumber: string; userContext?: any; options?: RecipeFunctionOptions }
@@ -83,7 +85,7 @@ export default class RecipeWrapper {
         });
     }
 
-    static async resendCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static async resendPasswordlessCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }> {
@@ -95,7 +97,7 @@ export default class RecipeWrapper {
         });
     }
 
-    static async consumeCode(
+    static async consumePasswordlessCode(
         input:
             | {
                   userInputCode: string;
@@ -192,28 +194,29 @@ export default class RecipeWrapper {
 }
 
 const init = RecipeWrapper.init;
-const getAuthorizationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorizationURLWithQueryParamsAndSetState;
+const getThirdPartyAuthorisationURLWithQueryParamsAndSetState =
+    RecipeWrapper.getThirdPartyAuthorisationURLWithQueryParamsAndSetState;
 const thirdPartySignInAndUp = RecipeWrapper.thirdPartySignInAndUp;
 const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
-const createCode = RecipeWrapper.createCode;
-const resendCode = RecipeWrapper.resendCode;
-const consumeCode = RecipeWrapper.consumeCode;
+const createPasswordlessCode = RecipeWrapper.createPasswordlessCode;
+const resendPasswordlessCode = RecipeWrapper.resendPasswordlessCode;
+const consumePasswordlessCode = RecipeWrapper.consumePasswordlessCode;
 const doesPasswordlessUserEmailExist = RecipeWrapper.doesPasswordlessUserEmailExist;
 const doesPasswordlessUserPhoneNumberExist = RecipeWrapper.doesPasswordlessUserPhoneNumberExist;
 const signOut = RecipeWrapper.signOut;
 
 export {
     init,
-    getAuthorizationURLWithQueryParamsAndSetState,
+    getThirdPartyAuthorisationURLWithQueryParamsAndSetState,
     thirdPartySignInAndUp,
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
-    createCode,
-    resendCode,
-    consumeCode,
+    createPasswordlessCode,
+    resendPasswordlessCode,
+    consumePasswordlessCode,
     doesPasswordlessUserEmailExist,
     doesPasswordlessUserPhoneNumberExist,
     signOut,

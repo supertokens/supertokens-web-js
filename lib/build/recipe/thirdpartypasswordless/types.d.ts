@@ -54,30 +54,30 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    getStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
+    getThirdPartyStateAndOtherInfoFromStorage: <CustomStateProperties>(input: {
         userContext: any;
     }) => (StateObject & CustomStateProperties) | undefined;
-    setStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
+    setThirdPartyStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
         state: StateObject & CustomStateProperties;
         userContext: any;
     }) => void;
-    getAuthorizationURLWithQueryParamsAndSetState: (input: {
+    getThirdPartyAuthorisationURLWithQueryParamsAndSetState: (input: {
         providerId: string;
         authorisationURL: string;
         userContext: any;
         providerClientId?: string;
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
-    generateStateToSendToOAuthProvider: (input: { userContext: any }) => string;
-    verifyAndGetStateOrThrowError: <CustomStateProperties>(input: {
+    generateThirdPartyStateToSendToOAuthProvider: (input: { userContext: any }) => string;
+    verifyAndGetThirdPartyStateOrThrowError: <CustomStateProperties>(input: {
         stateFromAuthProvider: string | undefined;
         stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
         userContext: any;
     }) => Promise<StateObject & CustomStateProperties>;
-    getAuthCodeFromURL: (input: { userContext: any }) => string;
-    getAuthErrorFromURL: (input: { userContext: any }) => string | undefined;
-    getAuthStateFromURL: (input: { userContext: any }) => string;
-    createCode: (
+    getThirdPartyAuthCodeFromURL: (input: { userContext: any }) => string;
+    getThirdPartyAuthErrorFromURL: (input: { userContext: any }) => string | undefined;
+    getThirdPartyAuthStateFromURL: (input: { userContext: any }) => string;
+    createPasswordlessCode: (
         input:
             | {
                   email: string;
@@ -96,7 +96,7 @@ export declare type RecipeInterface = {
         flowType: PasswordlessFlowType;
         fetchResponse: Response;
     }>;
-    resendCode: (input: {
+    resendPasswordlessCode: (input: {
         userContext: any;
         deviceId: string;
         preAuthSessionId: string;
@@ -105,7 +105,7 @@ export declare type RecipeInterface = {
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }>;
-    consumeCode: (
+    consumePasswordlessCode: (
         input:
             | {
                   userInputCode: string;

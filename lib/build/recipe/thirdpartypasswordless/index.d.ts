@@ -18,14 +18,14 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     >;
-    static getAuthorizationURLWithQueryParamsAndSetState(input: {
+    static getThirdPartyAuthorisationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         authorisationURL: string;
         userContext?: any;
         providerClientId?: string;
         options?: RecipeFunctionOptions;
     }): Promise<string>;
-    static createCode(
+    static createPasswordlessCode(
         input:
             | {
                   email: string;
@@ -44,11 +44,11 @@ export default class RecipeWrapper {
         flowType: PasswordlessFlowType;
         fetchResponse: Response;
     }>;
-    static resendCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static resendPasswordlessCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }>;
-    static consumeCode(
+    static consumePasswordlessCode(
         input:
             | {
                   userInputCode: string;
@@ -110,27 +110,27 @@ export default class RecipeWrapper {
     }>;
 }
 declare const init: typeof RecipeWrapper.init;
-declare const getAuthorizationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorizationURLWithQueryParamsAndSetState;
+declare const getThirdPartyAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getThirdPartyAuthorisationURLWithQueryParamsAndSetState;
 declare const thirdPartySignInAndUp: typeof RecipeWrapper.thirdPartySignInAndUp;
 declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
 declare const sendVerificationEmail: typeof RecipeWrapper.sendVerificationEmail;
 declare const isEmailVerified: typeof RecipeWrapper.isEmailVerified;
-declare const createCode: typeof RecipeWrapper.createCode;
-declare const resendCode: typeof RecipeWrapper.resendCode;
-declare const consumeCode: typeof RecipeWrapper.consumeCode;
+declare const createPasswordlessCode: typeof RecipeWrapper.createPasswordlessCode;
+declare const resendPasswordlessCode: typeof RecipeWrapper.resendPasswordlessCode;
+declare const consumePasswordlessCode: typeof RecipeWrapper.consumePasswordlessCode;
 declare const doesPasswordlessUserEmailExist: typeof RecipeWrapper.doesPasswordlessUserEmailExist;
 declare const doesPasswordlessUserPhoneNumberExist: typeof RecipeWrapper.doesPasswordlessUserPhoneNumberExist;
 declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
-    getAuthorizationURLWithQueryParamsAndSetState,
+    getThirdPartyAuthorisationURLWithQueryParamsAndSetState,
     thirdPartySignInAndUp,
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
-    createCode,
-    resendCode,
-    consumeCode,
+    createPasswordlessCode,
+    resendPasswordlessCode,
+    consumePasswordlessCode,
     doesPasswordlessUserEmailExist,
     doesPasswordlessUserPhoneNumberExist,
     signOut,

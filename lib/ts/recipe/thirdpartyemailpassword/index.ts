@@ -173,14 +173,14 @@ export default class RecipeWrapper {
         });
     }
 
-    static getAuthorizationURLWithQueryParamsAndSetState(input: {
+    static getAuthorisationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         authorisationURL: string;
         userContext?: any;
         providerClientId?: string;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorizationURLWithQueryParamsAndSetState({
+        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLWithQueryParamsAndSetState({
             ...input,
             userContext: getNormalisedUserContext(input.userContext),
         });
@@ -225,7 +225,7 @@ const doesEmailExist = RecipeWrapper.doesEmailExist;
 const emailPasswordSignUp = RecipeWrapper.emailPasswordSignUp;
 const emailPasswordSignIn = RecipeWrapper.emailPasswordSignIn;
 const thirdPartySignInAndUp = RecipeWrapper.thirdPartySignInAndUp;
-const getAuthorizationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorizationURLWithQueryParamsAndSetState;
+const getAuthorisationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
@@ -240,7 +240,7 @@ export {
     emailPasswordSignUp,
     emailPasswordSignIn,
     thirdPartySignInAndUp,
-    getAuthorizationURLWithQueryParamsAndSetState,
+    getAuthorisationURLWithQueryParamsAndSetState,
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
