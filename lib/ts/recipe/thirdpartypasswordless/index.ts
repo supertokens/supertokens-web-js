@@ -218,6 +218,7 @@ export {
     doesPasswordlessUserPhoneNumberExist,
     signOut,
     PasswordlessUser,
+    PasswordlessFlowType,
     InputType,
     RecipeInterface,
     RecipeFunctionOptions,
