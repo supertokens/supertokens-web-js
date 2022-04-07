@@ -51,7 +51,7 @@ export declare type RecipeInterface = {
         state: StateObject & CustomStateProperties;
         userContext: any;
     }) => Promise<void>;
-    getAuthorizationURLWithQueryParamsAndSetState: (input: {
+    getAuthorisationURLWithQueryParamsAndSetState: (input: {
         providerId: string;
         authorisationURL: string;
         userContext: any;

@@ -189,7 +189,7 @@ export type RecipeInterface = {
         userContext: any;
     }) => Promise<void>;
 
-    getAuthorizationURLWithQueryParamsAndSetState: (input: {
+    getAuthorisationURLWithQueryParamsAndSetState: (input: {
         providerId: string;
         authorisationURL: string;
         userContext: any;
