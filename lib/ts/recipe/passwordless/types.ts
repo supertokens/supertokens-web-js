@@ -145,7 +145,6 @@ export type RecipeInterface = {
           } & CustomLoginAttemptInfoProperties)
     >;
 
-    // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
     setLoginAttemptInfo: <CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
@@ -155,6 +154,5 @@ export type RecipeInterface = {
         userContext: any;
     }) => Promise<void>;
 
-    // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
     clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void>;
 };
