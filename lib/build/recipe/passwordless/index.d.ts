@@ -6,11 +6,10 @@ import {
     PostAPIHookContext,
     PreAPIHookContext,
     RecipeInterface,
+    PreAndPostAPIHookAction,
 } from "./types";
 export default class RecipeWrapper {
-    static init(
-        config?: InputType
-    ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
+    static init(config?: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     static createCode(
         input:
             | {
@@ -100,4 +99,5 @@ export {
     RecipeFunctionOptions,
     PreAPIHookContext,
     PostAPIHookContext,
+    PreAndPostAPIHookAction,
 };

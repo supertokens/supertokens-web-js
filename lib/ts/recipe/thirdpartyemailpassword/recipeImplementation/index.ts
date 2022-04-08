@@ -182,14 +182,14 @@ export default function getRecipeImplementation(
         setStateAndOtherInfoToStorage: function (input: { state: StateObject; userContext: any }): void {
             return thirdPartyImpl.setStateAndOtherInfoToStorage.bind(DerivedThirdParty(this))(input);
         },
-        getAuthorizationURLWithQueryParamsAndSetState: async function (input: {
+        getAuthorisationURLWithQueryParamsAndSetState: async function (input: {
             providerId: string;
             authorisationURL: string;
             userContext: any;
             providerClientId?: string;
             options?: RecipeFunctionOptions;
         }): Promise<string> {
-            return thirdPartyImpl.getAuthorizationURLWithQueryParamsAndSetState.bind(DerivedThirdParty(this))(input);
+            return thirdPartyImpl.getAuthorisationURLWithQueryParamsAndSetState.bind(DerivedThirdParty(this))(input);
         },
 
         generateStateToSendToOAuthProvider: function (input: { userContext: any }): string {

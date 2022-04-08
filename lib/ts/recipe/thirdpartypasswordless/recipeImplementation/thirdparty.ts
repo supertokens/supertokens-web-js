@@ -12,28 +12,28 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { RecipeInterface as ThirdPartyEmailPasswordRecipeInterface } from "../types";
-import { RecipeInterface } from "../../thirdparty/types";
+import { RecipeInterface as ThirdPartyPasswordlessRecipeInterface } from "../types";
+import { RecipeInterface as ThirdPartyRecipeInterface } from "../../thirdparty/types";
 
 export default function getRecipeImplementation(
-    originalImplementation: ThirdPartyEmailPasswordRecipeInterface
-): RecipeInterface {
+    originalImplementation: ThirdPartyPasswordlessRecipeInterface
+): ThirdPartyRecipeInterface {
     return {
         getAuthorisationURLFromBackend:
             originalImplementation.getAuthorisationURLFromBackend.bind(originalImplementation),
         getStateAndOtherInfoFromStorage:
-            originalImplementation.getStateAndOtherInfoFromStorage.bind(originalImplementation),
+            originalImplementation.getThirdPartyStateAndOtherInfoFromStorage.bind(originalImplementation),
         getAuthorisationURLWithQueryParamsAndSetState:
-            originalImplementation.getAuthorisationURLWithQueryParamsAndSetState.bind(originalImplementation),
+            originalImplementation.getThirdPartyAuthorisationURLWithQueryParamsAndSetState.bind(originalImplementation),
         setStateAndOtherInfoToStorage:
-            originalImplementation.setStateAndOtherInfoToStorage.bind(originalImplementation),
+            originalImplementation.setThirdPartyStateAndOtherInfoToStorage.bind(originalImplementation),
         generateStateToSendToOAuthProvider:
-            originalImplementation.generateStateToSendToOAuthProvider.bind(originalImplementation),
-        getAuthCodeFromURL: originalImplementation.getAuthCodeFromURL.bind(originalImplementation),
-        getAuthErrorFromURL: originalImplementation.getAuthErrorFromURL.bind(originalImplementation),
-        getAuthStateFromURL: originalImplementation.getAuthStateFromURL.bind(originalImplementation),
+            originalImplementation.generateThirdPartyStateToSendToOAuthProvider.bind(originalImplementation),
+        getAuthCodeFromURL: originalImplementation.getThirdPartyAuthCodeFromURL.bind(originalImplementation),
+        getAuthErrorFromURL: originalImplementation.getThirdPartyAuthErrorFromURL.bind(originalImplementation),
+        getAuthStateFromURL: originalImplementation.getThirdPartyAuthStateFromURL.bind(originalImplementation),
         verifyAndGetStateOrThrowError:
-            originalImplementation.verifyAndGetStateOrThrowError.bind(originalImplementation),
+            originalImplementation.verifyAndGetThirdPartyStateOrThrowError.bind(originalImplementation),
         signInAndUp: originalImplementation.thirdPartySignInAndUp.bind(originalImplementation),
     };
 }

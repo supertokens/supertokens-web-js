@@ -37,14 +37,14 @@ export default class RecipeWrapper {
         });
     }
 
-    static getAuthorizationURLWithQueryParamsAndSetState(input: {
+    static getAuthorisationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         authorisationURL: string;
         providerClientId?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorizationURLWithQueryParamsAndSetState({
+        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLWithQueryParamsAndSetState({
             ...input,
             userContext: getNormalisedUserContext(input.userContext),
         });
@@ -101,7 +101,7 @@ export default class RecipeWrapper {
 }
 
 const init = RecipeWrapper.init;
-const getAuthorizationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorizationURLWithQueryParamsAndSetState;
+const getAuthorisationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 const signInAndUp = RecipeWrapper.signInAndUp;
 const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
@@ -111,7 +111,7 @@ const signOut = RecipeWrapper.signOut;
 
 export {
     init,
-    getAuthorizationURLWithQueryParamsAndSetState,
+    getAuthorisationURLWithQueryParamsAndSetState,
     signInAndUp,
     verifyEmail,
     sendVerificationEmail,
@@ -123,4 +123,5 @@ export {
     PostAPIHookContext,
     PreAndPostAPIHookAction,
     InputType,
+    UserType,
 };
