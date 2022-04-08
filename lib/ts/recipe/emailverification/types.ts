@@ -97,6 +97,8 @@ export type RecipeInterface = {
     /**
      * Reads and returns the email verification token from the current URL
      *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
      * @returns The "token" query parameter from the current location
      */
     getEmailVerificationTokenFromURL: (input: { userContext: any }) => string;

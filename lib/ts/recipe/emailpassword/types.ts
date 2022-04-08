@@ -61,6 +61,21 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
 };
 
 export type RecipeInterface = {
+    /**
+     * Submit a new password for the user
+     *
+     * @param formFields List of fields to send to the API exposed by the backend SDK (Refer to the {@link https://supertokens.com/docs/fdi API spec} to know more)
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns `{status: "OK"}` if successfull
+     *
+     * @returns `{status: "RESET_PASSWORD_INVALID_TOKEN_ERROR"}` if the token in the URL is invalid
+     *
+     * @returns `{status: "FIELD_ERROR", formFields}` if the form field values are incorrect
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     submitNewPassword: (input: {
         formFields: {
             id: string;
@@ -83,6 +98,19 @@ export type RecipeInterface = {
           }
     >;
 
+    /**
+     * Send an email to the user for password reset
+     *
+     * @param formFields List of fields to send to the API exposed by the backend SDK (Refer to the {@link https://supertokens.com/docs/fdi API spec} to know more)
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns `{status: "OK"}` if successfull
+     *
+     * @returns `{status: "FIELD_ERROR", formFields}` if the formFields dont match the ones in the configured in the backend SDKs
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     sendPasswordResetEmail: (input: {
         formFields: {
             id: string;
@@ -105,6 +133,19 @@ export type RecipeInterface = {
           }
     >;
 
+    /**
+     * Sign up a user with email and password
+     *
+     * @param formFields List of fields to send to the API exposed by the backend SDK (Refer to the {@link https://supertokens.com/docs/fdi API spec} to know more). Note that the form fields must match the ones configured in the backend SDKs
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns `{status: "OK"}` if successfull
+     *
+     * @returns `{status: "FIELD_ERROR", formFields}` if the formFields dont match the ones in the configured in the backend SDKs
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     signUp: (input: {
         formFields: {
             id: string;
@@ -128,6 +169,21 @@ export type RecipeInterface = {
           }
     >;
 
+    /**
+     * Sign up a user with email and password
+     *
+     * @param formFields List of fields to send to the API exposed by the backend SDK (Refer to the {@link https://supertokens.com/docs/fdi API spec} to know more). Note that the form fields must match the ones configured in the backend SDKs
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns `{status: "OK"}` if successfull
+     *
+     * @returns `{status: "FIELD_ERROR", formFields}` if the formFields dont match the ones in the configured in the backend SDKs
+     *
+     * @returns `{status: "WRONG_CREDENTIALS_ERROR"}` if the credentials are invalid
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     signIn: (input: {
         formFields: {
             id: string;
@@ -155,11 +211,29 @@ export type RecipeInterface = {
           }
     >;
 
+    /**
+     * Check if an email exists
+     *
+     * @param email The email to check
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns `{status: "OK", doesExist: boolean}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     doesEmailExist: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<{
         status: "OK";
         doesExist: boolean;
         fetchResponse: Response;
     }>;
 
+    /**
+     * Reads and returns the reset password token from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "token" query parameter from the current location
+     */
     getResetPasswordTokenFromURL: (input: { userContext: any }) => string;
 };
