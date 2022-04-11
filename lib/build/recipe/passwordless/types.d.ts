@@ -161,7 +161,7 @@ export declare type RecipeInterface = {
     /**
      * Reads and returns the link code from the current URL
      *
-     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *
      * @returns The hash (#) property of the current URL
      */
@@ -169,7 +169,7 @@ export declare type RecipeInterface = {
     /**
      * Reads and returns the pre auth session id from the current URL
      *
-     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *
      * @returns The "preAuthSessionId" query parameter from the current URL
      */
@@ -179,7 +179,7 @@ export declare type RecipeInterface = {
      *
      * @param email Email to check
      *
-     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
@@ -197,7 +197,7 @@ export declare type RecipeInterface = {
      *
      * @param phoneNumber Phone number to check
      *
-     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
@@ -214,6 +214,13 @@ export declare type RecipeInterface = {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
+    /**
+     * Get information about the current login attempt from storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns `{deviceId, preAuthSessionId, flowType}` if present, returns undefined otherwise
+     */
     getLoginAttemptInfo: <CustomLoginAttemptInfoProperties>(input: { userContext: any }) => Promise<
         | undefined
         | ({
@@ -222,6 +229,11 @@ export declare type RecipeInterface = {
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
     >;
+    /**
+     * Set information about the current login attempt to storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     */
     setLoginAttemptInfo: <CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
@@ -230,5 +242,10 @@ export declare type RecipeInterface = {
         } & CustomStateProperties;
         userContext: any;
     }) => Promise<void>;
+    /**
+     * Clear any information about login attempts from storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     */
     clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void>;
 };
