@@ -152,7 +152,7 @@ export declare type RecipeInterface = {
           }
     >;
     /**
-     * Sign up a user with email and password
+     * Sign in a user with email and password
      *
      * @param formFields List of fields to send to the API exposed by the backend SDK (Refer to the {@link https://supertokens.com/docs/fdi API spec} to know more). Note that the form fields must match the ones configured in the backend SDKs
      *
