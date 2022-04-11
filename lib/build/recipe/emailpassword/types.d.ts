@@ -47,6 +47,8 @@ export declare type RecipeInterface = {
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
      *
+     * @param options Use this to configure additional properties (for example pre api hooks)
+     *
      * @returns `{status: "OK"}` if successfull
      *
      * @returns `{status: "RESET_PASSWORD_INVALID_TOKEN_ERROR"}` if the token in the URL is invalid
@@ -83,6 +85,8 @@ export declare type RecipeInterface = {
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
      *
+     * @param options Use this to configure additional properties (for example pre api hooks)
+     *
      * @returns `{status: "OK"}` if successfull
      *
      * @returns `{status: "FIELD_ERROR", formFields}` if the formFields dont match the ones in the configured in the backend SDKs
@@ -116,6 +120,8 @@ export declare type RecipeInterface = {
      * @param formFields List of fields to send to the API exposed by the backend SDK (Refer to the {@link https://supertokens.com/docs/fdi API spec} to know more). Note that the form fields must match the ones configured in the backend SDKs
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options Use this to configure additional properties (for example pre api hooks)
      *
      * @returns `{status: "OK"}` if successfull
      *
@@ -151,6 +157,8 @@ export declare type RecipeInterface = {
      * @param formFields List of fields to send to the API exposed by the backend SDK (Refer to the {@link https://supertokens.com/docs/fdi API spec} to know more). Note that the form fields must match the ones configured in the backend SDKs
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options Use this to configure additional properties (for example pre api hooks)
      *
      * @returns `{status: "OK"}` if successfull
      *
@@ -192,6 +200,8 @@ export declare type RecipeInterface = {
      * @param email The email to check
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options Use this to configure additional properties (for example pre api hooks)
      *
      * @returns `{status: "OK", doesExist: boolean}`
      *

@@ -33,6 +33,8 @@ export declare type RecipeInterface = {
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
      *
+     * @param options Use this to configure additional properties (for example pre api hooks)
+     *
      * @returns `{status: "OK"}` if successfull
      * @returns `{status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR"}` if token is invalid
      *
@@ -47,6 +49,8 @@ export declare type RecipeInterface = {
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
      *
+     * @param options Use this to configure additional properties (for example pre api hooks)
+     *
      * @returns `{status: "OK"}` if successfull
      * @returns `{status: "EMAIL_ALREADY_VERIFIED_ERROR"}` if the email has already been verified
      *
@@ -60,6 +64,8 @@ export declare type RecipeInterface = {
      * Check if an email has been verified
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options Use this to configure additional properties (for example pre api hooks)
      *
      * @returns `{status: "OK", isVerified: boolean}`
      *
