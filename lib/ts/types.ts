@@ -38,7 +38,7 @@ export type SuperTokensConfig = {
 
 export type CreateRecipeFunction<Action> = (
     appInfo: NormalisedAppInfo,
-    storageHandlers?: StorageHandlerInput
+    storageHandlers: NormalisedStorageHandlers
 ) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 
 export type AppInfoUserInput = {

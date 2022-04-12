@@ -10,7 +10,7 @@ export declare type SuperTokensConfig = {
 };
 export declare type CreateRecipeFunction<Action> = (
     appInfo: NormalisedAppInfo,
-    storageHandlers?: StorageHandlerInput
+    storageHandlers: NormalisedStorageHandlers
 ) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 export declare type AppInfoUserInput = {
     appName: string;

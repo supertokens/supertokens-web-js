@@ -12,9 +12,6 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import getDefaultLocalStorageHandler from "../../common/storage/defaultLocalStorageHandler";
-import getDefaultSessionStorageHandler from "../../common/storage/defaultSessionStorageHandler";
-import { NormalisedStorageHandlers, StorageHandlerFunction, StorageHandlerInput } from "../../types";
 import { NormalisedRecipeConfig, RecipeConfig } from "./types";
 
 export function normaliseRecipeModuleConfig<Action>(config: RecipeConfig<Action>): NormalisedRecipeConfig<Action> {
@@ -33,28 +30,8 @@ export function normaliseRecipeModuleConfig<Action>(config: RecipeConfig<Action>
     return {
         recipeId: config.recipeId,
         appInfo: config.appInfo,
-        storageHandlerInput: config.storageHandlerInput,
+        storageHandlers: config.storageHandlers,
         preAPIHook,
         postAPIHook,
-    };
-}
-
-export function normaliseStorageHandlerInput(storageHandlerInput?: StorageHandlerInput): NormalisedStorageHandlers {
-    let localStorageFunction: StorageHandlerFunction = (original) => original;
-    let sessionStorageFunction: StorageHandlerFunction = (original) => original;
-
-    if (storageHandlerInput !== undefined) {
-        if (storageHandlerInput.localStorage !== undefined) {
-            localStorageFunction = storageHandlerInput.localStorage;
-        }
-
-        if (storageHandlerInput.sessionStorage !== undefined) {
-            sessionStorageFunction = storageHandlerInput.sessionStorage;
-        }
-    }
-
-    return {
-        localStorage: localStorageFunction(getDefaultLocalStorageHandler()),
-        sessionStorage: sessionStorageFunction(getDefaultSessionStorageHandler()),
     };
 }

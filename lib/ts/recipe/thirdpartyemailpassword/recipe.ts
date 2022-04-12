@@ -23,7 +23,7 @@ import RecipeImplementation from "./recipeImplementation";
 import DerivedEmailPasswordImplementation from "./recipeImplementation/emailpassword";
 import DerivedThirdPartyRecipeImplementation from "./recipeImplementation/thirdparty";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
-import { CreateRecipeFunction, NormalisedAppInfo, StorageHandlerInput } from "../../types";
+import { CreateRecipeFunction, NormalisedAppInfo, NormalisedStorageHandlers } from "../../types";
 
 export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -49,7 +49,7 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
                 appInfo: this.config.appInfo,
                 preAPIHook: this.config.preAPIHook,
                 postAPIHook: this.config.postAPIHook,
-                storageHandlerInput: this.config.storageHandlerInput,
+                storageHandlers: this.config.storageHandlers,
             })
         );
         const _recipeImplementation = builder.override(this.config.override.functions).build();
@@ -67,7 +67,7 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
                           appInfo: this.config.appInfo,
                           preAPIHook: config.preAPIHook,
                           postAPIHook: config.postAPIHook,
-                          storageHandlerInput: config.storageHandlerInput,
+                          storageHandlers: config.storageHandlers,
                           override: {
                               emailVerification: config.override?.emailVerification,
                               functions: function () {
@@ -93,7 +93,7 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
                           appInfo: this.config.appInfo,
                           preAPIHook: config.preAPIHook,
                           postAPIHook: config.postAPIHook,
-                          storageHandlerInput: config.storageHandlerInput,
+                          storageHandlers: config.storageHandlers,
                           override: {
                               emailVerification: config.override?.emailVerification,
                               functions: function () {
@@ -121,13 +121,13 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
     }
 
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo, storageHandlerInput?: StorageHandlerInput) => {
+        return (appInfo: NormalisedAppInfo, storageHandlers: NormalisedStorageHandlers) => {
             Recipe.instance = new Recipe(
                 {
                     ...config,
                     recipeId: Recipe.RECIPE_ID,
                     appInfo,
-                    storageHandlerInput,
+                    storageHandlers,
                 },
                 {
                     emailVerification: undefined,
