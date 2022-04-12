@@ -16,6 +16,7 @@ import RecipeModule from "./recipe/recipeModule";
 import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
+import { StorageHandler } from "./common/storage/types";
 
 /*
  * Recipe Module Manager Config Types.
@@ -31,10 +32,13 @@ export type SuperTokensConfig = {
      * List of recipes for authentication and session management.
      */
     recipeList: CreateRecipeFunction<any>[];
+
+    storageHandlers?: StorageHandlerInput;
 };
 
 export type CreateRecipeFunction<Action> = (
-    appInfo: NormalisedAppInfo
+    appInfo: NormalisedAppInfo,
+    storageHandlers: NormalisedStorageHandlers
 ) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 
 export type AppInfoUserInput = {
@@ -89,4 +93,16 @@ export type NormalisedAppInfo = {
      * Default to `/auth`
      */
     websiteBasePath: NormalisedURLPath;
+};
+
+export type StorageHandlerFunction = (original: StorageHandler) => StorageHandler;
+
+export type StorageHandlerInput = {
+    sessionStorage?: StorageHandlerFunction;
+    localStorage?: StorageHandlerFunction;
+};
+
+export type NormalisedStorageHandlers = {
+    sessionStorage: StorageHandler;
+    localStorage: StorageHandler;
 };

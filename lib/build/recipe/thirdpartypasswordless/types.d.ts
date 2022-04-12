@@ -15,7 +15,7 @@ import OverrideableBuilder from "supertokens-js-override";
 export declare type PreAndPostAPIHookAction = ThirdPartyPreAndPostAPIHookAction | PasswordlessPreAndPostAPIHookAction;
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
-export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
+export declare type UserInput = {
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (
@@ -24,6 +24,7 @@ export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
         ) => RecipeInterface;
     };
 };
+export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     override: {
         functions: (
@@ -60,7 +61,7 @@ export declare type RecipeInterface = {
     setThirdPartyStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
         state: StateObject & CustomStateProperties;
         userContext: any;
-    }) => void;
+    }) => Promise<void>;
     getThirdPartyAuthorisationURLWithQueryParamsAndSetState: (input: {
         providerId: string;
         authorisationURL: string;
@@ -158,21 +159,14 @@ export declare type RecipeInterface = {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
-    getPasswordlessLoginAttemptInfo: <CustomLoginAttemptInfoProperties>(input: { userContext: any }) =>
-        | Promise<
-              | undefined
-              | ({
-                    deviceId: string;
-                    preAuthSessionId: string;
-                    flowType: PasswordlessFlowType;
-                } & CustomLoginAttemptInfoProperties)
-          >
+    getPasswordlessLoginAttemptInfo: <CustomLoginAttemptInfoProperties>(input: { userContext: any }) => Promise<
+        | undefined
         | ({
               deviceId: string;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
-        | undefined;
+    >;
     setPasswordlessLoginAttemptInfo: <CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
@@ -180,6 +174,6 @@ export declare type RecipeInterface = {
             flowType: PasswordlessFlowType;
         } & CustomStateProperties;
         userContext: any;
-    }) => Promise<void> | void;
-    clearPasswordlessLoginAttemptInfo: (input: { userContext: any }) => Promise<void> | void;
+    }) => Promise<void>;
+    clearPasswordlessLoginAttemptInfo: (input: { userContext: any }) => Promise<void>;
 };

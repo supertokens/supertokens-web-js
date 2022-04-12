@@ -16,17 +16,26 @@ import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
     UserType,
+    PreAndPostAPIHookAction as AuthRecipePreAndPostAPIHookAction,
 } from "../authRecipeWithEmailVerification/types";
-import { RecipePostAPIHookContext, RecipePreAPIHookContext, RecipeFunctionOptions } from "../recipeModule/types";
+import {
+    RecipePostAPIHookContext,
+    RecipePreAPIHookContext,
+    RecipeFunctionOptions,
+    UserInput as RecipeModuleUserInput,
+} from "../recipeModule/types";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 import OverrideableBuilder from "supertokens-js-override";
 
-export type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP";
+export type PreAndPostAPIHookAction =
+    | AuthRecipePreAndPostAPIHookAction
+    | "GET_AUTHORISATION_URL"
+    | "THIRD_PARTY_SIGN_IN_UP";
 
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
-export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
+export type UserInput = {
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (
@@ -34,7 +43,9 @@ export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
             builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
-};
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
+
+export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 
 export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     override: {
@@ -61,7 +72,7 @@ export type RecipeInterface = {
     setStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
         state: StateObject & CustomStateProperties;
         userContext: any;
-    }) => void;
+    }) => Promise<void>;
 
     getAuthorisationURLWithQueryParamsAndSetState: (input: {
         providerId: string;

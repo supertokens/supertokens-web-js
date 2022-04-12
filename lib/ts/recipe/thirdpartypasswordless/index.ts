@@ -13,7 +13,7 @@
  * under the License.
  */
 
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction } from "./types";
+import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction } from "./types";
 import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
@@ -23,7 +23,7 @@ import { PasswordlessFlowType, PasswordlessUser } from "../passwordless/types";
 import { StateObject } from "../thirdparty/types";
 
 export default class RecipeWrapper {
-    static init(config?: InputType) {
+    static init(config?: UserInput) {
         return Recipe.init(config);
     }
 
@@ -222,7 +222,7 @@ export {
     signOut,
     PasswordlessUser,
     PasswordlessFlowType,
-    InputType,
+    UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,

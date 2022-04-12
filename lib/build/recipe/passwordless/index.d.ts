@@ -1,15 +1,15 @@
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
-    InputType,
     PasswordlessFlowType,
     PasswordlessUser,
     PostAPIHookContext,
     PreAPIHookContext,
     RecipeInterface,
     PreAndPostAPIHookAction,
+    UserInput,
 } from "./types";
 export default class RecipeWrapper {
-    static init(config?: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
+    static init(config?: UserInput): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     static createCode(
         input:
             | {
@@ -29,7 +29,7 @@ export default class RecipeWrapper {
         flowType: PasswordlessFlowType;
         fetchResponse: Response;
     }>;
-    static resendCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static resendCode(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }>;
@@ -94,7 +94,7 @@ export {
     doesPhoneNumberExist,
     signOut,
     PasswordlessUser,
-    InputType,
+    UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,

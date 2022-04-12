@@ -14,43 +14,49 @@
  */
 
 import Querier from "../../querier";
-import { appendQueryParamsToURL, getQueryParams, getSessionStorage, setSessionStorage } from "../../utils";
+import { appendQueryParamsToURL, getQueryParams } from "../../utils";
 import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeInterface, StateObject } from "./types";
-import { RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../recipeModule/types";
+import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
-import { NormalisedAppInfo } from "../../types";
 import { PreAndPostAPIHookAction } from "./types";
 
 export default function getRecipeImplementation(
-    recipeId: string,
-    appInfo: NormalisedAppInfo,
-    preAPIHook: RecipePreAPIHookFunction<PreAndPostAPIHookAction>,
-    postAPIHook: RecipePostAPIHookFunction<PreAndPostAPIHookAction>
+    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
-    const querier = new Querier(recipeId, appInfo);
+    const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
+
     return {
         getStateAndOtherInfoFromStorage: function <CustomStateProperties>():
             | (StateObject & CustomStateProperties)
             | undefined {
+            /**
+             * This function can also be used to decide which flow to use in the UI
+             * (For example routing in supertokens-auth-react), which means we can
+             * not make this an async function.
+             *
+             * To allow for this and allow for storage functions to be async where
+             * possible we call the sync version of getItem here
+             */
+            const stateFromStorage =
+                recipeImplInput.storageHandlers.sessionStorage.getItemSync("supertokens-oauth-state-2");
+
+            if (stateFromStorage === null) {
+                return undefined;
+            }
+
             try {
-                const stateFromStorage = getSessionStorage("supertokens-oauth-state-2");
-
-                if (stateFromStorage === undefined) {
-                    return undefined;
-                }
-
                 return JSON.parse(stateFromStorage);
             } catch {
                 return undefined;
             }
         },
 
-        setStateAndOtherInfoToStorage: function (input: { state: StateObject; userContext: any }) {
+        setStateAndOtherInfoToStorage: async function (input: { state: StateObject; userContext: any }): Promise<void> {
             const value = JSON.stringify({
                 ...input.state,
             });
-            setSessionStorage("supertokens-oauth-state-2", value);
+            await recipeImplInput.storageHandlers.sessionStorage.setItem("supertokens-oauth-state-2", value);
         },
 
         getAuthorisationURLWithQueryParamsAndSetState: async function (input: {
@@ -67,7 +73,7 @@ export default function getRecipeImplementation(
 
             const stateExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
             // 2. Store state in Session Storage.
-            this.setStateAndOtherInfoToStorage<{}>({
+            await this.setStateAndOtherInfoToStorage<{}>({
                 state: {
                     stateForAuthProvider: stateToSendToAuthProvider,
                     providerId: input.providerId,
@@ -118,13 +124,13 @@ export default function getRecipeImplementation(
                 {},
                 { thirdPartyId: input.providerId },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "GET_AUTHORISATION_URL",
                     options: input.options,
                     userContext: input.userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "GET_AUTHORISATION_URL",
                     userContext: input.userContext,
                 })
@@ -208,13 +214,13 @@ export default function getRecipeImplementation(
                     }),
                 },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "THIRD_PARTY_SIGN_IN_UP",
                     options: input.options,
                     userContext: input.userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "THIRD_PARTY_SIGN_IN_UP",
                     userContext: input.userContext,
                 })

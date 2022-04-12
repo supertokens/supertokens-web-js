@@ -13,8 +13,7 @@
  * under the License.
  */
 
-import { NormalisedAppInfo } from "../../../types";
-import { RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../../recipeModule/types";
+import { RecipeFunctionOptions, RecipeImplementationInput } from "../../recipeModule/types";
 import { PreAndPostAPIHookAction, RecipeInterface } from "../types";
 import ThirdPartyRecipeImplementation from "../../thirdparty/recipeImplementation";
 import PasswordlessRecipeImplementation from "../../passwordless/recipeImplementation";
@@ -25,13 +24,10 @@ import { StateObject } from "../../thirdparty/types";
 import { PasswordlessFlowType, PasswordlessUser } from "../../passwordless/types";
 
 export default function getRecipeImplementation(
-    recipeId: string,
-    appInfo: NormalisedAppInfo,
-    preAPIHook: RecipePreAPIHookFunction<PreAndPostAPIHookAction>,
-    postAPIHook: RecipePostAPIHookFunction<PreAndPostAPIHookAction>
+    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
-    const thirdPartyImpl = ThirdPartyRecipeImplementation(recipeId, appInfo, preAPIHook, postAPIHook);
-    const passwordlessImpl = PasswordlessRecipeImplementation(recipeId, appInfo, preAPIHook, postAPIHook);
+    const thirdPartyImpl = ThirdPartyRecipeImplementation(recipeImplInput);
+    const passwordlessImpl = PasswordlessRecipeImplementation(recipeImplInput);
 
     return {
         getAuthorisationURLFromBackend: async function (input: {
@@ -70,7 +66,7 @@ export default function getRecipeImplementation(
         setThirdPartyStateAndOtherInfoToStorage: function <CustomStateProperties>(input: {
             state: StateObject & CustomStateProperties;
             userContext: any;
-        }): void {
+        }): Promise<void> {
             return thirdPartyImpl.setStateAndOtherInfoToStorage.bind(DerivedThirdParty(this))(input);
         },
 
@@ -199,21 +195,16 @@ export default function getRecipeImplementation(
             return passwordlessImpl.doesPhoneNumberExist.bind(DerivedPasswordless(this))(input);
         },
 
-        getPasswordlessLoginAttemptInfo: function <CustomLoginAttemptInfoProperties>(input: { userContext: any }):
-            | Promise<
-                  | undefined
-                  | ({
-                        deviceId: string;
-                        preAuthSessionId: string;
-                        flowType: PasswordlessFlowType;
-                    } & CustomLoginAttemptInfoProperties)
-              >
+        getPasswordlessLoginAttemptInfo: function <CustomLoginAttemptInfoProperties>(input: {
+            userContext: any;
+        }): Promise<
+            | undefined
             | ({
                   deviceId: string;
                   preAuthSessionId: string;
                   flowType: PasswordlessFlowType;
               } & CustomLoginAttemptInfoProperties)
-            | undefined {
+        > {
             return passwordlessImpl.getLoginAttemptInfo.bind(DerivedPasswordless(this))(input);
         },
 
@@ -224,11 +215,11 @@ export default function getRecipeImplementation(
                 flowType: PasswordlessFlowType;
             } & CustomStateProperties;
             userContext: any;
-        }): Promise<void> | void {
+        }): Promise<void> {
             return passwordlessImpl.setLoginAttemptInfo.bind(DerivedPasswordless(this))(input);
         },
 
-        clearPasswordlessLoginAttemptInfo: function (input: { userContext: any }): Promise<void> | void {
+        clearPasswordlessLoginAttemptInfo: function (input: { userContext: any }): Promise<void> {
             return passwordlessImpl.clearLoginAttemptInfo.bind(DerivedPasswordless(this))(input);
         },
     };

@@ -12,9 +12,7 @@ export declare type RecipeEvent =
           sessionExpiredOrRevoked: boolean;
           userContext: any;
       };
-export declare type InputType = {
-    recipeId: string;
-    appInfo: NormalisedAppInfo;
+export declare type UserInput = {
     apiDomain?: string;
     apiBasePath?: string;
     sessionScope?: string;
@@ -44,3 +42,7 @@ export declare type InputType = {
         ) => RecipeInterface;
     };
 };
+export declare type InputType = {
+    recipeId: string;
+    appInfo: NormalisedAppInfo;
+} & UserInput;

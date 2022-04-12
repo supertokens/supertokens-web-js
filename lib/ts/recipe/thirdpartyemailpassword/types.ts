@@ -13,7 +13,11 @@
  * under the License.
  */
 import { PreAndPostAPIHookAction as EmailPasswordPreAndPostAPIHookAction } from "../emailpassword/types";
-import { RecipePostAPIHookContext, RecipePreAPIHookContext } from "../recipeModule/types";
+import {
+    RecipePostAPIHookContext,
+    RecipePreAPIHookContext,
+    UserInput as RecipeModuleUserInput,
+} from "../recipeModule/types";
 import { PreAndPostAPIHookAction as ThirdPartyPreAndPostAPIHookAction, StateObject } from "../thirdparty/types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
@@ -29,7 +33,7 @@ export type PreAndPostAPIHookAction = EmailPasswordPreAndPostAPIHookAction | Thi
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
-export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
+export type UserInput = {
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (
@@ -37,7 +41,9 @@ export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
             builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
-};
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
+
+export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 
 export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     override: {
@@ -181,7 +187,7 @@ export type RecipeInterface = {
     setStateAndOtherInfoToStorage: <CustomStateProperties>(input: {
         state: StateObject & CustomStateProperties;
         userContext: any;
-    }) => void;
+    }) => Promise<void>;
 
     getAuthorisationURLWithQueryParamsAndSetState: (input: {
         providerId: string;

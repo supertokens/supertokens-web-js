@@ -17,7 +17,6 @@ import RecipeModule from "../recipeModule";
 import { NormalisedRecipeConfig } from "../recipeModule/types";
 import Session from "../session/recipe";
 
-// TODO NEMI: Add session recipe methods here
 export default abstract class AuthRecipe<
     Action,
     NormalisedConfig extends NormalisedRecipeConfig<Action>

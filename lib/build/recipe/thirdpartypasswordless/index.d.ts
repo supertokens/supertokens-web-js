@@ -1,10 +1,10 @@
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction } from "./types";
+import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { UserType as ThirdPartyUserType } from "../authRecipeWithEmailVerification/types";
 import { PasswordlessFlowType, PasswordlessUser } from "../passwordless/types";
 import { StateObject } from "../thirdparty/types";
 export default class RecipeWrapper {
-    static init(config?: InputType): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
+    static init(config?: UserInput): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     static signOut(input?: { userContext?: any }): Promise<void>;
     static thirdPartySignInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
@@ -136,7 +136,7 @@ export {
     signOut,
     PasswordlessUser,
     PasswordlessFlowType,
-    InputType,
+    UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,

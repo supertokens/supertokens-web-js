@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { NormalisedAppInfo } from "../../types";
+import { NormalisedAppInfo, NormalisedStorageHandlers } from "../../types";
 
 export type RecipePreAPIHookContext<Action> = {
     requestInit: RequestInit;
@@ -46,16 +46,21 @@ export type RecipePreAPIHookFunction<Action> = (
 
 export type RecipePostAPIHookFunction<Action> = (context: RecipePostAPIHookContext<Action>) => Promise<void>;
 
-export type RecipeConfig<Action> = {
-    recipeId: string;
-    appInfo: NormalisedAppInfo;
+export type UserInput<Action> = {
     preAPIHook?: RecipePreAPIHookFunction<Action>;
     postAPIHook?: RecipePostAPIHookFunction<Action>;
 };
 
+export type RecipeConfig<Action> = {
+    storageHandlers: NormalisedStorageHandlers;
+    recipeId: string;
+    appInfo: NormalisedAppInfo;
+} & UserInput<Action>;
+
 export type NormalisedRecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
+    storageHandlers: NormalisedStorageHandlers;
     preAPIHook: RecipePreAPIHookFunction<Action>;
     postAPIHook: RecipePostAPIHookFunction<Action>;
 };
@@ -73,4 +78,12 @@ export type RecipeFunctionOptions = {
         requestInit: RequestInit;
         userContext: any;
     }) => Promise<{ url: string; requestInit: RequestInit }>;
+};
+
+export type RecipeImplementationInput<PrePostAPIHookAction> = {
+    recipeId: string;
+    appInfo: NormalisedAppInfo;
+    preAPIHook: RecipePreAPIHookFunction<PrePostAPIHookAction>;
+    postAPIHook: RecipePostAPIHookFunction<PrePostAPIHookAction>;
+    storageHandlers: NormalisedStorageHandlers;
 };

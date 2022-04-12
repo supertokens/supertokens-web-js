@@ -14,10 +14,10 @@
  */
 
 import AuthRecipeWithEmailVerification from "../authRecipeWithEmailVerification";
-import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
+import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface, UserInput } from "./types";
 import EmailVerificationRecipe from "../emailverification/recipe";
 import { normaliseUserInput } from "./utils";
-import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
+import { CreateRecipeFunction, NormalisedAppInfo, NormalisedStorageHandlers } from "../../types";
 import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
@@ -32,23 +32,25 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
         super(normaliseUserInput(config), recipes);
 
         const builder = new OverrideableBuilder(
-            RecipeImplementation(
-                this.config.recipeId,
-                this.config.appInfo,
-                this.config.preAPIHook,
-                this.config.postAPIHook
-            )
+            RecipeImplementation({
+                recipeId: this.config.recipeId,
+                appInfo: this.config.appInfo,
+                preAPIHook: this.config.preAPIHook,
+                postAPIHook: this.config.postAPIHook,
+                storageHandlers: this.config.storageHandlers,
+            })
         );
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 
-    static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo) => {
+    static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
+        return (appInfo: NormalisedAppInfo, storageHandlers: NormalisedStorageHandlers) => {
             Recipe.instance = new Recipe(
                 {
                     ...config,
                     recipeId: Recipe.RECIPE_ID,
                     appInfo,
+                    storageHandlers,
                 },
                 {
                     emailVerification: undefined,

@@ -16,10 +16,10 @@
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import AuthRecipe from "../authRecipe";
-import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
+import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface, UserInput } from "./types";
 import { normaliseUserInput } from "./utils";
 import RecipeImplementation from "./recipeImplementation";
-import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
+import { CreateRecipeFunction, NormalisedAppInfo, NormalisedStorageHandlers } from "../../types";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -31,23 +31,25 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
         super(normaliseUserInput(config));
 
         const builder = new OverrideableBuilder(
-            RecipeImplementation(
-                this.config.recipeId,
-                this.config.appInfo,
-                this.config.preAPIHook,
-                this.config.postAPIHook
-            )
+            RecipeImplementation({
+                recipeId: this.config.recipeId,
+                appInfo: this.config.appInfo,
+                preAPIHook: this.config.preAPIHook,
+                postAPIHook: this.config.postAPIHook,
+                storageHandlers: this.config.storageHandlers,
+            })
         );
 
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 
-    static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo) => {
+    static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
+        return (appInfo: NormalisedAppInfo, storageHandlers: NormalisedStorageHandlers) => {
             Recipe.instance = new Recipe({
                 ...config,
                 recipeId: Recipe.RECIPE_ID,
                 appInfo,
+                storageHandlers,
             });
 
             return Recipe.instance;

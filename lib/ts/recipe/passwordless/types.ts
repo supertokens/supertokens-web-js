@@ -19,6 +19,7 @@ import {
     RecipeFunctionOptions,
     RecipePostAPIHookContext,
     RecipePreAPIHookContext,
+    UserInput as RecipeModuleUserInput,
 } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 
@@ -32,14 +33,16 @@ export type PreAndPostAPIHookAction =
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
-export type InputType = RecipeConfig<PreAndPostAPIHookAction> & {
+export type UserInput = {
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
             builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
-};
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
+
+export type InputType = RecipeConfig<PreAndPostAPIHookAction> & UserInput;
 
 export type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
     override: {
@@ -133,24 +136,15 @@ export type RecipeInterface = {
         fetchResponse: Response;
     }>;
 
-    // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
-    getLoginAttemptInfo: <CustomLoginAttemptInfoProperties>(input: { userContext: any }) =>
-        | Promise<
-              | undefined
-              | ({
-                    deviceId: string;
-                    preAuthSessionId: string;
-                    flowType: PasswordlessFlowType;
-                } & CustomLoginAttemptInfoProperties)
-          >
+    getLoginAttemptInfo: <CustomLoginAttemptInfoProperties>(input: { userContext: any }) => Promise<
+        | undefined
         | ({
               deviceId: string;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
-        | undefined;
+    >;
 
-    // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
     setLoginAttemptInfo: <CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
@@ -158,8 +152,7 @@ export type RecipeInterface = {
             flowType: PasswordlessFlowType;
         } & CustomStateProperties;
         userContext: any;
-    }) => Promise<void> | void;
+    }) => Promise<void>;
 
-    // TODO NEMI: Wouldnt it make more sense for this to just be a promise?
-    clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void> | void;
+    clearLoginAttemptInfo: (input: { userContext: any }) => Promise<void>;
 };

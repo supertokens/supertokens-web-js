@@ -15,17 +15,13 @@
 import Querier from "../../querier";
 import { PreAndPostAPIHookAction, RecipeInterface } from "./types";
 import { getQueryParams } from "../../utils";
-import { RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../recipeModule/types";
+import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { UserType } from ".";
-import { NormalisedAppInfo } from "../../types";
 
 export default function getRecipeImplementation(
-    recipeId: string,
-    appInfo: NormalisedAppInfo,
-    preAPIHook: RecipePreAPIHookFunction<PreAndPostAPIHookAction>,
-    postAPIHook: RecipePostAPIHookFunction<PreAndPostAPIHookAction>
+    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
-    const querier = new Querier(recipeId, appInfo);
+    const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
     return {
         submitNewPassword: async function ({
             formFields,
@@ -71,13 +67,13 @@ export default function getRecipeImplementation(
                 "/user/password/reset",
                 { body: JSON.stringify({ formFields, token, method: "token" }) },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "SUBMIT_NEW_PASSWORD",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "SUBMIT_NEW_PASSWORD",
                     userContext,
                 })
@@ -137,13 +133,13 @@ export default function getRecipeImplementation(
                 "/user/password/reset/token",
                 { body: JSON.stringify({ formFields }) },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "SEND_RESET_PASSWORD_EMAIL",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "SEND_RESET_PASSWORD_EMAIL",
                     userContext,
                 })
@@ -205,13 +201,13 @@ export default function getRecipeImplementation(
                 "/signup",
                 { body: JSON.stringify({ formFields }) },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_UP",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_UP",
                     userContext,
                 })
@@ -281,13 +277,13 @@ export default function getRecipeImplementation(
                 "/signin",
                 { body: JSON.stringify({ formFields }) },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_IN",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_IN",
                     userContext,
                 })
@@ -336,13 +332,13 @@ export default function getRecipeImplementation(
                 {},
                 { email },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "EMAIL_EXISTS",
                     options,
                     userContext,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "EMAIL_EXISTS",
                     userContext,
                 })

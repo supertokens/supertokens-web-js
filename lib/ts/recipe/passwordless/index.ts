@@ -17,17 +17,17 @@ import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import Recipe from "./recipe";
 import {
-    InputType,
     PasswordlessFlowType,
     PasswordlessUser,
     PostAPIHookContext,
     PreAPIHookContext,
     RecipeInterface,
     PreAndPostAPIHookAction,
+    UserInput,
 } from "./types";
 import * as UtilFunctions from "./utils";
 export default class RecipeWrapper {
-    static init(config?: InputType) {
+    static init(config?: UserInput) {
         return Recipe.init(config);
     }
 
@@ -50,7 +50,7 @@ export default class RecipeWrapper {
         });
     }
 
-    static async resendCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static async resendCode(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }> {
@@ -146,7 +146,7 @@ export {
     doesPhoneNumberExist,
     signOut,
     PasswordlessUser,
-    InputType,
+    UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,

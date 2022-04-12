@@ -1,8 +1,8 @@
-import { InputType, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
+import { RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserInput } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 export default class RecipeWrapper {
     static init(
-        config?: InputType
+        config?: UserInput
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
     static verifyEmail(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
@@ -27,7 +27,7 @@ export {
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
-    InputType,
+    UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,

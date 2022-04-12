@@ -30,6 +30,7 @@ export function normaliseRecipeModuleConfig<Action>(config: RecipeConfig<Action>
     return {
         recipeId: config.recipeId,
         appInfo: config.appInfo,
+        storageHandlers: config.storageHandlers,
         preAPIHook,
         postAPIHook,
     };

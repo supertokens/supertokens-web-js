@@ -14,25 +14,15 @@
  */
 
 import Querier from "../../querier";
-import { NormalisedAppInfo } from "../../types";
-import {
-    getHashFromLocation,
-    getLocalStorage,
-    getQueryParams,
-    removeFromLocalStorage,
-    setLocalStorage,
-} from "../../utils";
-import { RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../recipeModule/types";
+import { getHashFromLocation, getQueryParams } from "../../utils";
+import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY } from "./constants";
 import { PreAndPostAPIHookAction, RecipeInterface, PasswordlessFlowType, PasswordlessUser } from "./types";
 
 export default function getRecipeImplementation(
-    recipeId: string,
-    appInfo: NormalisedAppInfo,
-    preAPIHook: RecipePreAPIHookFunction<PreAndPostAPIHookAction>,
-    postAPIHook: RecipePostAPIHookFunction<PreAndPostAPIHookAction>
+    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
-    const querier = new Querier(recipeId, appInfo);
+    const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
     return {
         createCode: async function (
@@ -69,13 +59,13 @@ export default function getRecipeImplementation(
                 "/signinup/code",
                 { body: JSON.stringify(bodyObj) },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "PASSWORDLESS_CREATE_CODE",
                     userContext: input.userContext,
                     options: input.options,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "PASSWORDLESS_CREATE_CODE",
                     userContext: input.userContext,
                 })
@@ -106,13 +96,13 @@ export default function getRecipeImplementation(
                 "/signinup/code/resend",
                 { body: JSON.stringify(bodyObj) },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "PASSWORDLESS_RESEND_CODE",
                     userContext: input.userContext,
                     options: input.options,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "PASSWORDLESS_RESEND_CODE",
                     userContext: input.userContext,
                 })
@@ -189,13 +179,13 @@ export default function getRecipeImplementation(
                 "/signinup/code/consume",
                 { body: JSON.stringify(bodyObj) },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "PASSWORDLESS_CONSUME_CODE",
                     userContext: input.userContext,
                     options: input.options,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "PASSWORDLESS_CONSUME_CODE",
                     userContext: input.userContext,
                 })
@@ -235,13 +225,13 @@ export default function getRecipeImplementation(
                 {},
                 { email: input.email },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "EMAIL_EXISTS",
                     userContext: input.userContext,
                     options: input.options,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "EMAIL_EXISTS",
                     userContext: input.userContext,
                 })
@@ -270,13 +260,13 @@ export default function getRecipeImplementation(
                 {},
                 { phoneNumber: input.phoneNumber },
                 Querier.preparePreAPIHook({
-                    recipePreAPIHook: preAPIHook,
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "PHONE_NUMBER_EXISTS",
                     userContext: input.userContext,
                     options: input.options,
                 }),
                 Querier.preparePostAPIHook({
-                    recipePostAPIHook: postAPIHook,
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "PHONE_NUMBER_EXISTS",
                     userContext: input.userContext,
                 })
@@ -288,24 +278,19 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        getLoginAttemptInfo: function <CustomAttemptInfoProperties>():
-            | Promise<
-                  | undefined
-                  | ({
-                        deviceId: string;
-                        preAuthSessionId: string;
-                        flowType: PasswordlessFlowType;
-                    } & CustomAttemptInfoProperties)
-              >
+        getLoginAttemptInfo: async function <CustomLoginAttemptInfoProperties>(): Promise<
+            | undefined
             | ({
                   deviceId: string;
                   preAuthSessionId: string;
                   flowType: PasswordlessFlowType;
-              } & CustomAttemptInfoProperties)
-            | undefined {
-            const storedInfo = getLocalStorage(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
+              } & CustomLoginAttemptInfoProperties)
+        > {
+            const storedInfo = await recipeImplInput.storageHandlers.localStorage.getItem(
+                PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY
+            );
 
-            if (storedInfo === undefined) {
+            if (storedInfo === null) {
                 return undefined;
             }
 
@@ -315,15 +300,15 @@ export default function getRecipeImplementation(
                 return undefined;
             }
         },
-        setLoginAttemptInfo: function <CustomStateProperties>(input: {
+        setLoginAttemptInfo: async function <CustomStateProperties>(input: {
             attemptInfo: {
                 deviceId: string;
                 preAuthSessionId: string;
                 flowType: PasswordlessFlowType;
             } & CustomStateProperties;
             userContext: any;
-        }): Promise<void> | void {
-            setLocalStorage(
+        }): Promise<void> {
+            await recipeImplInput.storageHandlers.localStorage.setItem(
                 PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY,
                 JSON.stringify({
                     // This can make future changes/migrations a lot cleaner
@@ -332,8 +317,8 @@ export default function getRecipeImplementation(
                 })
             );
         },
-        clearLoginAttemptInfo: function (): Promise<void> | void {
-            removeFromLocalStorage(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
+        clearLoginAttemptInfo: async function (): Promise<void> {
+            recipeImplInput.storageHandlers.localStorage.removeItem(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
         },
     };
 }
