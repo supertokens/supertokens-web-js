@@ -17,6 +17,10 @@ import { NormalisedStorageHandlers, StorageHandlerFunction, StorageHandlerInput 
 import getDefaultLocalStorageHandler from "./defaultLocalStorageHandler";
 import getDefaultSessionStorageHandler from "./defaultSessionStorageHandler";
 
+/*
+ * Here we dont use the override builder (the way we do for function overrides), because
+ * storage functions are not expected to call each other.
+ */
 export function normaliseStorageHandlerInput(storageHandlerInput?: StorageHandlerInput): NormalisedStorageHandlers {
     let localStorageFunction: StorageHandlerFunction = (original) => original;
     let sessionStorageFunction: StorageHandlerFunction = (original) => original;
