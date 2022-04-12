@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { DEFAULT_API_BASE_PATH, DEFAULT_WEBSITE_BASE_PATH, SSR_ERROR, WINDOW_UNDEFINED_ERROR } from "./constants";
+import { DEFAULT_API_BASE_PATH, SSR_ERROR, WINDOW_UNDEFINED_ERROR } from "./constants";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import NormalisedURLPath from "./normalisedURLPath";
 import { AppInfoUserInput, NormalisedAppInfo } from "./types";
@@ -79,7 +79,6 @@ export function normaliseInputAppInfoOrThrowError(appInfo: AppInfoUserInput): No
         apiBasePath: apiGatewayPath.appendPath(
             getNormalisedURLPathOrDefault(DEFAULT_API_BASE_PATH, appInfo.apiBasePath)
         ),
-        websiteBasePath: getNormalisedURLPathOrDefault(DEFAULT_WEBSITE_BASE_PATH, appInfo.websiteBasePath),
     };
 }
 
