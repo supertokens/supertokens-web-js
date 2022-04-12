@@ -17,6 +17,9 @@ export declare type PreAndPostAPIHookAction = EmailPasswordPreAndPostAPIHookActi
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 export declare type UserInput = {
+    /**
+     * Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/frontend-functions-override/about the documentation}
+     */
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (

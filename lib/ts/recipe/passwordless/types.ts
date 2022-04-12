@@ -34,6 +34,9 @@ export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
 export type UserInput = {
+    /**
+     * Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/frontend-functions-override/about the documentation}
+     */
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,

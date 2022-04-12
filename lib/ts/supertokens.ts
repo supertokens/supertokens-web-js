@@ -43,6 +43,12 @@ export default class SuperTokens {
         });
     }
 
+    /**
+     * Initialise the SuperTokens SDK. Calling this function multiple times results
+     * in a warning and has no other effect
+     *
+     * @param config The configuration the SDK should use
+     */
     static init(config: SuperTokensConfig): void {
         if (SuperTokens.instance !== undefined) {
             console.warn("SuperTokens was already initialized");
@@ -52,6 +58,13 @@ export default class SuperTokens {
         SuperTokens.instance = new SuperTokens(config);
     }
 
+    /**
+     * Retrieve an instance of SuperTokens
+     *
+     * @returns An instance of SuperTokens
+     *
+     * @throws If SuperTokens.init has not been called before using this function
+     */
     static getInstanceOrThrow(): SuperTokens {
         if (SuperTokens.instance === undefined) {
             let error = "SuperTokens must be initialized before calling this method.";
