@@ -56,11 +56,11 @@ describe("Storage Abstraction tests", function () {
             });
 
             try {
-                await ThirdParty.getAuthorizationURLWithQueryParamsAndSetState({
+                await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
                     providerId: "",
                     authorisationURL: "",
                 });
-                throw new Error("getAuthorizationURLWithQueryParamsAndSetState should have failed but didnt");
+                throw new Error("getAuthorisationURLWithQueryParamsAndSetState should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -129,11 +129,11 @@ describe("Storage Abstraction tests", function () {
             });
 
             try {
-                await ThirdParty.getAuthorizationURLWithQueryParamsAndSetState({
+                await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
                     providerId: "",
                     authorisationURL: "",
                 });
-                throw new Error("getAuthorizationURLWithQueryParamsAndSetState should have failed but didnt");
+                throw new Error("getAuthorisationURLWithQueryParamsAndSetState should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;

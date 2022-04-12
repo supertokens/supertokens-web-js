@@ -50,7 +50,6 @@ export default class Recipe extends RecipeModule<unknown, any> {
     }
 
     static init(config?: UserInput): CreateRecipeFunction<unknown> {
-        // TODO NEMI: Change supertokens-website to accept storage handlers (DO NOT MERGE WITH THIS TODO)
         return (appInfo: NormalisedAppInfo) => {
             Recipe.instance = new Recipe({
                 ...config,
