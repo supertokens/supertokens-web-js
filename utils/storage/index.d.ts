@@ -12,26 +12,6 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { NormalisedRecipeConfig, RecipeConfig } from "./types";
-
-export function normaliseRecipeModuleConfig<Action>(config: RecipeConfig<Action>): NormalisedRecipeConfig<Action> {
-    let preAPIHook = config.preAPIHook;
-
-    if (preAPIHook === undefined) {
-        preAPIHook = async (context) => context;
-    }
-
-    let postAPIHook = config.postAPIHook;
-
-    if (postAPIHook === undefined) {
-        postAPIHook = async () => {};
-    }
-
-    return {
-        recipeId: config.recipeId,
-        appInfo: config.appInfo,
-        storageHandlers: config.storageHandlers,
-        preAPIHook,
-        postAPIHook,
-    };
-}
+export * from "../../lib/build/common/storage";
+import * as _default from "../../lib/build/common/storage";
+export default _default;

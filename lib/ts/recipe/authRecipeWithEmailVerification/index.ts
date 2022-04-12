@@ -31,7 +31,7 @@ export default abstract class AuthRecipeWithEmailVerification<
                       recipeId: config.recipeId,
                       preAPIHook: config.preAPIHook,
                       postAPIHook: config.postAPIHook,
-                      storageHandlerInput: config.storageHandlerInput,
+                      storageHandlers: config.storageHandlers,
                       override: config.override === undefined ? undefined : config.override.emailVerification,
                   })
                 : recipes.emailVerification;

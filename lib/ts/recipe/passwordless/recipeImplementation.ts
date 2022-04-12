@@ -16,7 +16,6 @@
 import Querier from "../../querier";
 import { getHashFromLocation, getQueryParams } from "../../utils";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
-import { normaliseStorageHandlerInput } from "../recipeModule/utils";
 import { PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY } from "./constants";
 import { PreAndPostAPIHookAction, RecipeInterface, PasswordlessFlowType, PasswordlessUser } from "./types";
 
@@ -24,7 +23,6 @@ export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
-    const storageHandlers = normaliseStorageHandlerInput(recipeImplInput.storageHandlerInput);
 
     return {
         createCode: async function (
@@ -288,7 +286,9 @@ export default function getRecipeImplementation(
                   flowType: PasswordlessFlowType;
               } & CustomLoginAttemptInfoProperties)
         > {
-            const storedInfo = await storageHandlers.localStorage.getItem(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
+            const storedInfo = await recipeImplInput.storageHandlers.localStorage.getItem(
+                PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY
+            );
 
             if (storedInfo === null) {
                 return undefined;
@@ -308,7 +308,7 @@ export default function getRecipeImplementation(
             } & CustomStateProperties;
             userContext: any;
         }): Promise<void> {
-            await storageHandlers.localStorage.setItem(
+            await recipeImplInput.storageHandlers.localStorage.setItem(
                 PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY,
                 JSON.stringify({
                     // This can make future changes/migrations a lot cleaner
@@ -318,7 +318,7 @@ export default function getRecipeImplementation(
             );
         },
         clearLoginAttemptInfo: async function (): Promise<void> {
-            storageHandlers.localStorage.removeItem(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
+            recipeImplInput.storageHandlers.localStorage.removeItem(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
         },
     };
 }

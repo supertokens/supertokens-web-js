@@ -20,13 +20,11 @@ import { RecipeInterface, StateObject } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
 import { PreAndPostAPIHookAction } from "./types";
-import { normaliseStorageHandlerInput } from "../recipeModule/utils";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
-    const storageHandlers = normaliseStorageHandlerInput(recipeImplInput.storageHandlerInput);
 
     return {
         getStateAndOtherInfoFromStorage: function <CustomStateProperties>():
@@ -40,7 +38,8 @@ export default function getRecipeImplementation(
              * To allow for this and allow for storage functions to be async where
              * possible we call the sync version of getItem here
              */
-            const stateFromStorage = storageHandlers.sessionStorage.getItemSync("supertokens-oauth-state-2");
+            const stateFromStorage =
+                recipeImplInput.storageHandlers.sessionStorage.getItemSync("supertokens-oauth-state-2");
 
             if (stateFromStorage === null) {
                 return undefined;
@@ -57,7 +56,7 @@ export default function getRecipeImplementation(
             const value = JSON.stringify({
                 ...input.state,
             });
-            await storageHandlers.sessionStorage.setItem("supertokens-oauth-state-2", value);
+            await recipeImplInput.storageHandlers.sessionStorage.setItem("supertokens-oauth-state-2", value);
         },
 
         getAuthorisationURLWithQueryParamsAndSetState: async function (input: {

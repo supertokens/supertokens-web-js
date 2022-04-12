@@ -1,4 +1,4 @@
-import { NormalisedAppInfo, StorageHandlerInput } from "../../types";
+import { NormalisedAppInfo, NormalisedStorageHandlers } from "../../types";
 /**
  * This context object is passed as an argument to pre API hook functions.
  *
@@ -72,14 +72,14 @@ export declare type UserInput<Action> = {
     postAPIHook?: RecipePostAPIHookFunction<Action>;
 };
 export declare type RecipeConfig<Action> = {
-    storageHandlerInput?: StorageHandlerInput;
+    storageHandlers: NormalisedStorageHandlers;
     recipeId: string;
     appInfo: NormalisedAppInfo;
 } & UserInput<Action>;
 export declare type NormalisedRecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
-    storageHandlerInput?: StorageHandlerInput;
+    storageHandlers: NormalisedStorageHandlers;
     preAPIHook: RecipePreAPIHookFunction<Action>;
     postAPIHook: RecipePostAPIHookFunction<Action>;
 };
@@ -101,5 +101,5 @@ export declare type RecipeImplementationInput<PrePostAPIHookAction> = {
     appInfo: NormalisedAppInfo;
     preAPIHook: RecipePreAPIHookFunction<PrePostAPIHookAction>;
     postAPIHook: RecipePostAPIHookFunction<PrePostAPIHookAction>;
-    storageHandlerInput?: StorageHandlerInput;
+    storageHandlers: NormalisedStorageHandlers;
 };

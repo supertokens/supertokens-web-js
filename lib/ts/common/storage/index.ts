@@ -12,26 +12,10 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { NormalisedRecipeConfig, RecipeConfig } from "./types";
 
-export function normaliseRecipeModuleConfig<Action>(config: RecipeConfig<Action>): NormalisedRecipeConfig<Action> {
-    let preAPIHook = config.preAPIHook;
+import getDefaultLocalStorageHandler from "./defaultLocalStorageHandler";
+import getDefaultSessionStorageHandler from "./defaultSessionStorageHandler";
+import { StorageHandler } from "./types";
+import { NormalisedStorageHandlers } from "../../types";
 
-    if (preAPIHook === undefined) {
-        preAPIHook = async (context) => context;
-    }
-
-    let postAPIHook = config.postAPIHook;
-
-    if (postAPIHook === undefined) {
-        postAPIHook = async () => {};
-    }
-
-    return {
-        recipeId: config.recipeId,
-        appInfo: config.appInfo,
-        storageHandlers: config.storageHandlers,
-        preAPIHook,
-        postAPIHook,
-    };
-}
+export { getDefaultLocalStorageHandler, getDefaultSessionStorageHandler, StorageHandler, NormalisedStorageHandlers };
