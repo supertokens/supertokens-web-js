@@ -33,7 +33,7 @@ export type PreAndPostAPIHookAction = ThirdPartyPreAndPostAPIHookAction | Passwo
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
-export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
+export type UserInput = {
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (
@@ -42,6 +42,8 @@ export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
         ) => RecipeInterface;
     };
 };
+
+export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 
 export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     override: {

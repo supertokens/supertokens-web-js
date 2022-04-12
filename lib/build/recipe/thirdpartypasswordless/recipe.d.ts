@@ -1,5 +1,5 @@
 import AuthRecipeWithEmailVerification from "../authRecipeWithEmailVerification";
-import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
+import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface, UserInput } from "./types";
 import EmailVerificationRecipe from "../emailverification/recipe";
 import ThirdPartyRecipe from "../thirdparty/recipe";
 import PasswordlessRecipe from "../passwordless/recipe";
@@ -19,6 +19,6 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
         }
     );
     static getInstanceOrThrow(): Recipe;
-    static init(config?: InputType): CreateRecipeFunction<PreAndPostAPIHookAction>;
+    static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction>;
     static reset(): void;
 }
