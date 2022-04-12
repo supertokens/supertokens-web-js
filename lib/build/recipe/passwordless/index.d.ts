@@ -10,6 +10,21 @@ import {
 } from "./types";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
+    /**
+     * Create and send a code to the user for passwordless auth
+     *
+     * @param email Email of the user, ignored if `phoneNumber` is provided
+     *
+     * @param phoneNumber Phone number of the user
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", deviceId, preAuthSessionId, flowType}` If successful
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static createCode(
         input:
             | {
@@ -29,10 +44,52 @@ export default class RecipeWrapper {
         flowType: PasswordlessFlowType;
         fetchResponse: Response;
     }>;
+    /**
+     * Resend the code to the user
+     *
+     * @param deviceId The device if from the reponse of `createCode`
+     *
+     * @param preAuthSessionId The id from the response of `createCode`
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK"}` if succesful
+     *
+     * @returns `{status: "RESTART_FLOW_ERROR"}` if the auth flow should be restarted
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static resendCode(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }>;
+    /**
+     * Log the user in using the input code or link code
+     *
+     * @param userInputCode Code that the user inputs
+     *
+     * @param deviceId The device if from the reponse of `createCode`. (Not required when using `linkCode`)
+     *
+     * @param preAuthSessionId The id from the response of `createCode`.
+     *
+     * @param linkCode The code from the URL to use when logging the user in. Ignored if `userInputCode` is provided
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", user, createdUser: bool}` if succesful
+     *
+     * @returns `{status: "INCORRECT_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is incorrect
+     *
+     * @returns `{status: "EXPIRED_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is expired
+     *
+     * @returns `{status: "RESTART_FLOW_ERROR"}` if the auth flow should be restarted
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static consumeCode(
         input:
             | {
@@ -62,11 +119,37 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     >;
+    /**
+     * Check if a user with the given email exists
+     *
+     * @param email Email to check
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", doesExist: boolean}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static doesEmailExist(input: { email: string; userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK";
         doesExist: boolean;
         fetchResponse: Response;
     }>;
+    /**
+     * Check if a user with the given phone number exists
+     *
+     * @param phoneNumber Phone number to check
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", doesExist: boolean}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static doesPhoneNumberExist(input: {
         phoneNumber: string;
         userContext?: any;
