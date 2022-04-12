@@ -102,6 +102,8 @@ export type RecipeInterface = {
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
      * @returns URL string
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getAuthorisationURLWithQueryParamsAndSetState: (input: {
         providerId: string;
@@ -121,6 +123,8 @@ export type RecipeInterface = {
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
      * @returns `{status: "OK", url}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getAuthorisationURLFromBackend: (input: {
         providerId: string;
@@ -142,6 +146,8 @@ export type RecipeInterface = {
      * @returns `{status: OK, user, createdNewUser: boolean}` if succesful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     signInAndUp: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
