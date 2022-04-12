@@ -15,7 +15,7 @@ import OverrideableBuilder from "supertokens-js-override";
 export declare type PreAndPostAPIHookAction = ThirdPartyPreAndPostAPIHookAction | PasswordlessPreAndPostAPIHookAction;
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
-export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
+export declare type UserInput = {
     override?: {
         emailVerification?: EmailVerificationOverride;
         functions?: (
@@ -24,6 +24,7 @@ export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & {
         ) => RecipeInterface;
     };
 };
+export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     override: {
         functions: (
