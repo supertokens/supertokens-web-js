@@ -63,6 +63,7 @@ import {
     UserInput as TPPUserInput,
 } from "../../recipe/thirdpartypasswordless";
 import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
+import Session from "../../recipe/session";
 
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
@@ -610,7 +611,77 @@ function getThirdPartyPasswordlessFunctions(original: TPPRecipeInterface): TPPRe
 }
 
 function getThirdPartyPasswordless() {
-    const config: TPPUserInput = {};
+    const config: TPPUserInput = {
+        override: {
+            functions: getThirdPartyPasswordlessFunctions,
+        },
+        preAPIHook: async function (context) {
+            if (context.action === "EMAIL_EXISTS") {
+                //
+            } else if (context.action === "PASSWORDLESS_CONSUME_CODE") {
+                //
+            } else if (context.action === "PASSWORDLESS_CREATE_CODE") {
+                //
+            } else if (context.action === "PASSWORDLESS_RESEND_CODE") {
+                //
+            } else if (context.action === "PHONE_NUMBER_EXISTS") {
+                //
+            } else if (context.action === "GET_AUTHORISATION_URL") {
+                //
+            } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
+                //
+            } else if (context.action === "IS_EMAIL_VERIFIED") {
+                //
+            } else if (context.action === "SEND_VERIFY_EMAIL") {
+                //
+            } else if (context.action === "VERIFY_EMAIL") {
+                //
+            }
+
+            if (context.userContext === undefined) {
+                //
+            }
+
+            const url: string = context.url;
+            const requestInit: RequestInit = context.requestInit;
+
+            return {
+                requestInit: context.requestInit,
+                url: context.url,
+            };
+        },
+        postAPIHook: async function (context) {
+            if (context.action === "EMAIL_EXISTS") {
+                //
+            } else if (context.action === "PASSWORDLESS_CONSUME_CODE") {
+                //
+            } else if (context.action === "PASSWORDLESS_CREATE_CODE") {
+                //
+            } else if (context.action === "PASSWORDLESS_RESEND_CODE") {
+                //
+            } else if (context.action === "PHONE_NUMBER_EXISTS") {
+                //
+            } else if (context.action === "GET_AUTHORISATION_URL") {
+                //
+            } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
+                //
+            } else if (context.action === "IS_EMAIL_VERIFIED") {
+                //
+            } else if (context.action === "SEND_VERIFY_EMAIL") {
+                //
+            } else if (context.action === "VERIFY_EMAIL") {
+                //
+            }
+
+            if (context.userContext === undefined) {
+                //
+            }
+
+            const url: string = context.url;
+            const fetchResponse: Response = context.fetchResponse;
+            const requestInit: RequestInit = context.requestInit;
+        },
+    };
 
     return ThirdPartyPasswordless.init(config);
 }
