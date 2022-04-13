@@ -1,4 +1,4 @@
-import { InputType as STWebsiteInputType } from "supertokens-website";
+import { InputType as STWebsiteInputType, RecipeInterface as STWebsiteRecipeInterface } from "supertokens-website";
 import { NormalisedAppInfo } from "../../types";
 export declare type PreAndPostAPIHookAction = "SIGN_OUT" | "REFRESH_SESSION";
 export declare type RecipeEvent =
@@ -12,6 +12,7 @@ export declare type RecipeEvent =
           userContext: any;
       };
 export declare type UserInput = STWebsiteInputType;
+export declare type RecipeInterface = STWebsiteRecipeInterface;
 export declare type InputType = {
     recipeId: string;
     appInfo: NormalisedAppInfo;

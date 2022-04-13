@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { InputType as STWebsiteInputType } from "supertokens-website";
+import { InputType as STWebsiteInputType, RecipeInterface as STWebsiteRecipeInterface } from "supertokens-website";
 import { NormalisedAppInfo } from "../../types";
 
 export type PreAndPostAPIHookAction = "SIGN_OUT" | "REFRESH_SESSION";
@@ -29,6 +29,7 @@ export type RecipeEvent =
       };
 
 export type UserInput = STWebsiteInputType;
+export type RecipeInterface = STWebsiteRecipeInterface;
 
 export type InputType = {
     recipeId: string;
