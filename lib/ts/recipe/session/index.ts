@@ -14,11 +14,11 @@
  */
 import { getNormalisedUserContext } from "../../utils";
 import SessionRecipe from "./recipe";
-import { InputType, UserInput } from "./types";
+import { UserInput } from "./types";
 import { RecipeInterface } from "supertokens-website";
 
 export default class RecipeWrapper {
-    static init(config?: InputType) {
+    static init(config?: UserInput) {
         return SessionRecipe.init(config);
     }
 

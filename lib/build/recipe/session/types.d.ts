@@ -1,6 +1,5 @@
-import { RecipeInterface } from "supertokens-website";
+import { InputType as STWebsiteInputType } from "supertokens-website";
 import { NormalisedAppInfo } from "../../types";
-import OverrideableBuilder from "supertokens-js-override";
 export declare type PreAndPostAPIHookAction = "SIGN_OUT" | "REFRESH_SESSION";
 export declare type RecipeEvent =
     | {
@@ -12,36 +11,7 @@ export declare type RecipeEvent =
           sessionExpiredOrRevoked: boolean;
           userContext: any;
       };
-export declare type UserInput = {
-    apiDomain?: string;
-    apiBasePath?: string;
-    sessionScope?: string;
-    sessionExpiredStatusCode?: number;
-    autoAddCredentials?: boolean;
-    isInIframe?: boolean;
-    cookieDomain?: string;
-    preAPIHook?: (context: {
-        action: "SIGN_OUT" | "REFRESH_SESSION";
-        requestInit: RequestInit;
-        url: string;
-    }) => Promise<{
-        url: string;
-        requestInit: RequestInit;
-    }>;
-    postAPIHook?: (context: {
-        action: "SIGN_OUT" | "REFRESH_SESSION";
-        requestInit: RequestInit;
-        url: string;
-        fetchResponse: Response;
-    }) => Promise<void>;
-    onHandleEvent?: (event: RecipeEvent) => void;
-    override?: {
-        functions?: (
-            originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
-        ) => RecipeInterface;
-    };
-};
+export declare type UserInput = STWebsiteInputType;
 export declare type InputType = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
