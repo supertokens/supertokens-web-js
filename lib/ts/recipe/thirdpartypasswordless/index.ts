@@ -33,6 +33,19 @@ export default class RecipeWrapper {
         });
     }
 
+    /**
+     * Sign up/Sign in the user, this method uses the login attempt information from storage
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: OK, user, createdNewUser: boolean}` if succesful
+     *
+     * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static thirdPartySignInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
@@ -51,6 +64,23 @@ export default class RecipeWrapper {
         });
     }
 
+    /**
+     * Get the URL that should be opened for third party authentication
+     *
+     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     *
+     * @param authorisationURL The URL that should be used for redirection after the third party flow finishes. This is ignored if the backend has a pre-configured redirect_url
+     *
+     * @param providerClientId (OPTIONAL) Client id to be used for the third party provider
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns URL string
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static getThirdPartyAuthorisationURLWithQueryParamsAndSetState(input: {
         providerId: string;
         authorisationURL: string;
@@ -66,6 +96,21 @@ export default class RecipeWrapper {
         );
     }
 
+    /**
+     * Create and send a code to the user for passwordless auth
+     *
+     * @param email Email of the user, ignored if `phoneNumber` is provided
+     *
+     * @param phoneNumber Phone number of the user
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", deviceId, preAuthSessionId, flowType}` If successful
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static async createPasswordlessCode(
         input:
             | { email: string; userContext?: any; options?: RecipeFunctionOptions }
@@ -85,6 +130,19 @@ export default class RecipeWrapper {
         });
     }
 
+    /**
+     * Resend the code to the user
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK"}` if succesful
+     *
+     * @returns `{status: "RESTART_FLOW_ERROR"}` if the auth flow should be restarted
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static async resendPasswordlessCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
@@ -97,6 +155,25 @@ export default class RecipeWrapper {
         });
     }
 
+    /**
+     * Log the user in using the input code or link code
+     *
+     * @param userInputCode Code that the user inputs
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", user, createdUser: bool}` if succesful
+     *
+     * @returns `{status: "INCORRECT_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is incorrect
+     *
+     * @returns `{status: "EXPIRED_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is expired
+     *
+     * @returns `{status: "RESTART_FLOW_ERROR"}` if the auth flow should be restarted
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static async consumePasswordlessCode(
         input:
             | {
@@ -197,6 +274,19 @@ export default class RecipeWrapper {
         });
     }
 
+    /**
+     * Check if a user with the given email exists
+     *
+     * @param email Email to check
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", doesExist: boolean}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static doesPasswordlessUserEmailExist(input: {
         email: string;
         userContext?: any;
@@ -212,6 +302,19 @@ export default class RecipeWrapper {
         });
     }
 
+    /**
+     * Check if a user with the given phone number exists
+     *
+     * @param phoneNumber Phone number to check
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", doesExist: boolean}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
     static doesPasswordlessUserPhoneNumberExist(input: {
         phoneNumber: string;
         userContext?: any;
