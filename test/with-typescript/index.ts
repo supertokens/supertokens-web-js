@@ -19,8 +19,8 @@
  *
  * const url: string = context.url;
  *
- * The above line will make sure that the context object has a URL and it is of type string, but
- * building this file would normally fail because of the variable being unused
+ * The above line will make sure that the context object has a `url` property and it is of type string,
+ * but building this file would normally fail because of the variable being unused
  *
  * The differences in tsconfig for with-typescript compared to the main project:
  * - noUnusedLocals is set to false
@@ -63,6 +63,11 @@ import {
     UserInput as TPPUserInput,
 } from "../../recipe/thirdpartypasswordless";
 import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
+import {
+    RecipeInterface as SessionRecipeInterface,
+    PreAndPostAPIHookAction as SessionAction,
+    UserInput as SessionUserInput,
+} from "../../recipe/session/types";
 import Session from "../../recipe/session";
 
 // Email verification init
@@ -610,7 +615,7 @@ function getThirdPartyPasswordlessFunctions(original: TPPRecipeInterface): TPPRe
     };
 }
 
-function getThirdPartyPasswordless() {
+function getThirdPartyPasswordless(): CreateRecipeFunction<TPPlessAction> {
     const config: TPPUserInput = {
         override: {
             functions: getThirdPartyPasswordlessFunctions,
@@ -686,6 +691,97 @@ function getThirdPartyPasswordless() {
     return ThirdPartyPasswordless.init(config);
 }
 
+// Session init
+
+function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInterface {
+    return {
+        signOut: async function (input) {
+            return original.signOut(input);
+        },
+        addAxiosInterceptors: function (input) {
+            return original.addAxiosInterceptors(input);
+        },
+        addFetchInterceptorsAndReturnModifiedFetch: function (input) {
+            return original.addFetchInterceptorsAndReturnModifiedFetch(input);
+        },
+        doesSessionExist: async function (input) {
+            return original.doesSessionExist(input);
+        },
+        getAccessTokenPayloadSecurely: async function (input) {
+            return original.getAccessTokenPayloadSecurely(input);
+        },
+        getUserId: async function (input) {
+            return original.getUserId(input);
+        },
+    };
+}
+
+function getSession(): CreateRecipeFunction<SessionAction> {
+    const config: SessionUserInput = {
+        apiDomain: "",
+        apiBasePath: "",
+        autoAddCredentials: true,
+        cookieDomain: "",
+        isInIframe: false,
+        sessionExpiredStatusCode: 440,
+        sessionScope: "",
+        onHandleEvent: function (event) {
+            if (event.action === "REFRESH_SESSION") {
+                //
+            } else if (event.action === "SESSION_CREATED") {
+                //
+            } else if (event.action === "SIGN_OUT") {
+                //
+            } else if (event.action === "UNAUTHORISED") {
+                //
+            }
+
+            if (event.userContext === undefined) {
+                //
+            }
+        },
+        override: {
+            functions: getSessionFunctions,
+        },
+        preAPIHook: async function (context) {
+            if (context.action === "REFRESH_SESSION") {
+                //
+            } else if (context.action === "SIGN_OUT") {
+                //
+            }
+
+            if (context.userContext === undefined) {
+                //
+            }
+
+            const url: string = context.url;
+            const requestInit: RequestInit = context.requestInit;
+
+            return {
+                requestInit: context.requestInit,
+                url: context.url,
+            };
+        },
+        postAPIHook: async function (context) {
+            if (context.action === "REFRESH_SESSION") {
+                //
+            } else if (context.action === "SIGN_OUT") {
+                //
+            }
+
+            if (context.userContext === undefined) {
+                //
+            }
+
+            const url: string = context.url;
+            const fetchResponse: Response = context.fetchResponse;
+            const requestInit: RequestInit = context.requestInit;
+        },
+    };
+
+    return Session.init(config);
+}
+
 // SuperTokens init
 const appInfo: AppInfoUserInput = {
     apiDomain: "http://localhost:8080",
@@ -701,6 +797,7 @@ const recipeList: CreateRecipeFunction<any>[] = [
     getThirdPartyEmailPassword(),
     getPasswordless(),
     getThirdPartyPasswordless(),
+    getSession(),
 ];
 
 const config: SuperTokensConfig = {
