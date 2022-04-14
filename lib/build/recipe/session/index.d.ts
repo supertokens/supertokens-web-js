@@ -1,7 +1,7 @@
-import { InputType, UserInput } from "./types";
+import { UserInput } from "./types";
 import { RecipeInterface } from "supertokens-website";
 export default class RecipeWrapper {
-    static init(config?: InputType): import("../../types").CreateRecipeFunction<unknown>;
+    static init(config?: UserInput): import("../../types").CreateRecipeFunction<unknown>;
     static getUserId(input?: { userContext?: any }): Promise<string>;
     static getAccessTokenPayloadSecurely(input?: { userContext?: any }): Promise<any>;
     static attemptRefreshingSession(): Promise<boolean>;
