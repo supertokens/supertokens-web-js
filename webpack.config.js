@@ -12,8 +12,6 @@ var config = {
      *
      * The `import` property tells webpack what file to use as the starting point
      * The `filename` property is the name of the bundle file
-     *
-     * For example the user
      */
     entry: {
         supertokens: {
