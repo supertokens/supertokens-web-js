@@ -23,7 +23,12 @@ import {
     PasswordlessUser,
     PreAndPostAPIHookAction as PasswordlessPreAndPostAPIHookAction,
 } from "../passwordless/types";
-import { RecipeFunctionOptions, RecipePostAPIHookContext, RecipePreAPIHookContext } from "../recipeModule/types";
+import {
+    RecipeFunctionOptions,
+    RecipePostAPIHookContext,
+    RecipePreAPIHookContext,
+    UserInput as RecipeModuleUserInput,
+} from "../recipeModule/types";
 import { StateObject, PreAndPostAPIHookAction as ThirdPartyPreAndPostAPIHookAction } from "../thirdparty/types";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 import OverrideableBuilder from "supertokens-js-override";
@@ -44,7 +49,7 @@ export type UserInput = {
             builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
-};
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
 
 export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 
