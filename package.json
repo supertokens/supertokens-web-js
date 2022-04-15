@@ -6,11 +6,11 @@
     "scripts": {
         "build-check": "cd lib && npx tsc -p tsconfig.json --noEmit && cd ../test/with-typescript && npm run build",
         "check-circular-dependencies": "npx madge --circular --extensions js ./lib/build/",
-        "build": "cd lib && rm -rf build && npx tsc -p tsconfig.json",
+        "build": "cd lib && rm -rf build && npx tsc -p tsconfig.json && npm run pack",
         "pretty-check": "npx pretty-quick --check .",
         "pretty": "npx pretty-quick .",
         "build-pretty": "npm run build && npm run pretty && npm run pretty",
-        "pack": "./node_modules/.bin/webpack -p",
+        "pack": "./node_modules/.bin/webpack --mode production",
         "set-up-hooks": "cp hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit",
         "lint": "cd lib && npx tslint -c tslint.json './**/*.ts'",
         "test-unit": "TEST_MODE=testing npx mocha 'test/unit/*.test.js'",
@@ -54,8 +54,8 @@
         "size-limit": "^6.0.3",
         "tslint": "^6.1.3",
         "typescript": "^4.5.4",
-        "webpack": "4.35.0",
-        "webpack-cli": "3.3.5",
+        "webpack": "^5.72.0",
+        "webpack-cli": "^4.9.2",
         "webpack-dev-server": "3.7.2"
     },
     "size-limit": [

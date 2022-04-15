@@ -1,1 +1,3 @@
 docs/
+# We dont want to prettify the bundles
+bundle/
