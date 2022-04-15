@@ -64,15 +64,7 @@
             "limit": "5kb"
         },
         {
-            "path": "bundle/supertokens.js",
-            "limit": "5kb"
-        },
-        {
             "path": "recipe/emailverification/index.js",
-            "limit": "6kb"
-        },
-        {
-            "path": "bundle/emailverification.js",
             "limit": "6kb"
         },
         {
@@ -80,15 +72,7 @@
             "limit": "16kb"
         },
         {
-            "path": "bundle/emailpassword.js",
-            "limit": "16kb"
-        },
-        {
             "path": "recipe/thirdparty/index.js",
-            "limit": "16kb"
-        },
-        {
-            "path": "bundle/thirdparty.js",
             "limit": "16kb"
         },
         {
@@ -96,15 +80,7 @@
             "limit": "17kb"
         },
         {
-            "path": "bundle/thirdpartyemailpassword.js",
-            "limit": "17kb"
-        },
-        {
             "path": "recipe/session/index.js",
-            "limit": "13kb"
-        },
-        {
-            "path": "bundle/session.js",
             "limit": "13kb"
         },
         {
@@ -112,15 +88,7 @@
             "limit": "15kb"
         },
         {
-            "path": "bundle/passwordless.js",
-            "limit": "15kb"
-        },
-        {
             "path": "recipe/thirdpartypasswordless/index.js",
-            "limit": "18kb"
-        },
-        {
-            "path": "bundle/thirdpartypasswordless.js",
             "limit": "18kb"
         }
     ]
