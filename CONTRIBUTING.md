@@ -25,7 +25,7 @@ We're so excited you're interested in helping with SuperTokens! We are happy to 
 3. `cd supertokens-web-js`
 4. Install the project dependencies
     ```
-    npm run init
+    npm i -d
     ```
 5. Add git pre-commit hooks
     ```

@@ -4,7 +4,6 @@
     "description": "SuperTokens SDK for vanilla JS for all recipes",
     "main": "./index.js",
     "scripts": {
-        "init": "bash ./init.sh",
         "build-check": "cd lib && npx tsc -p tsconfig.json --noEmit && cd ../test/with-typescript && npm run build",
         "check-circular-dependencies": "npx madge --circular --extensions js ./lib/build/",
         "build": "cd lib && rm -rf build && npx tsc -p tsconfig.json && npm run pack",
