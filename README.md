@@ -17,7 +17,7 @@ Learn more at https://supertokens.com
 
 ## Documentation
 
-To see documentation, please click [here](https://supertokens.com/docs/community/introduction).
+To see documentation, please click [here](https://supertokens.com/docs/guides).
 
 ## Contributing
 
