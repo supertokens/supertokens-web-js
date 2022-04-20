@@ -12,6 +12,15 @@ export default {
         };
     },
 
+    mounted() {
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.has("error")) {
+            this.errorMessage = "Something went wrong";
+            this.error = true;
+        }
+    },
+
     methods: {
         goToSignUp() {
             this.isSignIn = false;
@@ -121,6 +130,30 @@ export default {
                 this.signUp(e);
             }
         },
+        onGithubPressed: async function () {
+            const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+                providerId: "github",
+                authorisationURL: "http://localhost:3000/auth/callback/github",
+            });
+
+            window.location.assign(authUrl);
+        },
+        onGooglePressed: async function () {
+            const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+                providerId: "google",
+                authorisationURL: "http://localhost:3000/auth/callback/google",
+            });
+
+            window.location.assign(authUrl);
+        },
+        onApplePressed: async function () {
+            const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+                providerId: "apple",
+                authorisationURL: "http://localhost:3000/auth/callback/apple",
+            });
+
+            window.location.assign(authUrl);
+        },
     },
 };
 </script>
@@ -148,7 +181,7 @@ export default {
                 </div>
                 <div class="providerContainer">
                     <span>
-                        <button class="providerButton providerGithub">
+                        <button class="providerButton providerGithub" @click="onGithubPressed">
                             <div class="providerButtonLeft">
                                 <div class="providerButtonLogo">
                                     <div class="providerButtonLogoCenter">
@@ -175,7 +208,7 @@ export default {
 
                 <div class="providerContainer">
                     <span>
-                        <button class="providerButton providerGoogle">
+                        <button class="providerButton providerGoogle" @click="onGooglePressed">
                             <div class="providerButtonLeft">
                                 <div class="providerButtonLogo">
                                     <div class="providerButtonLogoCenter">
@@ -222,7 +255,7 @@ export default {
 
                 <div class="providerContainer">
                     <span>
-                        <button class="providerButton providerApple">
+                        <button class="providerButton providerApple" @click="onApplePressed">
                             <div class="providerButtonLeft">
                                 <div class="providerButtonLogo">
                                     <div class="providerButtonLogoCenter">
@@ -333,6 +366,7 @@ export default {
                 </form>
             </div>
         </div>
+        <div class="bottom-banner">🚨 SuperTokens does not provide a UI for Vue</div>
     </div>
 </template>
 

@@ -61,7 +61,7 @@ export default {
             >
         </div>
     </div>
-    <div class="bottom-banner">React Demo app. Made with ❤️ using supertokens.com</div>
+    <div class="bottom-banner">Vue Demo app. Made with ❤️ using supertokens.com</div>
 </template>
 
 <style>
