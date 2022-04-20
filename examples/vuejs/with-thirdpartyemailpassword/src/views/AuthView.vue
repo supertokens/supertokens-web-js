@@ -1,6 +1,9 @@
 <script lang="ts">
 import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
 
+const websitePort = import.meta.env.VUE_APP_WEB_PORT || 3000;
+const websiteDomain = import.meta.env.VUE_APP_WEB_URL || `http://localhost:${websitePort}`;
+
 export default {
     data() {
         return {
@@ -133,7 +136,7 @@ export default {
         onGithubPressed: async function () {
             const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
                 providerId: "github",
-                authorisationURL: "http://localhost:3000/auth/callback/github",
+                authorisationURL: `${websiteDomain}/auth/callback/github`,
             });
 
             window.location.assign(authUrl);
@@ -141,7 +144,7 @@ export default {
         onGooglePressed: async function () {
             const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
                 providerId: "google",
-                authorisationURL: "http://localhost:3000/auth/callback/google",
+                authorisationURL: `${websiteDomain}/auth/callback/google`,
             });
 
             window.location.assign(authUrl);
@@ -149,7 +152,7 @@ export default {
         onApplePressed: async function () {
             const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
                 providerId: "apple",
-                authorisationURL: "http://localhost:3000/auth/callback/apple",
+                authorisationURL: `${websiteDomain}/auth/callback/apple`,
             });
 
             window.location.assign(authUrl);
@@ -361,12 +364,13 @@ export default {
 
                     <div class="input-section-container">
                         <button type="submit" class="button">SIGN IN</button>
-                        <div v-if="isSignIn" class="forgot-password-link">Forgot password?</div>
                     </div>
                 </form>
             </div>
         </div>
-        <div class="bottom-banner">🚨 SuperTokens does not provide a UI for Vue</div>
+        <div class="bottom-banner">
+            🚨 SuperTokens does not provide a UI for Vue. You will need to build your own UI
+        </div>
     </div>
 </template>
 

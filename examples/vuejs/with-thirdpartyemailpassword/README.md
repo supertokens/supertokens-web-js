@@ -1,40 +1,48 @@
-# with-thirdpartyemailpassword
+![SuperTokens banner](https://raw.githubusercontent.com/supertokens/supertokens-logo/master/images/Artboard%20%E2%80%93%2027%402x.png)
 
-This template should help get you started developing with Vue 3 in Vite.
+# SuperTokens ThirdPartyEmailPassword Demo app for Vue
 
-## Recommended IDE Setup
+This demo app demonstrates the following use cases:
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.vscode-typescript-vue-plugin).
+-   Social Login / Sign up
+-   Email & Password login
+-   Logout
+-   Session management & Calling APIs
 
-## Type Support for `.vue` Imports in TS
+## Project setup
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+Use `npm` to install the project dependencies:
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
-
-1. Disable the built-in TypeScript Extension
-    1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
+```bash
 npm install
 ```
 
-### Compile and Hot-Reload for Development
+## Run the demo app
 
-```sh
+This compiles and serves the React app and starts the backend API server on port 3001.
+
+```bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+The app will start on `http://localhost:3000`
 
-```sh
-npm run build
-```
+If you would like to modify the website (http://localhost:3000) or the API server (http://localhost:3001) URL:
+
+-   Change the `apiPort` or `apiDomain` values in `api-server.js`
+-   Change the `apiPort` or `apiDomain` values in `src/main.ts`
+-   Change the `websitePort` or `websiteDomain` values in `api-server.js`
+-   Change the `websitePort` or `websiteDomain` values in `src/views/AuthCallvackView.vue`
+
+## Project structure & Parameters
+
+-   The frontend code is located in the `src` folder.
+-   The backend API is in the `api-server.js` file.
+
+## Author
+
+Created with :heart: by the folks at supertokens.com.
+
+## License
+
+This project is licensed under the Apache 2.0 license.
