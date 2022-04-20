@@ -1,8 +1,14 @@
 <script lang="ts">
+import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
+
 export default {
     data() {
         return {
             isSignIn: true,
+            email: "",
+            password: "",
+            error: false,
+            errorMessage: "Something went wrong",
         };
     },
 
@@ -13,6 +19,108 @@ export default {
         goToSignIn() {
             this.isSignIn = true;
         },
+        signIn: async function (_: SubmitEvent) {
+            if (
+                !(
+                    await ThirdPartyEmailPassword.doesEmailExist({
+                        email: this.email,
+                    })
+                ).doesExist
+            ) {
+                this.errorMessage = "Email does not exist, sign up instead";
+                this.error = true;
+                return;
+            }
+
+            const response = await ThirdPartyEmailPassword.emailPasswordSignIn({
+                formFields: [
+                    {
+                        id: "email",
+                        value: this.email,
+                    },
+                    {
+                        id: "password",
+                        value: this.password,
+                    },
+                ],
+            });
+
+            if (response.status === "WRONG_CREDENTIALS_ERROR") {
+                this.errorMessage = "Invalid credentials";
+                this.error = true;
+                return;
+            }
+
+            if (response.status !== "OK") {
+                this.errorMessage = "Something went wrong";
+                this.error = true;
+                return;
+            }
+
+            window.location.assign("/");
+        },
+        validateEmail(email: string) {
+            return email
+                .toLowerCase()
+                .match(
+                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                );
+        },
+        signUp: async function (_: SubmitEvent) {
+            if (
+                (
+                    await ThirdPartyEmailPassword.doesEmailExist({
+                        email: this.email,
+                    })
+                ).doesExist
+            ) {
+                this.errorMessage = "Email already exists, sign in instead";
+                this.error = true;
+                return;
+            }
+
+            const response = await ThirdPartyEmailPassword.emailPasswordSignUp({
+                formFields: [
+                    {
+                        id: "email",
+                        value: this.email,
+                    },
+                    {
+                        id: "password",
+                        value: this.password,
+                    },
+                ],
+            });
+
+            if (response.status !== "OK") {
+                this.errorMessage = "Something went wrong";
+                this.error = true;
+                return;
+            }
+
+            window.location.assign("/");
+        },
+        onSubmitPressed: async function (e: SubmitEvent) {
+            if (this.email.trim() === "" || this.password.trim() === "") {
+                this.errorMessage = "Enter both email and password";
+                this.error = true;
+                return;
+            }
+
+            if (!this.validateEmail(this.email)) {
+                this.errorMessage = "Invalid Email";
+                this.error = true;
+                return;
+            }
+
+            this.error = false;
+
+            if (this.isSignIn) {
+                this.signIn(e);
+            } else {
+                this.signUp(e);
+            }
+        },
     },
 };
 </script>
@@ -20,6 +128,9 @@ export default {
 <template>
     <div class="auth-container">
         <div class="auth-form-container">
+            <div v-if="error" class="error-container">
+                <div class="error-message">{{ errorMessage }}</div>
+            </div>
             <div class="auth-form-content-container">
                 <div class="form-title" v-if="isSignIn">Sign In</div>
                 <div class="form-title" v-else>Sign Up</div>
@@ -182,7 +293,7 @@ export default {
                     <div class="divider" />
                 </div>
 
-                <form autocomplete="on" novalidate>
+                <form v-on:submit="onSubmitPressed" autocomplete="on" novalidate @submit.stop.prevent="precent">
                     <div class="input-section-container">
                         <div class="input-label">Email</div>
                         <div class="input-container">
@@ -193,6 +304,7 @@ export default {
                                     type="email"
                                     name="email"
                                     placeholder="Email address"
+                                    v-model="email"
                                 />
                             </div>
                         </div>
@@ -208,6 +320,7 @@ export default {
                                     type="password"
                                     name="password"
                                     placeholder="Password"
+                                    v-model="password"
                                 />
                             </div>
                         </div>
@@ -267,7 +380,7 @@ export default {
 .auth-form-content-container {
     margin: auto;
     width: 76%;
-    padding-top: 30px;
+    padding-top: 40px;
     padding-bottom: 30px;
 }
 
@@ -420,5 +533,23 @@ form {
     letter-spacing: 0.4px;
     color: rgb(101, 101, 101);
     margin-top: 10px;
+}
+
+.error-container {
+    display: flex;
+    position: absolute;
+    width: calc(100% - 24px);
+    background-color: #ffcdd2;
+    justify-content: center;
+    align-items: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin-left: 12px;
+    margin-right: 12px;
+    margin-top: 4px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    border-width: 1px;
+    border: 1px solid #ff1744;
 }
 </style>
