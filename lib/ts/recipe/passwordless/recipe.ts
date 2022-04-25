@@ -75,3 +75,5 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
         return;
     }
 }
+
+export { Recipe };

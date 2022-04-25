@@ -75,3 +75,5 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
         return;
     }
 }
+
+export { Recipe };

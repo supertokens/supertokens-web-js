@@ -16,3 +16,4 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
     static getInstanceOrThrow(): Recipe;
     static reset(): void;
 }
+export { Recipe };
