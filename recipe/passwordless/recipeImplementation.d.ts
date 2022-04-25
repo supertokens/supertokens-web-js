@@ -12,6 +12,6 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-export * from "../../lib/build/recipe/emailverification/recipe";
-import * as _default from "../../lib/build/recipe/emailverification/recipe";
+export * from "../../lib/build/recipe/passwordless/recipeImplementation";
+import * as _default from "../../lib/build/recipe/passwordless/recipeImplementation";
 export default _default;

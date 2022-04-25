@@ -12,6 +12,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-export * from "../../lib/build/recipe/emailverification/recipe";
-import * as _default from "../../lib/build/recipe/emailverification/recipe";
-export default _default;
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+exports.__esModule = true;
+__export(require("../../lib/build/recipe/thirdpartyemailpassword/recipeImplementation"));
