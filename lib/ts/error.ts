@@ -23,6 +23,7 @@ export default class STGeneralError extends Error {
 
     constructor(message: string) {
         super(message);
+        this.message = message;
     }
 
     static isThisError(err: any): err is STGeneralError {
