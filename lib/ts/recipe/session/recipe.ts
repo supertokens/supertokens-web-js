@@ -112,3 +112,5 @@ export default class Recipe extends RecipeModule<unknown, any> {
         return;
     }
 }
+
+export { Recipe };
