@@ -148,3 +148,5 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
         return;
     }
 }
+
+export { Recipe };

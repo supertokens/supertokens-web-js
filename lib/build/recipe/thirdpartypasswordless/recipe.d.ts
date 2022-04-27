@@ -22,3 +22,4 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction>;
     static reset(): void;
 }
+export { Recipe };

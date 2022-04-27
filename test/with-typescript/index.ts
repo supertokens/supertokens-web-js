@@ -25,7 +25,13 @@
  * The differences in tsconfig for with-typescript compared to the main project:
  * - noUnusedLocals is set to false
  */
-import { SuperTokensConfig, AppInfoUserInput, CreateRecipeFunction } from "../../types";
+import {
+    SuperTokensConfig,
+    AppInfoUserInput,
+    CreateRecipeFunction,
+    NormalisedAppInfo,
+    StorageHandlerInput,
+} from "../../types";
 import SuperTokens from "../../";
 import {
     RecipeInterface as EmailVerificationRecipeInterface,
@@ -69,6 +75,38 @@ import {
     UserInput as SessionUserInput,
 } from "../../recipe/session/types";
 import Session from "../../recipe/session";
+import STGeneralError from "../../utils/error";
+import NormalisedURLDomain from "../../utils/normalisedURLDomain";
+import NormalisedURLPath from "../../utils/normalisedURLPath";
+import {
+    NormalisedStorageHandlers,
+    getDefaultLocalStorageHandler,
+    getDefaultSessionStorageHandler,
+} from "../../utils/storage";
+import {
+    RecipePostAPIHookContext,
+    RecipePostAPIHookFunction,
+    RecipePreAPIHookContext,
+    RecipePreAPIHookFunction,
+} from "../../recipe/recipeModule/types";
+import { Recipe as EmailVerificationRecipe } from "../../recipe/emailverification/recipe";
+import { getRecipeImplementation as EmailVerificationRecipeImplementation } from "../../recipe/emailverification/recipeImplementation";
+import EmailVerificationUtils from "../../recipe/emailverification/utils";
+import { Recipe as EmailPasswordRecipe } from "../../recipe/emailpassword/recipe";
+import { getRecipeImplementation as EmailPasswordRecipeImplementation } from "../../recipe/emailpassword/recipeImplementation";
+import EmailPasswordUtils from "../../recipe/emailpassword/utils";
+import { Recipe as ThirdPartyRecipe } from "../../recipe/thirdparty/recipe";
+import { getRecipeImplementation as ThirdPartyRecipeImplementation } from "../../recipe/thirdparty/recipeImplementation";
+import ThirdPartyUtils from "../../recipe/thirdparty/utils";
+import { Recipe as TPEPRecipe } from "../../recipe/thirdpartyemailpassword/recipe";
+import { getRecipeImplementation as TPEPRecipeImplementation } from "../../recipe/thirdpartyemailpassword/recipeImplementation";
+import TPEPUtils from "../../recipe/thirdpartyemailpassword/utils";
+import { Recipe as PasswordlessRecipe } from "../../recipe/passwordless/recipe";
+import { getRecipeImplementation as PasswordlessRecipeImplementation } from "../../recipe/passwordless/recipeImplementation";
+import PasswordlessUtils from "../../recipe/passwordless/utils";
+import { Recipe as TPPRecipe } from "../../recipe/thirdpartypasswordless/recipe";
+import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe/thirdpartypasswordless/recipeImplementation";
+import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
 
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
@@ -88,49 +126,57 @@ function getEmailVerificationFunctions(original: EmailVerificationRecipeInterfac
     };
 }
 
+const emailVerificationPreAPIHook: RecipePreAPIHookFunction<EmailVerificationAction> = async function (
+    context: RecipePreAPIHookContext<EmailVerificationAction>
+) {
+    if (context.action === "IS_EMAIL_VERIFIED") {
+        //
+    } else if (context.action === "SEND_VERIFY_EMAIL") {
+        //
+    } else if (context.action === "VERIFY_EMAIL") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const requestInit: RequestInit = context.requestInit;
+
+    return {
+        requestInit: context.requestInit,
+        url: context.url,
+    };
+};
+
+const emailVerificationPostAPIHook: RecipePostAPIHookFunction<EmailVerificationAction> = async function (
+    context: RecipePostAPIHookContext<EmailVerificationAction>
+) {
+    if (context.action === "IS_EMAIL_VERIFIED") {
+        //
+    } else if (context.action === "SEND_VERIFY_EMAIL") {
+        //
+    } else if (context.action === "VERIFY_EMAIL") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const fetchResponse: Response = context.fetchResponse;
+    const requestInit: RequestInit = context.requestInit;
+};
+
 function getEmailverification(): CreateRecipeFunction<EmailVerificationAction> {
     const config: EmailVerificationUserInput = {
         override: {
             functions: getEmailVerificationFunctions,
         },
-        preAPIHook: async function (context) {
-            if (context.action === "IS_EMAIL_VERIFIED") {
-                //
-            } else if (context.action === "SEND_VERIFY_EMAIL") {
-                //
-            } else if (context.action === "VERIFY_EMAIL") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const requestInit: RequestInit = context.requestInit;
-
-            return {
-                requestInit: context.requestInit,
-                url: context.url,
-            };
-        },
-        postAPIHook: async function (context) {
-            if (context.action === "IS_EMAIL_VERIFIED") {
-                //
-            } else if (context.action === "SEND_VERIFY_EMAIL") {
-                //
-            } else if (context.action === "VERIFY_EMAIL") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const fetchResponse: Response = context.fetchResponse;
-            const requestInit: RequestInit = context.requestInit;
-        },
+        preAPIHook: emailVerificationPreAPIHook,
+        postAPIHook: emailVerificationPostAPIHook,
     };
 
     return EmailVerification.init(config);
@@ -160,6 +206,70 @@ function getEmailPasswordFunctions(original: EmailPasswordRecipeInterface): Emai
     };
 }
 
+const emailPasswordPreAPIHook: RecipePreAPIHookFunction<EmailPasswordAction> = async function (
+    context: RecipePreAPIHookContext<EmailPasswordAction>
+) {
+    if (context.action === "IS_EMAIL_VERIFIED") {
+        //
+    } else if (context.action === "SEND_VERIFY_EMAIL") {
+        //
+    } else if (context.action === "VERIFY_EMAIL") {
+        //
+    } else if (context.action === "EMAIL_EXISTS") {
+        //
+    } else if (context.action === "EMAIL_PASSWORD_SIGN_IN") {
+        //
+    } else if (context.action === "EMAIL_PASSWORD_SIGN_UP") {
+        //
+    } else if (context.action === "SEND_RESET_PASSWORD_EMAIL") {
+        //
+    } else if (context.action === "SUBMIT_NEW_PASSWORD") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const requestInit: RequestInit = context.requestInit;
+
+    return {
+        requestInit: context.requestInit,
+        url: context.url,
+    };
+};
+
+const emailPasswordPostAPIHook: RecipePostAPIHookFunction<EmailPasswordAction> = async function (
+    context: RecipePostAPIHookContext<EmailPasswordAction>
+) {
+    if (context.action === "IS_EMAIL_VERIFIED") {
+        //
+    } else if (context.action === "SEND_VERIFY_EMAIL") {
+        //
+    } else if (context.action === "VERIFY_EMAIL") {
+        //
+    } else if (context.action === "EMAIL_EXISTS") {
+        //
+    } else if (context.action === "EMAIL_PASSWORD_SIGN_IN") {
+        //
+    } else if (context.action === "EMAIL_PASSWORD_SIGN_UP") {
+        //
+    } else if (context.action === "SEND_RESET_PASSWORD_EMAIL") {
+        //
+    } else if (context.action === "SUBMIT_NEW_PASSWORD") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const fetchResponse: Response = context.fetchResponse;
+    const requestInit: RequestInit = context.requestInit;
+};
+
 function getEmailPassword(): CreateRecipeFunction<EmailPasswordAction> {
     const config: EmailPasswordUserInput = {
         override: {
@@ -168,64 +278,8 @@ function getEmailPassword(): CreateRecipeFunction<EmailPasswordAction> {
             },
             functions: getEmailPasswordFunctions,
         },
-        preAPIHook: async function (context) {
-            if (context.action === "IS_EMAIL_VERIFIED") {
-                //
-            } else if (context.action === "SEND_VERIFY_EMAIL") {
-                //
-            } else if (context.action === "VERIFY_EMAIL") {
-                //
-            } else if (context.action === "EMAIL_EXISTS") {
-                //
-            } else if (context.action === "EMAIL_PASSWORD_SIGN_IN") {
-                //
-            } else if (context.action === "EMAIL_PASSWORD_SIGN_UP") {
-                //
-            } else if (context.action === "SEND_RESET_PASSWORD_EMAIL") {
-                //
-            } else if (context.action === "SUBMIT_NEW_PASSWORD") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const requestInit: RequestInit = context.requestInit;
-
-            return {
-                requestInit: context.requestInit,
-                url: context.url,
-            };
-        },
-        postAPIHook: async function (context) {
-            if (context.action === "IS_EMAIL_VERIFIED") {
-                //
-            } else if (context.action === "SEND_VERIFY_EMAIL") {
-                //
-            } else if (context.action === "VERIFY_EMAIL") {
-                //
-            } else if (context.action === "EMAIL_EXISTS") {
-                //
-            } else if (context.action === "EMAIL_PASSWORD_SIGN_IN") {
-                //
-            } else if (context.action === "EMAIL_PASSWORD_SIGN_UP") {
-                //
-            } else if (context.action === "SEND_RESET_PASSWORD_EMAIL") {
-                //
-            } else if (context.action === "SUBMIT_NEW_PASSWORD") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const fetchResponse: Response = context.fetchResponse;
-            const requestInit: RequestInit = context.requestInit;
-        },
+        preAPIHook: emailPasswordPreAPIHook,
+        postAPIHook: emailPasswordPostAPIHook,
     };
 
     return EmailPassword.init(config);
@@ -268,6 +322,58 @@ function getThirdPartyFunctions(original: ThirdPartyRecipeInterface): ThirdParty
     };
 }
 
+const thirdPartyPreAPIHook: RecipePreAPIHookFunction<ThirdPartyAction> = async function (
+    context: RecipePreAPIHookContext<ThirdPartyAction>
+) {
+    if (context.action === "IS_EMAIL_VERIFIED") {
+        //
+    } else if (context.action === "SEND_VERIFY_EMAIL") {
+        //
+    } else if (context.action === "VERIFY_EMAIL") {
+        //
+    } else if (context.action === "GET_AUTHORISATION_URL") {
+        //
+    } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const requestInit: RequestInit = context.requestInit;
+
+    return {
+        requestInit: context.requestInit,
+        url: context.url,
+    };
+};
+
+const thirdPartyPostAPIHook: RecipePostAPIHookFunction<ThirdPartyAction> = async function (
+    context: RecipePostAPIHookContext<ThirdPartyAction>
+) {
+    if (context.action === "IS_EMAIL_VERIFIED") {
+        //
+    } else if (context.action === "SEND_VERIFY_EMAIL") {
+        //
+    } else if (context.action === "VERIFY_EMAIL") {
+        //
+    } else if (context.action === "GET_AUTHORISATION_URL") {
+        //
+    } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const fetchResponse: Response = context.fetchResponse;
+    const requestInit: RequestInit = context.requestInit;
+};
+
 function getThirdParty(): CreateRecipeFunction<ThirdPartyAction> {
     const config: ThirdPartyUserInput = {
         override: {
@@ -276,52 +382,8 @@ function getThirdParty(): CreateRecipeFunction<ThirdPartyAction> {
             },
             functions: getThirdPartyFunctions,
         },
-        preAPIHook: async function (context) {
-            if (context.action === "IS_EMAIL_VERIFIED") {
-                //
-            } else if (context.action === "SEND_VERIFY_EMAIL") {
-                //
-            } else if (context.action === "VERIFY_EMAIL") {
-                //
-            } else if (context.action === "GET_AUTHORISATION_URL") {
-                //
-            } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const requestInit: RequestInit = context.requestInit;
-
-            return {
-                requestInit: context.requestInit,
-                url: context.url,
-            };
-        },
-        postAPIHook: async function (context) {
-            if (context.action === "IS_EMAIL_VERIFIED") {
-                //
-            } else if (context.action === "SEND_VERIFY_EMAIL") {
-                //
-            } else if (context.action === "VERIFY_EMAIL") {
-                //
-            } else if (context.action === "GET_AUTHORISATION_URL") {
-                //
-            } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const fetchResponse: Response = context.fetchResponse;
-            const requestInit: RequestInit = context.requestInit;
-        },
+        preAPIHook: thirdPartyPreAPIHook,
+        postAPIHook: thirdPartyPostAPIHook,
     };
 
     return ThirdParty.init(config);
@@ -382,6 +444,78 @@ function getThirdPartyEmailPasswordFunctions(original: TPEPRecipeInterface): TPE
     };
 }
 
+const tpepPreAPIHook: RecipePreAPIHookFunction<TPEPPartyAction> = async function (
+    context: RecipePreAPIHookContext<TPEPPartyAction>
+) {
+    if (context.action === "IS_EMAIL_VERIFIED") {
+        //
+    } else if (context.action === "SEND_VERIFY_EMAIL") {
+        //
+    } else if (context.action === "VERIFY_EMAIL") {
+        //
+    } else if (context.action === "GET_AUTHORISATION_URL") {
+        //
+    } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
+        //
+    } else if (context.action === "EMAIL_EXISTS") {
+        //
+    } else if (context.action === "EMAIL_PASSWORD_SIGN_IN") {
+        //
+    } else if (context.action === "EMAIL_PASSWORD_SIGN_UP") {
+        //
+    } else if (context.action === "SEND_RESET_PASSWORD_EMAIL") {
+        //
+    } else if (context.action === "SUBMIT_NEW_PASSWORD") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const requestInit: RequestInit = context.requestInit;
+
+    return {
+        requestInit: context.requestInit,
+        url: context.url,
+    };
+};
+
+const tpepPostAPIHook: RecipePostAPIHookFunction<TPEPPartyAction> = async function (
+    context: RecipePostAPIHookContext<TPEPPartyAction>
+) {
+    if (context.action === "IS_EMAIL_VERIFIED") {
+        //
+    } else if (context.action === "SEND_VERIFY_EMAIL") {
+        //
+    } else if (context.action === "VERIFY_EMAIL") {
+        //
+    } else if (context.action === "GET_AUTHORISATION_URL") {
+        //
+    } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
+        //
+    } else if (context.action === "EMAIL_EXISTS") {
+        //
+    } else if (context.action === "EMAIL_PASSWORD_SIGN_IN") {
+        //
+    } else if (context.action === "EMAIL_PASSWORD_SIGN_UP") {
+        //
+    } else if (context.action === "SEND_RESET_PASSWORD_EMAIL") {
+        //
+    } else if (context.action === "SUBMIT_NEW_PASSWORD") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const fetchResponse: Response = context.fetchResponse;
+    const requestInit: RequestInit = context.requestInit;
+};
+
 function getThirdPartyEmailPassword(): CreateRecipeFunction<TPEPPartyAction> {
     const config: TPEPPartyUserInput = {
         override: {
@@ -390,72 +524,8 @@ function getThirdPartyEmailPassword(): CreateRecipeFunction<TPEPPartyAction> {
             },
             functions: getThirdPartyEmailPasswordFunctions,
         },
-        preAPIHook: async function (context) {
-            if (context.action === "IS_EMAIL_VERIFIED") {
-                //
-            } else if (context.action === "SEND_VERIFY_EMAIL") {
-                //
-            } else if (context.action === "VERIFY_EMAIL") {
-                //
-            } else if (context.action === "GET_AUTHORISATION_URL") {
-                //
-            } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
-                //
-            } else if (context.action === "EMAIL_EXISTS") {
-                //
-            } else if (context.action === "EMAIL_PASSWORD_SIGN_IN") {
-                //
-            } else if (context.action === "EMAIL_PASSWORD_SIGN_UP") {
-                //
-            } else if (context.action === "SEND_RESET_PASSWORD_EMAIL") {
-                //
-            } else if (context.action === "SUBMIT_NEW_PASSWORD") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const requestInit: RequestInit = context.requestInit;
-
-            return {
-                requestInit: context.requestInit,
-                url: context.url,
-            };
-        },
-        postAPIHook: async function (context) {
-            if (context.action === "IS_EMAIL_VERIFIED") {
-                //
-            } else if (context.action === "SEND_VERIFY_EMAIL") {
-                //
-            } else if (context.action === "VERIFY_EMAIL") {
-                //
-            } else if (context.action === "GET_AUTHORISATION_URL") {
-                //
-            } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
-                //
-            } else if (context.action === "EMAIL_EXISTS") {
-                //
-            } else if (context.action === "EMAIL_PASSWORD_SIGN_IN") {
-                //
-            } else if (context.action === "EMAIL_PASSWORD_SIGN_UP") {
-                //
-            } else if (context.action === "SEND_RESET_PASSWORD_EMAIL") {
-                //
-            } else if (context.action === "SUBMIT_NEW_PASSWORD") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const fetchResponse: Response = context.fetchResponse;
-            const requestInit: RequestInit = context.requestInit;
-        },
+        preAPIHook: tpepPreAPIHook,
+        postAPIHook: tpepPostAPIHook,
     };
 
     return ThirdPartyEmailPassword.init(config);
@@ -498,57 +568,65 @@ function getPasswordlessFunctions(original: PasswordlessRecipeInterface): Passwo
     };
 }
 
+const passwordlessPreAPIHook: RecipePreAPIHookFunction<PasswordlessAction> = async function (
+    context: RecipePreAPIHookContext<PasswordlessAction>
+) {
+    if (context.action === "EMAIL_EXISTS") {
+        //
+    } else if (context.action === "PASSWORDLESS_CONSUME_CODE") {
+        //
+    } else if (context.action === "PASSWORDLESS_CREATE_CODE") {
+        //
+    } else if (context.action === "PASSWORDLESS_RESEND_CODE") {
+        //
+    } else if (context.action === "PHONE_NUMBER_EXISTS") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const requestInit: RequestInit = context.requestInit;
+
+    return {
+        requestInit: context.requestInit,
+        url: context.url,
+    };
+};
+
+const passwordlessPostAPIHook: RecipePostAPIHookFunction<PasswordlessAction> = async function (
+    context: RecipePostAPIHookContext<PasswordlessAction>
+) {
+    if (context.action === "EMAIL_EXISTS") {
+        //
+    } else if (context.action === "PASSWORDLESS_CONSUME_CODE") {
+        //
+    } else if (context.action === "PASSWORDLESS_CREATE_CODE") {
+        //
+    } else if (context.action === "PASSWORDLESS_RESEND_CODE") {
+        //
+    } else if (context.action === "PHONE_NUMBER_EXISTS") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const fetchResponse: Response = context.fetchResponse;
+    const requestInit: RequestInit = context.requestInit;
+};
+
 function getPasswordless(): CreateRecipeFunction<PasswordlessAction> {
     const config: PasswordlessUserInput = {
         override: {
             functions: getPasswordlessFunctions,
         },
-        preAPIHook: async function (context) {
-            if (context.action === "EMAIL_EXISTS") {
-                //
-            } else if (context.action === "PASSWORDLESS_CONSUME_CODE") {
-                //
-            } else if (context.action === "PASSWORDLESS_CREATE_CODE") {
-                //
-            } else if (context.action === "PASSWORDLESS_RESEND_CODE") {
-                //
-            } else if (context.action === "PHONE_NUMBER_EXISTS") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const requestInit: RequestInit = context.requestInit;
-
-            return {
-                requestInit: context.requestInit,
-                url: context.url,
-            };
-        },
-        postAPIHook: async function (context) {
-            if (context.action === "EMAIL_EXISTS") {
-                //
-            } else if (context.action === "PASSWORDLESS_CONSUME_CODE") {
-                //
-            } else if (context.action === "PASSWORDLESS_CREATE_CODE") {
-                //
-            } else if (context.action === "PASSWORDLESS_RESEND_CODE") {
-                //
-            } else if (context.action === "PHONE_NUMBER_EXISTS") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const fetchResponse: Response = context.fetchResponse;
-            const requestInit: RequestInit = context.requestInit;
-        },
+        preAPIHook: passwordlessPreAPIHook,
+        postAPIHook: passwordlessPostAPIHook,
     };
 
     return Passwordless.init(config);
@@ -621,6 +699,78 @@ function getThirdPartyPasswordlessFunctions(original: TPPRecipeInterface): TPPRe
     };
 }
 
+const tppPreAPIHook: RecipePreAPIHookFunction<TPPlessAction> = async function (
+    context: RecipePreAPIHookContext<TPPlessAction>
+) {
+    if (context.action === "EMAIL_EXISTS") {
+        //
+    } else if (context.action === "PASSWORDLESS_CONSUME_CODE") {
+        //
+    } else if (context.action === "PASSWORDLESS_CREATE_CODE") {
+        //
+    } else if (context.action === "PASSWORDLESS_RESEND_CODE") {
+        //
+    } else if (context.action === "PHONE_NUMBER_EXISTS") {
+        //
+    } else if (context.action === "GET_AUTHORISATION_URL") {
+        //
+    } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
+        //
+    } else if (context.action === "IS_EMAIL_VERIFIED") {
+        //
+    } else if (context.action === "SEND_VERIFY_EMAIL") {
+        //
+    } else if (context.action === "VERIFY_EMAIL") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const requestInit: RequestInit = context.requestInit;
+
+    return {
+        requestInit: context.requestInit,
+        url: context.url,
+    };
+};
+
+const tppPostAPIHook: RecipePostAPIHookFunction<TPPlessAction> = async function (
+    context: RecipePostAPIHookContext<TPPlessAction>
+) {
+    if (context.action === "EMAIL_EXISTS") {
+        //
+    } else if (context.action === "PASSWORDLESS_CONSUME_CODE") {
+        //
+    } else if (context.action === "PASSWORDLESS_CREATE_CODE") {
+        //
+    } else if (context.action === "PASSWORDLESS_RESEND_CODE") {
+        //
+    } else if (context.action === "PHONE_NUMBER_EXISTS") {
+        //
+    } else if (context.action === "GET_AUTHORISATION_URL") {
+        //
+    } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
+        //
+    } else if (context.action === "IS_EMAIL_VERIFIED") {
+        //
+    } else if (context.action === "SEND_VERIFY_EMAIL") {
+        //
+    } else if (context.action === "VERIFY_EMAIL") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const fetchResponse: Response = context.fetchResponse;
+    const requestInit: RequestInit = context.requestInit;
+};
+
 function getThirdPartyPasswordless(): CreateRecipeFunction<TPPlessAction> {
     const config: TPPUserInput = {
         override: {
@@ -629,72 +779,8 @@ function getThirdPartyPasswordless(): CreateRecipeFunction<TPPlessAction> {
             },
             functions: getThirdPartyPasswordlessFunctions,
         },
-        preAPIHook: async function (context) {
-            if (context.action === "EMAIL_EXISTS") {
-                //
-            } else if (context.action === "PASSWORDLESS_CONSUME_CODE") {
-                //
-            } else if (context.action === "PASSWORDLESS_CREATE_CODE") {
-                //
-            } else if (context.action === "PASSWORDLESS_RESEND_CODE") {
-                //
-            } else if (context.action === "PHONE_NUMBER_EXISTS") {
-                //
-            } else if (context.action === "GET_AUTHORISATION_URL") {
-                //
-            } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
-                //
-            } else if (context.action === "IS_EMAIL_VERIFIED") {
-                //
-            } else if (context.action === "SEND_VERIFY_EMAIL") {
-                //
-            } else if (context.action === "VERIFY_EMAIL") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const requestInit: RequestInit = context.requestInit;
-
-            return {
-                requestInit: context.requestInit,
-                url: context.url,
-            };
-        },
-        postAPIHook: async function (context) {
-            if (context.action === "EMAIL_EXISTS") {
-                //
-            } else if (context.action === "PASSWORDLESS_CONSUME_CODE") {
-                //
-            } else if (context.action === "PASSWORDLESS_CREATE_CODE") {
-                //
-            } else if (context.action === "PASSWORDLESS_RESEND_CODE") {
-                //
-            } else if (context.action === "PHONE_NUMBER_EXISTS") {
-                //
-            } else if (context.action === "GET_AUTHORISATION_URL") {
-                //
-            } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
-                //
-            } else if (context.action === "IS_EMAIL_VERIFIED") {
-                //
-            } else if (context.action === "SEND_VERIFY_EMAIL") {
-                //
-            } else if (context.action === "VERIFY_EMAIL") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const fetchResponse: Response = context.fetchResponse;
-            const requestInit: RequestInit = context.requestInit;
-        },
+        preAPIHook: tppPreAPIHook,
+        postAPIHook: tppPostAPIHook,
     };
 
     return ThirdPartyPasswordless.init(config);
@@ -725,6 +811,46 @@ function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInt
     };
 }
 
+const sessionPreAPIHook: RecipePreAPIHookFunction<SessionAction> = async function (
+    context: RecipePreAPIHookContext<SessionAction>
+) {
+    if (context.action === "REFRESH_SESSION") {
+        //
+    } else if (context.action === "SIGN_OUT") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const requestInit: RequestInit = context.requestInit;
+
+    return {
+        requestInit: context.requestInit,
+        url: context.url,
+    };
+};
+
+const sessionPostAPIHook: RecipePostAPIHookFunction<SessionAction> = async function (
+    context: RecipePostAPIHookContext<SessionAction>
+) {
+    if (context.action === "REFRESH_SESSION") {
+        //
+    } else if (context.action === "SIGN_OUT") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const fetchResponse: Response = context.fetchResponse;
+    const requestInit: RequestInit = context.requestInit;
+};
+
 function getSession(): CreateRecipeFunction<SessionAction> {
     const config: SessionUserInput = {
         apiDomain: "",
@@ -752,25 +878,7 @@ function getSession(): CreateRecipeFunction<SessionAction> {
         override: {
             functions: getSessionFunctions,
         },
-        preAPIHook: async function (context) {
-            if (context.action === "REFRESH_SESSION") {
-                //
-            } else if (context.action === "SIGN_OUT") {
-                //
-            }
-
-            if (context.userContext === undefined) {
-                //
-            }
-
-            const url: string = context.url;
-            const requestInit: RequestInit = context.requestInit;
-
-            return {
-                requestInit: context.requestInit,
-                url: context.url,
-            };
-        },
+        preAPIHook: sessionPreAPIHook,
         postAPIHook: async function (context) {
             if (context.action === "REFRESH_SESSION") {
                 //
@@ -790,6 +898,16 @@ function getSession(): CreateRecipeFunction<SessionAction> {
 
     return Session.init(config);
 }
+
+const storageHandlerInput: StorageHandlerInput = {
+    localStorage: (original) => original,
+    sessionStorage: (original) => original,
+};
+
+const normalisedStorageHandlers: NormalisedStorageHandlers = {
+    localStorage: getDefaultLocalStorageHandler(),
+    sessionStorage: getDefaultSessionStorageHandler(),
+};
 
 // SuperTokens init
 const appInfo: AppInfoUserInput = {
@@ -812,6 +930,180 @@ const recipeList: CreateRecipeFunction<any>[] = [
 const config: SuperTokensConfig = {
     appInfo,
     recipeList,
+    storageHandlers: storageHandlerInput,
 };
 
 SuperTokens.init(config);
+
+// General
+
+const error: any = {};
+
+if (STGeneralError.isThisError(error)) {
+    const message: string = error.message;
+}
+
+const normalisedAppInfo: NormalisedAppInfo = {
+    appName: "",
+    apiDomain: new NormalisedURLDomain(""),
+    apiBasePath: new NormalisedURLPath(""),
+};
+
+const evId: string = EmailVerificationRecipe.RECIPE_ID;
+EmailVerificationRecipe.init();
+EmailVerificationRecipe.getInstanceOrThrow();
+EmailVerificationRecipe.reset();
+
+EmailVerificationUtils.normaliseUserInput({
+    appInfo: normalisedAppInfo,
+    recipeId: evId,
+    storageHandlers: normalisedStorageHandlers,
+    override: {
+        functions: getEmailVerificationFunctions,
+    },
+    preAPIHook: emailVerificationPreAPIHook,
+    postAPIHook: emailVerificationPostAPIHook,
+});
+
+EmailVerificationRecipeImplementation({
+    appInfo: normalisedAppInfo,
+    postAPIHook: emailVerificationPostAPIHook,
+    preAPIHook: emailVerificationPreAPIHook,
+    recipeId: evId,
+    storageHandlers: normalisedStorageHandlers,
+});
+
+const epId: string = EmailPasswordRecipe.RECIPE_ID;
+EmailPasswordRecipe.init();
+EmailPasswordRecipe.getInstanceOrThrow();
+EmailPasswordRecipe.reset();
+
+EmailPasswordUtils.normaliseUserInput({
+    appInfo: normalisedAppInfo,
+    recipeId: epId,
+    storageHandlers: normalisedStorageHandlers,
+    override: {
+        functions: getEmailPasswordFunctions,
+    },
+    preAPIHook: emailPasswordPreAPIHook,
+    postAPIHook: emailPasswordPostAPIHook,
+});
+
+EmailPasswordRecipeImplementation({
+    appInfo: normalisedAppInfo,
+    postAPIHook: emailPasswordPostAPIHook,
+    preAPIHook: emailPasswordPreAPIHook,
+    recipeId: epId,
+    storageHandlers: normalisedStorageHandlers,
+});
+
+const tpId: string = ThirdPartyRecipe.RECIPE_ID;
+ThirdPartyRecipe.init();
+ThirdPartyRecipe.getInstanceOrThrow();
+ThirdPartyRecipe.reset();
+
+ThirdPartyUtils.normaliseUserInput({
+    appInfo: normalisedAppInfo,
+    recipeId: tpId,
+    storageHandlers: normalisedStorageHandlers,
+    override: {
+        functions: getThirdPartyFunctions,
+    },
+    preAPIHook: thirdPartyPreAPIHook,
+    postAPIHook: thirdPartyPostAPIHook,
+});
+
+ThirdPartyRecipeImplementation({
+    appInfo: normalisedAppInfo,
+    postAPIHook: thirdPartyPostAPIHook,
+    preAPIHook: thirdPartyPreAPIHook,
+    recipeId: tpId,
+    storageHandlers: normalisedStorageHandlers,
+});
+
+const tpepId: string = TPEPRecipe.RECIPE_ID;
+TPEPRecipe.init();
+TPEPRecipe.getInstanceOrThrow();
+TPEPRecipe.reset();
+
+TPEPUtils.normaliseUserInput({
+    appInfo: normalisedAppInfo,
+    recipeId: tpepId,
+    storageHandlers: normalisedStorageHandlers,
+    override: {
+        functions: getThirdPartyEmailPasswordFunctions,
+    },
+    preAPIHook: tpepPreAPIHook,
+    postAPIHook: tpepPostAPIHook,
+});
+
+TPEPRecipeImplementation({
+    appInfo: normalisedAppInfo,
+    postAPIHook: tpepPostAPIHook,
+    preAPIHook: tpepPreAPIHook,
+    recipeId: tpepId,
+    storageHandlers: normalisedStorageHandlers,
+});
+
+const passwordlessId: string = PasswordlessRecipe.RECIPE_ID;
+PasswordlessRecipe.init();
+PasswordlessRecipe.getInstanceOrThrow();
+PasswordlessRecipe.reset();
+
+PasswordlessUtils.normaliseUserInput({
+    appInfo: normalisedAppInfo,
+    recipeId: passwordlessId,
+    storageHandlers: normalisedStorageHandlers,
+    override: {
+        functions: getPasswordlessFunctions,
+    },
+    preAPIHook: passwordlessPreAPIHook,
+    postAPIHook: passwordlessPostAPIHook,
+});
+
+const passwordlessRecipeImplementation = PasswordlessRecipeImplementation({
+    appInfo: normalisedAppInfo,
+    postAPIHook: passwordlessPostAPIHook,
+    preAPIHook: passwordlessPreAPIHook,
+    recipeId: passwordlessId,
+    storageHandlers: normalisedStorageHandlers,
+});
+
+PasswordlessUtils.consumeCode({
+    userInputCode: "",
+    recipeImplementation: passwordlessRecipeImplementation,
+});
+
+PasswordlessUtils.createCode({
+    email: "",
+    recipeImplementation: passwordlessRecipeImplementation,
+    phoneNumber: "",
+});
+
+PasswordlessUtils.resendCode({
+    recipeImplementation: passwordlessRecipeImplementation,
+});
+
+const tppId: string = TPPRecipe.RECIPE_ID;
+TPPRecipe.init();
+TPPRecipe.getInstanceOrThrow();
+TPPRecipe.reset();
+
+TPPUtils.normaliseUserInput({
+    appInfo: normalisedAppInfo,
+    recipeId: passwordlessId,
+    storageHandlers: normalisedStorageHandlers,
+    override: {
+        functions: getThirdPartyPasswordlessFunctions,
+    },
+    preAPIHook: tppPreAPIHook,
+    postAPIHook: tppPostAPIHook,
+});
+
+TPPRecipeImplementation({
+    appInfo: normalisedAppInfo,
+    postAPIHook: tppPostAPIHook,
+    preAPIHook: tppPreAPIHook,
+    recipeId: tppId,
+    storageHandlers: normalisedStorageHandlers,
+});
