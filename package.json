@@ -14,6 +14,7 @@
         "set-up-hooks": "cp hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit",
         "lint": "cd lib && npx tslint -c tslint.json './**/*.ts'",
         "test-unit": "TEST_MODE=testing npx mocha 'test/unit/*.test.js'",
+        "test-e2e": "./test/end-to-end/runTests",
         "test": "npm run test-unit"
     },
     "repository": {
