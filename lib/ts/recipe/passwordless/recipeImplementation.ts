@@ -13,9 +13,8 @@
  * under the License.
  */
 
-import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
 import Querier from "../../querier";
-import { getQueryParams } from "../../utils";
+import { getHashFromLocation, getQueryParams } from "../../utils";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY } from "./constants";
 import { PreAndPostAPIHookAction, RecipeInterface, PasswordlessFlowType, PasswordlessUser } from "./types";
@@ -198,7 +197,7 @@ export default function getRecipeImplementation(
             };
         },
         getLinkCodeFromURL: function () {
-            return WindowHandlerReference.getReferenceOrThrow().windowHandler.location.getHash();
+            return getHashFromLocation();
         },
         getPreAuthSessionIdFromURL: function () {
             const idFromQuery = getQueryParams("preAuthSessionId");

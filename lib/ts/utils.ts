@@ -107,3 +107,8 @@ export function checkForSSRErrorAndAppendIfNeeded(error: string): string {
 export function getNormalisedUserContext(userContext?: any) {
     return userContext === undefined ? {} : userContext;
 }
+
+export function getHashFromLocation(): string {
+    // By default it is returned with the "#" at the beginning, we cut that off here.
+    return WindowHandlerReference.getReferenceOrThrow().windowHandler.location.getHash().substring(1);
+}
