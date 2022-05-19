@@ -107,6 +107,8 @@ import PasswordlessUtils from "../../recipe/passwordless/utils";
 import { Recipe as TPPRecipe } from "../../recipe/thirdpartypasswordless/recipe";
 import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe/thirdpartypasswordless/recipeImplementation";
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
+import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
+import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
 
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
@@ -927,10 +929,81 @@ const recipeList: CreateRecipeFunction<any>[] = [
     getSession(),
 ];
 
+const windowHandlerInput: WindowHandlerInput = (original: WindowHandlerInterface) => {
+    return {
+        ...original,
+        getDocument: () => {
+            return document;
+        },
+        getLocalStorage: () => {
+            return window.localStorage;
+        },
+        getSessionStorage: () => {
+            return window.sessionStorage;
+        },
+        history: {
+            ...original.history,
+            getState: () => {
+                return window.history.state;
+            },
+            replaceState: (data: any, unused: string, url?: string | null | undefined) => {
+                window.history.replaceState(data, unused, url);
+            },
+        },
+        location: {
+            ...original.location,
+            assign: (url: string | URL) => {
+                window.location.assign(url);
+            },
+            getHash: () => {
+                return window.location.hash;
+            },
+            getHostName: () => {
+                return window.location.hostname;
+            },
+            getHref: () => {
+                return window.location.href;
+            },
+            getOrigin: () => {
+                return window.location.origin;
+            },
+            getPathName: () => {
+                return window.location.pathname;
+            },
+            getSearch: () => {
+                return window.location.pathname;
+            },
+            setHref: (newHref: string) => {
+                window.location.href = newHref;
+            },
+        },
+    };
+};
+
+const cookieHandlerInput: CookieHandlerInput = (original: CookieHandlerInterface) => {
+    return {
+        ...original,
+        getCookie: async function () {
+            return document.cookie;
+        },
+        getCookieSync: function () {
+            return document.cookie;
+        },
+        setCookie: async function (newCookie: string) {
+            document.cookie = newCookie;
+        },
+        setCookieSync: function (newCookie: string) {
+            document.cookie = newCookie;
+        },
+    };
+};
+
 const config: SuperTokensConfig = {
     appInfo,
     recipeList,
     storageHandlers: storageHandlerInput,
+    windowHandler: windowHandlerInput,
+    cookieHandler: cookieHandlerInput,
 };
 
 SuperTokens.init(config);
