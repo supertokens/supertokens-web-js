@@ -65,10 +65,6 @@ export type SuperTokensConfig = {
      *
      * In most cases you should not need to provide these. When provided, the SDK will rely on
      * these functions instead of using any Window APIs directly
-     *
-     * When using this feature, take extra care to use the correct function version (async/async).
-     * The interface by default uses async versions of the functions when possible but specific parts
-     * of the SDK may rely on using the sync versions instead.
      */
     windowHandler?: WindowHandlerInput;
 };
