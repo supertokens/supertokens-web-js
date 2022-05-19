@@ -13,41 +13,41 @@
  * under the License.
  */
 
-import { getWindowOrThrow } from "../../utils";
 import { StorageHandler } from "./types";
+import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
 
 export default function getDefaultSessionStorageHandler(): StorageHandler {
     return {
         key: async function (index: number) {
-            return getWindowOrThrow().sessionStorage.key(index);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getSessionStorage().key(index);
         },
         clear: async function () {
-            return getWindowOrThrow().sessionStorage.clear();
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getSessionStorage().clear();
         },
         getItem: async function (key: string) {
-            return getWindowOrThrow().sessionStorage.getItem(key);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getSessionStorage().getItem(key);
         },
         removeItem: async function (key: string) {
-            return getWindowOrThrow().sessionStorage.removeItem(key);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getSessionStorage().removeItem(key);
         },
         setItem: async function (key: string, value: string) {
-            return getWindowOrThrow().sessionStorage.setItem(key, value);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getSessionStorage().setItem(key, value);
         },
 
         keySync: function (index: number) {
-            return getWindowOrThrow().sessionStorage.key(index);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getSessionStorage().key(index);
         },
         clearSync: function () {
-            return getWindowOrThrow().sessionStorage.clear();
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getSessionStorage().clear();
         },
         getItemSync: function (key: string) {
-            return getWindowOrThrow().sessionStorage.getItem(key);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getSessionStorage().getItem(key);
         },
         removeItemSync: function (key: string) {
-            return getWindowOrThrow().sessionStorage.removeItem(key);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getSessionStorage().removeItem(key);
         },
         setItemSync: function (key: string, value: string) {
-            return getWindowOrThrow().sessionStorage.setItem(key, value);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getSessionStorage().setItem(key, value);
         },
     };
 }

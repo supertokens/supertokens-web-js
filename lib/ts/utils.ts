@@ -12,7 +12,8 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { DEFAULT_API_BASE_PATH, SSR_ERROR, WINDOW_UNDEFINED_ERROR } from "./constants";
+import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
+import { DEFAULT_API_BASE_PATH, SSR_ERROR } from "./constants";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import NormalisedURLPath from "./normalisedURLPath";
 import { AppInfoUserInput, NormalisedAppInfo } from "./types";
@@ -36,16 +37,6 @@ export function appendQueryParamsToURL(stringUrl: string, queryParams?: Record<s
         });
         return `${url.pathname}${url.search}`;
     }
-}
-
-export function getWindowOrThrow(): Window {
-    // tslint:disable-next-line
-    if (typeof window === "undefined") {
-        throw new Error(WINDOW_UNDEFINED_ERROR);
-    }
-
-    // tslint:disable-next-line
-    return window;
 }
 
 function getNormalisedURLPathOrDefault(defaultPath: string, path?: string): NormalisedURLPath {
@@ -92,7 +83,9 @@ export function isTest(): boolean {
 }
 
 export function getQueryParams(param: string): string | undefined {
-    const urlParams = new URLSearchParams(getWindowOrThrow().location.search);
+    const urlParams = new URLSearchParams(
+        WindowHandlerReference.getReferenceOrThrow().windowHandler.location.getSearch()
+    );
     let queryParam = urlParams.get(param);
 
     if (queryParam === null) {
@@ -113,9 +106,4 @@ export function checkForSSRErrorAndAppendIfNeeded(error: string): string {
 
 export function getNormalisedUserContext(userContext?: any) {
     return userContext === undefined ? {} : userContext;
-}
-
-export function getHashFromLocation(): string {
-    // By default it is returned with the "#" at the beginning, we cut that off here.
-    return getWindowOrThrow().location.hash.substring(1);
 }

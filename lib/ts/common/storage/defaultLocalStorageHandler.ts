@@ -13,40 +13,40 @@
  * under the License.
  */
 
-import { getWindowOrThrow } from "../../utils";
+import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
 import { StorageHandler } from "./types";
 
 export default function getDefaultLocalStorageHandler(): StorageHandler {
     return {
         key: async function (index: number) {
-            return getWindowOrThrow().localStorage.key(index);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getLocalStorage().key(index);
         },
         clear: async function () {
-            return getWindowOrThrow().localStorage.clear();
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getLocalStorage().clear();
         },
         getItem: async function (key: string) {
-            return getWindowOrThrow().localStorage.getItem(key);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getLocalStorage().getItem(key);
         },
         removeItem: async function (key: string) {
-            return getWindowOrThrow().localStorage.removeItem(key);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getLocalStorage().removeItem(key);
         },
         setItem: async function (key: string, value: string) {
-            return getWindowOrThrow().localStorage.setItem(key, value);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getLocalStorage().setItem(key, value);
         },
         keySync: function (index: number) {
-            return getWindowOrThrow().localStorage.key(index);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getLocalStorage().key(index);
         },
         clearSync: function () {
-            return getWindowOrThrow().localStorage.clear();
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getLocalStorage().clear();
         },
         getItemSync: function (key: string) {
-            return getWindowOrThrow().localStorage.getItem(key);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getLocalStorage().getItem(key);
         },
         removeItemSync: function (key: string) {
-            return getWindowOrThrow().localStorage.removeItem(key);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getLocalStorage().removeItem(key);
         },
         setItemSync: function (key: string, value: string) {
-            return getWindowOrThrow().localStorage.setItem(key, value);
+            return WindowHandlerReference.getReferenceOrThrow().windowHandler.getLocalStorage().setItem(key, value);
         },
     };
 }

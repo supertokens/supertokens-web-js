@@ -17,6 +17,8 @@ import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
 import { StorageHandler } from "./common/storage/types";
+import { CookieHandlerInput } from "supertokens-website/utils/cookieHandler/types";
+import { WindowHandlerInput } from "supertokens-website/utils/windowHandler/types";
 
 /**
  * The configuration object to be passed when calling SuperTokens.init
@@ -40,11 +42,35 @@ export type SuperTokensConfig = {
      * In most cases you should not need to provide these. When provided, the SDK
      * will rely on these functions instead of using the Window.Storage API directly.
      *
-     * When using this feature, take extra care to use the function version (sync/async).
+     * When using this feature, take extra care to use the correct function version (sync/async).
      * The interface by default uses all storage methods as async, but specific parts of the
      * SDK may rely on using the sync versions.
      */
     storageHandlers?: StorageHandlerInput;
+
+    /**
+     * Custom handlers that the SDK should use when trying to read or write to document.cookie
+     *
+     * In most cases you should not need to provide these. When provided, the SDK will rely on
+     * these functions instead of using document.cookie directly
+     *
+     * When using this feature, take extra care to use the correct function version (async/async).
+     * The interface by default uses async versions of the functions when possible but specific parts
+     * of the SDK may rely on using the sync versions instead.
+     */
+    cookieHandler?: CookieHandlerInput;
+
+    /**
+     * Custom handlers that the SDK should use when trying to access Window APIs
+     *
+     * In most cases you should not need to provide these. When provided, the SDK will rely on
+     * these functions instead of using any Window APIs directly
+     *
+     * When using this feature, take extra care to use the correct function version (async/async).
+     * The interface by default uses async versions of the functions when possible but specific parts
+     * of the SDK may rely on using the sync versions instead.
+     */
+    windowHandler?: WindowHandlerInput;
 };
 
 export type CreateRecipeFunction<Action> = (
