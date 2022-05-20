@@ -1,6 +1,6 @@
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { UserType as ThirdPartyUserType } from "../authRecipeWithEmailVerification/types";
+import { ThirdPartyUserType } from "../thirdParty/types";
 import { PasswordlessFlowType, PasswordlessUser } from "../passwordless/types";
 import { StateObject } from "../thirdparty/types";
 export default class RecipeWrapper {

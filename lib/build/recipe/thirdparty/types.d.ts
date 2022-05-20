@@ -46,6 +46,12 @@ export declare type StateObject = {
     stateForAuthProvider: string;
     providerClientId?: string;
 };
+export declare type ThirdPartyUserType = UserType & {
+    thirdParty: {
+        id: string;
+        userId: string;
+    };
+};
 export declare type RecipeInterface = {
     /**
      * Get the current login state from storage, this is also used when calling signInUp
@@ -130,7 +136,7 @@ export declare type RecipeInterface = {
     signInAndUp: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: ThirdPartyUserType;
               createdNewUser: boolean;
               fetchResponse: Response;
           }

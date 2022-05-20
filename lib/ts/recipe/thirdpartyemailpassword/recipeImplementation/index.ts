@@ -21,6 +21,7 @@ import DerivedThirdParty from "./thirdparty";
 import { StateObject } from "../../thirdparty/types";
 import { RecipeFunctionOptions, UserType } from "../../emailpassword";
 import { RecipeImplementationInput } from "../../recipeModule/types";
+import { ThirdPartyUserType } from "../../thirdparty/types";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -159,7 +160,7 @@ export default function getRecipeImplementation(
         thirdPartySignInAndUp: async function (input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
             | {
                   status: "OK";
-                  user: UserType;
+                  user: ThirdPartyUserType;
                   createdNewUser: boolean;
                   fetchResponse: Response;
               }

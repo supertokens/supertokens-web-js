@@ -27,6 +27,7 @@ import {
 } from "../authRecipeWithEmailVerification/types";
 import OverrideableBuilder from "supertokens-js-override";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
+import { ThirdPartyUserType } from "../thirdparty/types";
 
 export type PreAndPostAPIHookAction = EmailPasswordPreAndPostAPIHookAction | ThirdPartyPreAndPostAPIHookAction;
 
@@ -279,7 +280,7 @@ export type RecipeInterface = {
     thirdPartySignInAndUp: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: ThirdPartyUserType;
               createdNewUser: boolean;
               fetchResponse: Response;
           }

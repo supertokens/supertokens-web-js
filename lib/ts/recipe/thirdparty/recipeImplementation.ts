@@ -15,8 +15,7 @@
 
 import Querier from "../../querier";
 import { appendQueryParamsToURL, getQueryParams } from "../../utils";
-import { UserType } from "../authRecipeWithEmailVerification/types";
-import { RecipeInterface, StateObject } from "./types";
+import { RecipeInterface, StateObject, ThirdPartyUserType } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
 import { PreAndPostAPIHookAction } from "./types";
@@ -152,7 +151,7 @@ export default function getRecipeImplementation(
         signInAndUp: async function (input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
             | {
                   status: "OK";
-                  user: UserType;
+                  user: ThirdPartyUserType;
                   createdNewUser: boolean;
                   fetchResponse: Response;
               }
@@ -200,7 +199,7 @@ export default function getRecipeImplementation(
                 | {
                       status: "OK";
                       createdNewUser: boolean;
-                      user: UserType;
+                      user: ThirdPartyUserType;
                   }
                 | {
                       status: "NO_EMAIL_GIVEN_BY_PROVIDER";

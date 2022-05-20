@@ -15,6 +15,7 @@
 
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions, UserType } from "../emailpassword";
+import { ThirdPartyUserType } from "../thirdparty/types";
 import Recipe from "./recipe";
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 
@@ -245,7 +246,7 @@ export default class RecipeWrapper {
     static thirdPartySignInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: ThirdPartyUserType;
               createdNewUser: boolean;
               fetchResponse: Response;
           }
@@ -383,6 +384,7 @@ export {
     isEmailVerified,
     signOut,
     UserType,
+    ThirdPartyUserType,
     UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
