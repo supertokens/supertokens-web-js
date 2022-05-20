@@ -2,7 +2,6 @@ import RecipeModule from "./recipe/recipeModule";
 import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
-import { StorageHandler } from "./common/storage/types";
 import { CookieHandlerInput } from "supertokens-website/utils/cookieHandler/types";
 import { WindowHandlerInput } from "supertokens-website/utils/windowHandler/types";
 /**
@@ -20,17 +19,6 @@ export declare type SuperTokensConfig = {
      */
     recipeList: CreateRecipeFunction<any>[];
     /**
-     * Custom handlers that the SDK should use whn accessing the Web Storage API.
-     *
-     * In most cases you should not need to provide these. When provided, the SDK
-     * will rely on these functions instead of using the Window.Storage API directly.
-     *
-     * When using this feature, take extra care to use the correct function version (sync/async).
-     * The interface by default uses all storage methods as async, but specific parts of the
-     * SDK may rely on using the sync versions.
-     */
-    storageHandlers?: StorageHandlerInput;
-    /**
      * Custom handlers that the SDK should use when trying to read or write to document.cookie
      *
      * In most cases you should not need to provide these. When provided, the SDK will rely on
@@ -46,12 +34,15 @@ export declare type SuperTokensConfig = {
      *
      * In most cases you should not need to provide these. When provided, the SDK will rely on
      * these functions instead of using any Window APIs directly
+     *
+     * When using this feature, take extra care to use the correct function version (async/async).
+     * The interface by default uses async versions of the functions when possible but specific parts
+     * of the SDK may rely on using the sync versions instead.
      */
     windowHandler?: WindowHandlerInput;
 };
 export declare type CreateRecipeFunction<Action> = (
-    appInfo: NormalisedAppInfo,
-    storageHandlers: NormalisedStorageHandlers
+    appInfo: NormalisedAppInfo
 ) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 export declare type AppInfoUserInput = {
     /**
@@ -102,25 +93,4 @@ export declare type NormalisedAppInfo = {
      * This value must match the one set in the backend SDKs for SuperTokens to work correctly
      */
     apiBasePath: NormalisedURLPath;
-};
-export declare type StorageHandlerFunction = (original: StorageHandler) => StorageHandler;
-export declare type StorageHandlerInput = {
-    /**
-     * Handlers to be used as a replacement for `window.sessionStorage`
-     */
-    sessionStorage?: StorageHandlerFunction;
-    /**
-     * Handlers to be used as a replacement for `window.localStorage`
-     */
-    localStorage?: StorageHandlerFunction;
-};
-export declare type NormalisedStorageHandlers = {
-    /**
-     * Handlers to be used as a replacement for `window.sessionStorage`
-     */
-    sessionStorage: StorageHandler;
-    /**
-     * Handlers to be used as a replacement for `window.localStorage`
-     */
-    localStorage: StorageHandler;
 };

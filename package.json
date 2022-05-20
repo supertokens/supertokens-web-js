@@ -38,7 +38,7 @@
     "homepage": "https://github.com/supertokens/supertokens-web-js#readme",
     "dependencies": {
         "supertokens-js-override": "0.0.4",
-        "supertokens-website": "github:supertokens/supertokens-website#user-context-changes"
+        "supertokens-website": "github:supertokens/supertokens-website#custom-storage-handling"
     },
     "devDependencies": {
         "@babel/core": "^7.17.8",
