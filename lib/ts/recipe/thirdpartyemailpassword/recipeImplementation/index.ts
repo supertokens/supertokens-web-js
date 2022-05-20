@@ -19,7 +19,7 @@ import ThirdPartyImplementation from "../../thirdparty/recipeImplementation";
 import DerivedEmailPassword from "./emailpassword";
 import DerivedThirdParty from "./thirdparty";
 import { StateObject } from "../../thirdparty/types";
-import { RecipeFunctionOptions, UserType } from "../../emailpassword";
+import { RecipeFunctionOptions, UserType as EmailPasswordUserType } from "../../emailpassword";
 import { RecipeImplementationInput } from "../../recipeModule/types";
 import { ThirdPartyUserType } from "../../thirdparty/types";
 
@@ -98,7 +98,7 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
-                  user: UserType;
+                  user: EmailPasswordUserType;
                   fetchResponse: Response;
               }
             | {
@@ -123,7 +123,7 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
-                  user: UserType;
+                  user: EmailPasswordUserType;
                   fetchResponse: Response;
               }
             | {

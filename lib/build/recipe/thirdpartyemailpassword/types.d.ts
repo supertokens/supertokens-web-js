@@ -7,7 +7,7 @@ import {
 import { PreAndPostAPIHookAction as ThirdPartyPreAndPostAPIHookAction, StateObject } from "../thirdparty/types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
-    UserType,
+    UserType as EmailPasswordUserType,
     InputType as AuthRecipeInputType,
     NormalisedInputType as AuthRecipeNormalisedInputType,
 } from "../authRecipeWithEmailVerification/types";
@@ -156,7 +156,7 @@ export declare type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: EmailPasswordUserType;
               fetchResponse: Response;
           }
         | {
@@ -195,7 +195,7 @@ export declare type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: EmailPasswordUserType;
               fetchResponse: Response;
           }
         | {

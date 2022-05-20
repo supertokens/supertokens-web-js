@@ -14,7 +14,7 @@
  */
 
 import { getNormalisedUserContext } from "../../utils";
-import { RecipeFunctionOptions, UserType } from "../emailpassword";
+import { RecipeFunctionOptions, UserType as EmailPasswordUserType } from "../emailpassword";
 import { ThirdPartyUserType } from "../thirdparty/types";
 import Recipe from "./recipe";
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
@@ -165,7 +165,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: EmailPasswordUserType;
               fetchResponse: Response;
           }
         | {
@@ -210,7 +210,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: EmailPasswordUserType;
               fetchResponse: Response;
           }
         | {
@@ -383,7 +383,7 @@ export {
     sendVerificationEmail,
     isEmailVerified,
     signOut,
-    UserType,
+    EmailPasswordUserType,
     ThirdPartyUserType,
     UserInput,
     RecipeInterface,
