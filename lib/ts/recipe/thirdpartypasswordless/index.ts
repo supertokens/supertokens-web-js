@@ -17,7 +17,7 @@ import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreA
 import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
-import { ThirdPartyUserType } from "../thirdParty/types";
+import { ThirdPartyUserType } from "../thirdparty/types";
 import * as PasswordlessUtilsFunctions from "../passwordless/utils";
 import { PasswordlessFlowType, PasswordlessUser } from "../passwordless/types";
 import { StateObject } from "../thirdparty/types";

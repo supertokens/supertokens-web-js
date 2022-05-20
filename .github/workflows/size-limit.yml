@@ -9,10 +9,6 @@ jobs:
             CI_JOB_NUMBER: 1
         steps:
             - uses: actions/checkout@v1
-            - name: Setup tmate session
-              uses: mxschmitt/action-tmate@v3
-              with:
-                  sudo: true
             - uses: porcellus/size-limit-action@feature/continue_on_base_branch_error
               with:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
