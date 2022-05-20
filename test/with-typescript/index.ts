@@ -914,44 +914,68 @@ const windowHandlerInput: WindowHandlerInput = (original: WindowHandlerInterface
             return document;
         },
         localStorage: {
-            clear: async () => {},
-            clearSync: () => {},
-            getItem: async () => {
-                return "";
+            clear: async () => {
+                return window.localStorage.clear();
             },
-            getItemSync: () => {
-                return "";
+            clearSync: () => {
+                return window.localStorage.clear();
             },
-            key: async () => {
-                return "";
+            getItem: async (key: string) => {
+                return window.localStorage.getItem(key);
             },
-            keySync: () => {
-                return "";
+            getItemSync: (key: string) => {
+                return window.localStorage.getItem(key);
             },
-            removeItem: async () => {},
-            removeItemSync: () => {},
-            setItem: async (_: string, __: string) => {},
-            setItemSync: (_: string, __: string) => {},
+            key: async (index: number) => {
+                return window.localStorage.key(index);
+            },
+            keySync: (index: number) => {
+                return window.localStorage.key(index);
+            },
+            removeItem: async (key: string) => {
+                return window.localStorage.removeItem(key);
+            },
+            removeItemSync: (key: string) => {
+                return window.localStorage.removeItem(key);
+            },
+            setItem: async (key: string, value: string) => {
+                return window.localStorage.setItem(key, value);
+            },
+            setItemSync: (key: string, value: string) => {
+                return window.localStorage.setItem(key, value);
+            },
         },
         sessionStorage: {
-            clear: async () => {},
-            clearSync: () => {},
-            getItem: async () => {
-                return "";
+            clear: async () => {
+                return window.localStorage.clear();
             },
-            getItemSync: () => {
-                return "";
+            clearSync: () => {
+                return window.localStorage.clear();
             },
-            key: async () => {
-                return "";
+            getItem: async (key: string) => {
+                return window.localStorage.getItem(key);
             },
-            keySync: () => {
-                return "";
+            getItemSync: (key: string) => {
+                return window.localStorage.getItem(key);
             },
-            removeItem: async () => {},
-            removeItemSync: () => {},
-            setItem: async (_: string, __: string) => {},
-            setItemSync: (_: string, __: string) => {},
+            key: async (index: number) => {
+                return window.localStorage.key(index);
+            },
+            keySync: (index: number) => {
+                return window.localStorage.key(index);
+            },
+            removeItem: async (key: string) => {
+                return window.localStorage.removeItem(key);
+            },
+            removeItemSync: (key: string) => {
+                return window.localStorage.removeItem(key);
+            },
+            setItem: async (key: string, value: string) => {
+                return window.localStorage.setItem(key, value);
+            },
+            setItemSync: (key: string, value: string) => {
+                return window.localStorage.setItem(key, value);
+            },
         },
         history: {
             ...original.history,
