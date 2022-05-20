@@ -930,8 +930,8 @@ const windowHandlerInput: WindowHandlerInput = (original: WindowHandlerInterface
             },
             removeItem: async () => {},
             removeItemSync: () => {},
-            setItem: async (_: string) => {},
-            setItemSync: (_: string) => {},
+            setItem: async (_: string, __: string) => {},
+            setItemSync: (_: string, __: string) => {},
         },
         sessionStorage: {
             clear: async () => {},
@@ -950,8 +950,8 @@ const windowHandlerInput: WindowHandlerInput = (original: WindowHandlerInterface
             },
             removeItem: async () => {},
             removeItemSync: () => {},
-            setItem: async (_: string) => {},
-            setItemSync: (_: string) => {},
+            setItem: async (_: string, __: string) => {},
+            setItemSync: (_: string, __: string) => {},
         },
         history: {
             ...original.history,
