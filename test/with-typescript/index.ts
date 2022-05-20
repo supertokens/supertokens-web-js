@@ -25,13 +25,7 @@
  * The differences in tsconfig for with-typescript compared to the main project:
  * - noUnusedLocals is set to false
  */
-import {
-    SuperTokensConfig,
-    AppInfoUserInput,
-    CreateRecipeFunction,
-    NormalisedAppInfo,
-    StorageHandlerInput,
-} from "../../types";
+import { SuperTokensConfig, AppInfoUserInput, CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import SuperTokens from "../../";
 import {
     RecipeInterface as EmailVerificationRecipeInterface,
@@ -79,11 +73,6 @@ import STGeneralError from "../../utils/error";
 import NormalisedURLDomain from "../../utils/normalisedURLDomain";
 import NormalisedURLPath from "../../utils/normalisedURLPath";
 import {
-    NormalisedStorageHandlers,
-    getDefaultLocalStorageHandler,
-    getDefaultSessionStorageHandler,
-} from "../../utils/storage";
-import {
     RecipePostAPIHookContext,
     RecipePostAPIHookFunction,
     RecipePreAPIHookContext,
@@ -107,6 +96,8 @@ import PasswordlessUtils from "../../recipe/passwordless/utils";
 import { Recipe as TPPRecipe } from "../../recipe/thirdpartypasswordless/recipe";
 import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe/thirdpartypasswordless/recipeImplementation";
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
+import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
+import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
 
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
@@ -899,16 +890,6 @@ function getSession(): CreateRecipeFunction<SessionAction> {
     return Session.init(config);
 }
 
-const storageHandlerInput: StorageHandlerInput = {
-    localStorage: (original) => original,
-    sessionStorage: (original) => original,
-};
-
-const normalisedStorageHandlers: NormalisedStorageHandlers = {
-    localStorage: getDefaultLocalStorageHandler(),
-    sessionStorage: getDefaultSessionStorageHandler(),
-};
-
 // SuperTokens init
 const appInfo: AppInfoUserInput = {
     apiDomain: "http://localhost:8080",
@@ -927,10 +908,113 @@ const recipeList: CreateRecipeFunction<any>[] = [
     getSession(),
 ];
 
+const windowHandlerInput: WindowHandlerInput = (original: WindowHandlerInterface) => {
+    return {
+        getDocument: () => {
+            return document;
+        },
+        localStorage: {
+            clear: async () => {},
+            clearSync: () => {},
+            getItem: async () => {
+                return "";
+            },
+            getItemSync: () => {
+                return "";
+            },
+            key: async () => {
+                return "";
+            },
+            keySync: () => {
+                return "";
+            },
+            removeItem: async () => {},
+            removeItemSync: () => {},
+            setItem: async (_: string, __: string) => {},
+            setItemSync: (_: string, __: string) => {},
+        },
+        sessionStorage: {
+            clear: async () => {},
+            clearSync: () => {},
+            getItem: async () => {
+                return "";
+            },
+            getItemSync: () => {
+                return "";
+            },
+            key: async () => {
+                return "";
+            },
+            keySync: () => {
+                return "";
+            },
+            removeItem: async () => {},
+            removeItemSync: () => {},
+            setItem: async (_: string, __: string) => {},
+            setItemSync: (_: string, __: string) => {},
+        },
+        history: {
+            ...original.history,
+            getState: () => {
+                return window.history.state;
+            },
+            replaceState: (data: any, unused: string, url?: string | null | undefined) => {
+                window.history.replaceState(data, unused, url);
+            },
+        },
+        location: {
+            ...original.location,
+            assign: (url: string | URL) => {
+                window.location.assign(url);
+            },
+            getHash: () => {
+                return window.location.hash;
+            },
+            getHostName: () => {
+                return window.location.hostname;
+            },
+            getHref: () => {
+                return window.location.href;
+            },
+            getOrigin: () => {
+                return window.location.origin;
+            },
+            getPathName: () => {
+                return window.location.pathname;
+            },
+            getSearch: () => {
+                return window.location.pathname;
+            },
+            setHref: (newHref: string) => {
+                window.location.href = newHref;
+            },
+        },
+    };
+};
+
+const cookieHandlerInput: CookieHandlerInput = (original: CookieHandlerInterface) => {
+    return {
+        ...original,
+        getCookie: async function () {
+            return document.cookie;
+        },
+        getCookieSync: function () {
+            return document.cookie;
+        },
+        setCookie: async function (newCookie: string) {
+            document.cookie = newCookie;
+        },
+        setCookieSync: function (newCookie: string) {
+            document.cookie = newCookie;
+        },
+    };
+};
+
 const config: SuperTokensConfig = {
     appInfo,
     recipeList,
-    storageHandlers: storageHandlerInput,
+    windowHandler: windowHandlerInput,
+    cookieHandler: cookieHandlerInput,
 };
 
 SuperTokens.init(config);
@@ -957,7 +1041,6 @@ EmailVerificationRecipe.reset();
 EmailVerificationUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: evId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getEmailVerificationFunctions,
     },
@@ -970,7 +1053,6 @@ EmailVerificationRecipeImplementation({
     postAPIHook: emailVerificationPostAPIHook,
     preAPIHook: emailVerificationPreAPIHook,
     recipeId: evId,
-    storageHandlers: normalisedStorageHandlers,
 });
 
 const epId: string = EmailPasswordRecipe.RECIPE_ID;
@@ -981,7 +1063,6 @@ EmailPasswordRecipe.reset();
 EmailPasswordUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: epId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getEmailPasswordFunctions,
     },
@@ -994,7 +1075,6 @@ EmailPasswordRecipeImplementation({
     postAPIHook: emailPasswordPostAPIHook,
     preAPIHook: emailPasswordPreAPIHook,
     recipeId: epId,
-    storageHandlers: normalisedStorageHandlers,
 });
 
 const tpId: string = ThirdPartyRecipe.RECIPE_ID;
@@ -1005,7 +1085,6 @@ ThirdPartyRecipe.reset();
 ThirdPartyUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: tpId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getThirdPartyFunctions,
     },
@@ -1018,7 +1097,6 @@ ThirdPartyRecipeImplementation({
     postAPIHook: thirdPartyPostAPIHook,
     preAPIHook: thirdPartyPreAPIHook,
     recipeId: tpId,
-    storageHandlers: normalisedStorageHandlers,
 });
 
 const tpepId: string = TPEPRecipe.RECIPE_ID;
@@ -1029,7 +1107,6 @@ TPEPRecipe.reset();
 TPEPUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: tpepId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getThirdPartyEmailPasswordFunctions,
     },
@@ -1042,7 +1119,6 @@ TPEPRecipeImplementation({
     postAPIHook: tpepPostAPIHook,
     preAPIHook: tpepPreAPIHook,
     recipeId: tpepId,
-    storageHandlers: normalisedStorageHandlers,
 });
 
 const passwordlessId: string = PasswordlessRecipe.RECIPE_ID;
@@ -1053,7 +1129,6 @@ PasswordlessRecipe.reset();
 PasswordlessUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: passwordlessId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getPasswordlessFunctions,
     },
@@ -1066,7 +1141,6 @@ const passwordlessRecipeImplementation = PasswordlessRecipeImplementation({
     postAPIHook: passwordlessPostAPIHook,
     preAPIHook: passwordlessPreAPIHook,
     recipeId: passwordlessId,
-    storageHandlers: normalisedStorageHandlers,
 });
 
 PasswordlessUtils.consumeCode({
@@ -1092,7 +1166,6 @@ TPPRecipe.reset();
 TPPUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: passwordlessId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getThirdPartyPasswordlessFunctions,
     },
@@ -1105,5 +1178,4 @@ TPPRecipeImplementation({
     postAPIHook: tppPostAPIHook,
     preAPIHook: tppPreAPIHook,
     recipeId: tppId,
-    storageHandlers: normalisedStorageHandlers,
 });

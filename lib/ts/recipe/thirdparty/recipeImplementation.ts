@@ -20,6 +20,7 @@ import { RecipeInterface, StateObject } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
 import { PreAndPostAPIHookAction } from "./types";
+import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -39,7 +40,9 @@ export default function getRecipeImplementation(
              * possible we call the sync version of getItem here
              */
             const stateFromStorage =
-                recipeImplInput.storageHandlers.sessionStorage.getItemSync("supertokens-oauth-state-2");
+                WindowHandlerReference.getReferenceOrThrow().windowHandler.sessionStorage.getItemSync(
+                    "supertokens-oauth-state-2"
+                );
 
             if (stateFromStorage === null) {
                 return undefined;
@@ -56,7 +59,10 @@ export default function getRecipeImplementation(
             const value = JSON.stringify({
                 ...input.state,
             });
-            await recipeImplInput.storageHandlers.sessionStorage.setItem("supertokens-oauth-state-2", value);
+            await WindowHandlerReference.getReferenceOrThrow().windowHandler.sessionStorage.setItem(
+                "supertokens-oauth-state-2",
+                value
+            );
         },
 
         getAuthorisationURLWithQueryParamsAndSetState: async function (input: {

@@ -1,14 +1,64 @@
-import ThirdParty from "../../recipe/thirdparty";
-import Passwordless from "../../recipe/passwordless";
+/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
+ *
+ * This software is licensed under the Apache License, Version 2.0 (the
+ * "License") as published by the Apache Software Foundation.
+ *
+ * You may not use this file except in compliance with the License. You may
+ * obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
+import Session from "../../recipe/session";
 import SuperTokens from "../../lib/build/supertokens";
 import assert from "assert";
+import { CookieHandlerReference } from "supertokens-website/utils/cookieHandler";
+import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
 
-describe("Storage Abstraction tests", function () {
+describe("Window handlers test", function () {
     let storageLogs = [];
 
     beforeEach(function () {
         SuperTokens.reset();
+        CookieHandlerReference.instance = undefined;
+        WindowHandlerReference.instance = undefined;
         storageLogs = [];
+    });
+
+    describe("General tests", function () {
+        it("Test that window handlers are correctly used in website SDK", async function () {
+            try {
+                SuperTokens.init({
+                    appInfo: {
+                        appName: "SuperTokens",
+                        apiDomain: "api.supertokens.io",
+                    },
+                    windowHandler: function (original) {
+                        return {
+                            ...original,
+                            location: {
+                                ...original.location,
+                                // This is called when supertokens website init is called
+                                getHostName: () => {
+                                    throw new Error("Expected error during tests");
+                                },
+                            },
+                        };
+                    },
+                    recipeList: [Session.init()],
+                });
+                throw new Error("SuperTokens.init should have failed but didnt");
+            } catch (e) {
+                if (e.message !== "Expected error during tests") {
+                    throw e;
+                }
+            }
+        });
     });
 
     describe("Session storage tests", function () {
@@ -18,25 +68,11 @@ describe("Storage Abstraction tests", function () {
                     appName: "SuperTokens",
                     apiDomain: "api.supertokens.io",
                 },
-                recipeList: [
-                    ThirdParty.init({
-                        override: {
-                            functions: function (original) {
-                                return {
-                                    ...original,
-                                    generateStateToSendToOAuthProvider: () => "state",
-                                    // getAuthStateFromURL: () => {
-                                    //     throw new Error("Expected error during tests");
-                                    // },
-                                };
-                            },
-                        },
-                    }),
-                ],
-                storageHandlers: {
-                    sessionStorage: (original) => {
-                        return {
-                            ...original,
+                windowHandler: function (original) {
+                    return {
+                        ...original,
+                        sessionStorage: {
+                            ...original.sessionStorage,
                             getItemSync: function (key) {
                                 storageLogs.push(`GET_ITEM_SYNC ${key}`);
                                 /**
@@ -50,17 +86,29 @@ describe("Storage Abstraction tests", function () {
                                 storageLogs.push(`SET_ITEM ${key}`);
                                 throw new Error("Expected error during tests");
                             },
-                        };
-                    },
+                        },
+                    };
                 },
+                recipeList: [
+                    ThirdPartyPasswordless.init({
+                        override: {
+                            functions: function (original) {
+                                return {
+                                    ...original,
+                                    generateThirdPartyStateToSendToOAuthProvider: () => "state",
+                                };
+                            },
+                        },
+                    }),
+                ],
             });
 
             try {
-                await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
+                await ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
                     providerId: "",
                     authorisationURL: "",
                 });
-                throw new Error("getAuthorisationURLWithQueryParamsAndSetState should have failed but didnt");
+                throw new Error("getThirdPartyAuthorisationURLWithQueryParamsAndSetState should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -68,8 +116,8 @@ describe("Storage Abstraction tests", function () {
             }
 
             try {
-                await ThirdParty.signInAndUp();
-                throw new Error("signInAndUp should have failed but didnt");
+                await ThirdPartyPasswordless.thirdPartySignInAndUp();
+                throw new Error("thirdPartySignInAndUp should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -82,7 +130,7 @@ describe("Storage Abstraction tests", function () {
             ]);
         });
 
-        it("Test that recipe functions use default handlers", async function () {
+        it("Test that recipe functions use default window APIs", async function () {
             /**
              * In normal SDK operation, the recipe functions will use storage from the
              * `window` object. We do this to mimic sessionStorage
@@ -115,12 +163,12 @@ describe("Storage Abstraction tests", function () {
                     apiDomain: "api.supertokens.io",
                 },
                 recipeList: [
-                    ThirdParty.init({
+                    ThirdPartyPasswordless.init({
                         override: {
                             functions: function (original) {
                                 return {
                                     ...original,
-                                    generateStateToSendToOAuthProvider: () => "state",
+                                    generateThirdPartyStateToSendToOAuthProvider: () => "state",
                                 };
                             },
                         },
@@ -129,11 +177,11 @@ describe("Storage Abstraction tests", function () {
             });
 
             try {
-                await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
+                await ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
                     providerId: "",
                     authorisationURL: "",
                 });
-                throw new Error("getAuthorisationURLWithQueryParamsAndSetState should have failed but didnt");
+                throw new Error("getThirdPartyAuthorisationURLWithQueryParamsAndSetState should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -141,8 +189,8 @@ describe("Storage Abstraction tests", function () {
             }
 
             try {
-                await ThirdParty.signInAndUp();
-                throw new Error("signInAndUp should have failed but didnt");
+                await ThirdPartyPasswordless.thirdPartySignInAndUp();
+                throw new Error("thirdPartySignInAndUp should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -163,24 +211,11 @@ describe("Storage Abstraction tests", function () {
                     appName: "SuperTokens",
                     apiDomain: "api.supertokens.io",
                 },
-                recipeList: [
-                    Passwordless.init({
-                        override: {
-                            functions: function (original) {
-                                return {
-                                    ...original,
-                                    createCode: () => {
-                                        return {};
-                                    },
-                                };
-                            },
-                        },
-                    }),
-                ],
-                storageHandlers: {
-                    localStorage: (original) => {
-                        return {
-                            ...original,
+                windowHandler: function (original) {
+                    return {
+                        ...original,
+                        localStorage: {
+                            ...original.localStorage,
                             getItem: async function (key) {
                                 storageLogs.push(`GET_ITEM ${key}`);
                                 throw new Error("Expected error during tests");
@@ -189,16 +224,30 @@ describe("Storage Abstraction tests", function () {
                                 storageLogs.push(`SET_ITEM ${key}`);
                                 throw new Error("Expected error during tests");
                             },
-                        };
-                    },
+                        },
+                    };
                 },
+                recipeList: [
+                    ThirdPartyPasswordless.init({
+                        override: {
+                            functions: function (original) {
+                                return {
+                                    ...original,
+                                    createPasswordlessCode: () => {
+                                        return {};
+                                    },
+                                };
+                            },
+                        },
+                    }),
+                ],
             });
 
             try {
-                await Passwordless.createCode({
+                await ThirdPartyPasswordless.createPasswordlessCode({
                     email: "",
                 });
-                throw new Error("createCode should have failed but didnt");
+                throw new Error("createPasswordlessCode should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -206,8 +255,8 @@ describe("Storage Abstraction tests", function () {
             }
 
             try {
-                await Passwordless.resendCode();
-                throw new Error("resendCode should have failed but didnt");
+                await ThirdPartyPasswordless.resendPasswordlessCode();
+                throw new Error("resendPasswordlessCode should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -249,12 +298,12 @@ describe("Storage Abstraction tests", function () {
                     apiDomain: "api.supertokens.io",
                 },
                 recipeList: [
-                    Passwordless.init({
+                    ThirdPartyPasswordless.init({
                         override: {
                             functions: function (original) {
                                 return {
                                     ...original,
-                                    createCode: () => {
+                                    createPasswordlessCode: () => {
                                         return {};
                                     },
                                 };
@@ -265,10 +314,10 @@ describe("Storage Abstraction tests", function () {
             });
 
             try {
-                await Passwordless.createCode({
+                await ThirdPartyPasswordless.createPasswordlessCode({
                     email: "",
                 });
-                throw new Error("createCode should have failed but didnt");
+                throw new Error("createPasswordlessCode should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -276,8 +325,8 @@ describe("Storage Abstraction tests", function () {
             }
 
             try {
-                await Passwordless.resendCode();
-                throw new Error("resendCode should have failed but didnt");
+                await ThirdPartyPasswordless.resendPasswordlessCode();
+                throw new Error("resendPasswordlessCode should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;

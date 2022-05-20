@@ -38,7 +38,7 @@
     "homepage": "https://github.com/supertokens/supertokens-web-js#readme",
     "dependencies": {
         "supertokens-js-override": "0.0.4",
-        "supertokens-website": "github:supertokens/supertokens-website#user-context-changes"
+        "supertokens-website": "github:supertokens/supertokens-website#custom-storage-handling"
     },
     "devDependencies": {
         "@babel/core": "^7.17.8",
@@ -69,27 +69,27 @@
         },
         {
             "path": "recipe/emailpassword/index.js",
-            "limit": "16kb"
+            "limit": "18kb"
         },
         {
             "path": "recipe/thirdparty/index.js",
-            "limit": "16kb"
+            "limit": "19kb"
         },
         {
             "path": "recipe/thirdpartyemailpassword/index.js",
-            "limit": "17kb"
+            "limit": "20kb"
         },
         {
             "path": "recipe/session/index.js",
-            "limit": "13kb"
-        },
-        {
-            "path": "recipe/passwordless/index.js",
             "limit": "15kb"
         },
         {
-            "path": "recipe/thirdpartypasswordless/index.js",
+            "path": "recipe/passwordless/index.js",
             "limit": "18kb"
+        },
+        {
+            "path": "recipe/thirdpartypasswordless/index.js",
+            "limit": "21kb"
         }
     ]
 }

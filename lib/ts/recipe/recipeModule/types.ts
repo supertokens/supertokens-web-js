@@ -12,7 +12,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { NormalisedAppInfo, NormalisedStorageHandlers } from "../../types";
+import { NormalisedAppInfo } from "../../types";
 
 /**
  * This context object is passed as an argument to pre API hook functions.
@@ -97,7 +97,6 @@ export type UserInput<Action> = {
 };
 
 export type RecipeConfig<Action> = {
-    storageHandlers: NormalisedStorageHandlers;
     recipeId: string;
     appInfo: NormalisedAppInfo;
 } & UserInput<Action>;
@@ -105,7 +104,6 @@ export type RecipeConfig<Action> = {
 export type NormalisedRecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
-    storageHandlers: NormalisedStorageHandlers;
     preAPIHook: RecipePreAPIHookFunction<Action>;
     postAPIHook: RecipePostAPIHookFunction<Action>;
 };
@@ -130,5 +128,4 @@ export type RecipeImplementationInput<PrePostAPIHookAction> = {
     appInfo: NormalisedAppInfo;
     preAPIHook: RecipePreAPIHookFunction<PrePostAPIHookAction>;
     postAPIHook: RecipePostAPIHookFunction<PrePostAPIHookAction>;
-    storageHandlers: NormalisedStorageHandlers;
 };
