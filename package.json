@@ -73,7 +73,7 @@
         },
         {
             "path": "recipe/thirdparty/index.js",
-            "limit": "18kb"
+            "limit": "19kb"
         },
         {
             "path": "recipe/thirdpartyemailpassword/index.js",
