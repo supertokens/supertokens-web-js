@@ -910,15 +910,48 @@ const recipeList: CreateRecipeFunction<any>[] = [
 
 const windowHandlerInput: WindowHandlerInput = (original: WindowHandlerInterface) => {
     return {
-        ...original,
         getDocument: () => {
             return document;
         },
-        getLocalStorage: () => {
-            return window.localStorage;
+        localStorage: {
+            clear: async () => {},
+            clearSync: () => {},
+            getItem: async () => {
+                return "";
+            },
+            getItemSync: () => {
+                return "";
+            },
+            key: async () => {
+                return "";
+            },
+            keySync: () => {
+                return "";
+            },
+            removeItem: async () => {},
+            removeItemSync: () => {},
+            setItem: async (_: string) => {},
+            setItemSync: (_: string) => {},
         },
-        getSessionStorage: () => {
-            return window.sessionStorage;
+        sessionStorage: {
+            clear: async () => {},
+            clearSync: () => {},
+            getItem: async () => {
+                return "";
+            },
+            getItemSync: () => {
+                return "";
+            },
+            key: async () => {
+                return "";
+            },
+            keySync: () => {
+                return "";
+            },
+            removeItem: async () => {},
+            removeItemSync: () => {},
+            setItem: async (_: string) => {},
+            setItemSync: (_: string) => {},
         },
         history: {
             ...original.history,
