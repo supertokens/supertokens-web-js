@@ -1,4 +1,5 @@
-import { RecipeFunctionOptions, UserType } from "../emailpassword";
+import { RecipeFunctionOptions, UserType as EmailPasswordUserType } from "../emailpassword";
+import { ThirdPartyUserType } from "../thirdparty/types";
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 export default class RecipeWrapper {
     static init(
@@ -122,7 +123,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: EmailPasswordUserType;
               fetchResponse: Response;
           }
         | {
@@ -161,7 +162,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: EmailPasswordUserType;
               fetchResponse: Response;
           }
         | {
@@ -191,7 +192,7 @@ export default class RecipeWrapper {
     static thirdPartySignInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: ThirdPartyUserType;
               createdNewUser: boolean;
               fetchResponse: Response;
           }
@@ -296,7 +297,8 @@ export {
     sendVerificationEmail,
     isEmailVerified,
     signOut,
-    UserType,
+    EmailPasswordUserType,
+    ThirdPartyUserType,
     UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
