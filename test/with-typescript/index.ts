@@ -1203,3 +1203,161 @@ TPPRecipeImplementation({
     preAPIHook: tppPreAPIHook,
     recipeId: tppId,
 });
+
+/**
+ * Calling recipe functions exported from recipe/index files
+ */
+
+// Email Verificiation
+EmailVerification.verifyEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+EmailVerification.verifyEmail(undefined);
+EmailVerification.verifyEmail();
+
+EmailVerification.isEmailVerified({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+EmailVerification.isEmailVerified(undefined);
+EmailVerification.isEmailVerified();
+
+EmailVerification.sendVerificationEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+EmailVerification.sendVerificationEmail(undefined);
+EmailVerification.sendVerificationEmail();
+
+EmailVerification.getEmailVerificationTokenFromURL({
+    userContext: undefined,
+});
+EmailVerification.getEmailVerificationTokenFromURL(undefined);
+EmailVerification.getEmailVerificationTokenFromURL();
+
+// Email password
+EmailPassword.doesEmailExist({
+    email: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+EmailPassword.doesEmailExist();
+// @ts-expect-error
+EmailPassword.doesEmailExist(undefined);
+
+EmailPassword.getResetPasswordTokenFromURL({
+    userContext: undefined,
+});
+EmailPassword.getResetPasswordTokenFromURL(undefined);
+EmailPassword.getResetPasswordTokenFromURL();
+
+EmailPassword.isEmailVerified({
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+EmailPassword.isEmailVerified(undefined);
+EmailPassword.isEmailVerified();
+
+EmailPassword.sendPasswordResetEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+//@ts-expect-error
+EmailPassword.sendPasswordResetEmail(undefined);
+//@ts-expect-error
+EmailPassword.sendPasswordResetEmail();
+
+EmailPassword.sendVerificationEmail({
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+EmailPassword.sendVerificationEmail(undefined);
+EmailPassword.sendVerificationEmail();
+
+EmailPassword.signIn({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+EmailPassword.signIn(undefined);
+// @ts-expect-error
+EmailPassword.signIn();
+
+EmailPassword.signOut({
+    userContext: undefined,
+});
+EmailPassword.signOut(undefined);
+EmailPassword.signOut();
+
+EmailPassword.signUp({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+EmailPassword.signUp(undefined);
+// @ts-expect-error
+EmailPassword.signUp();
+
+EmailPassword.submitNewPassword({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+EmailPassword.submitNewPassword(undefined);
+// @ts-expect-error
+EmailPassword.submitNewPassword();
+
+EmailPassword.verifyEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+EmailPassword.verifyEmail(undefined);
+EmailPassword.verifyEmail();

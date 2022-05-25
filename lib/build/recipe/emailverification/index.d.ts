@@ -52,16 +52,19 @@ export default class RecipeWrapper {
         isVerified: boolean;
         fetchResponse: Response;
     }>;
+    static getEmailVerificationTokenFromURL(input?: { userContext?: any }): string;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
 declare const sendVerificationEmail: typeof RecipeWrapper.sendVerificationEmail;
 declare const isEmailVerified: typeof RecipeWrapper.isEmailVerified;
+declare const getEmailVerificationTokenFromURL: typeof RecipeWrapper.getEmailVerificationTokenFromURL;
 export {
     init,
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
+    getEmailVerificationTokenFromURL,
     UserInput,
     RecipeInterface,
     RecipeFunctionOptions,

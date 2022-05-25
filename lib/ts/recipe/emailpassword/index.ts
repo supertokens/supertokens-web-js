@@ -238,10 +238,10 @@ export default class RecipeWrapper {
      *
      * @returns The "token" query parameter from the current location
      */
-    static getResetPasswordTokenFromURL(input: { userContext?: any }): string {
+    static getResetPasswordTokenFromURL(input?: { userContext?: any }): string {
         return Recipe.getInstanceOrThrow().recipeImplementation.getResetPasswordTokenFromURL({
             ...input,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 
@@ -322,6 +322,7 @@ const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
 const signOut = RecipeWrapper.signOut;
+const getResetPasswordTokenFromURL = RecipeWrapper.getResetPasswordTokenFromURL;
 
 export {
     init,
@@ -330,6 +331,7 @@ export {
     signUp,
     signIn,
     doesEmailExist,
+    getResetPasswordTokenFromURL,
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,

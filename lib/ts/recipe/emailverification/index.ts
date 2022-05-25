@@ -87,18 +87,27 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
+
+    static getEmailVerificationTokenFromURL(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getEmailVerificationTokenFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
 const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
+const getEmailVerificationTokenFromURL = RecipeWrapper.getEmailVerificationTokenFromURL;
 
 export {
     init,
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,
+    getEmailVerificationTokenFromURL,
     UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
