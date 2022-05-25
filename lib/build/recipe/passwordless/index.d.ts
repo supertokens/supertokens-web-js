@@ -120,6 +120,22 @@ export default class RecipeWrapper {
           }
     >;
     /**
+     * Reads and returns the link code from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The hash (#) property of the current URL
+     */
+    static getLinkCodeFromURL(input?: { userContext?: any }): string;
+    /**
+     * Reads and returns the pre auth session id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "preAuthSessionId" query parameter from the current URL
+     */
+    static getPreAuthSessionIdFromURL(input?: { userContext?: any }): string;
+    /**
      * Check if a user with the given email exists
      *
      * @param email Email to check
@@ -159,6 +175,40 @@ export default class RecipeWrapper {
         doesExist: boolean;
         fetchResponse: Response;
     }>;
+    /**
+     * Get information about the current login attempt from storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns `{deviceId, preAuthSessionId, flowType}` if present, returns undefined otherwise
+     */
+    static getLoginAttemptInfo<CustomLoginAttemptInfoProperties>(input?: { userContext?: any }): Promise<
+        | undefined
+        | ({
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+          } & CustomLoginAttemptInfoProperties)
+    >;
+    /**
+     * Set information about the current login attempt to storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     */
+    static setLoginAttemptInfo<CustomStateProperties>(input: {
+        attemptInfo: {
+            deviceId: string;
+            preAuthSessionId: string;
+            flowType: PasswordlessFlowType;
+        } & CustomStateProperties;
+        userContext?: any;
+    }): Promise<void>;
+    /**
+     * Clear any information about login attempts from storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     */
+    static clearLoginAttemptInfo(input?: { userContext?: any }): Promise<void>;
     static signOut(input?: { userContext?: any }): Promise<void>;
 }
 declare const init: typeof RecipeWrapper.init;
@@ -168,6 +218,11 @@ declare const consumeCode: typeof RecipeWrapper.consumeCode;
 declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
 declare const doesPhoneNumberExist: typeof RecipeWrapper.doesPhoneNumberExist;
 declare const signOut: typeof RecipeWrapper.signOut;
+declare const getLinkCodeFromURL: typeof RecipeWrapper.getLinkCodeFromURL;
+declare const getPreAuthSessionIdFromURL: typeof RecipeWrapper.getPreAuthSessionIdFromURL;
+declare const getLoginAttemptInfo: typeof RecipeWrapper.getLoginAttemptInfo;
+declare const setLoginAttemptInfo: typeof RecipeWrapper.setLoginAttemptInfo;
+declare const clearLoginAttemptInfo: typeof RecipeWrapper.clearLoginAttemptInfo;
 export {
     init,
     createCode,
@@ -176,6 +231,11 @@ export {
     doesEmailExist,
     doesPhoneNumberExist,
     signOut,
+    getLinkCodeFromURL,
+    getPreAuthSessionIdFromURL,
+    getLoginAttemptInfo,
+    setLoginAttemptInfo,
+    clearLoginAttemptInfo,
     PasswordlessUser,
     UserInput,
     RecipeInterface,
