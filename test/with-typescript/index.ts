@@ -55,6 +55,7 @@ import {
     RecipeInterface as PasswordlessRecipeInterface,
     PreAndPostAPIHookAction as PasswordlessAction,
     UserInput as PasswordlessUserInput,
+    PasswordlessFlowType,
 } from "../../recipe/passwordless/types";
 import Passwordless from "../../recipe/passwordless";
 import {
@@ -1361,3 +1362,204 @@ EmailPassword.verifyEmail({
 });
 EmailPassword.verifyEmail(undefined);
 EmailPassword.verifyEmail();
+
+// Passwordless
+Passwordless.clearLoginAttemptInfo({
+    userContext: undefined,
+});
+Passwordless.clearLoginAttemptInfo(undefined);
+Passwordless.clearLoginAttemptInfo();
+
+Passwordless.consumeCode({
+    userInputCode: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+Passwordless.consumeCode({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+// @ts-expect-error
+Passwordless.consumeCode(undefined);
+// @ts-expect-error
+Passwordless.consumeCode();
+
+Passwordless.createCode({
+    email: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+Passwordless.createCode({
+    phoneNumber: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+Passwordless.createCode({
+    email: "",
+    phoneNumber: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+Passwordless.createCode(undefined);
+// @ts-expect-error
+Passwordless.createCode();
+
+Passwordless.doesEmailExist({
+    email: "",
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+// @ts-expect-error
+Passwordless.doesEmailExist(undefined);
+// @ts-expect-error
+Passwordless.doesEmailExist();
+
+Passwordless.doesPhoneNumberExist({
+    phoneNumber: "",
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+// @ts-expect-error
+Passwordless.doesPhoneNumberExist(undefined);
+// @ts-expect-error
+Passwordless.doesPhoneNumberExist();
+
+Passwordless.getLinkCodeFromURL({
+    userContext: undefined,
+});
+Passwordless.getLinkCodeFromURL(undefined);
+Passwordless.getLinkCodeFromURL();
+
+async function getLoginAttemptInfo() {
+    // @ts-expect-error
+    const incorrectCustomType:
+        | {
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+              customData: string;
+          }
+        | undefined = await Passwordless.getLoginAttemptInfo<{
+        customData: number;
+    }>({
+        userContext: undefined,
+    });
+
+    const correctCustomType:
+        | {
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+              customData: string;
+          }
+        | undefined = await Passwordless.getLoginAttemptInfo<{
+        customData: string;
+    }>(undefined);
+
+    const defaultType:
+        | {
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+          }
+        | undefined = await Passwordless.getLoginAttemptInfo();
+}
+
+Passwordless.getPreAuthSessionIdFromURL({
+    userContext: undefined,
+});
+Passwordless.getPreAuthSessionIdFromURL(undefined);
+Passwordless.getPreAuthSessionIdFromURL();
+
+Passwordless.resendCode({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+Passwordless.resendCode(undefined);
+Passwordless.resendCode();
+
+Passwordless.setLoginAttemptInfo({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE",
+    },
+    userContext: undefined,
+});
+Passwordless.setLoginAttemptInfo({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "MAGIC_LINK",
+    },
+    userContext: undefined,
+});
+Passwordless.setLoginAttemptInfo({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+    },
+    userContext: undefined,
+});
+Passwordless.setLoginAttemptInfo<{
+    customData: string;
+}>({
+    // @ts-expect-error
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+    },
+    userContext: undefined,
+});
+Passwordless.setLoginAttemptInfo<{
+    customData: string;
+}>({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+        // @ts-expect-error
+        customData: 123,
+    },
+    userContext: undefined,
+});
+Passwordless.setLoginAttemptInfo<{
+    customData: string;
+}>({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+        customData: "",
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+Passwordless.setLoginAttemptInfo(undefined);
+// @ts-expect-error
+Passwordless.setLoginAttemptInfo();
+
+Passwordless.signOut({
+    userContext: undefined,
+});
+Passwordless.signOut(undefined);
+Passwordless.signOut();
