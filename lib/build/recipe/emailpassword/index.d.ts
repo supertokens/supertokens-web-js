@@ -179,6 +179,14 @@ export default class RecipeWrapper {
         fetchResponse: Response;
     }>;
     /**
+     * Reads and returns the reset password token from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "token" query parameter from the current location
+     */
+    static getResetPasswordTokenFromURL(input: { userContext?: any }): string;
+    /**
      * Verify an email
      *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
