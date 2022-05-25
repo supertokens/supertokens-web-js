@@ -1800,3 +1800,328 @@ ThirdParty.verifyEmail({
 });
 ThirdParty.verifyEmail(undefined);
 ThirdParty.verifyEmail();
+
+// TPEP
+ThirdPartyEmailPassword.doesEmailExist({
+    email: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.doesEmailExist(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.doesEmailExist();
+
+ThirdPartyEmailPassword.emailPasswordSignIn({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.emailPasswordSignIn(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.emailPasswordSignIn();
+
+ThirdPartyEmailPassword.emailPasswordSignUp({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.emailPasswordSignUp(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.emailPasswordSignUp();
+
+ThirdPartyEmailPassword.generateStateToSendToOAuthProvider({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.generateStateToSendToOAuthProvider(undefined);
+ThirdPartyEmailPassword.generateStateToSendToOAuthProvider();
+
+ThirdPartyEmailPassword.getAuthCodeFromURL({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.getAuthCodeFromURL(undefined);
+ThirdPartyEmailPassword.getAuthCodeFromURL();
+
+ThirdPartyEmailPassword.getAuthErrorFromURL({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.getAuthErrorFromURL(undefined);
+ThirdPartyEmailPassword.getAuthErrorFromURL();
+
+ThirdPartyEmailPassword.getAuthStateFromURL({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.getAuthStateFromURL(undefined);
+ThirdPartyEmailPassword.getAuthStateFromURL();
+
+ThirdPartyEmailPassword.getAuthorisationURLFromBackend({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    providerId: "",
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.getAuthorisationURLFromBackend(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.getAuthorisationURLFromBackend();
+
+ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+    authorisationURL: "",
+    providerId: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    providerClientId: "",
+    userContext: undefined,
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState();
+
+ThirdPartyEmailPassword.getResetPasswordTokenFromURL({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.getResetPasswordTokenFromURL(undefined);
+ThirdPartyEmailPassword.getResetPasswordTokenFromURL();
+
+function tpepgetStateAndOtherInfoFromStorage() {
+    // @ts-expect-error
+    const invalidCustomType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+              customData: string;
+          }
+        | undefined = ThirdPartyEmailPassword.getStateAndOtherInfoFromStorage<{
+        customData: number;
+    }>({
+        userContext: undefined,
+    });
+
+    const validCustomType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+              customData: string;
+          }
+        | undefined = ThirdPartyEmailPassword.getStateAndOtherInfoFromStorage<{
+        customData: string;
+    }>({
+        userContext: undefined,
+    });
+
+    const defaultType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+          }
+        | undefined = ThirdPartyEmailPassword.getStateAndOtherInfoFromStorage({
+        userContext: undefined,
+    });
+}
+
+ThirdPartyEmailPassword.isEmailVerified({
+    userContext: undefined,
+    options: undefined,
+});
+ThirdPartyEmailPassword.isEmailVerified(undefined);
+ThirdPartyEmailPassword.isEmailVerified();
+
+ThirdPartyEmailPassword.sendPasswordResetEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.sendPasswordResetEmail(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.sendPasswordResetEmail();
+
+ThirdPartyEmailPassword.sendVerificationEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdPartyEmailPassword.sendVerificationEmail(undefined);
+ThirdPartyEmailPassword.sendVerificationEmail();
+
+ThirdPartyEmailPassword.setStateAndOtherInfoToStorage({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+ThirdPartyEmailPassword.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    // @ts-expect-error
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+    },
+});
+ThirdPartyEmailPassword.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        // @ts-expect-error
+        customData: 123,
+    },
+});
+ThirdPartyEmailPassword.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        customData: "",
+    },
+});
+
+ThirdPartyEmailPassword.signOut({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.signOut(undefined);
+ThirdPartyEmailPassword.signOut();
+
+ThirdPartyEmailPassword.submitNewPassword({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.submitNewPassword(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.submitNewPassword();
+
+ThirdPartyEmailPassword.thirdPartySignInAndUp({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdPartyEmailPassword.thirdPartySignInAndUp(undefined);
+ThirdPartyEmailPassword.thirdPartySignInAndUp();
+
+ThirdPartyEmailPassword.verifyAndGetStateOrThrowError({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+
+ThirdPartyEmailPassword.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    // @ts-expect-error
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+    },
+});
+
+ThirdPartyEmailPassword.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        // @ts-expect-error
+        customData: 123,
+    },
+});
+
+ThirdPartyEmailPassword.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        customData: "",
+    },
+});
+
+ThirdPartyEmailPassword.verifyEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdPartyEmailPassword.verifyEmail(undefined);
+ThirdPartyEmailPassword.verifyEmail();
