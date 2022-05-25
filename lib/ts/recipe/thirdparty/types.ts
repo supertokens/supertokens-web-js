@@ -173,7 +173,7 @@ export type RecipeInterface = {
     >;
 
     /**
-     * Generate a new state that will be sent to the thirs party provider
+     * Generate a new state that will be sent to the third party provider
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *

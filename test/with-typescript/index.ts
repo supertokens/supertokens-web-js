@@ -1563,3 +1563,240 @@ Passwordless.signOut({
 });
 Passwordless.signOut(undefined);
 Passwordless.signOut();
+
+// Third party
+ThirdParty.generateStateToSendToOAuthProvider({
+    userContext: undefined,
+});
+ThirdParty.generateStateToSendToOAuthProvider(undefined);
+ThirdParty.generateStateToSendToOAuthProvider();
+
+ThirdParty.getAuthCodeFromURL({
+    userContext: undefined,
+});
+ThirdParty.getAuthCodeFromURL(undefined);
+ThirdParty.getAuthCodeFromURL();
+
+ThirdParty.getAuthErrorFromURL({
+    userContext: undefined,
+});
+ThirdParty.getAuthErrorFromURL(undefined);
+ThirdParty.getAuthErrorFromURL();
+
+ThirdParty.getAuthStateFromURL({
+    userContext: undefined,
+});
+ThirdParty.getAuthStateFromURL(undefined);
+ThirdParty.getAuthStateFromURL();
+
+ThirdParty.getAuthorisationURLFromBackend({
+    providerId: "",
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+// @ts-expect-error
+ThirdParty.getAuthorisationURLFromBackend(undefined);
+// @ts-expect-error
+ThirdParty.getAuthorisationURLFromBackend();
+
+ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
+    authorisationURL: "",
+    providerId: "",
+    providerClientId: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+ThirdParty.getAuthorisationURLWithQueryParamsAndSetState(undefined);
+// @ts-expect-error
+ThirdParty.getAuthorisationURLWithQueryParamsAndSetState();
+
+function getStateAndOtherInfoFromStorage() {
+    // @ts-expect-error
+    const invalidCustomType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+              customData: string;
+          }
+        | undefined = ThirdParty.getStateAndOtherInfoFromStorage<{
+        customData: number;
+    }>({
+        userContext: undefined,
+    });
+
+    const validCustomType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+              customData: string;
+          }
+        | undefined = ThirdParty.getStateAndOtherInfoFromStorage<{
+        customData: string;
+    }>(undefined);
+
+    const defaultType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+          }
+        | undefined = ThirdParty.getStateAndOtherInfoFromStorage();
+}
+
+ThirdParty.isEmailVerified({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdParty.isEmailVerified(undefined);
+ThirdParty.isEmailVerified();
+
+ThirdParty.sendVerificationEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdParty.sendVerificationEmail(undefined);
+ThirdParty.sendVerificationEmail();
+
+ThirdParty.setStateAndOtherInfoToStorage({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+ThirdParty.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        // @ts-expect-error
+        customData: 123,
+    },
+});
+ThirdParty.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    // @ts-expect-error
+    state: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+    },
+});
+ThirdParty.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        customData: "",
+    },
+});
+
+ThirdParty.signInAndUp({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdParty.signInAndUp(undefined);
+ThirdParty.signInAndUp();
+
+ThirdParty.signOut({
+    userContext: undefined,
+});
+ThirdParty.signOut(undefined);
+ThirdParty.signOut();
+
+ThirdParty.verifyAndGetStateOrThrowError({
+    userContext: undefined,
+    stateFromAuthProvider: "",
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+ThirdParty.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    userContext: undefined,
+    stateFromAuthProvider: "",
+    // @ts-expect-error
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+ThirdParty.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    userContext: undefined,
+    stateFromAuthProvider: "",
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+        // @ts-expect-error
+        customData: 123,
+    },
+});
+ThirdParty.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    userContext: undefined,
+    stateFromAuthProvider: "",
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+        customData: "",
+    },
+});
+
+ThirdParty.verifyEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdParty.verifyEmail(undefined);
+ThirdParty.verifyEmail();
