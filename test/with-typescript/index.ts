@@ -25,13 +25,7 @@
  * The differences in tsconfig for with-typescript compared to the main project:
  * - noUnusedLocals is set to false
  */
-import {
-    SuperTokensConfig,
-    AppInfoUserInput,
-    CreateRecipeFunction,
-    NormalisedAppInfo,
-    StorageHandlerInput,
-} from "../../types";
+import { SuperTokensConfig, AppInfoUserInput, CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import SuperTokens from "../../";
 import {
     RecipeInterface as EmailVerificationRecipeInterface,
@@ -61,6 +55,7 @@ import {
     RecipeInterface as PasswordlessRecipeInterface,
     PreAndPostAPIHookAction as PasswordlessAction,
     UserInput as PasswordlessUserInput,
+    PasswordlessFlowType,
 } from "../../recipe/passwordless/types";
 import Passwordless from "../../recipe/passwordless";
 import {
@@ -78,11 +73,6 @@ import Session from "../../recipe/session";
 import STGeneralError from "../../utils/error";
 import NormalisedURLDomain from "../../utils/normalisedURLDomain";
 import NormalisedURLPath from "../../utils/normalisedURLPath";
-import {
-    NormalisedStorageHandlers,
-    getDefaultLocalStorageHandler,
-    getDefaultSessionStorageHandler,
-} from "../../utils/storage";
 import {
     RecipePostAPIHookContext,
     RecipePostAPIHookFunction,
@@ -107,6 +97,8 @@ import PasswordlessUtils from "../../recipe/passwordless/utils";
 import { Recipe as TPPRecipe } from "../../recipe/thirdpartypasswordless/recipe";
 import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe/thirdpartypasswordless/recipeImplementation";
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
+import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
+import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
 
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
@@ -899,16 +891,6 @@ function getSession(): CreateRecipeFunction<SessionAction> {
     return Session.init(config);
 }
 
-const storageHandlerInput: StorageHandlerInput = {
-    localStorage: (original) => original,
-    sessionStorage: (original) => original,
-};
-
-const normalisedStorageHandlers: NormalisedStorageHandlers = {
-    localStorage: getDefaultLocalStorageHandler(),
-    sessionStorage: getDefaultSessionStorageHandler(),
-};
-
 // SuperTokens init
 const appInfo: AppInfoUserInput = {
     apiDomain: "http://localhost:8080",
@@ -927,10 +909,137 @@ const recipeList: CreateRecipeFunction<any>[] = [
     getSession(),
 ];
 
+const windowHandlerInput: WindowHandlerInput = (original: WindowHandlerInterface) => {
+    return {
+        getDocument: () => {
+            return document;
+        },
+        localStorage: {
+            clear: async () => {
+                return window.localStorage.clear();
+            },
+            clearSync: () => {
+                return window.localStorage.clear();
+            },
+            getItem: async (key: string) => {
+                return window.localStorage.getItem(key);
+            },
+            getItemSync: (key: string) => {
+                return window.localStorage.getItem(key);
+            },
+            key: async (index: number) => {
+                return window.localStorage.key(index);
+            },
+            keySync: (index: number) => {
+                return window.localStorage.key(index);
+            },
+            removeItem: async (key: string) => {
+                return window.localStorage.removeItem(key);
+            },
+            removeItemSync: (key: string) => {
+                return window.localStorage.removeItem(key);
+            },
+            setItem: async (key: string, value: string) => {
+                return window.localStorage.setItem(key, value);
+            },
+            setItemSync: (key: string, value: string) => {
+                return window.localStorage.setItem(key, value);
+            },
+        },
+        sessionStorage: {
+            clear: async () => {
+                return window.localStorage.clear();
+            },
+            clearSync: () => {
+                return window.localStorage.clear();
+            },
+            getItem: async (key: string) => {
+                return window.localStorage.getItem(key);
+            },
+            getItemSync: (key: string) => {
+                return window.localStorage.getItem(key);
+            },
+            key: async (index: number) => {
+                return window.localStorage.key(index);
+            },
+            keySync: (index: number) => {
+                return window.localStorage.key(index);
+            },
+            removeItem: async (key: string) => {
+                return window.localStorage.removeItem(key);
+            },
+            removeItemSync: (key: string) => {
+                return window.localStorage.removeItem(key);
+            },
+            setItem: async (key: string, value: string) => {
+                return window.localStorage.setItem(key, value);
+            },
+            setItemSync: (key: string, value: string) => {
+                return window.localStorage.setItem(key, value);
+            },
+        },
+        history: {
+            ...original.history,
+            getState: () => {
+                return window.history.state;
+            },
+            replaceState: (data: any, unused: string, url?: string | null | undefined) => {
+                window.history.replaceState(data, unused, url);
+            },
+        },
+        location: {
+            ...original.location,
+            assign: (url: string | URL) => {
+                window.location.assign(url);
+            },
+            getHash: () => {
+                return window.location.hash;
+            },
+            getHostName: () => {
+                return window.location.hostname;
+            },
+            getHref: () => {
+                return window.location.href;
+            },
+            getOrigin: () => {
+                return window.location.origin;
+            },
+            getPathName: () => {
+                return window.location.pathname;
+            },
+            getSearch: () => {
+                return window.location.pathname;
+            },
+            setHref: (newHref: string) => {
+                window.location.href = newHref;
+            },
+        },
+    };
+};
+
+const cookieHandlerInput: CookieHandlerInput = (original: CookieHandlerInterface) => {
+    return {
+        ...original,
+        getCookie: async function () {
+            return document.cookie;
+        },
+        getCookieSync: function () {
+            return document.cookie;
+        },
+        setCookie: async function (newCookie: string) {
+            document.cookie = newCookie;
+        },
+        setCookieSync: function (newCookie: string) {
+            document.cookie = newCookie;
+        },
+    };
+};
+
 const config: SuperTokensConfig = {
     appInfo,
     recipeList,
-    storageHandlers: storageHandlerInput,
+    windowHandler: windowHandlerInput,
+    cookieHandler: cookieHandlerInput,
 };
 
 SuperTokens.init(config);
@@ -957,7 +1066,6 @@ EmailVerificationRecipe.reset();
 EmailVerificationUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: evId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getEmailVerificationFunctions,
     },
@@ -970,7 +1078,6 @@ EmailVerificationRecipeImplementation({
     postAPIHook: emailVerificationPostAPIHook,
     preAPIHook: emailVerificationPreAPIHook,
     recipeId: evId,
-    storageHandlers: normalisedStorageHandlers,
 });
 
 const epId: string = EmailPasswordRecipe.RECIPE_ID;
@@ -981,7 +1088,6 @@ EmailPasswordRecipe.reset();
 EmailPasswordUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: epId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getEmailPasswordFunctions,
     },
@@ -994,7 +1100,6 @@ EmailPasswordRecipeImplementation({
     postAPIHook: emailPasswordPostAPIHook,
     preAPIHook: emailPasswordPreAPIHook,
     recipeId: epId,
-    storageHandlers: normalisedStorageHandlers,
 });
 
 const tpId: string = ThirdPartyRecipe.RECIPE_ID;
@@ -1005,7 +1110,6 @@ ThirdPartyRecipe.reset();
 ThirdPartyUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: tpId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getThirdPartyFunctions,
     },
@@ -1018,7 +1122,6 @@ ThirdPartyRecipeImplementation({
     postAPIHook: thirdPartyPostAPIHook,
     preAPIHook: thirdPartyPreAPIHook,
     recipeId: tpId,
-    storageHandlers: normalisedStorageHandlers,
 });
 
 const tpepId: string = TPEPRecipe.RECIPE_ID;
@@ -1029,7 +1132,6 @@ TPEPRecipe.reset();
 TPEPUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: tpepId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getThirdPartyEmailPasswordFunctions,
     },
@@ -1042,7 +1144,6 @@ TPEPRecipeImplementation({
     postAPIHook: tpepPostAPIHook,
     preAPIHook: tpepPreAPIHook,
     recipeId: tpepId,
-    storageHandlers: normalisedStorageHandlers,
 });
 
 const passwordlessId: string = PasswordlessRecipe.RECIPE_ID;
@@ -1053,7 +1154,6 @@ PasswordlessRecipe.reset();
 PasswordlessUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: passwordlessId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getPasswordlessFunctions,
     },
@@ -1066,7 +1166,6 @@ const passwordlessRecipeImplementation = PasswordlessRecipeImplementation({
     postAPIHook: passwordlessPostAPIHook,
     preAPIHook: passwordlessPreAPIHook,
     recipeId: passwordlessId,
-    storageHandlers: normalisedStorageHandlers,
 });
 
 PasswordlessUtils.consumeCode({
@@ -1092,7 +1191,6 @@ TPPRecipe.reset();
 TPPUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
     recipeId: passwordlessId,
-    storageHandlers: normalisedStorageHandlers,
     override: {
         functions: getThirdPartyPasswordlessFunctions,
     },
@@ -1105,5 +1203,1350 @@ TPPRecipeImplementation({
     postAPIHook: tppPostAPIHook,
     preAPIHook: tppPreAPIHook,
     recipeId: tppId,
-    storageHandlers: normalisedStorageHandlers,
 });
+
+/**
+ * Calling recipe functions exported from recipe/index files
+ */
+
+// Email Verificiation
+EmailVerification.verifyEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+EmailVerification.verifyEmail(undefined);
+EmailVerification.verifyEmail();
+
+EmailVerification.isEmailVerified({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+EmailVerification.isEmailVerified(undefined);
+EmailVerification.isEmailVerified();
+
+EmailVerification.sendVerificationEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+EmailVerification.sendVerificationEmail(undefined);
+EmailVerification.sendVerificationEmail();
+
+EmailVerification.getEmailVerificationTokenFromURL({
+    userContext: undefined,
+});
+EmailVerification.getEmailVerificationTokenFromURL(undefined);
+EmailVerification.getEmailVerificationTokenFromURL();
+
+// Email password
+EmailPassword.doesEmailExist({
+    email: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+EmailPassword.doesEmailExist();
+// @ts-expect-error
+EmailPassword.doesEmailExist(undefined);
+
+EmailPassword.getResetPasswordTokenFromURL({
+    userContext: undefined,
+});
+EmailPassword.getResetPasswordTokenFromURL(undefined);
+EmailPassword.getResetPasswordTokenFromURL();
+
+EmailPassword.isEmailVerified({
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+EmailPassword.isEmailVerified(undefined);
+EmailPassword.isEmailVerified();
+
+EmailPassword.sendPasswordResetEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+//@ts-expect-error
+EmailPassword.sendPasswordResetEmail(undefined);
+//@ts-expect-error
+EmailPassword.sendPasswordResetEmail();
+
+EmailPassword.sendVerificationEmail({
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+EmailPassword.sendVerificationEmail(undefined);
+EmailPassword.sendVerificationEmail();
+
+EmailPassword.signIn({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+EmailPassword.signIn(undefined);
+// @ts-expect-error
+EmailPassword.signIn();
+
+EmailPassword.signOut({
+    userContext: undefined,
+});
+EmailPassword.signOut(undefined);
+EmailPassword.signOut();
+
+EmailPassword.signUp({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+EmailPassword.signUp(undefined);
+// @ts-expect-error
+EmailPassword.signUp();
+
+EmailPassword.submitNewPassword({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+EmailPassword.submitNewPassword(undefined);
+// @ts-expect-error
+EmailPassword.submitNewPassword();
+
+EmailPassword.verifyEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+EmailPassword.verifyEmail(undefined);
+EmailPassword.verifyEmail();
+
+// Passwordless
+Passwordless.clearLoginAttemptInfo({
+    userContext: undefined,
+});
+Passwordless.clearLoginAttemptInfo(undefined);
+Passwordless.clearLoginAttemptInfo();
+
+Passwordless.consumeCode({
+    userInputCode: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+Passwordless.consumeCode({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+// @ts-expect-error
+Passwordless.consumeCode(undefined);
+// @ts-expect-error
+Passwordless.consumeCode();
+
+Passwordless.createCode({
+    email: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+Passwordless.createCode({
+    phoneNumber: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+Passwordless.createCode({
+    email: "",
+    phoneNumber: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+Passwordless.createCode(undefined);
+// @ts-expect-error
+Passwordless.createCode();
+
+Passwordless.doesEmailExist({
+    email: "",
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+// @ts-expect-error
+Passwordless.doesEmailExist(undefined);
+// @ts-expect-error
+Passwordless.doesEmailExist();
+
+Passwordless.doesPhoneNumberExist({
+    phoneNumber: "",
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+// @ts-expect-error
+Passwordless.doesPhoneNumberExist(undefined);
+// @ts-expect-error
+Passwordless.doesPhoneNumberExist();
+
+Passwordless.getLinkCodeFromURL({
+    userContext: undefined,
+});
+Passwordless.getLinkCodeFromURL(undefined);
+Passwordless.getLinkCodeFromURL();
+
+async function getLoginAttemptInfo() {
+    // @ts-expect-error
+    const incorrectCustomType:
+        | {
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+              customData: string;
+          }
+        | undefined = await Passwordless.getLoginAttemptInfo<{
+        customData: number;
+    }>({
+        userContext: undefined,
+    });
+
+    const correctCustomType:
+        | {
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+              customData: string;
+          }
+        | undefined = await Passwordless.getLoginAttemptInfo<{
+        customData: string;
+    }>(undefined);
+
+    const defaultType:
+        | {
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+          }
+        | undefined = await Passwordless.getLoginAttemptInfo();
+}
+
+Passwordless.getPreAuthSessionIdFromURL({
+    userContext: undefined,
+});
+Passwordless.getPreAuthSessionIdFromURL(undefined);
+Passwordless.getPreAuthSessionIdFromURL();
+
+Passwordless.resendCode({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+Passwordless.resendCode(undefined);
+Passwordless.resendCode();
+
+Passwordless.setLoginAttemptInfo({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE",
+    },
+    userContext: undefined,
+});
+Passwordless.setLoginAttemptInfo({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "MAGIC_LINK",
+    },
+    userContext: undefined,
+});
+Passwordless.setLoginAttemptInfo({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+    },
+    userContext: undefined,
+});
+Passwordless.setLoginAttemptInfo<{
+    customData: string;
+}>({
+    // @ts-expect-error
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+    },
+    userContext: undefined,
+});
+Passwordless.setLoginAttemptInfo<{
+    customData: string;
+}>({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+        // @ts-expect-error
+        customData: 123,
+    },
+    userContext: undefined,
+});
+Passwordless.setLoginAttemptInfo<{
+    customData: string;
+}>({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+        customData: "",
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+Passwordless.setLoginAttemptInfo(undefined);
+// @ts-expect-error
+Passwordless.setLoginAttemptInfo();
+
+Passwordless.signOut({
+    userContext: undefined,
+});
+Passwordless.signOut(undefined);
+Passwordless.signOut();
+
+// Third party
+ThirdParty.generateStateToSendToOAuthProvider({
+    userContext: undefined,
+});
+ThirdParty.generateStateToSendToOAuthProvider(undefined);
+ThirdParty.generateStateToSendToOAuthProvider();
+
+ThirdParty.getAuthCodeFromURL({
+    userContext: undefined,
+});
+ThirdParty.getAuthCodeFromURL(undefined);
+ThirdParty.getAuthCodeFromURL();
+
+ThirdParty.getAuthErrorFromURL({
+    userContext: undefined,
+});
+ThirdParty.getAuthErrorFromURL(undefined);
+ThirdParty.getAuthErrorFromURL();
+
+ThirdParty.getAuthStateFromURL({
+    userContext: undefined,
+});
+ThirdParty.getAuthStateFromURL(undefined);
+ThirdParty.getAuthStateFromURL();
+
+ThirdParty.getAuthorisationURLFromBackend({
+    providerId: "",
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+// @ts-expect-error
+ThirdParty.getAuthorisationURLFromBackend(undefined);
+// @ts-expect-error
+ThirdParty.getAuthorisationURLFromBackend();
+
+ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
+    authorisationURL: "",
+    providerId: "",
+    providerClientId: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+ThirdParty.getAuthorisationURLWithQueryParamsAndSetState(undefined);
+// @ts-expect-error
+ThirdParty.getAuthorisationURLWithQueryParamsAndSetState();
+
+function getStateAndOtherInfoFromStorage() {
+    // @ts-expect-error
+    const invalidCustomType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+              customData: string;
+          }
+        | undefined = ThirdParty.getStateAndOtherInfoFromStorage<{
+        customData: number;
+    }>({
+        userContext: undefined,
+    });
+
+    const validCustomType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+              customData: string;
+          }
+        | undefined = ThirdParty.getStateAndOtherInfoFromStorage<{
+        customData: string;
+    }>(undefined);
+
+    const defaultType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+          }
+        | undefined = ThirdParty.getStateAndOtherInfoFromStorage();
+}
+
+ThirdParty.isEmailVerified({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdParty.isEmailVerified(undefined);
+ThirdParty.isEmailVerified();
+
+ThirdParty.sendVerificationEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdParty.sendVerificationEmail(undefined);
+ThirdParty.sendVerificationEmail();
+
+ThirdParty.setStateAndOtherInfoToStorage({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+ThirdParty.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        // @ts-expect-error
+        customData: 123,
+    },
+});
+ThirdParty.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    // @ts-expect-error
+    state: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+    },
+});
+ThirdParty.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        customData: "",
+    },
+});
+
+ThirdParty.signInAndUp({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdParty.signInAndUp(undefined);
+ThirdParty.signInAndUp();
+
+ThirdParty.signOut({
+    userContext: undefined,
+});
+ThirdParty.signOut(undefined);
+ThirdParty.signOut();
+
+ThirdParty.verifyAndGetStateOrThrowError({
+    userContext: undefined,
+    stateFromAuthProvider: "",
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+ThirdParty.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    userContext: undefined,
+    stateFromAuthProvider: "",
+    // @ts-expect-error
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+ThirdParty.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    userContext: undefined,
+    stateFromAuthProvider: "",
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+        // @ts-expect-error
+        customData: 123,
+    },
+});
+ThirdParty.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    userContext: undefined,
+    stateFromAuthProvider: "",
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 0,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+        customData: "",
+    },
+});
+
+ThirdParty.verifyEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdParty.verifyEmail(undefined);
+ThirdParty.verifyEmail();
+
+// TPEP
+ThirdPartyEmailPassword.doesEmailExist({
+    email: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.doesEmailExist(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.doesEmailExist();
+
+ThirdPartyEmailPassword.emailPasswordSignIn({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.emailPasswordSignIn(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.emailPasswordSignIn();
+
+ThirdPartyEmailPassword.emailPasswordSignUp({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.emailPasswordSignUp(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.emailPasswordSignUp();
+
+ThirdPartyEmailPassword.generateStateToSendToOAuthProvider({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.generateStateToSendToOAuthProvider(undefined);
+ThirdPartyEmailPassword.generateStateToSendToOAuthProvider();
+
+ThirdPartyEmailPassword.getAuthCodeFromURL({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.getAuthCodeFromURL(undefined);
+ThirdPartyEmailPassword.getAuthCodeFromURL();
+
+ThirdPartyEmailPassword.getAuthErrorFromURL({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.getAuthErrorFromURL(undefined);
+ThirdPartyEmailPassword.getAuthErrorFromURL();
+
+ThirdPartyEmailPassword.getAuthStateFromURL({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.getAuthStateFromURL(undefined);
+ThirdPartyEmailPassword.getAuthStateFromURL();
+
+ThirdPartyEmailPassword.getAuthorisationURLFromBackend({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    providerId: "",
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.getAuthorisationURLFromBackend(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.getAuthorisationURLFromBackend();
+
+ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+    authorisationURL: "",
+    providerId: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    providerClientId: "",
+    userContext: undefined,
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState();
+
+ThirdPartyEmailPassword.getResetPasswordTokenFromURL({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.getResetPasswordTokenFromURL(undefined);
+ThirdPartyEmailPassword.getResetPasswordTokenFromURL();
+
+function tpepgetStateAndOtherInfoFromStorage() {
+    // @ts-expect-error
+    const invalidCustomType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+              customData: string;
+          }
+        | undefined = ThirdPartyEmailPassword.getStateAndOtherInfoFromStorage<{
+        customData: number;
+    }>({
+        userContext: undefined,
+    });
+
+    const validCustomType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+              customData: string;
+          }
+        | undefined = ThirdPartyEmailPassword.getStateAndOtherInfoFromStorage<{
+        customData: string;
+    }>({
+        userContext: undefined,
+    });
+
+    const defaultType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+          }
+        | undefined = ThirdPartyEmailPassword.getStateAndOtherInfoFromStorage({
+        userContext: undefined,
+    });
+}
+
+ThirdPartyEmailPassword.isEmailVerified({
+    userContext: undefined,
+    options: undefined,
+});
+ThirdPartyEmailPassword.isEmailVerified(undefined);
+ThirdPartyEmailPassword.isEmailVerified();
+
+ThirdPartyEmailPassword.sendPasswordResetEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.sendPasswordResetEmail(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.sendPasswordResetEmail();
+
+ThirdPartyEmailPassword.sendVerificationEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdPartyEmailPassword.sendVerificationEmail(undefined);
+ThirdPartyEmailPassword.sendVerificationEmail();
+
+ThirdPartyEmailPassword.setStateAndOtherInfoToStorage({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+ThirdPartyEmailPassword.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    // @ts-expect-error
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+    },
+});
+ThirdPartyEmailPassword.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        // @ts-expect-error
+        customData: 123,
+    },
+});
+ThirdPartyEmailPassword.setStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        customData: "",
+    },
+});
+
+ThirdPartyEmailPassword.signOut({
+    userContext: undefined,
+});
+ThirdPartyEmailPassword.signOut(undefined);
+ThirdPartyEmailPassword.signOut();
+
+ThirdPartyEmailPassword.submitNewPassword({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    formFields: [
+        {
+            id: "",
+            value: "",
+        },
+    ],
+});
+// @ts-expect-error
+ThirdPartyEmailPassword.submitNewPassword(undefined);
+// @ts-expect-error
+ThirdPartyEmailPassword.submitNewPassword();
+
+ThirdPartyEmailPassword.thirdPartySignInAndUp({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdPartyEmailPassword.thirdPartySignInAndUp(undefined);
+ThirdPartyEmailPassword.thirdPartySignInAndUp();
+
+ThirdPartyEmailPassword.verifyAndGetStateOrThrowError({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+
+ThirdPartyEmailPassword.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    // @ts-expect-error
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+    },
+});
+
+ThirdPartyEmailPassword.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        // @ts-expect-error
+        customData: 123,
+    },
+});
+
+ThirdPartyEmailPassword.verifyAndGetStateOrThrowError<{
+    customData: string;
+}>({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        customData: "",
+    },
+});
+
+ThirdPartyEmailPassword.verifyEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdPartyEmailPassword.verifyEmail(undefined);
+ThirdPartyEmailPassword.verifyEmail();
+
+// TPP
+ThirdPartyPasswordless.clearPasswordlessLoginAttemptInfo({
+    userContext: undefined,
+});
+ThirdPartyPasswordless.clearPasswordlessLoginAttemptInfo(undefined);
+ThirdPartyPasswordless.clearPasswordlessLoginAttemptInfo();
+
+ThirdPartyPasswordless.consumePasswordlessCode({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    userInputCode: "",
+});
+ThirdPartyPasswordless.consumePasswordlessCode({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+// @ts-expect-error
+ThirdPartyPasswordless.consumePasswordlessCode(undefined);
+// @ts-expect-error
+ThirdPartyPasswordless.consumePasswordlessCode();
+
+ThirdPartyPasswordless.createPasswordlessCode({
+    email: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+ThirdPartyPasswordless.createPasswordlessCode({
+    phoneNumber: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+ThirdPartyPasswordless.createPasswordlessCode({
+    email: "",
+    phoneNumber: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+
+ThirdPartyPasswordless.doesPasswordlessUserEmailExist({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    email: "",
+});
+
+ThirdPartyPasswordless.doesPasswordlessUserPhoneNumberExist({
+    userContext: undefined,
+    phoneNumber: "",
+    options: {
+        preAPIHook: undefined,
+    },
+});
+
+ThirdPartyPasswordless.generateThirdPartyStateToSendToOAuthProvider({
+    userContext: undefined,
+});
+ThirdPartyPasswordless.generateThirdPartyStateToSendToOAuthProvider(undefined);
+ThirdPartyPasswordless.generateThirdPartyStateToSendToOAuthProvider();
+
+ThirdPartyPasswordless.getAuthorisationURLFromBackend({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+    providerId: "",
+});
+
+ThirdPartyPasswordless.getPasswordlessLinkCodeFromURL({
+    userContext: undefined,
+});
+ThirdPartyPasswordless.getPasswordlessLinkCodeFromURL(undefined);
+ThirdPartyPasswordless.getPasswordlessLinkCodeFromURL();
+
+async function getPasswordlessLoginAttemptInfo() {
+    // @ts-expect-error
+    const invalidCustomType:
+        | {
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+              customData: string;
+          }
+        | undefined = await ThirdPartyPasswordless.getPasswordlessLoginAttemptInfo<{
+        customData: number;
+    }>({
+        userContext: undefined,
+    });
+
+    const validCustomType:
+        | {
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+              customData: string;
+          }
+        | undefined = await ThirdPartyPasswordless.getPasswordlessLoginAttemptInfo<{
+        customData: string;
+    }>({
+        userContext: undefined,
+    });
+
+    const defaultType:
+        | {
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+          }
+        | undefined = await ThirdPartyPasswordless.getPasswordlessLoginAttemptInfo({
+        userContext: undefined,
+    });
+}
+
+ThirdPartyPasswordless.getPasswordlessPreAuthSessionIdFromURL({
+    userContext: undefined,
+});
+ThirdPartyPasswordless.getPasswordlessPreAuthSessionIdFromURL(undefined);
+ThirdPartyPasswordless.getPasswordlessPreAuthSessionIdFromURL();
+
+ThirdPartyPasswordless.getThirdPartyAuthCodeFromURL({
+    userContext: undefined,
+});
+ThirdPartyPasswordless.getThirdPartyAuthCodeFromURL(undefined);
+ThirdPartyPasswordless.getThirdPartyAuthCodeFromURL();
+
+ThirdPartyPasswordless.getThirdPartyAuthErrorFromURL({
+    userContext: undefined,
+});
+ThirdPartyPasswordless.getThirdPartyAuthErrorFromURL(undefined);
+ThirdPartyPasswordless.getThirdPartyAuthErrorFromURL();
+
+ThirdPartyPasswordless.getThirdPartyAuthStateFromURL({
+    userContext: undefined,
+});
+ThirdPartyPasswordless.getThirdPartyAuthStateFromURL(undefined);
+ThirdPartyPasswordless.getThirdPartyAuthStateFromURL();
+
+ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
+    authorisationURL: "",
+    providerId: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    providerClientId: "",
+    userContext: undefined,
+});
+ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
+    authorisationURL: "",
+    providerId: "",
+    options: {
+        preAPIHook: undefined,
+    },
+    userContext: undefined,
+});
+
+function tppgetThirdPartyStateAndOtherInfoFromStorage() {
+    // @ts-expect-error
+    const invalidCustomType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+              customData: string;
+          }
+        | undefined = ThirdPartyPasswordless.getThirdPartyStateAndOtherInfoFromStorage<{
+        customData: number;
+    }>({
+        userContext: undefined,
+    });
+
+    const validCustomType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+              customData: string;
+          }
+        | undefined = ThirdPartyPasswordless.getThirdPartyStateAndOtherInfoFromStorage<{
+        customData: string;
+    }>({
+        userContext: undefined,
+    });
+
+    const defaultType:
+        | {
+              expiresAt: number;
+              providerId: string;
+              authorisationURL: string;
+              stateForAuthProvider: string;
+              providerClientId?: string;
+          }
+        | undefined = ThirdPartyPasswordless.getThirdPartyStateAndOtherInfoFromStorage({
+        userContext: undefined,
+    });
+}
+
+ThirdPartyPasswordless.isEmailVerified({
+    userContext: undefined,
+    options: undefined,
+});
+ThirdPartyPasswordless.isEmailVerified(undefined);
+ThirdPartyPasswordless.isEmailVerified();
+
+ThirdPartyPasswordless.resendPasswordlessCode({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdPartyPasswordless.resendPasswordlessCode(undefined);
+ThirdPartyPasswordless.resendPasswordlessCode();
+
+ThirdPartyPasswordless.sendVerificationEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdPartyPasswordless.sendVerificationEmail(undefined);
+ThirdPartyPasswordless.sendVerificationEmail();
+
+ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE",
+    },
+    userContext: undefined,
+});
+ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "MAGIC_LINK",
+    },
+    userContext: undefined,
+});
+ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+    },
+    userContext: undefined,
+});
+ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo<{
+    customData: string;
+}>({
+    // @ts-expect-error
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+    },
+    userContext: undefined,
+});
+ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo<{
+    customData: string;
+}>({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+        // @ts-expect-error
+        customData: 123,
+    },
+    userContext: undefined,
+});
+ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo<{
+    customData: string;
+}>({
+    attemptInfo: {
+        deviceId: "",
+        preAuthSessionId: "",
+        flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
+        customData: "",
+    },
+    userContext: undefined,
+});
+// @ts-expect-error
+ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo(undefined);
+// @ts-expect-error
+ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo();
+
+ThirdPartyPasswordless.setThirdPartyStateAndOtherInfoToStorage({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+ThirdPartyPasswordless.setThirdPartyStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    // @ts-expect-error
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+    },
+});
+ThirdPartyPasswordless.setThirdPartyStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        // @ts-expect-error
+        customData: 123,
+    },
+});
+ThirdPartyPasswordless.setThirdPartyStateAndOtherInfoToStorage<{
+    customData: string;
+}>({
+    userContext: undefined,
+    state: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        customData: "",
+    },
+});
+
+ThirdPartyPasswordless.signOut({
+    userContext: undefined,
+});
+ThirdPartyPasswordless.signOut(undefined);
+ThirdPartyPasswordless.signOut();
+
+ThirdPartyPasswordless.thirdPartySignInAndUp({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdPartyPasswordless.thirdPartySignInAndUp(undefined);
+ThirdPartyPasswordless.thirdPartySignInAndUp();
+
+ThirdPartyPasswordless.verifyAndGetThirdPartyStateOrThrowError({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        providerClientId: "",
+    },
+});
+
+ThirdPartyPasswordless.verifyAndGetThirdPartyStateOrThrowError<{
+    customData: string;
+}>({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    // @ts-expect-error
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+    },
+});
+
+ThirdPartyPasswordless.verifyAndGetThirdPartyStateOrThrowError<{
+    customData: string;
+}>({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        // @ts-expect-error
+        customData: 123,
+    },
+});
+
+ThirdPartyPasswordless.verifyAndGetThirdPartyStateOrThrowError<{
+    customData: string;
+}>({
+    stateFromAuthProvider: "",
+    userContext: undefined,
+    stateObjectFromStorage: {
+        authorisationURL: "",
+        expiresAt: 123,
+        providerId: "",
+        stateForAuthProvider: "",
+        customData: "",
+    },
+});
+
+ThirdPartyPasswordless.verifyEmail({
+    userContext: undefined,
+    options: {
+        preAPIHook: undefined,
+    },
+});
+ThirdPartyPasswordless.verifyEmail(undefined);
+ThirdPartyPasswordless.verifyEmail();

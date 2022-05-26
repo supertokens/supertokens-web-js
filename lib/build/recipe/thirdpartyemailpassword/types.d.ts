@@ -7,12 +7,13 @@ import {
 import { PreAndPostAPIHookAction as ThirdPartyPreAndPostAPIHookAction, StateObject } from "../thirdparty/types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
-    UserType,
+    UserType as EmailPasswordUserType,
     InputType as AuthRecipeInputType,
     NormalisedInputType as AuthRecipeNormalisedInputType,
 } from "../authRecipeWithEmailVerification/types";
 import OverrideableBuilder from "supertokens-js-override";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
+import { ThirdPartyUserType } from "../thirdparty/types";
 export declare type PreAndPostAPIHookAction = EmailPasswordPreAndPostAPIHookAction | ThirdPartyPreAndPostAPIHookAction;
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
@@ -155,7 +156,7 @@ export declare type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: EmailPasswordUserType;
               fetchResponse: Response;
           }
         | {
@@ -194,7 +195,7 @@ export declare type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: EmailPasswordUserType;
               fetchResponse: Response;
           }
         | {
@@ -252,7 +253,7 @@ export declare type RecipeInterface = {
     thirdPartySignInAndUp: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: ThirdPartyUserType;
               createdNewUser: boolean;
               fetchResponse: Response;
           }
