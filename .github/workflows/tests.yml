@@ -70,7 +70,7 @@ jobs:
             - name: Running loadModules in supertokens-root
               run: cd ../supertokens-root && ./loadModules
             - name: Setup supertokens-auth-react
-              run: cd ../ && git clone https://github.com/${{ github.event.inputs.authReactOwnerName }}/supertokens-auth-react && git checkout ${{ github.event.inputs.authReactBranchName }} && npm run init
+              run: cd ../ && git clone https://github.com/${{ github.event.inputs.authReactOwnerName }}/supertokens-auth-react && cd supertokens-auth-react && git checkout ${{ github.event.inputs.authReactBranchName }} && npm run init
             - name: Installing supertokens-node
               run: cd ../supertokens-auth-react/test/server/ && npm i -d --force && npm i --force github:${{ github.event.inputs.nodeRepoOwnerName }}/supertokens-node#${{ github.event.inputs.nodeBranchName }}
             - name: Replacing Auth0 credentials in .env.js
