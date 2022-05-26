@@ -1,0 +1,14 @@
+node_modules
+.DS_Store
+/.history
+.vscode
+.idea
+coverage
+apiPassword
+releasePassword
+screenshot.jpeg
+/examples/**/**/package-lock.json
+/examples/**/**/yarn.lock
+/examples/**/package-lock.json
+/examples/**/yarn.lock
+/test/.env.js

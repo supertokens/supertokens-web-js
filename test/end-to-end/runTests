@@ -1,0 +1,23 @@
+#!/bin/bash
+cd ../supertokens-auth-react
+
+echo "Linking supertokens-web-js..."
+
+npm link ../supertokens-web-js
+
+echo "Running tests..."
+
+npm run test
+
+testsExitCode=$?
+
+echo "Unlinking supertokens-web-js..."
+
+npm unlink --no-save supertokens-web-js
+npm i
+
+if [[ $testsExitCode -ne 0 ]]
+then
+    echo "test failed Main script... exiting!"
+    exit 1
+fi
