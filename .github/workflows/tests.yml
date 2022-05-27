@@ -60,6 +60,7 @@ jobs:
             - uses: actions/checkout@v2
               with:
                   persist-credentials: false
+            - run: npm i || true
             - run: chown -R 1001:121 "/github/home/.npm"
             - run: npm i
             - name: Cloning supertokens-root
