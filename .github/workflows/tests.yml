@@ -69,6 +69,10 @@ jobs:
               run: cat ../supertokens-root/modules.txt
             - name: Running loadModules in supertokens-root
               run: cd ../supertokens-root && ./loadModules
+            - name: Setup tmate session
+              uses: mxschmitt/action-tmate@v3
+              with:
+                  sudo: false
             - name: Setup supertokens-auth-react
               run: cd ../ && git clone https://github.com/${{ github.event.inputs.authReactOwnerName }}/supertokens-auth-react && cd supertokens-auth-react && git checkout ${{ github.event.inputs.authReactBranchName }} && npm run init
             - name: Installing supertokens-node
