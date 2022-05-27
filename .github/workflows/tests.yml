@@ -41,6 +41,10 @@ jobs:
         runs-on: ubuntu-latest
         container: rishabhpoddar/supertokens_website_sdk_testing
         steps:
+            - name: Set up node
+              uses: actions/setup-node@v1
+              with:
+                  node-version: "16"
             - name: Environment variables
               run: |
                   echo "React Owner: ${{ github.event.inputs.authReactOwnerName }}"
