@@ -45,7 +45,6 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: "16"
-            - run: chown -R 1001:121 "/github/home/.npm"
             - name: Environment variables
               run: |
                   echo "React Owner: ${{ github.event.inputs.authReactOwnerName }}"
@@ -61,10 +60,7 @@ jobs:
             - uses: actions/checkout@v2
               with:
                   persist-credentials: false
-            - name: Setup tmate session
-              uses: mxschmitt/action-tmate@v3
-              with:
-                  sudo: false
+            - run: chown -R 1001:121 "/github/home/.npm"
             - run: npm i
             - name: Cloning supertokens-root
               run: cd ../ && git clone https://github.com/supertokens/supertokens-root.git
@@ -79,7 +75,7 @@ jobs:
             - name: Running loadModules in supertokens-root
               run: cd ../supertokens-root && ./loadModules
             - name: Setup supertokens-auth-react
-              run: cd ../ && git clone https://github.com/${{ github.event.inputs.authReactOwnerName }}/supertokens-auth-react && cd supertokens-auth-react && git checkout ${{ github.event.inputs.authReactBranchName }} && npm run init
+              run: cd ../ && git clone https://github.com/${{ github.event.inputs.authReactOwnerName }}/supertokens-auth-react && cd supertokens-auth-react && git checkout ${{ github.event.inputs.authReactBranchName }} && chown -R 1001:121 "/github/home/.npm" && npm run init
             - name: Installing supertokens-node
               run: cd ../supertokens-auth-react/test/server/ && npm i -d --force && npm i --force github:${{ github.event.inputs.nodeRepoOwnerName }}/supertokens-node#${{ github.event.inputs.nodeBranchName }}
             - name: Replacing Auth0 credentials in .env.js
