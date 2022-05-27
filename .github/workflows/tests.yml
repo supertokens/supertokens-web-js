@@ -45,6 +45,7 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: "16"
+            - run: chown -R 1001:121 "/github/home/.npm"
             - name: Environment variables
               run: |
                   echo "React Owner: ${{ github.event.inputs.authReactOwnerName }}"
