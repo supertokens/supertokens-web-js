@@ -33,7 +33,10 @@ jobs:
             - checkout
             - attach_workspace:
                   at: /
-            - run: (cd .circleci && ./doTests.sh << parameters.fdi-version >>)
+            - run:
+                  name: Do Test
+                  no_output_timeout: 30m
+                  command: (cd .circleci && ./doTests.sh << parameters.fdi-version >>)
             - run: ls -la test_report
             - store_test_results:
                   path: test_report/report_node-<< parameters.fdi-version >>.xml
