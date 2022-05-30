@@ -51,7 +51,7 @@ git checkout web-js-integration
 echo "Running init in supertokens-auth-react"
 npm run init
 
-reactFDIJson=`cat ../frontendDriverInterfaceSupported.json`
+reactFDIJson=`cat frontendDriverInterfaceSupported.json`
 reactFDIArray=`echo $reactFDIJson | jq .versions`
 
 if [[ "$webJsFDIArray" != "$reactFDIJson" ]]; then
