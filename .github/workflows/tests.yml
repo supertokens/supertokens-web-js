@@ -85,5 +85,9 @@ jobs:
               run: npm pack && cd ../supertokens-auth-react && tar -xf ../supertokens-web-js/supertokens-web-js-*.tgz --strip-components=1 -C node_modules/supertokens-web-js && rm -rf node_modules/supertokens-website && ln -s "$PWD/../supertokens-web-js/node_modules/supertokens-website" node_modules
             - name: Setting up supertokens-root test environment
               run: cd ../supertokens-root && bash ./utils/setupTestEnv --local
+            - name: Setup tmate session
+              uses: mxschmitt/action-tmate@v3
+              with:
+                  sudo: false
             - name: Run tests
               run: cd ../supertokens-auth-react && npm run test
