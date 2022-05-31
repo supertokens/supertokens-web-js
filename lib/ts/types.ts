@@ -58,10 +58,15 @@ export type SuperTokensConfig = {
      * of the SDK may rely on using the sync versions instead.
      */
     windowHandler?: WindowHandlerInput;
+    /**
+     * Enabled logging for the SuperTokens SDK. The SDK will log information in different stages.
+     */
+    enableDebugLogs?: boolean;
 };
 
 export type CreateRecipeFunction<Action> = (
-    appInfo: NormalisedAppInfo
+    appInfo: NormalisedAppInfo,
+    enableDebugLogs: boolean
 ) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 
 export type AppInfoUserInput = {

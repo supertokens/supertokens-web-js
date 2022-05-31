@@ -40,8 +40,13 @@ export default class SuperTokens {
             );
         }
 
+        let enableDebugLogs = false;
+        if (config.enableDebugLogs !== undefined) {
+            enableDebugLogs = config.enableDebugLogs;
+        }
+
         this.recipeList = config.recipeList.map((recipe) => {
-            return recipe(this.appInfo);
+            return recipe(this.appInfo, enableDebugLogs);
         });
     }
 

@@ -49,12 +49,13 @@ export default class Recipe extends RecipeModule<unknown, any> {
     }
 
     static init(config?: UserInput): CreateRecipeFunction<unknown> {
-        return (appInfo: NormalisedAppInfo) => {
+        return (appInfo: NormalisedAppInfo, enableDebugLogs: boolean) => {
             Recipe.instance = new Recipe({
                 ...config,
                 appInfo,
                 recipeId: Recipe.RECIPE_ID,
                 apiDomain: appInfo.apiDomain.getAsStringDangerous(),
+                enableDebugLogs,
             });
 
             return Recipe.instance;
