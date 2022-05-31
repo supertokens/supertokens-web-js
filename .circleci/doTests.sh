@@ -71,7 +71,6 @@ echo "Packing and installing web js + dependencies"
 cd ../project
 npm pack
 cd ../supertokens-auth-react
-rm -rf node_modules/supertokens-web-js
 tar -xf ../project/supertokens-web-js-*.tgz --strip-components=1 -C node_modules/supertokens-web-js
 rm -rf node_modules/supertokens-website
 ln -s "$PWD/../project/node_modules/supertokens-website" node_modules
