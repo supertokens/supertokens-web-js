@@ -81,7 +81,6 @@ jobs:
               run: cd ../supertokens-auth-react/test/server/ && npm i -d --force && npm i --force github:${{ github.event.inputs.nodeRepoOwnerName }}/supertokens-node#${{ github.event.inputs.nodeBranchName }}
             - name: Replacing Auth0 credentials in .env.js
               run: sed -i 's/AUTH0_EMAIL = "bradparishdoh@gmail.com"/AUTH0_EMAIL = "${{ secrets.AUTH0_EMAIL }}"/g' ../supertokens-auth-react/test/.env.js && sed -i 's/AUTH0_PASSWORD = "ow93jduDSje00asd"/AUTH0_PASSWORD = "${{ secrets.AUTH0_PASSWORD }}"/g' ../supertokens-auth-react/test/.env.js
-            - run: cat ../supertokens-auth-react/test/.env.js
             - name: Prepare dependencies
               run: npm pack && cd ../supertokens-auth-react && tar -xf ../supertokens-web-js/supertokens-web-js-*.tgz --strip-components=1 -C node_modules/supertokens-web-js && rm -rf node_modules/supertokens-website && ln -s "$PWD/../supertokens-web-js/node_modules/supertokens-website" node_modules
             - name: Setting up supertokens-root test environment
