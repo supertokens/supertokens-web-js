@@ -37,14 +37,15 @@ jobs:
                   name: Do Test
                   no_output_timeout: 30m
                   command: (cd .circleci && ./doTests.sh << parameters.fdi-version >>)
-            - run: ls -la test_report
+            - run: ls -a
+            - run: ls -la supertokens-auth-react/test_report
             - store_test_results:
-                  path: test_report/report_node-<< parameters.fdi-version >>.xml
+                  path: supertokens-auth-react/test_report/report_node-<< parameters.fdi-version >>.xml
             - store_artifacts:
-                  path: test_report/screenshots
+                  path: supertokens-auth-react/test_report/screenshots
                   destination: failed-test-screenshots
             - store_artifacts:
-                  path: test_report/logs
+                  path: supertokens-auth-react/test_report/logs
                   destination: logfiles
     mark-passed:
         docker:
