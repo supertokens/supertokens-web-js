@@ -1,8 +1,4 @@
 echo "Starting tests for FDI $1";
-pwd
-ls -a
-
-exit 1
 
 if [ -z "$SUPERTOKENS_API_KEY" ]; then
     echo "SUPERTOKENS_API_KEY not set"
@@ -49,7 +45,7 @@ echo "Running for web js interface version $webInterfaceVersion"
 
 # reactTag=$(echo $reactInfo | jq .tag | tr -d '"')
 # reactVersion=$(echo $reactInfo | jq .version | tr -d '"')
-
+cd ../../
 git clone git@github.com:supertokens/supertokens-auth-react.git
 cd supertokens-auth-react
 # TODO NEMI: Use react tag instead of hardcoding once API is setup
@@ -111,7 +107,7 @@ coreDriverVersion=`echo $coreDriverArray | jq ". | last"`
 coreDriverVersion=`echo $coreDriverVersion | tr -d '"'`
 cd ../
 rm -rf supertokens-node
-cd ../project
+cd ../project/.circleci
 
 coreFree=`curl -s -X GET \
     "https://api.supertokens.io/0/core-driver-interface/dependency/core/latest?password=$SUPERTOKENS_API_KEY&planType=FREE&mode=DEV&version=$coreDriverVersion" \
