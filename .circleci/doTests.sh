@@ -14,6 +14,8 @@ webInterfaceVersion=`echo $webInterfaceVersion | tr -d '"'`
 webJsFDIJson=`cat ../frontendDriverInterfaceSupported.json`
 webJsFDIArray=`echo $webJsFDIJson | jq .versions`
 
+echo "FDI versions supported by web js: $webJsFDIArray"
+
 if [ -z "$SUPERTOKENS_API_KEY" ]; then
     echo "SUPERTOKENS_API_KEY missing"
     exit 1;
@@ -46,18 +48,33 @@ echo "Running for web js interface version $webInterfaceVersion"
 
 git clone git@github.com:supertokens/supertokens-auth-react.git
 cd supertokens-auth-react
+# TODO NEMI: Use react tag instead of hardcoding once API is setup
+# echo "Checking out $reactTag in auth react"
 # git checkout $reactTag
+echo "Checking out web-js-integration in auth react"
 git checkout web-js-integration
-echo "Running init in supertokens-auth-react"
-npm run init
 
 reactFDIJson=`cat frontendDriverInterfaceSupported.json`
 reactFDIArray=`echo $reactFDIJson | jq .versions`
 
-if [[ "$webJsFDIArray" != "$reactFDIJson" ]]; then
+echo "FDI versions supported by auth react: $reactFDIArray"
+
+if [[ "$webJsFDIArray" != "$reactFDIArray" ]]; then
     echo "FDI supported for supertokens-auth-react and supertokens-web-js do not match. Exiting..."
     exit 1
 fi
+
+echo "Running init in supertokens-auth-react"
+npm run init
+
+echo "Packing and installing web js + dependencies"
+cd ../project
+npm pack
+cd ../supertokens-auth-react
+rm -rf node_modules/supertokens-web-js
+tar -xf ../project/supertokens-web-js-*.tgz --strip-components=1 -C node_modules/supertokens-web-js
+rm -rf node_modules/supertokens-website
+ln -s "$PWD/../project/node_modules/supertokens-website" node_modules
 
 driverVersionXY=`curl -s -X GET \
 "https://api.supertokens.io/0/frontend-driver-interface/dependency/driver/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$frontendDriverVersion&driverName=node" \
