@@ -14,6 +14,7 @@ jobs:
             image: ubuntu-2204:2022.04.1
 
         steps:
+            - nvm use 16
             - checkout
             - run:
                   name: Generate config
