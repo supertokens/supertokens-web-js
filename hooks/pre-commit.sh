@@ -21,7 +21,7 @@ then
    git stash push -k -u -- $files_to_stash >/dev/null 2>/dev/null
 fi
 
-npm run build-check
+npm run build-check >/dev/null 2>/dev/null
 compiles=$?
 
 echo "$(tput setaf 3)* Compiles?$(tput sgr 0)"
