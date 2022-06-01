@@ -27,4 +27,5 @@ jobs:
             - run: chown -R 1001:121 "/github/home/.npm"
             - run: npm i --force
             - run: cd test/with-typescript && npm i --force
+            - run: apt update && apt install sudo
             - run: sudo ./hooks/pre-commit.sh
