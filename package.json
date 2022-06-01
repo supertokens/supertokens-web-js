@@ -11,7 +11,7 @@
         "pretty": "npx pretty-quick .",
         "build-pretty": "npm run build && npm run pretty && npm run pretty",
         "pack": "./node_modules/.bin/webpack --mode production",
-        "set-up-hooks": "cp hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit",
+        "set-up-hooks": "cp hooks/pre-commit.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit",
         "lint": "cd lib && npx tslint -c tslint.json './**/*.ts'",
         "test-unit": "TEST_MODE=testing npx mocha 'test/unit/*.test.js'",
         "test": "npm run test-unit"

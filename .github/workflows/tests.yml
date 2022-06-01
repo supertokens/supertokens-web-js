@@ -1,0 +1,89 @@
+name: "Run tests"
+on:
+    workflow_dispatch:
+        inputs:
+            authReactOwnerName:
+                description: "supertokens-auth-react owner name"
+                default: supertokens
+                required: true
+            authReactBranchName:
+                description: "supertokens-auth-react repo branch name"
+                default: master
+                required: true
+            pluginInterfaceRepoOwnerName:
+                description: "supertokens-plugin-interface repo owner name"
+                default: supertokens
+                required: true
+            pluginInterfaceBranchName:
+                description: "supertokens-plugin-interface repos branch name"
+                default: master
+                required: true
+            coreRepoOwnerName:
+                description: "supertokens-core repo owner name"
+                default: supertokens
+                required: true
+            coreBranchName:
+                description: "supertokens-core repo branch name"
+                default: master
+                required: true
+            nodeRepoOwnerName:
+                description: "supertokens-node repo owner name"
+                default: supertokens
+                required: true
+            nodeBranchName:
+                description: "supertokens-node repo branch name"
+                default: master
+                required: true
+jobs:
+    test_job:
+        name: Run tests
+        timeout-minutes: 120
+        runs-on: ubuntu-latest
+        container: rishabhpoddar/supertokens_website_sdk_testing
+        steps:
+            - name: Set up node
+              uses: actions/setup-node@v1
+              with:
+                  node-version: "16"
+            - name: Environment variables
+              run: |
+                  echo "React Owner: ${{ github.event.inputs.authReactOwnerName }}"
+                  echo "React Branch: ${{ github.event.inputs.authReactBranchName }}"
+                  echo "Plugin Interface Owner: ${{ github.event.inputs.pluginInterfaceRepoOwnerName }}"
+                  echo "Plugin Interface Branch: ${{ github.event.inputs.pluginInterfaceBranchName }}"
+                  echo "Core Owner: ${{ github.event.inputs.coreRepoOwnerName }}"
+                  echo "Core Branch: ${{ github.event.inputs.coreBranchName }}"
+                  echo "Node Owner: ${{ github.event.inputs.nodeRepoOwnerName }}"
+                  echo "Node Branch: ${{ github.event.inputs.nodeBranchName }}"
+            - name: Make git use https instead of ssh
+              run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/
+            - uses: actions/checkout@v2
+              with:
+                  persist-credentials: false
+            - run: npm i || true
+            - run: chown -R 1001:121 "/github/home/.npm"
+            - run: npm i
+            - name: Cloning supertokens-root
+              run: cd ../ && git clone https://github.com/supertokens/supertokens-root.git
+            - name: Update Java 1
+              run: update-alternatives --install "/usr/bin/java" "java" "/usr/java/jdk-15.0.1/bin/java" 2
+            - name: Update Java 2
+              run: update-alternatives --install "/usr/bin/javac" "javac" "/usr/java/jdk-15.0.1/bin/javac" 2
+            - name: Modifying modules.txt in supertokens-root
+              run: cd ../supertokens-root && echo "core,${{ github.event.inputs.coreBranchName }},${{ github.event.inputs.coreRepoOwnerName }}\nplugin-interface,${{ github.event.inputs.pluginInterfaceBranchName }},${{ github.event.inputs.pluginInterfaceRepoOwnerName }}" > modules.txt
+            - name: Contents of modules.txt
+              run: cat ../supertokens-root/modules.txt
+            - name: Running loadModules in supertokens-root
+              run: cd ../supertokens-root && ./loadModules
+            - name: Setup supertokens-auth-react
+              run: cd ../ && git clone https://github.com/${{ github.event.inputs.authReactOwnerName }}/supertokens-auth-react && cd supertokens-auth-react && git checkout ${{ github.event.inputs.authReactBranchName }} && chown -R 1001:121 "/github/home/.npm" && npm run init
+            - name: Installing supertokens-node
+              run: cd ../supertokens-auth-react/test/server/ && npm i -d --force && npm i --force github:${{ github.event.inputs.nodeRepoOwnerName }}/supertokens-node#${{ github.event.inputs.nodeBranchName }}
+            - name: Replacing Auth0 credentials in .env.js
+              run: sed -i 's/AUTH0_EMAIL = "bradparishdoh@gmail.com"/AUTH0_EMAIL = "${{ secrets.AUTH0_EMAIL }}"/g' ../supertokens-auth-react/test/.env.js && sed -i 's/AUTH0_PASSWORD = "ow93jduDSje00asd"/AUTH0_PASSWORD = "${{ secrets.AUTH0_PASSWORD }}"/g' ../supertokens-auth-react/test/.env.js
+            - name: Prepare dependencies
+              run: npm pack && cd ../supertokens-auth-react && tar -xf ../supertokens-web-js/supertokens-web-js-*.tgz --strip-components=1 -C node_modules/supertokens-web-js && rm -rf node_modules/supertokens-website && ln -s "$PWD/../supertokens-web-js/node_modules/supertokens-website" node_modules
+            - name: Setting up supertokens-root test environment
+              run: cd ../supertokens-root && bash ./utils/setupTestEnv --local
+            - name: Run tests
+              run: cd ../supertokens-auth-react && npm run test
