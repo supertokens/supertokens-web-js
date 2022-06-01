@@ -27,8 +27,4 @@ jobs:
             - run: chown -R 1001:121 "/github/home/.npm"
             - run: npm i --force
             - run: cd test/with-typescript && npm i --force
-            - name: Setup tmate session
-              uses: mxschmitt/action-tmate@v3
-              with:
-                  sudo: false
             - run: ./hooks/pre-commit.sh
