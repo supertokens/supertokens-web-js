@@ -20,14 +20,13 @@ We're so excited you're interested in helping with SuperTokens! We are happy to 
 
 ### Project Setup
 
-1. Please setup `supertokens-core` by following [this guide](https://github.com/supertokens/supertokens-core/blob/master/CONTRIBUTING.md#development-setup). If you are not contributing to `supertokens-core`, please skip steps 1 & 4 under "Project Setup" section.
-2. `git clone https://github.com/supertokens/supertokens-web-js.git`, `supertokens-web-js` and `supertokens-root` should exist side by side within the same parent directory.
-3. `cd supertokens-web-js`
-4. Install the project dependencies
+1. `git clone https://github.com/supertokens/supertokens-web-js.git`
+2. `cd supertokens-web-js`
+3. Install the project dependencies
     ```
     npm i -d
     ```
-5. Add git pre-commit hooks
+4. Add git pre-commit hooks
     ```
     npm run set-up-hooks
     ```
