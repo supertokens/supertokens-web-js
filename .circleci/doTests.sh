@@ -24,7 +24,7 @@ fi
 echo "Running for web js interface version $webInterfaceVersion"
 
 reactVersionXY=`curl -s -X GET \
-"https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webInterfaceVersion&driverName=auth-react" \
+"https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webInterfaceVersion&frontendName=auth-react" \
 -H 'api-version: 0'`
 if [[ `echo $reactVersionXY | jq .frontend` == "null" ]]
 then
