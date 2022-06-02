@@ -15,7 +15,8 @@
         "lint": "cd lib && npx tslint -c tslint.json './**/*.ts'",
         "test-unit": "TEST_MODE=testing npx mocha 'test/unit/*.test.js'",
         "test": "npm run test-unit",
-        "build-docs": "rm -rf ./docs && npx typedoc --out ./docs --tsconfig ./lib/tsconfig.json ./lib/ts/index.ts ./lib/ts/**/index.ts ./lib/ts/**/*/index.ts"
+        "build-docs": "rm -rf ./docs && npx typedoc --out ./docs --tsconfig ./lib/tsconfig.json ./lib/ts/index.ts ./lib/ts/**/index.ts ./lib/ts/**/*/index.ts",
+        "prune": "cd lib && ts-prune | grep -vE 'used in module| - default$| - package_version$' && exit 1 || exit 0"
     },
     "repository": {
         "type": "git",
@@ -53,6 +54,7 @@
         "prettier": "^2.5.1",
         "pretty-quick": "^3.1.3",
         "size-limit": "^6.0.3",
+        "ts-prune": "^0.8.9",
         "tslint": "^6.1.3",
         "typedoc": "0.22.5",
         "typescript": "^4.5.4",

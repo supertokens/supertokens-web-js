@@ -15,19 +15,6 @@
 import { InputType as STWebsiteInputType, RecipeInterface as STWebsiteRecipeInterface } from "supertokens-website";
 import { NormalisedAppInfo } from "../../types";
 
-export type PreAndPostAPIHookAction = "SIGN_OUT" | "REFRESH_SESSION";
-
-export type RecipeEvent =
-    | {
-          action: "SIGN_OUT" | "REFRESH_SESSION" | "SESSION_CREATED" | "ACCESS_TOKEN_PAYLOAD_UPDATED";
-          userContext: any;
-      }
-    | {
-          action: "UNAUTHORISED";
-          sessionExpiredOrRevoked: boolean;
-          userContext: any;
-      };
-
 export type UserInput = STWebsiteInputType;
 export type RecipeInterface = STWebsiteRecipeInterface;
 

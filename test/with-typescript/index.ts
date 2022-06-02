@@ -64,11 +64,7 @@ import {
     UserInput as TPPUserInput,
 } from "../../recipe/thirdpartypasswordless";
 import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
-import {
-    RecipeInterface as SessionRecipeInterface,
-    PreAndPostAPIHookAction as SessionAction,
-    UserInput as SessionUserInput,
-} from "../../recipe/session/types";
+import { RecipeInterface as SessionRecipeInterface, UserInput as SessionUserInput } from "../../recipe/session/types";
 import Session from "../../recipe/session";
 import STGeneralError from "../../utils/error";
 import NormalisedURLDomain from "../../utils/normalisedURLDomain";
@@ -803,8 +799,8 @@ function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInt
     };
 }
 
-const sessionPreAPIHook: RecipePreAPIHookFunction<SessionAction> = async function (
-    context: RecipePreAPIHookContext<SessionAction>
+const sessionPreAPIHook: RecipePreAPIHookFunction<"SIGN_OUT" | "REFRESH_SESSION"> = async function (
+    context: RecipePreAPIHookContext<"SIGN_OUT" | "REFRESH_SESSION">
 ) {
     if (context.action === "REFRESH_SESSION") {
         //
@@ -825,8 +821,8 @@ const sessionPreAPIHook: RecipePreAPIHookFunction<SessionAction> = async functio
     };
 };
 
-const sessionPostAPIHook: RecipePostAPIHookFunction<SessionAction> = async function (
-    context: RecipePostAPIHookContext<SessionAction>
+const sessionPostAPIHook: RecipePostAPIHookFunction<"SIGN_OUT" | "REFRESH_SESSION"> = async function (
+    context: RecipePostAPIHookContext<"SIGN_OUT" | "REFRESH_SESSION">
 ) {
     if (context.action === "REFRESH_SESSION") {
         //
@@ -843,7 +839,7 @@ const sessionPostAPIHook: RecipePostAPIHookFunction<SessionAction> = async funct
     const requestInit: RequestInit = context.requestInit;
 };
 
-function getSession(): CreateRecipeFunction<SessionAction> {
+function getSession(): CreateRecipeFunction<"SIGN_OUT" | "REFRESH_SESSION"> {
     const config: SessionUserInput = {
         apiDomain: "",
         apiBasePath: "",

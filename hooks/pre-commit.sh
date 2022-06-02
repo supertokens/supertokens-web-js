@@ -59,6 +59,20 @@ else
     echo ""
 fi
 
+npm run prune >/dev/null 2>/dev/null
+pruned=$?
+
+echo "$(tput setaf 3)* Properly pruned?$(tput sgr 0)"
+
+if [ $pruned -eq 0 ]
+then
+   echo "$(tput setaf 2)* Yes$(tput sgr 0)"
+else
+   echo "$(tput setaf 1)* No$(tput sgr 0)"
+    echo "$(tput setaf 1)Please run 'npm run prune' to prune the code.$(tput sgr 0)"
+    echo ""
+fi
+
 npm run pretty-check >/dev/null 2>/dev/null
 formatted=$?
 
@@ -116,6 +130,12 @@ elif [ $linted -ne 0 ]
 then
    echo "$(tput setaf 1)... done.$(tput sgr 0)"
    echo "$(tput setaf 1)CANCELLING commit due to LINTER ERRORS.$(tput sgr 0)"
+   echo ""
+   exit 1
+elif [ $pruned -ne 0 ]
+then
+   echo "$(tput setaf 1)... done.$(tput sgr 0)"
+   echo "$(tput setaf 1)CANCELLING commit due to NON-PRUNED CODE.$(tput sgr 0)"
    echo ""
    exit 1
 elif [ $formatted -ne 0 ]

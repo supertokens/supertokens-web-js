@@ -21,6 +21,14 @@ jobs:
                       cd .circleci && ./generateConfig.sh
             - continuation/continue:
                   configuration_path: .circleci/config_continue.yml # use newly generated config to continue
+    update-docs:
+        docker:
+            - image: rishabhpoddar/supertokens_website_sdk_testing_node_16
+        steps:
+            - checkout
+            - run: cd ../ && git clone git@github.com:supertokens/supertokens-backend-website.git
+            - run: (cd .circleci && ./updateDocsInWebsite.sh)
+            - slack/status
 
 workflows:
     version: 2
