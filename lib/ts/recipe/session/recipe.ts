@@ -55,7 +55,6 @@ export default class Recipe extends RecipeModule<unknown, any> {
                 ...config,
                 appInfo,
                 recipeId: Recipe.RECIPE_ID,
-                apiDomain: appInfo.apiDomain.getAsStringDangerous(),
                 enableDebugLogs,
             });
 

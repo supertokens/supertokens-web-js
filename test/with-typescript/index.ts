@@ -842,8 +842,6 @@ const sessionPostAPIHook: RecipePostAPIHookFunction<"SIGN_OUT" | "REFRESH_SESSIO
 function getSession(): CreateRecipeFunction<"SIGN_OUT" | "REFRESH_SESSION"> {
     const config: SessionUserInput = {
         enableDebugLogs: undefined,
-        apiDomain: undefined,
-        apiBasePath: undefined,
         sessionScope: undefined,
         sessionExpiredStatusCode: undefined,
         autoAddCredentials: undefined,

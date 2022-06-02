@@ -30,8 +30,6 @@ export type RecipeEvent =
 
 export type UserInput = {
     enableDebugLogs?: boolean;
-    apiDomain?: string;
-    apiBasePath?: string;
     sessionScope?: string;
     sessionExpiredStatusCode?: number;
     autoAddCredentials?: boolean;
