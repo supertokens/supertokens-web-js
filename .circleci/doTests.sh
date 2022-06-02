@@ -8,12 +8,6 @@ fi
 frontendDriverVersion=$1
 frontendDriverVersion=`echo $frontendDriverVersion | tr -d '"'`
 
-if [[ $frontendDriverVersion != "1.9" ]] 
-then
-echo "Not matching FDI"
-exit 1
-fi
-
 webInterfaceJson=`cat ../webJsInterfaceSupported.json`
 webJSInterfaceVersion=`echo $webInterfaceJson | jq ".version"`
 webJSInterfaceVersion=`echo $webJSInterfaceVersion | tr -d '"'`
@@ -28,7 +22,10 @@ if [ -z "$SUPERTOKENS_API_KEY" ]; then
 fi
 
 echo "Running for web js interface version $webJSInterfaceVersion"
-echo "Running 2 for web js interface version $webJSInterfaceVersion"
+
+curl -s -X -v GET \
+"https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webJSInterfaceVersion&frontendName=auth-react" \
+-H 'api-version: 0'
 
 reactVersionXY=`curl -s -X GET \
 "https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webJSInterfaceVersion&frontendName=auth-react" \
