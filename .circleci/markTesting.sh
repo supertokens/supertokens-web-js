@@ -2,6 +2,10 @@ frontendDriverJson=`cat ../frontendDriverInterfaceSupported.json`
 frontendDriverLength=`echo $frontendDriverJson | jq ".versions | length"`
 frontendDriverArray=`echo $frontendDriverJson | jq ".versions"`
 
+webInterfaceJson=`cat ../webJsInterfaceSupported.json`
+webInterfaceVersion=`echo $webInterfaceJson | jq ".version"`
+webInterfaceVersion=`echo $webInterfaceVersion | tr -d '"'`
+
 # get sdk version
 version=`cat ../package.json | grep -e '"version":'`
 while IFS='"' read -ra ADDR; do
@@ -15,16 +19,16 @@ while IFS='"' read -ra ADDR; do
     done
 done <<< "$version"
 FILENAME=$(mktemp)
-# TODO NEMI: Uncomment this when API changes are done
 # responseStatus=`curl -o $FILENAME -w "%{http_code}" -X PUT \
 #     https://api.supertokens.io/0/frontend \
 #     -H 'Content-Type: application/json' \
-#     -H 'api-version: 0' \
+#     -H 'api-version: 1' \
 #     -d "{
 #         \"password\": \"$SUPERTOKENS_API_KEY\",
 #         \"version\":\"$version\",
 #         \"name\": \"web-js\",
-#         \"frontendDriverInterfaces\": $frontendDriverArray
+#         \"frontendDriverInterfaces\": $frontendDriverArray,
+#         \"webJsInterface\": \"$webInterfaceVersion\"
 #     }"`
 # if [ $responseStatus -ne "200" ]
 # then

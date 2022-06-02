@@ -13,20 +13,19 @@ done <<< "$version"
 
 FILENAME=$(mktemp)
 echo "calling /frontend PATCH to make testing passed"
-# TODO NEMI: Uncomment this when API changes are done
-# responseStatus=`curl -o $FILENAME -w "%{http_code}" -X PATCH \
-#     https://api.supertokens.io/0/frontend \
-#     -H 'Content-Type: application/json' \
-#     -H 'api-version: 0' \
-#     -d "{
-#         \"password\": \"$SUPERTOKENS_API_KEY\",
-#         \"version\":\"$version\",
-#         \"name\": \"web-js\",
-#         \"testPassed\": true
-#     }"`
-# if [ $responseStatus -ne "200" ]
-# then
-#     echo "failed core PATCH API status code: $responseStatus. Exiting!"
-#     cat $FILENAME
-#     exit 1
-# fi
+responseStatus=`curl -o $FILENAME -w "%{http_code}" -X PATCH \
+    https://api.supertokens.io/0/frontend \
+    -H 'Content-Type: application/json' \
+    -H 'api-version: 0' \
+    -d "{
+        \"password\": \"$SUPERTOKENS_API_KEY\",
+        \"version\":\"$version\",
+        \"name\": \"web-js\",
+        \"testPassed\": true
+    }"`
+if [ $responseStatus -ne "200" ]
+then
+    echo "failed core PATCH API status code: $responseStatus. Exiting!"
+    cat $FILENAME
+    exit 1
+fi

@@ -23,36 +23,37 @@ fi
 
 echo "Running for web js interface version $webInterfaceVersion"
 
-# TODO NEMI: Uncomment this when API changes are done
-# reactVersionXY=`curl -s -X GET \
-# "https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webInterfaceVersion&driverName=auth-react" \
-# -H 'api-version: 0'`
-# if [[ `echo $reactVersionXY | jq .frontend` == "null" ]]
-# then
-#     echo "fetching latest X.Y version for react given web-js-interface X.Y version: $webInterfaceVersion gave response: $reactVersionXY. Please make sure all relevant drivers have been pushed."
-#     exit 1
-# fi
-# reactVersionXY=$(echo $reactVersionXY | jq .driver | tr -d '"')
-# reactInfo=`curl -s -X GET \
-# "https://api.supertokens.io/0/frontend/latest?password=$SUPERTOKENS_API_KEY&version=$reactVersionXY&name=auth-react" \
-# -H 'api-version: 0'`
+reactVersionXY=`curl -s -X GET \
+"https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webInterfaceVersion&driverName=auth-react" \
+-H 'api-version: 0'`
+if [[ `echo $reactVersionXY | jq .frontend` == "null" ]]
+then
+    echo "fetching latest X.Y version for react given web-js-interface X.Y version: $webInterfaceVersion gave response: $reactVersionXY. Please make sure all relevant drivers have been pushed."
+    exit 1
+fi
+reactVersionXY=$(echo $reactVersionXY | jq .driver | tr -d '"')
 
-# if [[ `echo $reactInfo | jq .tag` == "null" ]]
-# then
-#     echo "fetching latest X.Y.Z version for react, X.Y version: $reactVersionXY gave response: $reactInfo"
-#     exit 1
-# fi
+reactInfo=`curl -s -X GET \
+"https://api.supertokens.io/0/frontend/latest?password=$SUPERTOKENS_API_KEY&version=$reactVersionXY&name=auth-react" \
+-H 'api-version: 0'`
 
-# reactTag=$(echo $reactInfo | jq .tag | tr -d '"')
-# reactVersion=$(echo $reactInfo | jq .version | tr -d '"')
+if [[ `echo $reactInfo | jq .tag` == "null" ]]
+then
+    echo "fetching latest X.Y.Z version for react, X.Y version: $reactVersionXY gave response: $reactInfo"
+    exit 1
+fi
+
+reactTag=$(echo $reactInfo | jq .tag | tr -d '"')
+reactVersion=$(echo $reactInfo | jq .version | tr -d '"')
+
+echo "React TAG: $reactTag, Exiting early for testing"
+exit 1
+
 cd ../../
 git clone git@github.com:supertokens/supertokens-auth-react.git
 cd supertokens-auth-react
-# TODO NEMI: Use react tag instead of hardcoding once API is setup
-# echo "Checking out $reactTag in auth react"
-# git checkout $reactTag
-echo "Checking out web-js-integration in auth react"
-git checkout web-js-integration
+echo "Checking out $reactTag in auth react"
+git checkout $reactTag
 
 reactFDIJson=`cat frontendDriverInterfaceSupported.json`
 reactFDIArray=`echo $reactFDIJson | jq .versions`
