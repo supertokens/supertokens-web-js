@@ -1,0 +1,95 @@
+version: 2.1
+
+orbs:
+    continuation: circleci/continuation@0.1.2
+    slack: circleci/slack@3.4.2
+    jq: circleci/jq@2.2.0
+jobs:
+    build:
+        docker:
+            - image: rishabhpoddar/supertokens_website_sdk_testing_node_16
+        steps:
+            - run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/ # This makes npm use http instead of ssh (required for node 16)
+            - checkout
+            - run: apt-get install lsof
+            - run: npm i
+            - run: npm run build-check
+            - run: npm run check-circular-dependencies
+            - run: (cd .circleci/ && ./markTesting.sh)
+            - persist_to_workspace:
+                  root: / # relative path to our working directory
+                  paths:
+                      - usr/lib/node_modules
+                      - root/project/node_modules
+    test:
+        docker:
+            - image: rishabhpoddar/supertokens_website_sdk_testing_node_16
+        environment:
+            MOCHA_FILE: test_report/report_node-<< parameters.fdi-version >>.xml
+        parameters:
+            fdi-version:
+                type: string
+        parallelism: 4
+        steps:
+            - run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/ # This makes npm use http instead of ssh (required for node 16)
+            - checkout
+            - attach_workspace:
+                  at: /
+            - run:
+                  name: Do Test
+                  no_output_timeout: 30m
+                  command: (cd .circleci && ./doTests.sh << parameters.fdi-version >>)
+            - run: ls -a
+            - run: ls -la ../supertokens-auth-react/test_report
+            - store_test_results:
+                  path: ../supertokens-auth-react/test_report/report_node-<< parameters.fdi-version >>.xml
+            - store_artifacts:
+                  path: ../supertokens-auth-react/test_report/screenshots
+                  destination: failed-test-screenshots
+            - store_artifacts:
+                  path: ../supertokens-auth-react/test_report/logs
+                  destination: logfiles
+    mark-passed:
+        docker:
+            - image: rishabhpoddar/supertokens_website_sdk_testing_node_16
+        steps:
+            - run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/ # This makes npm use http instead of ssh (required for node 16)
+            - checkout
+            - run: (cd .circleci && ./markPassed.sh)
+            - slack/status
+
+workflows:
+    version: 2
+    tagged-build:
+        jobs:
+            - build:
+                  context:
+                      - slack-notification
+                  filters:
+                      tags:
+                          only: /dev-v[0-9]+(\.[0-9]+)*/
+                      branches:
+                          ignore: /.*/
+
+            - test:
+                  requires:
+                      - build
+                  filters:
+                      tags:
+                          only: /dev-v[0-9]+(\.[0-9]+)*/
+                      branches:
+                          ignore: /.*/
+                  matrix:
+                      parameters:
+                          fdi-version: placeholder
+
+            - mark-passed:
+                  context:
+                      - slack-notification
+                  filters:
+                      tags:
+                          only: /dev-v[0-9]+(\.[0-9]+)*/
+                      branches:
+                          ignore: /.*/
+                  requires:
+                      - test
