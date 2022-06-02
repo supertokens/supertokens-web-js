@@ -20,6 +20,7 @@
 -   [ ] Changelog has been updated
 -   [ ] `frontendDriverInterfaceSupported.json` file has been updated (if needed)
     -   Along with the associated array in `lib/ts/version.ts`
+-   [ ] `webJsInterfaceSupported.json` file has been updated (if needed)
 -   [ ] Changes to the version if needed
     -   In `package.json`
     -   In `package-lock.json`
