@@ -67,6 +67,13 @@ export type StateObject = {
     providerClientId?: string;
 };
 
+export type ThirdPartyUserType = UserType & {
+    thirdParty: {
+        id: string;
+        userId: string;
+    };
+};
+
 export type RecipeInterface = {
     /**
      * Get the current login state from storage, this is also used when calling signInUp
@@ -155,7 +162,7 @@ export type RecipeInterface = {
     signInAndUp: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: ThirdPartyUserType;
               createdNewUser: boolean;
               fetchResponse: Response;
           }
@@ -166,7 +173,7 @@ export type RecipeInterface = {
     >;
 
     /**
-     * Generate a new state that will be sent to the thirs party provider
+     * Generate a new state that will be sent to the third party provider
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *

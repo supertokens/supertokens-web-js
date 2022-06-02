@@ -13,10 +13,11 @@ lib/tslint.json
 addDevTag
 addReleaseTag
 frontendDriverInterfaceSupported.json
+webJsInterfaceSupported.json
 .github/
 .gitattributes
 examples/
 .prettierignore
 docs/
-init.sh
 tslint-rules/
+.babelrc

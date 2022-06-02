@@ -2,7 +2,8 @@ import RecipeModule from "./recipe/recipeModule";
 import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
-import { StorageHandler } from "./common/storage/types";
+import { CookieHandlerInput } from "supertokens-website/utils/cookieHandler/types";
+import { WindowHandlerInput } from "supertokens-website/utils/windowHandler/types";
 /**
  * The configuration object to be passed when calling SuperTokens.init
  */
@@ -18,20 +19,35 @@ export declare type SuperTokensConfig = {
      */
     recipeList: CreateRecipeFunction<any>[];
     /**
-     * Custom handlers that the SDK should use whn accessing the Web Storage API.
+     * Custom handlers that the SDK should use when trying to read or write to document.cookie
      *
-     * In most cases you should not need to provide these. When provided, the SDK
-     * will rely on these functions instead of using the Window.Storage API directly.
+     * In most cases you should not need to provide these. When provided, the SDK will rely on
+     * these functions instead of using document.cookie directly
      *
-     * When using this feature, take extra care to use the function version (sync/async).
-     * The interface by default uses all storage methods as async, but specific parts of the
-     * SDK may rely on using the sync versions.
+     * When using this feature, take extra care to use the correct function version (async/async).
+     * The interface by default uses async versions of the functions when possible but specific parts
+     * of the SDK may rely on using the sync versions instead.
      */
-    storageHandlers?: StorageHandlerInput;
+    cookieHandler?: CookieHandlerInput;
+    /**
+     * Custom handlers that the SDK should use when trying to access Window APIs
+     *
+     * In most cases you should not need to provide these. When provided, the SDK will rely on
+     * these functions instead of using any Window APIs directly
+     *
+     * When using this feature, take extra care to use the correct function version (async/async).
+     * The interface by default uses async versions of the functions when possible but specific parts
+     * of the SDK may rely on using the sync versions instead.
+     */
+    windowHandler?: WindowHandlerInput;
+    /**
+     * Enabled logging for the SuperTokens SDK. The SDK will log information in different stages.
+     */
+    enableDebugLogs?: boolean;
 };
 export declare type CreateRecipeFunction<Action> = (
     appInfo: NormalisedAppInfo,
-    storageHandlers: NormalisedStorageHandlers
+    enableDebugLogs: boolean
 ) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 export declare type AppInfoUserInput = {
     /**
@@ -82,25 +98,4 @@ export declare type NormalisedAppInfo = {
      * This value must match the one set in the backend SDKs for SuperTokens to work correctly
      */
     apiBasePath: NormalisedURLPath;
-};
-export declare type StorageHandlerFunction = (original: StorageHandler) => StorageHandler;
-export declare type StorageHandlerInput = {
-    /**
-     * Handlers to be used as a replacement for `window.sessionStorage`
-     */
-    sessionStorage?: StorageHandlerFunction;
-    /**
-     * Handlers to be used as a replacement for `window.localStorage`
-     */
-    localStorage?: StorageHandlerFunction;
-};
-export declare type NormalisedStorageHandlers = {
-    /**
-     * Handlers to be used as a replacement for `window.sessionStorage`
-     */
-    sessionStorage: StorageHandler;
-    /**
-     * Handlers to be used as a replacement for `window.localStorage`
-     */
-    localStorage: StorageHandler;
 };

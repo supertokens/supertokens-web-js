@@ -19,7 +19,7 @@ import EmailVerificationRecipe from "../emailverification/recipe";
 import { normaliseUserInput } from "./utils";
 import OverrideableBuilder from "supertokens-js-override";
 import RecipeImplementation from "./recipeImplementation";
-import { CreateRecipeFunction, NormalisedAppInfo, NormalisedStorageHandlers } from "../../types";
+import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 
 export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAPIHookAction, NormalisedInputType> {
@@ -37,20 +37,18 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
                 appInfo: this.config.appInfo,
                 preAPIHook: this.config.preAPIHook,
                 postAPIHook: this.config.postAPIHook,
-                storageHandlers: this.config.storageHandlers,
             })
         );
         this.recipeImplementation = builder.override(this.config.override.functions).build();
     }
 
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo, storageHandlers: NormalisedStorageHandlers) => {
+        return (appInfo: NormalisedAppInfo) => {
             Recipe.instance = new Recipe(
                 {
                     ...config,
                     recipeId: Recipe.RECIPE_ID,
                     appInfo,
-                    storageHandlers,
                 },
                 {
                     emailVerification: undefined,

@@ -17,7 +17,7 @@ import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreA
 import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
-import { UserType as ThirdPartyUserType } from "../authRecipeWithEmailVerification/types";
+import { ThirdPartyUserType } from "../thirdparty/types";
 import * as PasswordlessUtilsFunctions from "../passwordless/utils";
 import { PasswordlessFlowType, PasswordlessUser } from "../passwordless/types";
 import { StateObject } from "../thirdparty/types";
@@ -30,6 +30,34 @@ export default class RecipeWrapper {
     static signOut(input?: { userContext?: any }) {
         return Recipe.getInstanceOrThrow().signOut({
             userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Get the URL to be used by the third party provider for redirecting after the auth flow
+     *
+     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @param options Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", url}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
+    static getAuthorisationURLFromBackend(input: {
+        providerId: string;
+        userContext?: any;
+        options?: RecipeFunctionOptions;
+    }): Promise<{
+        status: "OK";
+        url: string;
+        fetchResponse: Response;
+    }> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLFromBackend({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
         });
     }
 
@@ -65,6 +93,39 @@ export default class RecipeWrapper {
     }
 
     /**
+     * Get the current login state from storage, this is also used when calling signInUp
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns State object from storage
+     */
+    static getThirdPartyStateAndOtherInfoFromStorage<CustomStateProperties>(input?: {
+        userContext?: any;
+    }): (StateObject & CustomStateProperties) | undefined {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getThirdPartyStateAndOtherInfoFromStorage({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Set the login state to storage
+     *
+     * @param state
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     */
+    static setThirdPartyStateAndOtherInfoToStorage<CustomStateProperties>(input: {
+        state: StateObject & CustomStateProperties;
+        userContext?: any;
+    }): Promise<void> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.setThirdPartyStateAndOtherInfoToStorage({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
+
+    /**
      * Get the URL that should be opened for third party authentication
      *
      * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
@@ -94,6 +155,82 @@ export default class RecipeWrapper {
                 userContext: getNormalisedUserContext(input.userContext),
             }
         );
+    }
+
+    /**
+     * Generate a new state that will be sent to the thirs party provider
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns string
+     */
+    static generateThirdPartyStateToSendToOAuthProvider(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.generateThirdPartyStateToSendToOAuthProvider({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Verify that the state recieved from the third party provider matches the one in storage
+     *
+     * @param stateForAuthProvider State recieved as query param after redirection from third party provider
+     *
+     * @param stateObjectFromStorage State object from storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     */
+    static verifyAndGetThirdPartyStateOrThrowError<CustomStateProperties>(input: {
+        stateFromAuthProvider: string | undefined;
+        stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
+        userContext?: any;
+    }): Promise<StateObject & CustomStateProperties> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.verifyAndGetThirdPartyStateOrThrowError({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
+
+    /**
+     * Returns the auth code from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
+     */
+    static getThirdPartyAuthCodeFromURL(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getThirdPartyAuthCodeFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Returns the error from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "error" query param from the current URL. Returns undefined if no error exists
+     */
+    static getThirdPartyAuthErrorFromURL(input?: { userContext?: any }): string | undefined {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getThirdPartyAuthErrorFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Returns the auth state from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "state" query param from the current URL. Returns an empty string if no state exists
+     */
+    static getThirdPartyAuthStateFromURL(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getThirdPartyAuthStateFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
     }
 
     /**
@@ -143,7 +280,7 @@ export default class RecipeWrapper {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    static async resendPasswordlessCode(input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static async resendPasswordlessCode(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
         fetchResponse: Response;
     }> {
@@ -205,6 +342,34 @@ export default class RecipeWrapper {
         return PasswordlessUtilsFunctions.consumeCode({
             ...input,
             recipeImplementation: recipe.passwordlessRecipe.recipeImplementation,
+        });
+    }
+
+    /**
+     * Reads and returns the link code from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The hash (#) property of the current URL
+     */
+    static getPasswordlessLinkCodeFromURL(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getPasswordlessLinkCodeFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Reads and returns the pre auth session id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "preAuthSessionId" query parameter from the current URL
+     */
+    static getPasswordlessPreAuthSessionIdFromURL(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getPasswordlessPreAuthSessionIdFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 
@@ -329,6 +494,58 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input.userContext),
         });
     }
+
+    /**
+     * Get information about the current login attempt from storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns `{deviceId, preAuthSessionId, flowType}` if present, returns undefined otherwise
+     */
+    static getPasswordlessLoginAttemptInfo<CustomLoginAttemptInfoProperties>(input?: { userContext?: any }): Promise<
+        | undefined
+        | ({
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+          } & CustomLoginAttemptInfoProperties)
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getPasswordlessLoginAttemptInfo({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Set information about the current login attempt to storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     */
+    static setPasswordlessLoginAttemptInfo<CustomStateProperties>(input: {
+        attemptInfo: {
+            deviceId: string;
+            preAuthSessionId: string;
+            flowType: PasswordlessFlowType;
+        } & CustomStateProperties;
+        userContext?: any;
+    }): Promise<void> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.setPasswordlessLoginAttemptInfo({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Clear any information about login attempts from storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     */
+    static clearPasswordlessLoginAttemptInfo(input?: { userContext?: any }): Promise<void> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.clearPasswordlessLoginAttemptInfo({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
@@ -343,6 +560,19 @@ const resendPasswordlessCode = RecipeWrapper.resendPasswordlessCode;
 const consumePasswordlessCode = RecipeWrapper.consumePasswordlessCode;
 const doesPasswordlessUserEmailExist = RecipeWrapper.doesPasswordlessUserEmailExist;
 const doesPasswordlessUserPhoneNumberExist = RecipeWrapper.doesPasswordlessUserPhoneNumberExist;
+const getAuthorisationURLFromBackend = RecipeWrapper.getAuthorisationURLFromBackend;
+const getThirdPartyStateAndOtherInfoFromStorage = RecipeWrapper.getThirdPartyStateAndOtherInfoFromStorage;
+const setThirdPartyStateAndOtherInfoToStorage = RecipeWrapper.setThirdPartyStateAndOtherInfoToStorage;
+const generateThirdPartyStateToSendToOAuthProvider = RecipeWrapper.generateThirdPartyStateToSendToOAuthProvider;
+const verifyAndGetThirdPartyStateOrThrowError = RecipeWrapper.verifyAndGetThirdPartyStateOrThrowError;
+const getThirdPartyAuthCodeFromURL = RecipeWrapper.getThirdPartyAuthCodeFromURL;
+const getThirdPartyAuthErrorFromURL = RecipeWrapper.getThirdPartyAuthErrorFromURL;
+const getThirdPartyAuthStateFromURL = RecipeWrapper.getThirdPartyAuthStateFromURL;
+const getPasswordlessLinkCodeFromURL = RecipeWrapper.getPasswordlessLinkCodeFromURL;
+const getPasswordlessPreAuthSessionIdFromURL = RecipeWrapper.getPasswordlessPreAuthSessionIdFromURL;
+const getPasswordlessLoginAttemptInfo = RecipeWrapper.getPasswordlessLoginAttemptInfo;
+const setPasswordlessLoginAttemptInfo = RecipeWrapper.setPasswordlessLoginAttemptInfo;
+const clearPasswordlessLoginAttemptInfo = RecipeWrapper.clearPasswordlessLoginAttemptInfo;
 const signOut = RecipeWrapper.signOut;
 
 export {
@@ -358,6 +588,19 @@ export {
     doesPasswordlessUserEmailExist,
     doesPasswordlessUserPhoneNumberExist,
     signOut,
+    getAuthorisationURLFromBackend,
+    getThirdPartyStateAndOtherInfoFromStorage,
+    setThirdPartyStateAndOtherInfoToStorage,
+    generateThirdPartyStateToSendToOAuthProvider,
+    verifyAndGetThirdPartyStateOrThrowError,
+    getThirdPartyAuthCodeFromURL,
+    getThirdPartyAuthErrorFromURL,
+    getThirdPartyAuthStateFromURL,
+    getPasswordlessLinkCodeFromURL,
+    getPasswordlessPreAuthSessionIdFromURL,
+    getPasswordlessLoginAttemptInfo,
+    setPasswordlessLoginAttemptInfo,
+    clearPasswordlessLoginAttemptInfo,
     PasswordlessUser,
     PasswordlessFlowType,
     UserInput,
