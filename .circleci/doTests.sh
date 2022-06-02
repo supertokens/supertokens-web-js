@@ -47,9 +47,6 @@ fi
 reactTag=$(echo $reactInfo | jq .tag | tr -d '"')
 reactVersion=$(echo $reactInfo | jq .version | tr -d '"')
 
-echo "React TAG: $reactTag, Exiting early for testing"
-exit 1
-
 cd ../../
 git clone git@github.com:supertokens/supertokens-auth-react.git
 cd supertokens-auth-react
