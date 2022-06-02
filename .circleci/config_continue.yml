@@ -29,7 +29,7 @@ jobs:
         parameters:
             fdi-version:
                 type: string
-        parallelism: 4
+        parallelism: 1
         steps:
             - run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/ # This makes npm use http instead of ssh (required for node 16)
             - checkout

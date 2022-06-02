@@ -8,6 +8,12 @@ fi
 frontendDriverVersion=$1
 frontendDriverVersion=`echo $frontendDriverVersion | tr -d '"'`
 
+if [[ $frontendDriverVersion != "1.9" ]] 
+then
+echo "Not matching FDI"
+exit 1
+fi
+
 webInterfaceJson=`cat ../webJsInterfaceSupported.json`
 webJSInterfaceVersion=`echo $webInterfaceJson | jq ".version"`
 webJSInterfaceVersion=`echo $webJSInterfaceVersion | tr -d '"'`
