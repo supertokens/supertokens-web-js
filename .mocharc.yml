@@ -1,7 +1,6 @@
 exit: true
 spec:
     - test/unit/**/*.test.js
-    - test/end-to-end/**/*.test.js
 reporter: spec
 require: "@babel/register"
 slow: 20000
