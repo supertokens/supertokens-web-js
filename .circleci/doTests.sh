@@ -23,10 +23,6 @@ fi
 
 echo "Running for web js interface version $webJSInterfaceVersion"
 
-curl -s -X -v GET \
-"https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webJSInterfaceVersion&frontendName=auth-react" \
--H 'api-version: 0'
-
 reactVersionXY=`curl -s -X GET \
 "https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webJSInterfaceVersion&frontendName=auth-react" \
 -H 'api-version: 0'`
@@ -35,7 +31,8 @@ then
     echo "fetching latest X.Y version for react given web-js-interface X.Y version: $webJSInterfaceVersion gave response: $reactVersionXY. Please make sure all relevant drivers have been pushed."
     exit 1
 fi
-reactVersionXY=$(echo $reactVersionXY | jq .driver | tr -d '"')
+
+reactVersionXY=$(echo $reactVersionXY | jq .frontend | tr -d '"')
 
 reactInfo=`curl -s -X GET \
 "https://api.supertokens.io/0/frontend/latest?password=$SUPERTOKENS_API_KEY&version=$reactVersionXY&name=auth-react" \
