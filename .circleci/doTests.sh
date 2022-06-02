@@ -9,8 +9,8 @@ frontendDriverVersion=$1
 frontendDriverVersion=`echo $frontendDriverVersion | tr -d '"'`
 
 webInterfaceJson=`cat ../webJsInterfaceSupported.json`
-webInterfaceVersion=`echo $webInterfaceJson | jq ".version"`
-webInterfaceVersion=`echo $webInterfaceVersion | tr -d '"'`
+webJSInterfaceVersion=`echo $webInterfaceJson | jq ".version"`
+webJSInterfaceVersion=`echo $webJSInterfaceVersion | tr -d '"'`
 webJsFDIJson=`cat ../frontendDriverInterfaceSupported.json`
 webJsFDIArray=`echo $webJsFDIJson | jq .versions`
 
@@ -21,14 +21,14 @@ if [ -z "$SUPERTOKENS_API_KEY" ]; then
     exit 1;
 fi
 
-echo "Running for web js interface version $webInterfaceVersion"
+echo "Running for web js interface version $webJSInterfaceVersion"
 
 reactVersionXY=`curl -s -X GET \
-"https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webInterfaceVersion&frontendName=auth-react" \
+"https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webJSInterfaceVersion&frontendName=auth-react" \
 -H 'api-version: 0'`
 if [[ `echo $reactVersionXY | jq .frontend` == "null" ]]
 then
-    echo "fetching latest X.Y version for react given web-js-interface X.Y version: $webInterfaceVersion gave response: $reactVersionXY. Please make sure all relevant drivers have been pushed."
+    echo "fetching latest X.Y version for react given web-js-interface X.Y version: $webJSInterfaceVersion gave response: $reactVersionXY. Please make sure all relevant drivers have been pushed."
     exit 1
 fi
 reactVersionXY=$(echo $reactVersionXY | jq .driver | tr -d '"')
