@@ -35,7 +35,7 @@ fi
 reactVersionXY=$(echo $reactVersionXY | jq .frontend | tr -d '"')
 
 reactInfo=`curl -s -X GET \
-"https://api.supertokens.io/0/frontend/latest?password=$SUPERTOKENS_API_KEY&version=$reactVersionXY&name=auth-react" \
+"https://api.supertokens.io/0/frontend/latest?password=$SUPERTOKENS_API_KEY&version=$reactVersionXY&name=auth-react&mode=DEV" \
 -H 'api-version: 0'`
 
 if [[ `echo $reactInfo | jq .tag` == "null" ]]
