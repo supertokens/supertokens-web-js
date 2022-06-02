@@ -110,7 +110,7 @@ then
    git stash drop >/dev/null 2>/dev/null
 fi
 
-if [ $compiles -eq 0 ] && [ $formatted -eq 0 ] && [ $circDep -eq 0 ] && [ $dotOnly -eq 1 ] && [ $linted -eq 0 ]
+if [ $compiles -eq 0 ] && [ $formatted -eq 0 ] && [ $circDep -eq 0 ] && [ $dotOnly -eq 1 ] && [ $linted -eq 0 ] && [ $pruned -eq 0 ]
 then
    echo "$(tput setaf 2)... done. Proceeding with commit.$(tput sgr 0)"
    echo ""

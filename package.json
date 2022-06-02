@@ -16,7 +16,7 @@
         "test-unit": "TEST_MODE=testing npx mocha 'test/unit/*.test.js'",
         "test": "npm run test-unit",
         "build-docs": "rm -rf ./docs && npx typedoc --out ./docs --tsconfig ./lib/tsconfig.json ./lib/ts/index.ts ./lib/ts/**/index.ts ./lib/ts/**/*/index.ts",
-        "prune": "cd lib && ts-prune | grep -vE 'used in module| - default$| - package_version$|getSuperTokensRoutesForReactRouterDom$' && exit 1 || exit 0"
+        "prune": "cd lib && ts-prune | grep -vE 'used in module| - default$| - package_version$|init$' && exit 1 || exit 0"
     },
     "repository": {
         "type": "git",
