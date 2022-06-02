@@ -12,10 +12,8 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { RecipeInterface as STWebsiteRecipeInterface } from "supertokens-website";
+import { RecipeInterface as STWebsiteRecipeInterface, InputType as WebsiteInputType } from "supertokens-website";
 import { NormalisedAppInfo } from "../../types";
-import OverrideableBuilder from "supertokens-js-override";
-import { RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "../recipeModule/types";
 
 export type RecipeEvent =
     | {
@@ -28,22 +26,10 @@ export type RecipeEvent =
           userContext: any;
       };
 
-export type UserInput = {
-    sessionScope?: string;
-    sessionExpiredStatusCode?: number;
-    autoAddCredentials?: boolean;
-    isInIframe?: boolean;
-    cookieDomain?: string;
-    preAPIHook?: RecipePreAPIHookFunction<"SIGN_OUT" | "REFRESH_SESSION">;
-    postAPIHook?: RecipePostAPIHookFunction<"SIGN_OUT" | "REFRESH_SESSION">;
-    onHandleEvent?: (event: RecipeEvent) => void;
-    override?: {
-        functions?: (
-            originalImplementation: RecipeInterface,
-            builder?: OverrideableBuilder<RecipeInterface>
-        ) => RecipeInterface;
-    };
-};
+export type UserInput = Omit<
+    WebsiteInputType,
+    "apiDomain" | "apiBasePath" | "enableDebugLogs" | "cookieHandler" | "windowHandler"
+>;
 
 export type RecipeInterface = STWebsiteRecipeInterface;
 
