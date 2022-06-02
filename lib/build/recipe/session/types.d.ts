@@ -13,7 +13,6 @@ export declare type RecipeEvent =
           userContext: any;
       };
 export declare type UserInput = {
-    enableDebugLogs?: boolean;
     sessionScope?: string;
     sessionExpiredStatusCode?: number;
     autoAddCredentials?: boolean;

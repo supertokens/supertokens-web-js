@@ -29,7 +29,6 @@ export type RecipeEvent =
       };
 
 export type UserInput = {
-    enableDebugLogs?: boolean;
     sessionScope?: string;
     sessionExpiredStatusCode?: number;
     autoAddCredentials?: boolean;
