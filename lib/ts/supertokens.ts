@@ -13,10 +13,11 @@
  * under the License.
  */
 
-import { normaliseStorageHandlerInput } from "./common/storage/utils";
 import RecipeModule from "./recipe/recipeModule";
-import { NormalisedAppInfo, NormalisedStorageHandlers, SuperTokensConfig } from "./types";
+import { NormalisedAppInfo, SuperTokensConfig } from "./types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest, normaliseInputAppInfoOrThrowError } from "./utils";
+import { CookieHandlerReference } from "supertokens-website/utils/cookieHandler";
+import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
 
 export default class SuperTokens {
     /*
@@ -28,12 +29,10 @@ export default class SuperTokens {
      * Instance Attributes.
      */
     appInfo: NormalisedAppInfo;
-    storageHandlers: NormalisedStorageHandlers;
     recipeList: RecipeModule<any, any>[] = [];
 
     constructor(config: SuperTokensConfig) {
         this.appInfo = normaliseInputAppInfoOrThrowError(config.appInfo);
-        this.storageHandlers = normaliseStorageHandlerInput(config.storageHandlers);
 
         if (config.recipeList === undefined || config.recipeList.length === 0) {
             throw new Error(
@@ -41,8 +40,13 @@ export default class SuperTokens {
             );
         }
 
+        let enableDebugLogs = false;
+        if (config.enableDebugLogs !== undefined) {
+            enableDebugLogs = config.enableDebugLogs;
+        }
+
         this.recipeList = config.recipeList.map((recipe) => {
-            return recipe(this.appInfo, this.storageHandlers);
+            return recipe(this.appInfo, enableDebugLogs);
         });
     }
 
@@ -53,6 +57,9 @@ export default class SuperTokens {
      * @param config The configuration the SDK should use
      */
     static init(config: SuperTokensConfig): void {
+        CookieHandlerReference.init(config.cookieHandler);
+        WindowHandlerReference.init(config.windowHandler);
+
         if (SuperTokens.instance !== undefined) {
             console.warn("SuperTokens was already initialized");
             return;

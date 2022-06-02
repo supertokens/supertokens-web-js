@@ -14,7 +14,6 @@
  */
 
 import { getNormalisedUserContext } from "../../utils";
-import { UserType } from "../authRecipeWithEmailVerification/types";
 import { RecipeFunctionOptions } from "../emailpassword";
 import Recipe from "./recipe";
 import {
@@ -24,6 +23,7 @@ import {
     StateObject,
     RecipeInterface,
     UserInput,
+    ThirdPartyUserType,
 } from "./types";
 
 export default class RecipeWrapper {
@@ -34,6 +34,39 @@ export default class RecipeWrapper {
     static signOut(input?: { userContext?: any }) {
         return Recipe.getInstanceOrThrow().signOut({
             userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Get the current login state from storage, this is also used when calling signInUp
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     *
+     * @returns State object from storage
+     */
+    static getStateAndOtherInfoFromStorage<CustomStateProperties>(input?: {
+        userContext?: any;
+    }): (StateObject & CustomStateProperties) | undefined {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getStateAndOtherInfoFromStorage({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Set the login state to storage
+     *
+     * @param state
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     */
+    static setStateAndOtherInfoToStorage<CustomStateProperties>(input: {
+        state: StateObject & CustomStateProperties;
+        userContext?: any;
+    }): Promise<void> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.setStateAndOtherInfoToStorage({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
         });
     }
 
@@ -68,6 +101,34 @@ export default class RecipeWrapper {
     }
 
     /**
+     * Get the URL to be used by the third party provider for redirecting after the auth flow
+     *
+     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     *
+     * @param options Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", url}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
+    static getAuthorisationURLFromBackend(input: {
+        providerId: string;
+        userContext?: any;
+        options?: RecipeFunctionOptions;
+    }): Promise<{
+        status: "OK";
+        url: string;
+        fetchResponse: Response;
+    }> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLFromBackend({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
+
+    /**
      * Sign up/Sign in the user, this method uses the login attempt information from storage
      *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
@@ -83,7 +144,7 @@ export default class RecipeWrapper {
     static signInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: ThirdPartyUserType;
               createdNewUser: boolean;
               fetchResponse: Response;
           }
@@ -93,6 +154,82 @@ export default class RecipeWrapper {
           }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.signInAndUp({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Generate a new state that will be sent to the third party provider
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     *
+     * @returns string
+     */
+    static generateStateToSendToOAuthProvider(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.generateStateToSendToOAuthProvider({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Verify that the state recieved from the third party provider matches the one in storage
+     *
+     * @param stateForAuthProvider State recieved as query param after redirection from third party provider
+     *
+     * @param stateObjectFromStorage State object from storage
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     */
+    static verifyAndGetStateOrThrowError<CustomStateProperties>(input: {
+        stateFromAuthProvider: string | undefined;
+        stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
+        userContext?: any;
+    }): Promise<StateObject & CustomStateProperties> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.verifyAndGetStateOrThrowError({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
+
+    /**
+     * Returns the auth code from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
+     */
+    static getAuthCodeFromURL(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthCodeFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Returns the error from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "error" query param from the current URL. Returns undefined if no error exists
+     */
+    static getAuthErrorFromURL(input?: { userContext?: any }): string | undefined {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthErrorFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
+     * Returns the auth state from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "state" query param from the current URL. Returns an empty string if no state exists
+     */
+    static getAuthStateFromURL(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthStateFromURL({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
         });
@@ -171,7 +308,14 @@ const signInAndUp = RecipeWrapper.signInAndUp;
 const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
-
+const getStateAndOtherInfoFromStorage = RecipeWrapper.getStateAndOtherInfoFromStorage;
+const setStateAndOtherInfoToStorage = RecipeWrapper.setStateAndOtherInfoToStorage;
+const getAuthorisationURLFromBackend = RecipeWrapper.getAuthorisationURLFromBackend;
+const generateStateToSendToOAuthProvider = RecipeWrapper.generateStateToSendToOAuthProvider;
+const verifyAndGetStateOrThrowError = RecipeWrapper.verifyAndGetStateOrThrowError;
+const getAuthCodeFromURL = RecipeWrapper.getAuthCodeFromURL;
+const getAuthErrorFromURL = RecipeWrapper.getAuthErrorFromURL;
+const getAuthStateFromURL = RecipeWrapper.getAuthStateFromURL;
 const signOut = RecipeWrapper.signOut;
 
 export {
@@ -182,11 +326,19 @@ export {
     sendVerificationEmail,
     isEmailVerified,
     signOut,
+    getStateAndOtherInfoFromStorage,
+    setStateAndOtherInfoToStorage,
+    getAuthorisationURLFromBackend,
+    generateStateToSendToOAuthProvider,
+    verifyAndGetStateOrThrowError,
+    getAuthCodeFromURL,
+    getAuthErrorFromURL,
+    getAuthStateFromURL,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,
     PostAPIHookContext,
     PreAndPostAPIHookAction,
     UserInput,
-    UserType,
+    ThirdPartyUserType,
 };

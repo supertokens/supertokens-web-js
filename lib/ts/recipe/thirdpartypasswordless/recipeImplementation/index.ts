@@ -19,9 +19,9 @@ import ThirdPartyRecipeImplementation from "../../thirdparty/recipeImplementatio
 import PasswordlessRecipeImplementation from "../../passwordless/recipeImplementation";
 import DerivedThirdParty from "./thirdparty";
 import DerivedPasswordless from "./passwordless";
-import { UserType } from "../../authRecipeWithEmailVerification/types";
 import { StateObject } from "../../thirdparty/types";
 import { PasswordlessFlowType, PasswordlessUser } from "../../passwordless/types";
+import { ThirdPartyUserType } from "../../thirdparty/types";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -45,7 +45,7 @@ export default function getRecipeImplementation(
         thirdPartySignInAndUp: async function (input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
             | {
                   status: "OK";
-                  user: UserType;
+                  user: ThirdPartyUserType;
                   createdNewUser: boolean;
                   fetchResponse: Response;
               }
@@ -224,3 +224,5 @@ export default function getRecipeImplementation(
         },
     };
 }
+
+export { getRecipeImplementation };

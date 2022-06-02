@@ -15,3 +15,4 @@ export default class Recipe extends RecipeModule<unknown, any> {
     static getInstanceOrThrow(): Recipe;
     static reset(): void;
 }
+export { Recipe };

@@ -19,7 +19,7 @@ import AuthRecipe from "../authRecipe";
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface, UserInput } from "./types";
 import { normaliseUserInput } from "./utils";
 import RecipeImplementation from "./recipeImplementation";
-import { CreateRecipeFunction, NormalisedAppInfo, NormalisedStorageHandlers } from "../../types";
+import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -36,7 +36,6 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
                 appInfo: this.config.appInfo,
                 preAPIHook: this.config.preAPIHook,
                 postAPIHook: this.config.postAPIHook,
-                storageHandlers: this.config.storageHandlers,
             })
         );
 
@@ -44,12 +43,11 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     }
 
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo, storageHandlers: NormalisedStorageHandlers) => {
+        return (appInfo: NormalisedAppInfo) => {
             Recipe.instance = new Recipe({
                 ...config,
                 recipeId: Recipe.RECIPE_ID,
                 appInfo,
-                storageHandlers,
             });
 
             return Recipe.instance;
@@ -75,3 +73,5 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
         return;
     }
 }
+
+export { Recipe };

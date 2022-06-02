@@ -10,3 +10,4 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     static getInstanceOrThrow(): Recipe;
     static reset(): void;
 }
+export { Recipe };

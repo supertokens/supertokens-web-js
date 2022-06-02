@@ -232,6 +232,20 @@ export default class RecipeWrapper {
     }
 
     /**
+     * Reads and returns the reset password token from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "token" query parameter from the current location
+     */
+    static getResetPasswordTokenFromURL(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getResetPasswordTokenFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
      * Verify an email
      *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
@@ -308,6 +322,7 @@ const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
 const signOut = RecipeWrapper.signOut;
+const getResetPasswordTokenFromURL = RecipeWrapper.getResetPasswordTokenFromURL;
 
 export {
     init,
@@ -316,6 +331,7 @@ export {
     signUp,
     signIn,
     doesEmailExist,
+    getResetPasswordTokenFromURL,
     verifyEmail,
     sendVerificationEmail,
     isEmailVerified,

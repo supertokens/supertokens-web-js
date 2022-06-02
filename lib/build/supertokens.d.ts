@@ -1,9 +1,8 @@
 import RecipeModule from "./recipe/recipeModule";
-import { NormalisedAppInfo, NormalisedStorageHandlers, SuperTokensConfig } from "./types";
+import { NormalisedAppInfo, SuperTokensConfig } from "./types";
 export default class SuperTokens {
     private static instance?;
     appInfo: NormalisedAppInfo;
-    storageHandlers: NormalisedStorageHandlers;
     recipeList: RecipeModule<any, any>[];
     constructor(config: SuperTokensConfig);
     /**

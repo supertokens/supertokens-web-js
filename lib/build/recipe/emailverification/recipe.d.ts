@@ -12,3 +12,4 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
     static getInstanceOrThrow(): Recipe;
     static reset(): void;
 }
+export { Recipe };

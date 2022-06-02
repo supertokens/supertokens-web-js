@@ -13,6 +13,7 @@
  * under the License.
  */
 
+import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
 import Querier from "../../querier";
 import { getHashFromLocation, getQueryParams } from "../../utils";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
@@ -286,7 +287,7 @@ export default function getRecipeImplementation(
                   flowType: PasswordlessFlowType;
               } & CustomLoginAttemptInfoProperties)
         > {
-            const storedInfo = await recipeImplInput.storageHandlers.localStorage.getItem(
+            const storedInfo = await WindowHandlerReference.getReferenceOrThrow().windowHandler.localStorage.getItem(
                 PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY
             );
 
@@ -308,7 +309,7 @@ export default function getRecipeImplementation(
             } & CustomStateProperties;
             userContext: any;
         }): Promise<void> {
-            await recipeImplInput.storageHandlers.localStorage.setItem(
+            await WindowHandlerReference.getReferenceOrThrow().windowHandler.localStorage.setItem(
                 PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY,
                 JSON.stringify({
                     // This can make future changes/migrations a lot cleaner
@@ -318,7 +319,11 @@ export default function getRecipeImplementation(
             );
         },
         clearLoginAttemptInfo: async function (): Promise<void> {
-            recipeImplInput.storageHandlers.localStorage.removeItem(PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY);
+            WindowHandlerReference.getReferenceOrThrow().windowHandler.localStorage.removeItem(
+                PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY
+            );
         },
     };
 }
+
+export { getRecipeImplementation };
