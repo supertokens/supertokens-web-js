@@ -45,20 +45,14 @@ We're so excited you're interested in helping with SuperTokens! We are happy to 
     npm run lint
     ```
 
-## Testing
+## Running the tests
 
-1. Navigate to the supertokens-root repository
-2. Start the testing environment
-
-    ```
-    ./startTestingEnv --wait
-    ```
-
-3. Open a new terminal in `supertokens-web-js` and run all tests
-
-    ```
-    npm run test
-    ```
+1. Navigate to your fork of supertokens-web-js on https://github.com
+2. Set the `AUTH0_EMAIL` and `AUTH0_PASSWORD` secrets in your repository (Your forked repository -> Settings -> Secrets -> Actions). You can refer to [this file](https://github.com/supertokens/supertokens-auth-react/blob/master/test/.env.js) for the values
+3. Navigate to the "Actions" tab in the repository
+4. Select the "Run tests" Action in the sidebar
+5. Use the "Run workflow" button to configure the correct branch to use when running the tests. For supertokens-auth-react you can use "supertokens" as the owner name and use the latest version branch. For example if the latest version for supertokens-auth-react is `0.22.0`, you should use the branch `0.22`. You can use the default values for the rest. (Make sure to select the correct branch for your fork of supertokens-web-js in the dropdown)
+6. Run the workflow
 
 ## Pull Request
 
