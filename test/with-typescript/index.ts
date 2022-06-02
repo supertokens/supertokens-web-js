@@ -841,7 +841,6 @@ const sessionPostAPIHook: RecipePostAPIHookFunction<"SIGN_OUT" | "REFRESH_SESSIO
 
 function getSession(): CreateRecipeFunction<"SIGN_OUT" | "REFRESH_SESSION"> {
     const config: SessionUserInput = {
-        apiDomain: "",
         apiBasePath: "",
         autoAddCredentials: true,
         cookieDomain: "",
