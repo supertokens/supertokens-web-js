@@ -22,6 +22,7 @@ if [ -z "$SUPERTOKENS_API_KEY" ]; then
 fi
 
 echo "Running for web js interface version $webJSInterfaceVersion"
+echo "Running 2 for web js interface version $webJSInterfaceVersion"
 
 reactVersionXY=`curl -s -X GET \
 "https://api.supertokens.io/0/web-js-interface/dependency/frontend/latest?password=$SUPERTOKENS_API_KEY&mode=DEV&version=$webJSInterfaceVersion&frontendName=auth-react" \
