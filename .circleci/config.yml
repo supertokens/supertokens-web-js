@@ -21,6 +21,20 @@ jobs:
                       cd .circleci && ./generateConfig.sh
             - continuation/continue:
                   configuration_path: .circleci/config_continue.yml # use newly generated config to continue
+
+    publish:
+        docker:
+            - image: rishabhpoddar/supertokens_website_sdk_testing_node_16
+        steps:
+            - checkout
+            - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+            - run:
+                  name: Publish
+                  command: |
+                      cd .circleci
+                      ./publish.sh
+            - slack/status
+
     update-docs:
         docker:
             - image: rishabhpoddar/supertokens_website_sdk_testing_node_16
@@ -40,3 +54,20 @@ workflows:
                           only: /dev-v[0-9]+(\.[0-9]+)*/
                       branches:
                           ignore: /.*/
+
+            - publish:
+                  context:
+                      - slack-notification
+                  filters:
+                      tags:
+                          only: /v[0-9]+(\.[0-9]+)*/
+                      branches:
+                          ignore: /.*/
+
+            - update-docs:
+                  context:
+                      - slack-notification
+                  filters:
+                      branches:
+                          only:
+                              - master
