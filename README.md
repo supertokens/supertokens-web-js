@@ -1,9 +1,3 @@
-# supertokens-web-js (In progress)
-
-SuperTokens SDK for vanilla JS for all recipes
-
-![SuperTokens banner](https://raw.githubusercontent.com/supertokens/supertokens-logo/master/images/Artboard%20%E2%80%93%2027%402x.png)
-
 # SuperTokens Web JS SDK
 
 <a href="https://supertokens.com/discord">
