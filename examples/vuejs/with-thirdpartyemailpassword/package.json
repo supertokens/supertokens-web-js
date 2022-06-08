@@ -17,7 +17,7 @@
         "helmet": "^5.0.2",
         "pinia": "^2.0.13",
         "supertokens-node": "^9.1.2",
-        "supertokens-web-js": "github:supertokens/supertokens-web-js#0.0",
+        "supertokens-web-js": "^0.0.2",
         "vue": "^3.2.31",
         "vue-router": "^4.0.14"
     },

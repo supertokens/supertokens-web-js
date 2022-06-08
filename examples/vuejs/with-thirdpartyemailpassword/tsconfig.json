@@ -6,7 +6,8 @@
         "paths": {
             "@/*": ["./src/*"]
         },
-        "types": ["node"]
+        "types": ["node"],
+        "target": "esnext"
     },
 
     "references": [

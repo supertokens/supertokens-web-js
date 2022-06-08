@@ -20,12 +20,17 @@ export default {
             if (!(await Session.doesSessionExist())) {
                 return window.location.assign("/auth");
             }
-
             const userId = await Session.getUserId();
             this.userId = userId;
         },
         callAPI: async function () {
             const response = await fetch(`${apiDomain}/sessionInfo`);
+
+            if (response.status === 401) {
+                window.location.assign("/");
+                return;
+            }
+
             const json = await response.json();
 
             window.alert("Session Information:\n" + JSON.stringify(json, null, 2));
@@ -60,8 +65,8 @@ export default {
                 >View the code on GitHub</a
             >
         </div>
+        <div class="bottom-banner">Vue Demo app. Made with ❤️ using supertokens.com</div>
     </div>
-    <div class="bottom-banner">Vue Demo app. Made with ❤️ using supertokens.com</div>
 </template>
 
 <style>
@@ -70,8 +75,9 @@ export default {
 .fill {
     display: flex;
     flex-direction: column;
-    flex: 1 1;
-    justify-content: center;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
 }
 
 .top-bar {
@@ -81,6 +87,7 @@ export default {
     justify-content: flex-end;
     padding-left: 75px;
     padding-right: 75px;
+    width: 100%;
 }
 
 .sign-out {
@@ -125,15 +132,13 @@ export default {
 .bottom-banner {
     display: flex;
     width: 100vw;
-    height: 80px;
+    padding-top: 8px;
+    padding-bottom: 8px;
     background-color: rgb(0, 0, 0);
     align-items: center;
     justify-content: center;
     align-self: flex-end;
     color: rgb(255, 255, 255);
     font-weight: bold;
-    position: absolute;
-    bottom: 0;
-    left: 0;
 }
 </style>

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import AuthView from "../views/AuthView.vue";
 import AuthCallbackView from "../views/AuthCallbackView.vue";
+import ForgotPasswordView from "../views/ForgotPassword.vue";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,6 +21,11 @@ const router = createRouter({
             path: "/auth/callback/:provider",
             name: "authcallback",
             component: () => AuthCallbackView,
+        },
+        {
+            path: "/auth/reset-password",
+            name: "resetPassword",
+            component: () => ForgotPasswordView,
         },
     ],
 });

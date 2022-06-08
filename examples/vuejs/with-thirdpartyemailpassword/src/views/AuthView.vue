@@ -1,5 +1,6 @@
 <script lang="ts">
 import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import Session from "supertokens-web-js/recipe/session";
 
 const websitePort = import.meta.env.VUE_APP_WEB_PORT || 3000;
 const websiteDomain = import.meta.env.VUE_APP_WEB_URL || `http://localhost:${websitePort}`;
@@ -22,6 +23,8 @@ export default {
             this.errorMessage = "Something went wrong";
             this.error = true;
         }
+
+        this.checkForSession();
     },
 
     methods: {
@@ -32,18 +35,6 @@ export default {
             this.isSignIn = true;
         },
         signIn: async function (_: SubmitEvent) {
-            if (
-                !(
-                    await ThirdPartyEmailPassword.doesEmailExist({
-                        email: this.email,
-                    })
-                ).doesExist
-            ) {
-                this.errorMessage = "Email does not exist, sign up instead";
-                this.error = true;
-                return;
-            }
-
             const response = await ThirdPartyEmailPassword.emailPasswordSignIn({
                 formFields: [
                     {
@@ -156,6 +147,11 @@ export default {
             });
 
             window.location.assign(authUrl);
+        },
+        checkForSession: async function () {
+            if (await Session.doesSessionExist()) {
+                window.location.assign("/");
+            }
         },
     },
 };
@@ -384,8 +380,8 @@ export default {
 
 .auth-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    justify-content: space-between;
     width: 100%;
     height: 100%;
 }

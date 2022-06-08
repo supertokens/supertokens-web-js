@@ -5,11 +5,9 @@ export default {
     mounted: async function () {
         try {
             const response = await ThirdPartyEmailPassword.thirdPartySignInAndUp();
-
             if (response.status !== "OK") {
-                window.location.assign("/auth?error=signin");
+                return window.location.assign("/auth?error=signin");
             }
-
             window.location.assign("/");
         } catch (_) {
             window.location.assign("/auth?error=signin");
@@ -61,6 +59,15 @@ export default {
 #app {
     width: 100vw;
     height: 100vh;
+}
+
+.fill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .spinner {
