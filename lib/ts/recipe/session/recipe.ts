@@ -13,7 +13,7 @@
  * under the License.
  */
 import RecipeModule from "../recipeModule";
-import SuperTokensWebsite from "supertokens-website";
+import SuperTokensWebsite, { ClaimValidationError, SessionClaimValidator } from "supertokens-website";
 import { InputType, UserInput } from "./types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
@@ -88,6 +88,13 @@ export default class Recipe extends RecipeModule<unknown, any> {
 
     attemptRefreshingSession = async (): Promise<boolean> => {
         return SuperTokensWebsite.attemptRefreshingSession();
+    };
+
+    validateClaims = async (input: {
+        claimValidators: SessionClaimValidator[];
+        userContext: any;
+    }): Promise<ClaimValidationError[] | undefined> => {
+        return SuperTokensWebsite.validateClaims(input.claimValidators, input.userContext);
     };
 
     static addAxiosInterceptors(axiosInstance: any, userContext: any): void {

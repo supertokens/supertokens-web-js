@@ -15,7 +15,7 @@
 import { getNormalisedUserContext } from "../../utils";
 import SessionRecipe from "./recipe";
 import { UserInput } from "./types";
-import { RecipeInterface } from "supertokens-website";
+import { RecipeInterface, ClaimValidationError, SessionClaimValidator } from "supertokens-website";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -54,6 +54,16 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
+
+    static async validateClaims(input: {
+        claimValidators: SessionClaimValidator[];
+        userContext?: any;
+    }): Promise<ClaimValidationError[] | undefined> {
+        return SessionRecipe.getInstanceOrThrow().validateClaims({
+            claimValidators: input.claimValidators,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
@@ -63,6 +73,7 @@ const attemptRefreshingSession = RecipeWrapper.attemptRefreshingSession;
 const doesSessionExist = RecipeWrapper.doesSessionExist;
 const addAxiosInterceptors = RecipeWrapper.addAxiosInterceptors;
 const signOut = RecipeWrapper.signOut;
+const validateClaims = RecipeWrapper.validateClaims;
 
 export {
     init,
@@ -72,6 +83,7 @@ export {
     doesSessionExist,
     addAxiosInterceptors,
     signOut,
+    validateClaims,
     RecipeInterface,
     UserInput,
 };

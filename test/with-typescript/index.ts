@@ -95,6 +95,7 @@ import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
 import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
 import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
+import { BooleanClaim, PrimitiveClaim } from "../../recipe/session/claims";
 
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
@@ -2544,3 +2545,47 @@ ThirdPartyPasswordless.verifyEmail({
 });
 ThirdPartyPasswordless.verifyEmail(undefined);
 ThirdPartyPasswordless.verifyEmail();
+
+const TestBoolClaim = new BooleanClaim(
+    {
+        id: "test2",
+        refresh: async (ctx) => {
+            if (ctx) {
+                ctx.refreshCalled = 1;
+            }
+        },
+    },
+    {
+        customValidator: () => ({
+            id: "test2-cv",
+            refresh: async () => {},
+            shouldRefresh: () => false,
+            validate: () => ({
+                isValid: true,
+            }),
+        }),
+    }
+);
+const customValidator = TestBoolClaim.validators.customValidator();
+
+const TestPrimitiveClaim = new PrimitiveClaim<number>({
+    id: "test2",
+    refresh: async (ctx) => {
+        if (ctx) {
+            ctx.refreshCalled = 1;
+        }
+    },
+});
+
+const primitiveValidator = TestPrimitiveClaim.validators.hasFreshValue(321, 600);
+
+Session.validateClaims({
+    claimValidators: [primitiveValidator, customValidator],
+});
+
+Session.validateClaims({
+    claimValidators: [primitiveValidator, customValidator],
+    userContext: {
+        refreshCalled: 0,
+    },
+});
