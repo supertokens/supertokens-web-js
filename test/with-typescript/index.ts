@@ -1017,13 +1017,7 @@ const cookieHandlerInput: CookieHandlerInput = (original: CookieHandlerInterface
         getCookie: async function () {
             return document.cookie;
         },
-        getCookieSync: function () {
-            return document.cookie;
-        },
         setCookie: async function (newCookie: string) {
-            document.cookie = newCookie;
-        },
-        setCookieSync: function (newCookie: string) {
             document.cookie = newCookie;
         },
     };
