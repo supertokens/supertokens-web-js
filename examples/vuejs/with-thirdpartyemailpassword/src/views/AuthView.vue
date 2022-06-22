@@ -13,6 +13,8 @@ export default {
             password: "",
             error: false,
             errorMessage: "Something went wrong",
+            emailError: "",
+            passwordError: "",
         };
     },
 
@@ -54,9 +56,14 @@ export default {
                 return;
             }
 
-            if (response.status !== "OK") {
-                this.errorMessage = "Something went wrong";
-                this.error = true;
+            if (response.status === "FIELD_ERROR") {
+                response.formFields.forEach((item) => {
+                    if (item.id === "email") {
+                        this.emailError = item.error;
+                    } else if (item.id === "password") {
+                        this.passwordError = item.error;
+                    }
+                });
                 return;
             }
 
@@ -104,18 +111,6 @@ export default {
             window.location.assign("/");
         },
         onSubmitPressed: async function (e: SubmitEvent) {
-            if (this.email.trim() === "" || this.password.trim() === "") {
-                this.errorMessage = "Enter both email and password";
-                this.error = true;
-                return;
-            }
-
-            if (!this.validateEmail(this.email)) {
-                this.errorMessage = "Invalid Email";
-                this.error = true;
-                return;
-            }
-
             this.error = false;
 
             if (this.isSignIn) {
@@ -326,10 +321,10 @@ export default {
                 </div>
 
                 <form v-on:submit="onSubmitPressed" autocomplete="on" novalidate @submit.stop.prevent="precent">
-                    <div class="input-section-container">
+                    <div class="input-section-container" v-bind:class="emailError ? 'error' : ''">
                         <div class="input-label">Email</div>
                         <div class="input-container">
-                            <div class="input-wrapper">
+                            <div class="input-wrapper" v-bind:class="emailError ? 'error' : ''">
                                 <input
                                     autocomplete="email"
                                     class="input"
@@ -340,12 +335,15 @@ export default {
                                 />
                             </div>
                         </div>
+                        <div v-if="emailError" class="input-error">
+                            {{ `${emailError}` }}
+                        </div>
                     </div>
 
-                    <div class="input-section-container">
+                    <div class="input-section-container" v-bind:class="passwordError ? 'error' : ''">
                         <div class="input-label">Password</div>
                         <div class="input-container">
-                            <div class="input-wrapper">
+                            <div class="input-wrapper" v-bind:class="passwordError ? 'error' : ''">
                                 <input
                                     autocomplete="current-password"
                                     class="input"
@@ -355,6 +353,9 @@ export default {
                                     v-model="password"
                                 />
                             </div>
+                        </div>
+                        <div v-if="passwordError" class="input-error">
+                            {{ `${passwordError}` }}
                         </div>
                     </div>
 
@@ -493,6 +494,10 @@ export default {
     padding-bottom: 34px;
 }
 
+.input-section-container.error {
+    padding-bottom: 0px;
+}
+
 form {
     display: block;
     margin-top: 0em;
@@ -520,6 +525,10 @@ form {
     height: 34px;
     border-radius: 6px;
     border: 1px solid rgb(224, 224, 224);
+}
+
+.input-wrapper.error {
+    border-color: rgb(255, 23, 23);
 }
 
 .input {
@@ -585,5 +594,25 @@ form {
     box-sizing: border-box;
     border-width: 1px;
     border: 1px solid #ff1744;
+}
+
+.input-error {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: rgb(255, 23, 23);
+    line-height: 24px;
+    font-weight: 400;
+    font-size: 14px;
+    text-align: left;
+    animation: slideTop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s 1 normal both;
+    max-width: 330px;
+}
+@keyframes slideTop {
+    0% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
 }
 </style>
