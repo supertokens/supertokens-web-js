@@ -62,7 +62,7 @@ jobs:
                   persist-credentials: false
             - run: npm i || true
             - run: chown -R 1001:121 "/github/home/.npm"
-            - run: npm i
+            - run: npm i --force
             - name: Cloning supertokens-root
               run: cd ../ && git clone https://github.com/supertokens/supertokens-root.git
             - name: Update Java 1

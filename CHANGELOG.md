@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-## [0.0.3] - 2022-06-15
+### Breaking Changes
 
+-   Removes `setCookieSync` and `getCookieSync` from the interface for `cookieHandler` when calling `SuperTokens.init`
 -   Updates dependency version for supertokens website to support General Error handling
 
 ## [0.0.2] - 2022-06-03
