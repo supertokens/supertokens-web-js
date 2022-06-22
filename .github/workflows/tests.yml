@@ -39,12 +39,8 @@ jobs:
         name: Run tests
         timeout-minutes: 120
         runs-on: ubuntu-latest
-        container: rishabhpoddar/supertokens_website_sdk_testing
+        container: rishabhpoddar/supertokens_website_sdk_testing_node_16
         steps:
-            - name: Set up node
-              uses: actions/setup-node@v1
-              with:
-                  node-version: "16"
             - name: Environment variables
               run: |
                   echo "React Owner: ${{ github.event.inputs.authReactOwnerName }}"
