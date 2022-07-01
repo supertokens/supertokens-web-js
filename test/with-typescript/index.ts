@@ -95,7 +95,7 @@ import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
 import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
 import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
-import { BooleanClaim, PrimitiveClaim } from "../../recipe/session/claims";
+import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recipe/session/claims";
 
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
@@ -797,6 +797,15 @@ function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInt
         getUserId: async function (input) {
             return original.getUserId(input);
         },
+        getInvalidClaimsFromResponse: async function (input) {
+            return original.getInvalidClaimsFromResponse(input);
+        },
+        getGlobalClaimValidators: async function (input) {
+            return original.getGlobalClaimValidators(input);
+        },
+        validateClaims: async function (input) {
+            return original.validateClaims(input);
+        },
     };
 }
 
@@ -855,6 +864,8 @@ function getSession(): CreateRecipeFunction<"SIGN_OUT" | "REFRESH_SESSION"> {
             } else if (event.action === "SIGN_OUT") {
                 //
             } else if (event.action === "UNAUTHORISED") {
+                //
+            } else if (event.action === "API_INVALID_CLAIM") {
                 //
             }
 
@@ -2546,27 +2557,30 @@ ThirdPartyPasswordless.verifyEmail({
 ThirdPartyPasswordless.verifyEmail(undefined);
 ThirdPartyPasswordless.verifyEmail();
 
-const TestBoolClaim = new BooleanClaim(
-    {
-        id: "test2",
-        refresh: async (ctx) => {
-            if (ctx) {
-                ctx.refreshCalled = 1;
-            }
-        },
-    },
-    {
-        customValidator: () => ({
-            id: "test2-cv",
-            refresh: async () => {},
-            shouldRefresh: () => false,
-            validate: () => ({
-                isValid: true,
+class TestBoolClaimWithCustomValidators extends BooleanClaim {
+    constructor() {
+        super({
+            id: "custom",
+            refresh: async () => {
+                console.log("refresh...");
+            },
+        });
+
+        this.validators = {
+            ...this.validators,
+            custVal: (minTimeStamp: number) => ({
+                id: "test1-v1",
+                refresh: this.refresh,
+                shouldRefresh: (payload: any) => payload[this.id] === undefined || payload[this.id].t <= minTimeStamp,
+                validate: () => ({ isValid: true }),
             }),
-        }),
+        };
     }
-);
-const customValidator = TestBoolClaim.validators.customValidator();
+
+    validators!: BooleanClaim["validators"] & { custVal: (minTimeStamp: number) => SessionClaimValidator };
+}
+
+const customClaimInstance = new TestBoolClaimWithCustomValidators();
 
 const TestPrimitiveClaim = new PrimitiveClaim<number>({
     id: "test2",
@@ -2580,11 +2594,11 @@ const TestPrimitiveClaim = new PrimitiveClaim<number>({
 const primitiveValidator = TestPrimitiveClaim.validators.hasFreshValue(321, 600);
 
 Session.validateClaims({
-    claimValidators: [primitiveValidator, customValidator],
+    claimValidators: [primitiveValidator, customClaimInstance.validators.custVal(1)],
 });
 
 Session.validateClaims({
-    claimValidators: [primitiveValidator, customValidator],
+    claimValidators: [primitiveValidator, customClaimInstance.validators.custVal(1)],
     userContext: {
         refreshCalled: 0,
     },

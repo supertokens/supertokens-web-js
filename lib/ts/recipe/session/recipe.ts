@@ -97,6 +97,12 @@ export default class Recipe extends RecipeModule<unknown, any> {
         return SuperTokensWebsite.validateClaims(input.claimValidators, input.userContext);
     };
 
+    getInvalidClaimsFromResponse: typeof SuperTokensWebsite["getInvalidClaimsFromResponse"] = async (
+        input
+    ): Promise<ClaimValidationError[]> => {
+        return SuperTokensWebsite.getInvalidClaimsFromResponse(input);
+    };
+
     static addAxiosInterceptors(axiosInstance: any, userContext: any): void {
         return SuperTokensWebsite.addAxiosInterceptors(axiosInstance, userContext);
     }
