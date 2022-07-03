@@ -55,12 +55,26 @@ export default class RecipeWrapper {
         });
     }
 
-    static async validateClaims(input: {
-        claimValidators: SessionClaimValidator[];
+    static validateClaims(input: {
+        overrideGlobalClaimValidators?: (
+            globalClaimValidators: SessionClaimValidator[],
+            userContext: any
+        ) => SessionClaimValidator[];
         userContext?: any;
-    }): Promise<ClaimValidationError[] | undefined> {
+    }): Promise<ClaimValidationError[]> | ClaimValidationError[] {
         return SessionRecipe.getInstanceOrThrow().validateClaims({
-            claimValidators: input.claimValidators,
+            overrideGlobalClaimValidators: input.overrideGlobalClaimValidators,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    // The strange typing is to avoid adding a dependency to axios
+    static getInvalidClaimsFromResponse(input: {
+        response: { data: any } | Response;
+        userContext?: any;
+    }): Promise<ClaimValidationError[]> {
+        return SessionRecipe.getInstanceOrThrow().getInvalidClaimsFromResponse({
+            response: input.response,
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
@@ -74,6 +88,7 @@ const doesSessionExist = RecipeWrapper.doesSessionExist;
 const addAxiosInterceptors = RecipeWrapper.addAxiosInterceptors;
 const signOut = RecipeWrapper.signOut;
 const validateClaims = RecipeWrapper.validateClaims;
+const getInvalidClaimsFromResponse = RecipeWrapper.getInvalidClaimsFromResponse;
 
 export {
     init,
@@ -84,6 +99,7 @@ export {
     addAxiosInterceptors,
     signOut,
     validateClaims,
+    getInvalidClaimsFromResponse,
     RecipeInterface,
     UserInput,
 };

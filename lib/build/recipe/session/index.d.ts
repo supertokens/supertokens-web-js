@@ -9,9 +9,20 @@ export default class RecipeWrapper {
     static addAxiosInterceptors(axiosInstance: any, userContext?: any): void;
     static signOut(input?: { userContext?: any }): Promise<void>;
     static validateClaims(input: {
-        claimValidators: SessionClaimValidator[];
+        overrideGlobalClaimValidators?: (
+            globalClaimValidators: SessionClaimValidator[],
+            userContext: any
+        ) => SessionClaimValidator[];
         userContext?: any;
-    }): Promise<ClaimValidationError[] | undefined>;
+    }): Promise<ClaimValidationError[]> | ClaimValidationError[];
+    static getInvalidClaimsFromResponse(input: {
+        response:
+            | {
+                  data: any;
+              }
+            | Response;
+        userContext?: any;
+    }): Promise<ClaimValidationError[]>;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getUserId: typeof RecipeWrapper.getUserId;
@@ -21,6 +32,7 @@ declare const doesSessionExist: typeof RecipeWrapper.doesSessionExist;
 declare const addAxiosInterceptors: typeof RecipeWrapper.addAxiosInterceptors;
 declare const signOut: typeof RecipeWrapper.signOut;
 declare const validateClaims: typeof RecipeWrapper.validateClaims;
+declare const getInvalidClaimsFromResponse: typeof RecipeWrapper.getInvalidClaimsFromResponse;
 export {
     init,
     getUserId,
@@ -30,6 +42,7 @@ export {
     addAxiosInterceptors,
     signOut,
     validateClaims,
+    getInvalidClaimsFromResponse,
     RecipeInterface,
     UserInput,
 };

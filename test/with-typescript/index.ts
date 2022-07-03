@@ -800,7 +800,7 @@ function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInt
         getInvalidClaimsFromResponse: async function (input) {
             return original.getInvalidClaimsFromResponse(input);
         },
-        getGlobalClaimValidators: async function (input) {
+        getGlobalClaimValidators: function (input) {
             return original.getGlobalClaimValidators(input);
         },
         validateClaims: async function (input) {
@@ -2594,11 +2594,15 @@ const TestPrimitiveClaim = new PrimitiveClaim<number>({
 const primitiveValidator = TestPrimitiveClaim.validators.hasFreshValue(321, 600);
 
 Session.validateClaims({
-    claimValidators: [primitiveValidator, customClaimInstance.validators.custVal(1)],
+    overrideGlobalClaimValidators: () => [primitiveValidator, customClaimInstance.validators.custVal(1)],
 });
 
 Session.validateClaims({
-    claimValidators: [primitiveValidator, customClaimInstance.validators.custVal(1)],
+    overrideGlobalClaimValidators: (globalClaimValidators) => [
+        ...globalClaimValidators,
+        primitiveValidator,
+        customClaimInstance.validators.custVal(1),
+    ],
     userContext: {
         refreshCalled: 0,
     },

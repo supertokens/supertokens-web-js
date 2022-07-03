@@ -1,5 +1,5 @@
 import RecipeModule from "../recipeModule";
-import SuperTokensWebsite, { ClaimValidationError, SessionClaimValidator } from "supertokens-website";
+import { ClaimValidationError, SessionClaimValidator } from "supertokens-website";
 import { InputType, UserInput } from "./types";
 import { CreateRecipeFunction } from "../../types";
 export default class Recipe extends RecipeModule<unknown, any> {
@@ -13,10 +13,19 @@ export default class Recipe extends RecipeModule<unknown, any> {
     signOut: (input: { userContext: any }) => Promise<void>;
     attemptRefreshingSession: () => Promise<boolean>;
     validateClaims: (input: {
-        claimValidators: SessionClaimValidator[];
+        overrideGlobalClaimValidators?:
+            | ((globalClaimValidators: SessionClaimValidator[], userContext: any) => SessionClaimValidator[])
+            | undefined;
         userContext: any;
-    }) => Promise<ClaimValidationError[] | undefined>;
-    getInvalidClaimsFromResponse: typeof SuperTokensWebsite["getInvalidClaimsFromResponse"];
+    }) => Promise<ClaimValidationError[]> | ClaimValidationError[];
+    getInvalidClaimsFromResponse(input: {
+        response:
+            | {
+                  data: any;
+              }
+            | Response;
+        userContext: any;
+    }): Promise<ClaimValidationError[]>;
     static addAxiosInterceptors(axiosInstance: any, userContext: any): void;
     static getInstanceOrThrow(): Recipe;
     static reset(): void;

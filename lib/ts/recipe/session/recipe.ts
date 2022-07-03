@@ -90,18 +90,23 @@ export default class Recipe extends RecipeModule<unknown, any> {
         return SuperTokensWebsite.attemptRefreshingSession();
     };
 
-    validateClaims = async (input: {
-        claimValidators: SessionClaimValidator[];
+    validateClaims = (input: {
+        overrideGlobalClaimValidators?: (
+            globalClaimValidators: SessionClaimValidator[],
+            userContext: any
+        ) => SessionClaimValidator[];
         userContext: any;
-    }): Promise<ClaimValidationError[] | undefined> => {
-        return SuperTokensWebsite.validateClaims(input.claimValidators, input.userContext);
+    }): Promise<ClaimValidationError[]> | ClaimValidationError[] => {
+        return SuperTokensWebsite.validateClaims(input.overrideGlobalClaimValidators, input.userContext);
     };
 
-    getInvalidClaimsFromResponse: typeof SuperTokensWebsite["getInvalidClaimsFromResponse"] = async (
-        input
-    ): Promise<ClaimValidationError[]> => {
+    // The strange typing is to avoid adding a dependency to axios
+    getInvalidClaimsFromResponse(input: {
+        response: { data: any } | Response;
+        userContext: any;
+    }): Promise<ClaimValidationError[]> {
         return SuperTokensWebsite.getInvalidClaimsFromResponse(input);
-    };
+    }
 
     static addAxiosInterceptors(axiosInstance: any, userContext: any): void {
         return SuperTokensWebsite.addAxiosInterceptors(axiosInstance, userContext);
