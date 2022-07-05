@@ -34,6 +34,13 @@ declare const signOut: typeof RecipeWrapper.signOut;
 declare const validateClaims: typeof RecipeWrapper.validateClaims;
 declare const getInvalidClaimsFromResponse: typeof RecipeWrapper.getInvalidClaimsFromResponse;
 export {
+    ClaimValidationError,
+    ClaimValidationResult,
+    SessionClaimValidator,
+    PrimitiveClaim,
+    BooleanClaim,
+} from "supertokens-website";
+export {
     init,
     getUserId,
     getAccessTokenPayloadSecurely,

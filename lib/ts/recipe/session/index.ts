@@ -91,6 +91,14 @@ const validateClaims = RecipeWrapper.validateClaims;
 const getInvalidClaimsFromResponse = RecipeWrapper.getInvalidClaimsFromResponse;
 
 export {
+    ClaimValidationError,
+    ClaimValidationResult,
+    SessionClaimValidator,
+    PrimitiveClaim,
+    BooleanClaim,
+} from "supertokens-website";
+
+export {
     init,
     getUserId,
     getAccessTokenPayloadSecurely,
