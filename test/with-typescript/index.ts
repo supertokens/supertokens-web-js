@@ -95,7 +95,7 @@ import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
 import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
 import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
-import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recipe/session/claims";
+import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recipe/session";
 
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
