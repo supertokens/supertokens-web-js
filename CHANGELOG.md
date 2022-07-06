@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## Bug Fixes
+
+-   Fixes an issue where `Passwordless.consumeCode` was not honoring the API spec
+
 ## [0.1.1] - 2022-06-27
 
 -   Updates supertokens-website dependency to reflect change in cookieHandler interface
