@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.2] - 2022-07-06
+
 ## Bug Fixes
 
 -   Fixes an issue where `Passwordless.consumeCode` was not honoring the API spec
