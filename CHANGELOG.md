@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+-   Session claims related types/classes and the validateClaims function
+
 ## [0.0.2] - 2022-06-03
 
 -   Minor changes
