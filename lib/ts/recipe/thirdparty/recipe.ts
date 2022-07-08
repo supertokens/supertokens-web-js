@@ -13,23 +13,22 @@
  * under the License.
  */
 
-import AuthRecipeWithEmailVerification from "../authRecipeWithEmailVerification";
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface, UserInput } from "./types";
-import EmailVerificationRecipe from "../emailverification/recipe";
 import { normaliseUserInput } from "./utils";
 import OverrideableBuilder from "supertokens-js-override";
 import RecipeImplementation from "./recipeImplementation";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
+import AuthRecipe from "../authRecipe";
 
-export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAPIHookAction, NormalisedInputType> {
+export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
     static RECIPE_ID = "thirdparty";
 
     recipeImplementation: RecipeInterface;
 
-    constructor(config: InputType, recipes: { emailVerification: EmailVerificationRecipe | undefined }) {
-        super(normaliseUserInput(config), recipes);
+    constructor(config: InputType) {
+        super(normaliseUserInput(config));
 
         const builder = new OverrideableBuilder(
             RecipeImplementation({
@@ -44,16 +43,11 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
 
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
         return (appInfo: NormalisedAppInfo) => {
-            Recipe.instance = new Recipe(
-                {
-                    ...config,
-                    recipeId: Recipe.RECIPE_ID,
-                    appInfo,
-                },
-                {
-                    emailVerification: undefined,
-                }
-            );
+            Recipe.instance = new Recipe({
+                ...config,
+                recipeId: Recipe.RECIPE_ID,
+                appInfo,
+            });
 
             return Recipe.instance;
         };

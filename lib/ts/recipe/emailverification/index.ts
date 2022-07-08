@@ -16,9 +16,12 @@ import { RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserInput } fro
 import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
+import { EmailVerifiedClaimClass } from "./emailVerifiedClaim";
 
 export default class RecipeWrapper {
-    static init(config?: UserInput) {
+    static EmailVerifiedClaim = Recipe.EmailVerifiedClaim;
+
+    static init(config: UserInput) {
         return Recipe.init(config);
     }
 
@@ -101,6 +104,7 @@ const verifyEmail = RecipeWrapper.verifyEmail;
 const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
 const isEmailVerified = RecipeWrapper.isEmailVerified;
 const getEmailVerificationTokenFromURL = RecipeWrapper.getEmailVerificationTokenFromURL;
+const EmailVerifiedClaim = RecipeWrapper.EmailVerifiedClaim;
 
 export {
     init,
@@ -108,9 +112,11 @@ export {
     sendVerificationEmail,
     isEmailVerified,
     getEmailVerificationTokenFromURL,
+    EmailVerifiedClaim,
     UserInput,
     RecipeInterface,
     RecipeFunctionOptions,
     PreAPIHookContext,
     PostAPIHookContext,
+    EmailVerifiedClaimClass,
 };

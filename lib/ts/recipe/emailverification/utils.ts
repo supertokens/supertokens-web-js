@@ -13,7 +13,7 @@
  * under the License.
  */
 import { normaliseRecipeModuleConfig } from "../recipeModule/utils";
-import { InputType, NormalisedInputType, RecipeInterface } from "./types";
+import { EmailVerifiedClaimConfig, InputType, NormalisedInputType, RecipeInterface } from "./types";
 
 export function normaliseUserInput(config: InputType): NormalisedInputType {
     const override = {
@@ -21,8 +21,25 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
         ...config.override,
     };
 
+    let emailVerifiedClaimConfig: EmailVerifiedClaimConfig;
+    if (config.mode === "REQUIRED") {
+        if (config.getRedirectPathOnInvalidEmailVerification) {
+            emailVerifiedClaimConfig = {
+                mode: config.mode,
+                getRedirectPathOnInvalidEmailVerification: config.getRedirectPathOnInvalidEmailVerification,
+            };
+        } else {
+            throw new Error("onInvalidEmailVerificationClaim if mode is REQUIRED");
+        }
+    } else {
+        emailVerifiedClaimConfig = {
+            mode: config.mode,
+        };
+    }
+
     return {
         ...normaliseRecipeModuleConfig(config),
+        ...emailVerifiedClaimConfig,
         override,
     };
 }

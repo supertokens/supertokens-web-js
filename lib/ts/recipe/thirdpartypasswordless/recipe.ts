@@ -13,9 +13,7 @@
  * under the License.
  */
 
-import AuthRecipeWithEmailVerification from "../authRecipeWithEmailVerification";
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface, UserInput } from "./types";
-import EmailVerificationRecipe from "../emailverification/recipe";
 import ThirdPartyRecipe from "../thirdparty/recipe";
 import PasswordlessRecipe from "../passwordless/recipe";
 import { normaliseUserInput } from "./utils";
@@ -25,8 +23,9 @@ import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import DerivedThirdPartyRecipeImplementation from "./recipeImplementation/thirdparty";
 import DerivedPasswordlessRecipeImplementation from "./recipeImplementation/passwordless";
+import AuthRecipe from "../authRecipe";
 
-export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAPIHookAction, NormalisedInputType> {
+export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
     static RECIPE_ID = "thirdpartypasswordless";
 
@@ -37,12 +36,11 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
     constructor(
         config: InputType,
         recipes: {
-            emailVerification: EmailVerificationRecipe | undefined;
             thirdParty: ThirdPartyRecipe | undefined;
             passwordless: PasswordlessRecipe | undefined;
         }
     ) {
-        super(normaliseUserInput(config), recipes);
+        super(normaliseUserInput(config));
 
         const builder = new OverrideableBuilder(
             RecipeImplementation({
@@ -58,23 +56,18 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
 
         this.thirdPartyRecipe =
             recipes.thirdParty === undefined
-                ? new ThirdPartyRecipe(
-                      {
-                          recipeId: this.config.recipeId,
-                          appInfo: this.config.appInfo,
-                          preAPIHook: config.preAPIHook,
-                          postAPIHook: config.postAPIHook,
-                          override: {
-                              emailVerification: config.override?.emailVerification,
-                              functions: function () {
-                                  return DerivedThirdPartyRecipeImplementation(_recipeImplementation);
-                              },
+                ? new ThirdPartyRecipe({
+                      recipeId: this.config.recipeId,
+                      appInfo: this.config.appInfo,
+                      preAPIHook: config.preAPIHook,
+                      postAPIHook: config.postAPIHook,
+                      override: {
+                          emailVerification: config.override?.emailVerification,
+                          functions: function () {
+                              return DerivedThirdPartyRecipeImplementation(_recipeImplementation);
                           },
                       },
-                      {
-                          emailVerification: this.emailVerificationRecipe,
-                      }
-                  )
+                  })
                 : recipes.thirdParty;
 
         this.passwordlessRecipe =
@@ -114,7 +107,6 @@ export default class Recipe extends AuthRecipeWithEmailVerification<PreAndPostAP
                     appInfo,
                 },
                 {
-                    emailVerification: undefined,
                     thirdParty: undefined,
                     passwordless: undefined,
                 }

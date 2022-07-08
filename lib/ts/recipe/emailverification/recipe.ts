@@ -14,6 +14,7 @@
  */
 
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
+import { SessionClaimValidatorStore } from "supertokens-website/utils/sessionClaimValidatorStore";
 import RecipeModule from "../recipeModule";
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
 import { normaliseUserInput } from "./utils";
@@ -21,10 +22,12 @@ import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { UserInput } from "./types";
+import { EmailVerifiedClaimClass } from "./emailVerifiedClaim";
 
 export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
     static RECIPE_ID = "emailverification";
+    static EmailVerifiedClaim = new EmailVerifiedClaimClass(() => Recipe.getInstanceOrThrow().recipeImplementation);
 
     config: NormalisedInputType;
     recipeImplementation: RecipeInterface;
@@ -40,9 +43,15 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
             })
         );
         this.recipeImplementation = builder.override(this.config.override.functions).build();
+
+        if (config.mode === "REQUIRED") {
+            SessionClaimValidatorStore.addClaimValidatorFromOtherRecipe(
+                Recipe.EmailVerifiedClaim.validators.isValidated(10, config.getRedirectPathOnInvalidEmailVerification)
+            );
+        }
     }
 
-    static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
+    static init(config: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
         return (appInfo: NormalisedAppInfo) => {
             Recipe.instance = new Recipe({
                 ...config,
