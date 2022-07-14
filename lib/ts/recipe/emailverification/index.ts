@@ -21,7 +21,7 @@ import { EmailVerifiedClaimClass } from "./emailVerifiedClaim";
 export default class RecipeWrapper {
     static EmailVerifiedClaim = Recipe.EmailVerifiedClaim;
 
-    static init(config: UserInput) {
+    static init(config?: UserInput) {
         return Recipe.init(config);
     }
 

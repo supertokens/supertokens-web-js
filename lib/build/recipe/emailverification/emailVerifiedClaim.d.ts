@@ -3,9 +3,9 @@ import { RecipeInterface } from "./types";
 export declare class EmailVerifiedClaimClass extends BooleanClaim {
     constructor(getRecipeImpl: () => RecipeInterface);
     validators: BooleanClaim["validators"] & {
-        isValidated: (
+        isVerified: (
             minRefreshDelayInSeconds?: number,
-            redirectPath?: () => string | Promise<string>
+            updateContextOnInvalidClaim?: (userContext: any) => void | Promise<void>
         ) => SessionClaimValidator;
     };
 }

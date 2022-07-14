@@ -15,32 +15,23 @@ export declare type InputTypeOverride = {
         builder: OverrideableBuilder<RecipeInterface>
     ) => RecipeInterface;
 };
-export declare type EmailVerifiedClaimConfig =
-    | {
-          mode: "REQUIRED";
-          getRedirectPathOnInvalidEmailVerification: () => string | Promise<string>;
-      }
-    | {
-          mode: "OPTIONAL" | "OFF";
-          onInvalidEmailVerificationClaim?: undefined;
-      };
 export declare type UserInput = {
     /**
      * Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/frontend-functions-override/about the documentation}
      */
     override?: InputTypeOverride;
-} & EmailVerifiedClaimConfig &
-    RecipeModuleUserInput<PreAndPostAPIHookAction>;
+    updateContextOnInvalidClaim?: (userContext: any) => void;
+} & RecipeModuleUserInput<PreAndPostAPIHookAction>;
 export declare type InputType = RecipeConfig<PreAndPostAPIHookAction> & UserInput;
-export declare type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> &
-    EmailVerifiedClaimConfig & {
-        override: {
-            functions: (
-                originalImplementation: RecipeInterface,
-                builder: OverrideableBuilder<RecipeInterface>
-            ) => RecipeInterface;
-        };
+export declare type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
+    updateContextOnInvalidClaim?: (userContext: any) => void;
+    override: {
+        functions: (
+            originalImplementation: RecipeInterface,
+            builder: OverrideableBuilder<RecipeInterface>
+        ) => RecipeInterface;
     };
+};
 export declare type RecipeInterface = {
     /**
      * Verify an email

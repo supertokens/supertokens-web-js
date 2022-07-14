@@ -14,7 +14,7 @@ export class EmailVerifiedClaimClass extends BooleanClaim {
 
         this.validators = {
             ...this.validators,
-            isValidated: (minRefetchDelayInSeconds: number = 10, getRedirectPath?: () => string | Promise<string>) => ({
+            isVerified: (minRefetchDelayInSeconds = 10, updateContextOnInvalidClaim) => ({
                 id: this.id,
                 refresh: this.refresh,
                 shouldRefresh: (payload, userContext) => {
@@ -28,14 +28,14 @@ export class EmailVerifiedClaimClass extends BooleanClaim {
                 },
                 validate: async (payload, userContext) => {
                     const value = this.getValueFromPayload(payload, userContext);
-                    const redirectPath =
-                        getRedirectPath !== undefined && value !== true ? await getRedirectPath() : undefined;
+                    if (value !== true && updateContextOnInvalidClaim !== undefined) {
+                        await updateContextOnInvalidClaim(userContext);
+                    }
                     return value === true
                         ? { isValid: true }
                         : {
                               isValid: false,
                               reason: { message: "wrong value", expectedValue: true, actualValue: value },
-                              redirectPath,
                           };
                 },
             }),
@@ -43,9 +43,9 @@ export class EmailVerifiedClaimClass extends BooleanClaim {
     }
 
     validators!: BooleanClaim["validators"] & {
-        isValidated: (
+        isVerified: (
             minRefreshDelayInSeconds?: number,
-            redirectPath?: () => string | Promise<string>
+            updateContextOnInvalidClaim?: (userContext: any) => void | Promise<void>
         ) => SessionClaimValidator;
     };
 }

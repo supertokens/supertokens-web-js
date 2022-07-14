@@ -4,7 +4,7 @@ import { EmailVerifiedClaimClass } from "./emailVerifiedClaim";
 export default class RecipeWrapper {
     static EmailVerifiedClaim: EmailVerifiedClaimClass;
     static init(
-        config: UserInput
+        config?: UserInput
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
     /**
      * Verify an email

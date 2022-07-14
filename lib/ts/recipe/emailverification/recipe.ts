@@ -44,14 +44,12 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
         );
         this.recipeImplementation = builder.override(this.config.override.functions).build();
 
-        if (config.mode === "REQUIRED") {
-            SessionClaimValidatorStore.addClaimValidatorFromOtherRecipe(
-                Recipe.EmailVerifiedClaim.validators.isValidated(10, config.getRedirectPathOnInvalidEmailVerification)
-            );
-        }
+        SessionClaimValidatorStore.addClaimValidatorFromOtherRecipe(
+            Recipe.EmailVerifiedClaim.validators.isVerified(10, config.updateContextOnInvalidClaim)
+        );
     }
 
-    static init(config: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
+    static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
         return (appInfo: NormalisedAppInfo) => {
             Recipe.instance = new Recipe({
                 ...config,
