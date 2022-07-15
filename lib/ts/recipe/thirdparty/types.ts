@@ -24,7 +24,6 @@ import {
 } from "../recipeModule/types";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 import OverrideableBuilder from "supertokens-js-override";
-import { UserType as EmailPasswordUserType } from "../emailpassword/types";
 
 export type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP";
 
@@ -63,7 +62,10 @@ export type StateObject = {
     providerClientId?: string;
 };
 
-export type ThirdPartyUserType = EmailPasswordUserType & {
+export type ThirdPartyUserType = {
+    id: string;
+    email: string;
+    timeJoined: number;
     thirdParty: {
         id: string;
         userId: string;

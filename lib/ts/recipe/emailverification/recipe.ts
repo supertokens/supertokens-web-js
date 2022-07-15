@@ -22,12 +22,15 @@ import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { UserInput } from "./types";
-import { EmailVerifiedClaimClass } from "./emailVerifiedClaim";
+import { EmailVerificationClaimClass } from "./emailVerificationClaim";
+import { PostSuperTokensInitCallbacks } from "../../postSuperTokensInitCallbacks";
 
 export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
     static RECIPE_ID = "emailverification";
-    static EmailVerifiedClaim = new EmailVerifiedClaimClass(() => Recipe.getInstanceOrThrow().recipeImplementation);
+    static EmailVerificationClaim = new EmailVerificationClaimClass(
+        () => Recipe.getInstanceOrThrow().recipeImplementation
+    );
 
     config: NormalisedInputType;
     recipeImplementation: RecipeInterface;
@@ -44,9 +47,11 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
         );
         this.recipeImplementation = builder.override(this.config.override.functions).build();
 
-        SessionClaimValidatorStore.addClaimValidatorFromOtherRecipe(
-            Recipe.EmailVerifiedClaim.validators.isVerified(10, config.updateContextOnInvalidClaim)
-        );
+        PostSuperTokensInitCallbacks.addPostInitCallback(() => {
+            SessionClaimValidatorStore.addClaimValidatorFromOtherRecipe(
+                Recipe.EmailVerificationClaim.validators.isVerified(10, config.updateContextOnInvalidClaim)
+            );
+        });
     }
 
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {

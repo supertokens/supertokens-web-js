@@ -1,7 +1,10 @@
 import { SessionClaimValidator, BooleanClaim } from "../session";
 import { RecipeInterface } from "./types";
 
-export class EmailVerifiedClaimClass extends BooleanClaim {
+/**
+ * We include "Class" in the class name, because it makes it easier to import/use the right thing (the instance exported by the recipe) instead of this.
+ * */
+export class EmailVerificationClaimClass extends BooleanClaim {
     constructor(getRecipeImpl: () => RecipeInterface) {
         super({
             id: "st-ev",
@@ -14,7 +17,7 @@ export class EmailVerifiedClaimClass extends BooleanClaim {
 
         this.validators = {
             ...this.validators,
-            isVerified: (minRefetchDelayInSeconds = 10, updateContextOnInvalidClaim) => ({
+            isVerified: (refetchTimeOnFalseInSeconds = 10, updateContextOnInvalidClaim) => ({
                 id: this.id,
                 refresh: this.refresh,
                 shouldRefresh: (payload, userContext) => {
@@ -23,7 +26,7 @@ export class EmailVerifiedClaimClass extends BooleanClaim {
                         value === undefined ||
                         (value === false &&
                             this.getLastFetchedTime(payload, userContext)! <
-                                Date.now() - minRefetchDelayInSeconds * 1000)
+                                Date.now() - refetchTimeOnFalseInSeconds * 1000)
                     );
                 },
                 validate: async (payload, userContext) => {
@@ -44,7 +47,7 @@ export class EmailVerifiedClaimClass extends BooleanClaim {
 
     validators!: BooleanClaim["validators"] & {
         isVerified: (
-            minRefreshDelayInSeconds?: number,
+            refetchTimeOnFalseInSeconds?: number,
             updateContextOnInvalidClaim?: (userContext: any) => void | Promise<void>
         ) => SessionClaimValidator;
     };
