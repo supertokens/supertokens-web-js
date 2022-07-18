@@ -31,12 +31,12 @@ var config = {
         supertokensEmailPassword: {
             import: APP_DIR + "/lib/build/recipe/emailpassword/index.js",
             filename: "emailpassword.js",
-            dependOn: ["supertokensSession", "supertokensEmailVerification"],
+            dependOn: ["supertokensSession"],
         },
         supertokensThirdParty: {
             import: APP_DIR + "/lib/build/recipe/thirdparty/index.js",
             filename: "thirdparty.js",
-            dependOn: ["supertokensSession", "supertokensEmailVerification"],
+            dependOn: ["supertokensSession"],
         },
         supertokensThirdPartyEmailPassword: {
             import: APP_DIR + "/lib/build/recipe/thirdpartyemailpassword/index.js",
