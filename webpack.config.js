@@ -29,6 +29,7 @@ var config = {
         supertokensEmailPassword: {
             import: APP_DIR + "/lib/build/recipe/emailpassword/index.js",
             filename: "emailpassword.js",
+            dependOn: "supertokens",
         },
         supertokensThirdParty: {
             import: APP_DIR + "/lib/build/recipe/thirdparty/index.js",
@@ -50,9 +51,6 @@ var config = {
     output: {
         path: BUILD_DIR + "/bundle",
         library: "[name]",
-    },
-    optimization: {
-        runtimeChunk: "single",
     },
 };
 
