@@ -21,6 +21,7 @@ var config = {
         supertokensSession: {
             import: APP_DIR + "/lib/build/recipe/session/index.js",
             filename: "session.js",
+            dependOn: "supertokens",
         },
         supertokensEmailVerification: {
             import: APP_DIR + "/lib/build/recipe/emailverification/index.js",
@@ -29,7 +30,6 @@ var config = {
         supertokensEmailPassword: {
             import: APP_DIR + "/lib/build/recipe/emailpassword/index.js",
             filename: "emailpassword.js",
-            dependOn: "supertokens",
         },
         supertokensThirdParty: {
             import: APP_DIR + "/lib/build/recipe/thirdparty/index.js",
