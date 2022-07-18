@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.3] - 2022-07-18
+
+## Bug fixes
+
+-   Fixes an issue with webpack configuration that resulted in custom window and cookie handlers to not get initialised correctly
+
 ## [0.1.2] - 2022-07-06
 
 ## Bug Fixes
