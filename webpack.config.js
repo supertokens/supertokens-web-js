@@ -21,30 +21,37 @@ var config = {
         supertokensSession: {
             import: APP_DIR + "/lib/build/recipe/session/index.js",
             filename: "session.js",
+            dependOn: ["supertokens"],
         },
         supertokensEmailVerification: {
             import: APP_DIR + "/lib/build/recipe/emailverification/index.js",
             filename: "emailverification.js",
+            dependOn: ["supertokens"],
         },
         supertokensEmailPassword: {
             import: APP_DIR + "/lib/build/recipe/emailpassword/index.js",
             filename: "emailpassword.js",
+            dependOn: ["supertokensSession", "supertokensEmailVerification"],
         },
         supertokensThirdParty: {
             import: APP_DIR + "/lib/build/recipe/thirdparty/index.js",
             filename: "thirdparty.js",
+            dependOn: ["supertokensSession", "supertokensEmailVerification"],
         },
         supertokensThirdPartyEmailPassword: {
             import: APP_DIR + "/lib/build/recipe/thirdpartyemailpassword/index.js",
             filename: "thirdpartyemailpassword.js",
+            dependOn: ["supertokensThirdParty", "supertokensEmailPassword"],
         },
         supertokensPasswordless: {
             import: APP_DIR + "/lib/build/recipe/passwordless/index.js",
             filename: "passwordless.js",
+            dependOn: ["supertokensSession"],
         },
         supertokensThirdPartyPasswordless: {
             import: APP_DIR + "/lib/build/recipe/thirdpartypasswordless/index.js",
             filename: "thirdpartypasswordless.js",
+            dependOn: ["supertokensThirdParty", "supertokensPasswordless"],
         },
     },
     output: {
