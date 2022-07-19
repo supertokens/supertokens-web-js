@@ -12,17 +12,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-
-export class PostSuperTokensInitCallbacks {
-    static postInitCallbacks: (() => void)[] = [];
-
-    static addPostInitCallback(cb: () => void) {
-        PostSuperTokensInitCallbacks.postInitCallbacks.push(cb);
-    }
-
-    static runPostInitCallbacks() {
-        for (const cb of PostSuperTokensInitCallbacks.postInitCallbacks) {
-            cb();
-        }
-    }
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
+exports.__esModule = true;
+__export(require("../lib/build/postSuperTokensInitCallbacks"));

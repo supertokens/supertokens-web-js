@@ -13,16 +13,13 @@
  * under the License.
  */
 
-export class PostSuperTokensInitCallbacks {
-    static postInitCallbacks: (() => void)[] = [];
-
-    static addPostInitCallback(cb: () => void) {
-        PostSuperTokensInitCallbacks.postInitCallbacks.push(cb);
-    }
-
-    static runPostInitCallbacks() {
-        for (const cb of PostSuperTokensInitCallbacks.postInitCallbacks) {
-            cb();
-        }
-    }
-}
+export * from "../lib/build/postSuperTokensInitCallbacks";
+/**
+ * 'export *' does not re-export a default.
+ * import Querier from "supertokens-web-js/utils/querier";
+ * the above import statement won't be possible unless either
+ * - user add "esModuleInterop": true in their tsconfig.json file
+ * - we do the following change:
+ */
+import _default from "../lib/build/postSuperTokensInitCallbacks";
+export default _default;

@@ -1,5 +1,5 @@
 export declare class PostSuperTokensInitCallbacks {
-    static bootstrapCallbacks: (() => void)[];
+    static postInitCallbacks: (() => void)[];
     static addPostInitCallback(cb: () => void): void;
     static runPostInitCallbacks(): void;
 }
