@@ -38,13 +38,11 @@ export type UserInput = {
      * Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/frontend-functions-override/about the documentation}
      */
     override?: InputTypeOverride;
-    updateContextOnInvalidClaim?: (userContext: any) => void;
 } & RecipeModuleUserInput<PreAndPostAPIHookAction>;
 
 export type InputType = RecipeConfig<PreAndPostAPIHookAction> & UserInput;
 
 export type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
-    updateContextOnInvalidClaim?: (userContext: any) => void;
     override: {
         functions: (
             originalImplementation: RecipeInterface,

@@ -5,7 +5,10 @@ import { RecipeInterface } from "./types";
  * We include "Class" in the class name, because it makes it easier to import/use the right thing (the instance exported by the recipe) instead of this.
  * */
 export class EmailVerificationClaimClass extends BooleanClaim {
-    constructor(getRecipeImpl: () => RecipeInterface) {
+    constructor(
+        getRecipeImpl: () => RecipeInterface,
+        updateContextOnIsVerifiedFalse?: (userContext: any) => void | Promise<void>
+    ) {
         super({
             id: "st-ev",
             refresh: async (userContext) => {
@@ -17,7 +20,7 @@ export class EmailVerificationClaimClass extends BooleanClaim {
 
         this.validators = {
             ...this.validators,
-            isVerified: (refetchTimeOnFalseInSeconds = 10, updateContextOnInvalidClaim) => ({
+            isVerified: (refetchTimeOnFalseInSeconds = 10) => ({
                 id: this.id,
                 refresh: this.refresh,
                 shouldRefresh: (payload, userContext) => {
@@ -31,8 +34,8 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                 },
                 validate: async (payload, userContext) => {
                     const value = this.getValueFromPayload(payload, userContext);
-                    if (value !== true && updateContextOnInvalidClaim !== undefined) {
-                        await updateContextOnInvalidClaim(userContext);
+                    if (value !== true && updateContextOnIsVerifiedFalse !== undefined) {
+                        await updateContextOnIsVerifiedFalse(userContext);
                     }
                     return value === true
                         ? { isValid: true }
@@ -46,9 +49,6 @@ export class EmailVerificationClaimClass extends BooleanClaim {
     }
 
     validators!: BooleanClaim["validators"] & {
-        isVerified: (
-            refetchTimeOnFalseInSeconds?: number,
-            updateContextOnInvalidClaim?: (userContext: any) => void | Promise<void>
-        ) => SessionClaimValidator;
+        isVerified: (refetchTimeOnFalseInSeconds?: number) => SessionClaimValidator;
     };
 }

@@ -23,7 +23,6 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
 
     return {
         ...normaliseRecipeModuleConfig(config),
-        updateContextOnInvalidClaim: config.updateContextOnInvalidClaim,
         override,
     };
 }

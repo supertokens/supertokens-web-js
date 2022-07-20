@@ -49,7 +49,7 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
 
         PostSuperTokensInitCallbacks.addPostInitCallback(() => {
             SessionClaimValidatorStore.addClaimValidatorFromOtherRecipe(
-                Recipe.EmailVerificationClaim.validators.isVerified(10, config.updateContextOnInvalidClaim)
+                Recipe.EmailVerificationClaim.validators.isVerified(10)
             );
         });
     }

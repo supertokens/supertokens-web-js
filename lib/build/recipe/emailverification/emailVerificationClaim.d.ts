@@ -4,11 +4,11 @@ import { RecipeInterface } from "./types";
  * We include "Class" in the class name, because it makes it easier to import/use the right thing (the instance exported by the recipe) instead of this.
  * */
 export declare class EmailVerificationClaimClass extends BooleanClaim {
-    constructor(getRecipeImpl: () => RecipeInterface);
+    constructor(
+        getRecipeImpl: () => RecipeInterface,
+        updateContextOnIsVerifiedFalse?: (userContext: any) => void | Promise<void>
+    );
     validators: BooleanClaim["validators"] & {
-        isVerified: (
-            refetchTimeOnFalseInSeconds?: number,
-            updateContextOnInvalidClaim?: (userContext: any) => void | Promise<void>
-        ) => SessionClaimValidator;
+        isVerified: (refetchTimeOnFalseInSeconds?: number) => SessionClaimValidator;
     };
 }
