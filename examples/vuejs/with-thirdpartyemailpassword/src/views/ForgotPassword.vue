@@ -31,7 +31,6 @@ export default defineComponent({
                     this.didSubmit = true;
                 }
             } catch (e) {
-                console.log(e);
                 this.error = true;
             }
         },
