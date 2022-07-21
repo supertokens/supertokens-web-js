@@ -72,7 +72,6 @@ export default defineComponent({
             <div class="bottom-banner">Vue Demo app. Made with ❤️ using supertokens.com</div>
         </div>
     </div>
-    <div v-else></div>
 </template>
 
 <style>

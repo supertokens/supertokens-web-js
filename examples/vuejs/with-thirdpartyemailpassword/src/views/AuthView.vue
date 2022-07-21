@@ -365,9 +365,10 @@ export default defineComponent({
                     </div>
                 </form>
             </div>
-        </div>
-        <div class="bottom-banner">
-            🚨 SuperTokens does not provide a UI for Vue. You will need to build your own UI
+            <div v-if="isSignIn">
+                <router-link :to="{ path: `/auth/reset-password` }"> Forgot Password? </router-link>
+            </div>
+            <div style="margin-bottom: 10px" />
         </div>
     </div>
 </template>
@@ -417,7 +418,6 @@ export default defineComponent({
     margin: auto;
     width: 76%;
     padding-top: 40px;
-    padding-bottom: 30px;
 }
 
 .providerButtonLeft {

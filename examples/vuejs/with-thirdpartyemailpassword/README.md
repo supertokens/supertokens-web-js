@@ -6,7 +6,6 @@ This demo app demonstrates the following use cases:
 
 -   Social Login / Sign up
 -   Email & Password login
--   Email verification flow
 -   Reset password flow
 -   Logout
 -   Session management & Calling APIs
