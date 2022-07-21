@@ -1,11 +1,12 @@
 <script lang="ts">
 import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
 import Session from "supertokens-web-js/recipe/session";
+import { defineComponent } from "vue";
 
 const websitePort = import.meta.env.VUE_APP_WEB_PORT || 3000;
 const websiteDomain = import.meta.env.VUE_APP_WEB_URL || `http://localhost:${websitePort}`;
 
-export default {
+export default defineComponent({
     data() {
         return {
             isSignIn: true,
@@ -36,7 +37,7 @@ export default {
         goToSignIn() {
             this.isSignIn = true;
         },
-        signIn: async function (_: SubmitEvent) {
+        signIn: async function (_: Event) {
             const response = await ThirdPartyEmailPassword.emailPasswordSignIn({
                 formFields: [
                     {
@@ -76,7 +77,7 @@ export default {
                     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                 );
         },
-        signUp: async function (_: SubmitEvent) {
+        signUp: async function (_: Event) {
             if (
                 (
                     await ThirdPartyEmailPassword.doesEmailExist({
@@ -110,9 +111,9 @@ export default {
 
             window.location.assign("/");
         },
-        onSubmitPressed: async function (e: SubmitEvent) {
+        onSubmitPressed: function (e: Event) {
+            e.preventDefault();
             this.error = false;
-
             if (this.isSignIn) {
                 this.signIn(e);
             } else {
@@ -149,7 +150,7 @@ export default {
             }
         },
     },
-};
+});
 </script>
 
 <template>
@@ -320,7 +321,7 @@ export default {
                     <div class="divider" />
                 </div>
 
-                <form v-on:submit="onSubmitPressed" autocomplete="on" novalidate @submit.stop.prevent="precent">
+                <form v-on:submit="onSubmitPressed" autocomplete="on" novalidate>
                     <div class="input-section-container" v-bind:class="emailError ? 'error' : ''">
                         <div class="input-label">Email</div>
                         <div class="input-container">
@@ -445,6 +446,7 @@ export default {
     padding-top: 9px;
     padding-bottom: 9px;
 }
+
 .providerButton {
     width: 100%;
     min-height: 34px;
@@ -607,10 +609,12 @@ form {
     animation: slideTop 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0s 1 normal both;
     max-width: 330px;
 }
+
 @keyframes slideTop {
     0% {
         transform: translateY(-5px);
     }
+
     100% {
         transform: translateY(0px);
     }

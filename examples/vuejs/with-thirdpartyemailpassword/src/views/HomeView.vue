@@ -1,13 +1,15 @@
 <script lang="ts">
+import { defineComponent } from "vue";
 import Session from "supertokens-web-js/recipe/session";
 import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
 
 const apiPort = import.meta.env.VUE_APP_API_PORT || 3001;
 const apiDomain = import.meta.env.VUE_APP_API_URL || `http://localhost:${apiPort}`;
 
-export default {
+export default defineComponent({
     data() {
         return {
+            session: false,
             userId: "",
         };
     },
@@ -21,6 +23,7 @@ export default {
                 return window.location.assign("/auth");
             }
             const userId = await Session.getUserId();
+            this.session = true;
             this.userId = userId;
         },
         callAPI: async function () {
@@ -39,34 +42,37 @@ export default {
     mounted() {
         this.checkForSession();
     },
-};
+});
 </script>
 
 <template>
-    <div class="fill">
-        <div class="top-bar">
-            <div class="sign-out" v-on:click="signOut">SIGN OUT</div>
+    <div v-if="session">
+        <div class="fill">
+            <div class="top-bar">
+                <div class="sign-out" v-on:click="signOut">SIGN OUT</div>
+            </div>
+            <div class="fill home-content">
+                <span class="home-emoji">🥳🎉</span>
+                Login successful
+                <div style="height: 20px" />
+                Your user ID is <br />
+                {{ `${userId}` }}
+                <div style="height: 40px" />
+                <div class="session-button" v-on:click="callAPI">CALL API</div>
+                <div style="height: 30px" />
+                ------------------------------------
+                <div style="height: 40px" />
+                <a
+                    href="https://github.com/supertokens/supertokens-web-js/tree/master/examples/vuejs/with-thirdpartyemailpassword"
+                    target="_blank"
+                    rel="noreferrer"
+                    >View the code on GitHub</a
+                >
+            </div>
+            <div class="bottom-banner">Vue Demo app. Made with ❤️ using supertokens.com</div>
         </div>
-        <div class="fill home-content">
-            <span class="home-emoji">🥳🎉</span>
-            Login successful
-            <div style="height: 20px" />
-            Your user ID is <br />
-            {{ `${userId}` }}
-            <div style="height: 40px" />
-            <div class="session-button" v-on:click="callAPI">CALL API</div>
-            <div style="height: 30px" />
-            ------------------------------------
-            <div style="height: 40px" />
-            <a
-                href="https://github.com/supertokens/supertokens-web-js/tree/master/examples/vuejs/with-thirdpartyemailpassword"
-                target="_blank"
-                rel="noreferrer"
-                >View the code on GitHub</a
-            >
-        </div>
-        <div class="bottom-banner">Vue Demo app. Made with ❤️ using supertokens.com</div>
     </div>
+    <div v-else></div>
 </template>
 
 <style>

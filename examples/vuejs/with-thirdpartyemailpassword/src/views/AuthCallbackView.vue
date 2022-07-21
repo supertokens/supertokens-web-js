@@ -1,7 +1,8 @@
 <script lang="ts">
 import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     mounted: async function () {
         try {
             const response = await ThirdPartyEmailPassword.thirdPartySignInAndUp();
@@ -13,7 +14,7 @@ export default {
             window.location.assign("/auth?error=signin");
         }
     },
-};
+});
 </script>
 
 <template>

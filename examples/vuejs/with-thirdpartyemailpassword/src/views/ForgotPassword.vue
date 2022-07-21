@@ -1,8 +1,8 @@
 <script lang="ts">
-import Session from "supertokens-web-js/recipe/session";
 import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
     data() {
         return {
             email: "",
@@ -36,7 +36,7 @@ export default {
             }
         },
     },
-};
+});
 </script>
 
 <template>
