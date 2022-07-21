@@ -1,12 +1,11 @@
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
+import express from "express";
+import cors from "cors";
+import supertokens from "supertokens-node";
+import Session from "supertokens-node/recipe/session";
+import { verifySession } from "supertokens-node/recipe/session/framework/express";
+import { middleware, errorHandler, SessionRequest } from "supertokens-node/framework/express";
+import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
 require("dotenv").config();
-let supertokens = require("supertokens-node");
-let Session = require("supertokens-node/recipe/session");
-let { verifySession } = require("supertokens-node/recipe/session/framework/express");
-let { middleware, errorHandler } = require("supertokens-node/framework/express");
-let ThirdPartyEmailPassword = require("supertokens-node/recipe/thirdpartyemailpassword");
 
 const apiPort = process.env.REACT_APP_API_PORT || 3001;
 const apiDomain = process.env.REACT_APP_API_URL || `http://localhost:${apiPort}`;
@@ -64,27 +63,22 @@ app.use(
     })
 );
 
-app.use(
-    helmet({
-        contentSecurityPolicy: false,
-    })
-);
 app.use(middleware());
 
 // custom API that requires session verification
-app.get("/sessioninfo", verifySession(), async (req, res) => {
+app.get("/sessioninfo", verifySession(), async (req: SessionRequest, res) => {
     let session = req.session;
 
     res.send({
-        sessionHandle: session.getHandle(),
-        userId: session.getUserId(),
-        accessTokenPayload: session.getAccessTokenPayload(),
+        sessionHandle: session!.getHandle(),
+        userId: session!.getUserId(),
+        accessTokenPayload: session!.getAccessTokenPayload(),
     });
 });
 
 app.use(errorHandler());
 
-app.use((err, req, res, next) => {
+app.use((err: any, req: any, res: any, next: any) => {
     res.status(500).send("Internal error: " + err.message);
 });
 
