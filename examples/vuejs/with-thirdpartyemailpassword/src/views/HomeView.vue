@@ -16,7 +16,7 @@ export default defineComponent({
     methods: {
         signOut: async function () {
             await ThirdPartyEmailPassword.signOut();
-            window.location.reload();
+            window.location.assign("/auth");
         },
         checkForSession: async function () {
             if (!(await Session.doesSessionExist())) {
@@ -30,7 +30,7 @@ export default defineComponent({
             const response = await fetch(`${apiDomain}/sessionInfo`);
 
             if (response.status === 401) {
-                window.location.assign("/");
+                window.location.assign("/auth");
                 return;
             }
 

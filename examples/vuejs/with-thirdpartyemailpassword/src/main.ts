@@ -14,7 +14,6 @@ SuperTokens.init({
     appInfo: {
         appName: "SuperTokens Vue ThirdPartyEmailPassword Example",
         apiDomain,
-        apiBasePath: "/auth",
     },
     recipeList: [ThirdPartyEmailPassword.init(), Session.init()],
 });

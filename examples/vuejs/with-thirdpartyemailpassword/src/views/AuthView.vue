@@ -80,18 +80,6 @@ export default defineComponent({
                 );
         },
         signUp: async function (_: Event) {
-            if (
-                (
-                    await ThirdPartyEmailPassword.doesEmailExist({
-                        email: this.email,
-                    })
-                ).doesExist
-            ) {
-                this.errorMessage = "Email already exists, sign in instead";
-                this.error = true;
-                return;
-            }
-
             const response = await ThirdPartyEmailPassword.emailPasswordSignUp({
                 formFields: [
                     {
