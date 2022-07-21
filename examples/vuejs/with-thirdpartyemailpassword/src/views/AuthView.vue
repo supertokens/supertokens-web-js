@@ -58,6 +58,8 @@ export default defineComponent({
             }
 
             if (response.status === "FIELD_ERROR") {
+                this.emailError = "";
+                this.passwordError = "";
                 response.formFields.forEach((item) => {
                     if (item.id === "email") {
                         this.emailError = item.error;
@@ -103,9 +105,16 @@ export default defineComponent({
                 ],
             });
 
-            if (response.status !== "OK") {
-                this.errorMessage = "Something went wrong";
-                this.error = true;
+            if (response.status === "FIELD_ERROR") {
+                this.emailError = "";
+                this.passwordError = "";
+                response.formFields.forEach((item) => {
+                    if (item.id === "email") {
+                        this.emailError = item.error;
+                    } else if (item.id === "password") {
+                        this.passwordError = item.error;
+                    }
+                });
                 return;
             }
 
@@ -361,7 +370,12 @@ export default defineComponent({
                     </div>
 
                     <div class="input-section-container">
-                        <button type="submit" class="button">SIGN IN</button>
+                        <div v-if="isSignIn">
+                            <button type="submit" class="button">SIGN IN</button>
+                        </div>
+                        <div v-else>
+                            <button type="submit" class="button">SIGN UP</button>
+                        </div>
                     </div>
                 </form>
             </div>

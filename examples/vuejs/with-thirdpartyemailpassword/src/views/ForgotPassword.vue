@@ -24,13 +24,14 @@ export default defineComponent({
                 });
 
                 if (response.status !== "OK") {
-                    throw new Error("Something went wrong");
+                    throw new Error(response.formFields[0].error);
                 }
 
                 if (this.didSubmit !== true) {
                     this.didSubmit = true;
                 }
-            } catch (e) {
+            } catch (e: any) {
+                this.errorMessage = e.message;
                 this.error = true;
             }
         },
