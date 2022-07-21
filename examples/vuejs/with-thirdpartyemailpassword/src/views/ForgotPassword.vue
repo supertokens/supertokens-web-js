@@ -4,35 +4,63 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
     data() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get("token");
         return {
             email: "",
             error: false,
             errorMessage: "Something Went Wrong",
             didSubmit: false,
+            tokenPresent: token !== null,
+            password: "",
         };
     },
     methods: {
         onSubmitClicked: async function () {
-            try {
-                const response = await ThirdPartyEmailPassword.sendPasswordResetEmail({
-                    formFields: [
-                        {
-                            id: "email",
-                            value: this.email,
-                        },
-                    ],
-                });
+            if (this.tokenPresent) {
+                try {
+                    const response = await ThirdPartyEmailPassword.submitNewPassword({
+                        formFields: [
+                            {
+                                id: "password",
+                                value: this.password,
+                            },
+                        ],
+                    });
 
-                if (response.status !== "OK") {
-                    throw new Error(response.formFields[0].error);
-                }
+                    if (response.status === "FIELD_ERROR") {
+                        throw new Error(response.formFields[0].error);
+                    } else if (response.status === "RESET_PASSWORD_INVALID_TOKEN_ERROR") {
+                        throw new Error("Password reset token has expired, please go back to the sign in page");
+                    }
 
-                if (this.didSubmit !== true) {
-                    this.didSubmit = true;
+                    window.location.assign("/auth");
+                } catch (e: any) {
+                    this.errorMessage = e.message;
+                    this.error = true;
                 }
-            } catch (e: any) {
-                this.errorMessage = e.message;
-                this.error = true;
+            } else {
+                try {
+                    const response = await ThirdPartyEmailPassword.sendPasswordResetEmail({
+                        formFields: [
+                            {
+                                id: "email",
+                                value: this.email,
+                            },
+                        ],
+                    });
+
+                    if (response.status !== "OK") {
+                        throw new Error(response.formFields[0].error);
+                    }
+
+                    if (this.didSubmit !== true) {
+                        this.didSubmit = true;
+                    }
+                } catch (e: any) {
+                    this.errorMessage = e.message;
+                    this.error = true;
+                }
             }
         },
     },
@@ -42,30 +70,61 @@ export default defineComponent({
 <template>
     <div class="fill">
         <div class="form-container">
-            <div v-if="error" class="top-error-container">
-                <div class="error-message">{{ errorMessage }}</div>
-            </div>
-            <div v-if="!didSubmit" class="form-content-container">
-                <div class="form-text-header">Reset your password</div>
-                <div class="form-subtitle">We will send you an email to reset your password</div>
+            <div v-if="tokenPresent" class="form-content-container">
+                <div v-if="error" class="top-error-container">
+                    <div class="error-message">{{ errorMessage }}</div>
+                </div>
+                <div v-if="!didSubmit">
+                    <div class="form-text-header">Enter new password</div>
+                    <div class="form-subtitle">Please enter your new password below</div>
 
-                <div class="input-section-container">
-                    <div class="input-label">Email</div>
-                    <div class="input-container">
-                        <div class="input-wrapper">
-                            <input autocomplete="email" class="input" type="email" name="email" v-model="email" />
+                    <div class="input-section-container">
+                        <div class="input-label">New Password</div>
+                        <div class="input-container">
+                            <div class="input-wrapper">
+                                <input
+                                    autocomplete="current-password"
+                                    class="input"
+                                    type="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    v-model="password"
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="button-container">
-                    <button v-on:click="onSubmitClicked" class="form-button">Email Me</button>
+                    <div class="button-container">
+                        <button v-on:click="onSubmitClicked" class="form-button">Change Password</button>
+                    </div>
                 </div>
             </div>
             <div v-else class="form-content-container">
-                <div class="confirmation">
-                    Please check your email for the password recovery link
-                    <span class="resend-button" v-on:click="onSubmitClicked">Resend</span>
+                <div v-if="error" class="top-error-container">
+                    <div class="error-message">{{ errorMessage }}</div>
+                </div>
+                <div v-if="!didSubmit">
+                    <div class="form-text-header">Reset your password</div>
+                    <div class="form-subtitle">We will send you an email to reset your password</div>
+
+                    <div class="input-section-container">
+                        <div class="input-label">Email</div>
+                        <div class="input-container">
+                            <div class="input-wrapper">
+                                <input autocomplete="email" class="input" type="email" name="email" v-model="email" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button v-on:click="onSubmitClicked" class="form-button">Email Me</button>
+                    </div>
+                </div>
+                <div v-else>
+                    <div class="confirmation">
+                        Please check your email for the password recovery link
+                        <span class="resend-button" v-on:click="onSubmitClicked">Resend</span>
+                    </div>
                 </div>
             </div>
         </div>
