@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.normaliseAuthRecipeWithEmailVerificationConfig = void 0;
 /* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
@@ -15,8 +12,17 @@ exports.normaliseAuthRecipeWithEmailVerificationConfig = void 0;
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-var utils_1 = require("../authRecipe/utils");
-function normaliseAuthRecipeWithEmailVerificationConfig(config) {
-    return (0, utils_1.normaliseAuthRecipe)(config);
+
+export class PostSuperTokensInitCallbacks {
+    static postInitCallbacks: (() => void)[] = [];
+
+    static addPostInitCallback(cb: () => void) {
+        PostSuperTokensInitCallbacks.postInitCallbacks.push(cb);
+    }
+
+    static runPostInitCallbacks() {
+        for (const cb of PostSuperTokensInitCallbacks.postInitCallbacks) {
+            cb();
+        }
+    }
 }
-exports.normaliseAuthRecipeWithEmailVerificationConfig = normaliseAuthRecipeWithEmailVerificationConfig;

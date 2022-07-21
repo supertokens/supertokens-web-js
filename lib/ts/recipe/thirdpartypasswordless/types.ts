@@ -16,7 +16,7 @@
 import {
     InputType as AuthRecipeInputType,
     NormalisedInputType as AuthRecipeNormalisedInputType,
-} from "../authRecipeWithEmailVerification/types";
+} from "../authRecipe/types";
 import {
     PasswordlessFlowType,
     PasswordlessUser,

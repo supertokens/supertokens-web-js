@@ -12,11 +12,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import { normaliseAuthRecipe } from "../authRecipe/utils";
-import { InputType, NormalisedInputType } from "./types";
-
-export function normaliseAuthRecipeWithEmailVerificationConfig<Action>(
-    config: InputType<Action>
-): NormalisedInputType<Action> {
-    return normaliseAuthRecipe(config);
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 }
+exports.__esModule = true;
+__export(require("../lib/build/postSuperTokensInitCallbacks"));

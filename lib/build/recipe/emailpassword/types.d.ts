@@ -8,12 +8,14 @@ import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
-    UserType,
-    PreAndPostAPIHookAction as AuthRecipePreAndPostAPIHookAction,
-} from "../authRecipeWithEmailVerification/types";
+} from "../authRecipe/types";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
+export declare type UserType = {
+    id: string;
+    email: string;
+    timeJoined: number;
+};
 export declare type PreAndPostAPIHookAction =
-    | AuthRecipePreAndPostAPIHookAction
     | "EMAIL_PASSWORD_SIGN_UP"
     | "EMAIL_PASSWORD_SIGN_IN"
     | "SEND_RESET_PASSWORD_EMAIL"

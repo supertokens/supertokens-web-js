@@ -1,4 +1,7 @@
-import { PreAndPostAPIHookAction as EmailPasswordPreAndPostAPIHookAction } from "../emailpassword/types";
+import {
+    UserType as EmailPasswordUserType,
+    PreAndPostAPIHookAction as EmailPasswordPreAndPostAPIHookAction,
+} from "../emailpassword/types";
 import {
     RecipePostAPIHookContext,
     RecipePreAPIHookContext,
@@ -7,10 +10,9 @@ import {
 import { PreAndPostAPIHookAction as ThirdPartyPreAndPostAPIHookAction, StateObject } from "../thirdparty/types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
-    UserType as EmailPasswordUserType,
     InputType as AuthRecipeInputType,
     NormalisedInputType as AuthRecipeNormalisedInputType,
-} from "../authRecipeWithEmailVerification/types";
+} from "../authRecipe/types";
 import OverrideableBuilder from "supertokens-js-override";
 import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 import { ThirdPartyUserType } from "../thirdparty/types";

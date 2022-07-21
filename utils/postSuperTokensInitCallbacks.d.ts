@@ -13,24 +13,13 @@
  * under the License.
  */
 
-import { NormalisedRecipeConfig, RecipeConfig } from "../recipeModule/types";
-import {
-    PreAndPostAPIHookAction as EmailVerificationAction,
-    InputTypeOverride as EmailVerificationOverride,
-} from "../emailverification/types";
-
-export type InputType<Action> = RecipeConfig<PreAndPostAPIHookAction | Action>;
-
-export type PreAndPostAPIHookAction = EmailVerificationAction;
-
-export type NormalisedInputType<Action> = NormalisedRecipeConfig<PreAndPostAPIHookAction | Action> & {
-    override?: {
-        emailVerification?: EmailVerificationOverride;
-    };
-};
-
-export type UserType = {
-    id: string;
-    email: string;
-    timeJoined: number;
-};
+export * from "../lib/build/postSuperTokensInitCallbacks";
+/**
+ * 'export *' does not re-export a default.
+ * import Querier from "supertokens-web-js/utils/querier";
+ * the above import statement won't be possible unless either
+ * - user add "esModuleInterop": true in their tsconfig.json file
+ * - we do the following change:
+ */
+import _default from "../lib/build/postSuperTokensInitCallbacks";
+export default _default;
