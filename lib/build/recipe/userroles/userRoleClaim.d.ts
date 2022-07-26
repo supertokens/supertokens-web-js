@@ -1,2 +1,2 @@
 import { PrimitiveArrayClaim } from "../session";
-export declare const UserRoleClaim: PrimitiveArrayClaim<unknown>;
+export declare const UserRoleClaim: PrimitiveArrayClaim<string>;

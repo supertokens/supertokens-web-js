@@ -14,7 +14,7 @@
  */
 import { PrimitiveArrayClaim } from "../session";
 
-export const PermissionClaim = new PrimitiveArrayClaim({
+export const PermissionClaim = new PrimitiveArrayClaim<string>({
     id: "st-perm",
     refresh: async () => {
         // Right now we can't refresh this claim from the client side automatically

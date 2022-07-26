@@ -14,7 +14,7 @@
  */
 import { PrimitiveArrayClaim } from "../session";
 
-export const UserRoleClaim = new PrimitiveArrayClaim({
+export const UserRoleClaim = new PrimitiveArrayClaim<string>({
     id: "st-role",
     refresh: async () => {
         // Right now we can't refresh this claim from the client side automatically
