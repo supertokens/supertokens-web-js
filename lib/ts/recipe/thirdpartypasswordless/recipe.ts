@@ -62,7 +62,6 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
                       preAPIHook: config.preAPIHook,
                       postAPIHook: config.postAPIHook,
                       override: {
-                          emailVerification: config.override?.emailVerification,
                           functions: function () {
                               return DerivedThirdPartyRecipeImplementation(_recipeImplementation);
                           },

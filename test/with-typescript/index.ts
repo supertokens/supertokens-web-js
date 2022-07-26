@@ -250,9 +250,6 @@ const emailPasswordPostAPIHook: RecipePostAPIHookFunction<EmailPasswordAction> =
 function getEmailPassword(): CreateRecipeFunction<EmailPasswordAction> {
     const config: EmailPasswordUserInput = {
         override: {
-            emailVerification: {
-                functions: getEmailVerificationFunctions,
-            },
             functions: getEmailPasswordFunctions,
         },
         preAPIHook: emailPasswordPreAPIHook,
@@ -342,9 +339,6 @@ const thirdPartyPostAPIHook: RecipePostAPIHookFunction<ThirdPartyAction> = async
 function getThirdParty(): CreateRecipeFunction<ThirdPartyAction> {
     const config: ThirdPartyUserInput = {
         override: {
-            emailVerification: {
-                functions: getEmailVerificationFunctions,
-            },
             functions: getThirdPartyFunctions,
         },
         preAPIHook: thirdPartyPreAPIHook,
@@ -472,9 +466,6 @@ const tpepPostAPIHook: RecipePostAPIHookFunction<TPEPPartyAction> = async functi
 function getThirdPartyEmailPassword(): CreateRecipeFunction<TPEPPartyAction> {
     const config: TPEPPartyUserInput = {
         override: {
-            emailVerification: {
-                functions: getEmailVerificationFunctions,
-            },
             functions: getThirdPartyEmailPasswordFunctions,
         },
         preAPIHook: tpepPreAPIHook,
@@ -727,9 +718,6 @@ const tppPostAPIHook: RecipePostAPIHookFunction<TPPlessAction> = async function 
 function getThirdPartyPasswordless(): CreateRecipeFunction<TPPlessAction> {
     const config: TPPUserInput = {
         override: {
-            emailVerification: {
-                functions: getEmailVerificationFunctions,
-            },
             functions: getThirdPartyPasswordlessFunctions,
         },
         preAPIHook: tppPreAPIHook,

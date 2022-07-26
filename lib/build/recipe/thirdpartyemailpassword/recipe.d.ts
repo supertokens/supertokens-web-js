@@ -1,5 +1,4 @@
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface, UserInput } from "./types";
-import EmailVerificationRecipe from "../emailverification/recipe";
 import EmailPasswordRecipe from "../emailpassword/recipe";
 import ThirdPartyRecipe from "../thirdparty/recipe";
 import { CreateRecipeFunction } from "../../types";
@@ -13,7 +12,6 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     constructor(
         config: InputType,
         recipes: {
-            emailVerification: EmailVerificationRecipe | undefined;
             thirdParty: ThirdPartyRecipe | undefined;
             emailPassword: EmailPasswordRecipe | undefined;
         }
