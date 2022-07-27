@@ -1,0 +1,26 @@
+<div v-if="session">
+    <div class="fill">
+        <div class="top-bar">
+            <div class="sign-out" v-on:click="signOut">SIGN OUT</div>
+        </div>
+        <div class="fill home-content">
+            <span class="home-emoji">🥳🎉</span>
+            Login successful
+            <div style="height: 20px" />
+            Your user ID is <br />
+            {{ `${userId}` }}
+            <div style="height: 40px" />
+            <div class="session-button" v-on:click="callAPI">CALL API</div>
+            <div style="height: 30px" />
+            ------------------------------------
+            <div style="height: 40px" />
+            <a
+                href="https://github.com/supertokens/supertokens-web-js/tree/master/examples/vuejs/with-thirdpartyemailpassword"
+                target="_blank"
+                rel="noreferrer"
+                >View the code on GitHub</a
+            >
+        </div>
+        <div class="bottom-banner">Vue Demo app. Made with ❤️ using supertokens.com</div>
+    </div>
+</div>
