@@ -39,12 +39,8 @@ jobs:
         name: Run tests
         timeout-minutes: 120
         runs-on: ubuntu-latest
-        container: rishabhpoddar/supertokens_website_sdk_testing
+        container: rishabhpoddar/supertokens_website_sdk_testing_node_16
         steps:
-            - name: Set up node
-              uses: actions/setup-node@v1
-              with:
-                  node-version: "16"
             - name: Environment variables
               run: |
                   echo "React Owner: ${{ github.event.inputs.authReactOwnerName }}"
@@ -62,7 +58,7 @@ jobs:
                   persist-credentials: false
             - run: npm i || true
             - run: chown -R 1001:121 "/github/home/.npm"
-            - run: npm i
+            - run: npm i --force
             - name: Cloning supertokens-root
               run: cd ../ && git clone https://github.com/supertokens/supertokens-root.git
             - name: Update Java 1

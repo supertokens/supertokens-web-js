@@ -18,14 +18,6 @@
  * with `{status: "GENERAL_ERROR"}`. This should be used to show errors to the user
  * in your frontend application.
  */
-export default class STGeneralError extends Error {
-    isSuperTokensGeneralError = true;
+import { STGeneralError } from "supertokens-website/utils/error";
 
-    constructor(message: string) {
-        super(message);
-    }
-
-    static isThisError(err: any): err is STGeneralError {
-        return err.isSuperTokensGeneralError === true;
-    }
-}
+export default STGeneralError;

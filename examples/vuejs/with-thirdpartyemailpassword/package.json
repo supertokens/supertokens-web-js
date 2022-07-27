@@ -1,0 +1,36 @@
+{
+    "name": "with-thirdpartyemailpassword",
+    "version": "0.0.0",
+    "scripts": {
+        "dev": "npm-run-all --parallel start api-server:dev",
+        "start": "vite",
+        "api-server": "ts-node --project api-server/tsconfig.json api-server/index.ts",
+        "api-server:dev": "ts-node-dev --project api-server/tsconfig.json api-server/index.ts",
+        "build": "vue-tsc --noEmit && vite build",
+        "preview": "vite preview --port 5050",
+        "typecheck": "vue-tsc --noEmit"
+    },
+    "dependencies": {
+        "@types/cors": "^2.8.12",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.0",
+        "express": "^4.17.3",
+        "helmet": "^5.0.2",
+        "pinia": "^2.0.13",
+        "supertokens-node": "^11.0.0",
+        "supertokens-web-js": "^0.1.3",
+        "ts-node-dev": "^2.0.0",
+        "vue": "^3.2.31",
+        "vue-router": "^4.0.14"
+    },
+    "devDependencies": {
+        "@types/node": "^16.11.27",
+        "@vitejs/plugin-vue": "^2.3.1",
+        "@vitejs/plugin-vue-jsx": "^1.3.9",
+        "@vue/tsconfig": "^0.1.3",
+        "nodemon": "^2.0.15",
+        "typescript": "~4.6.3",
+        "vite": "^2.9.1",
+        "vue-tsc": "^0.33.9"
+    }
+}
