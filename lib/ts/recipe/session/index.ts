@@ -95,6 +95,7 @@ export {
     ClaimValidationResult,
     SessionClaimValidator,
     PrimitiveClaim,
+    PrimitiveArrayClaim,
     BooleanClaim,
 } from "supertokens-website";
 

@@ -96,7 +96,7 @@ import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
 import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
 import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
 import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recipe/session";
-
+import { PermissionClaim, UserRoleClaim } from "../../recipe/userroles";
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
     return {
@@ -2462,6 +2462,8 @@ Session.validateClaims({
         ...globalClaimValidators,
         primitiveValidator,
         customClaimInstance.validators.custVal(1),
+        UserRoleClaim.validators.excludes("admin", 15),
+        PermissionClaim.validators.includesAll(["support", "moderator"]),
     ],
     userContext: {
         refreshCalled: 0,
