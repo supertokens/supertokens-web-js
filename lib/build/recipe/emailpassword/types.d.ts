@@ -9,7 +9,6 @@ import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
 } from "../authRecipe/types";
-import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 export declare type UserType = {
     id: string;
     email: string;
@@ -28,7 +27,6 @@ export declare type UserInput = {
      * Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/frontend-functions-override/about the documentation}
      */
     override?: {
-        emailVerification?: EmailVerificationOverride;
         functions?: (
             originalImplementation: RecipeInterface,
             builder: OverrideableBuilder<RecipeInterface>

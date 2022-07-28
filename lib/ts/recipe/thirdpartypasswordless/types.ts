@@ -29,7 +29,6 @@ import {
     UserInput as RecipeModuleUserInput,
 } from "../recipeModule/types";
 import { StateObject, PreAndPostAPIHookAction as ThirdPartyPreAndPostAPIHookAction } from "../thirdparty/types";
-import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 import OverrideableBuilder from "supertokens-js-override";
 import { ThirdPartyUserType } from "../thirdparty/types";
 
@@ -43,7 +42,6 @@ export type UserInput = {
      * Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/frontend-functions-override/about the documentation}
      */
     override?: {
-        emailVerification?: EmailVerificationOverride;
         functions?: (
             originalImplementation: RecipeInterface,
             builder: OverrideableBuilder<RecipeInterface>

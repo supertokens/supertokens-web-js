@@ -13,7 +13,6 @@
  * under the License.
  */
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface, UserInput } from "./types";
-import EmailVerificationRecipe from "../emailverification/recipe";
 import EmailPasswordRecipe from "../emailpassword/recipe";
 import ThirdPartyRecipe from "../thirdparty/recipe";
 import { normaliseUserInput } from "./utils";
@@ -36,7 +35,6 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     constructor(
         config: InputType,
         recipes: {
-            emailVerification: EmailVerificationRecipe | undefined;
             thirdParty: ThirdPartyRecipe | undefined;
             emailPassword: EmailPasswordRecipe | undefined;
         }
@@ -66,7 +64,6 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
                       preAPIHook: config.preAPIHook,
                       postAPIHook: config.postAPIHook,
                       override: {
-                          emailVerification: config.override?.emailVerification,
                           functions: function () {
                               return DerivedEmailPasswordImplementation(_recipeImplementation);
                           },
@@ -86,7 +83,6 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
                       preAPIHook: config.preAPIHook,
                       postAPIHook: config.postAPIHook,
                       override: {
-                          emailVerification: config.override?.emailVerification,
                           functions: function () {
                               return DerivedThirdPartyRecipeImplementation(_recipeImplementation);
                           },
@@ -116,7 +112,6 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
                     appInfo,
                 },
                 {
-                    emailVerification: undefined,
                     emailPassword: undefined,
                     thirdParty: undefined,
                 }
