@@ -135,7 +135,7 @@ export type RecipeInterface = {
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: "OK", user, createdUser: bool}` if succesful
+     * @returns `{status: "OK", user, createdNewUser: bool}` if succesful
      *
      * @returns `{status: "INCORRECT_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is incorrect
      *
@@ -163,7 +163,7 @@ export type RecipeInterface = {
     ) => Promise<
         | {
               status: "OK";
-              createdUser: boolean;
+              createdNewUser: boolean;
               user: PasswordlessUser;
               fetchResponse: Response;
           }
