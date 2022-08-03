@@ -74,6 +74,10 @@ SuperTokens.init({
 });
 ```
 
+## [0.1.4] - 2022-07-30
+
+-   Corrects error message thrown from ThirdParty recipe if its init function is not called.
+
 ## [0.1.3] - 2022-07-18
 
 ## Bug fixes

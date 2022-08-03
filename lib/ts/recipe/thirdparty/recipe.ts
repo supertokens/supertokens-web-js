@@ -55,7 +55,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
 
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
-            let error = "No instance of EmailPassword found. Make sure to call the EmailPassword.init method.";
+            let error = "No instance of ThirdParty found. Make sure to call the ThirdParty.init method.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);
