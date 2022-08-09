@@ -16,8 +16,11 @@ export class DashboardComponent implements OnInit {
   }
 
   logout(){
+    console.log("Logging out");
     this.authService.logout().then(() => {
       this.router.navigate(["/login"]);
+    }).catch(() => {
+      console.log("Enter again or resend code");
     })
   }
 

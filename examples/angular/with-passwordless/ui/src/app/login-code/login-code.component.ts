@@ -30,6 +30,8 @@ userInputCode: string = "";
       this.router.navigate(["/dashboard"]);
     }).catch((err) => {
       // Set the error message
+      console.log("Error in verifying code");
+      console.log(err);
       this.errorText = err;
       this.successText = "";
       this.isValidCode = false;

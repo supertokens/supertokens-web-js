@@ -1,10 +1,12 @@
 <form  #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)">
     <span class="error" *ngIf="errorText">{{errorText}}</span>
     <br/>
-    <input ngModel="email" name="email" type="email" placeholder="Email">
+    <input [(ngModel)]="email" name="email" type="email" placeholder="Email" required>
+    <small><a *ngIf="isCodeDelivered" (click)="onSubmit(loginForm.value)">Resend code</a></small>
     <br/><br/>
     <button *ngIf="!isCodeDelivered" type="submit">Email login link/code</button>
     <span class="success" *ngIf="successText">{{successText}}</span>
+    <br/>
     <br/>
 </form>
 
