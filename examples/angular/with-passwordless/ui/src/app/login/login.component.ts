@@ -15,6 +15,9 @@ export class LoginComponent implements OnInit {
   isCodeDelivered: boolean = false;
 
   constructor(private router: Router, private authService: AuthService) { 
+    if(this.router.getCurrentNavigation().extras.state && this.router.getCurrentNavigation().extras.state.errorText){
+      this.errorText = this.router.getCurrentNavigation().extras.state.errorText;
+    }
   }
 
   ngOnInit(): void {

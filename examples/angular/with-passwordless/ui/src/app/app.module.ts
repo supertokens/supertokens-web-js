@@ -7,13 +7,15 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FormsModule } from '@angular/forms';
 import { LoginCodeComponent } from './login-code/login-code.component';
+import { LoginWithLinkComponent } from './login-with-link/login-with-link.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    LoginCodeComponent
+    LoginCodeComponent,
+    LoginWithLinkComponent
   ],
   imports: [
     BrowserModule,

@@ -34,7 +34,7 @@ export class AuthService {
       if(response && response.status=="OK"){
         return "Please check your mailbox for the login code";
       } else {
-        return response.fetchResponse.statusText;
+        throw new Error(response.status || response.fetchResponse.statusText);
       }
     });
   }
@@ -47,10 +47,20 @@ export class AuthService {
       if(response && response.status=="OK" && response.user){
         return "Login successful";
       } else {
-        return response.fetchResponse.statusText;
+        throw new Error(response.status || response.fetchResponse.statusText);
+        // Promise.reject(response.fetchResponse.statusText);
       }
-    }).catch((err) => {
-      return err
+    })
+  }
+
+  consumeCodeFromLink(){
+    return Passwordless.consumeCode({}).then((response) => {
+      if(response && response.status=="OK" && response.user){
+        return "Login successful";
+      } else {
+        throw new Error(response.status || response.fetchResponse.statusText);
+        // Promise.reject(response.fetchResponse.statusText);
+      }
     })
   }
 

@@ -17,7 +17,7 @@ supertokens.init({
         // learn more about this on https://supertokens.com/docs/session/appinfo
         appName: "My App",
         apiDomain: "http://localhost:3000",
-        websiteDomain: "http://localhost:3000",
+        websiteDomain: "http://localhost:4200",
         apiBasePath: "/api",
         websiteBasePath: "/auth"
     },
