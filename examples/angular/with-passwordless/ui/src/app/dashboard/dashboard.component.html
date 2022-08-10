@@ -1,3 +1,6 @@
-<p>Logged in successfully!</p>
+<p>Logged in {{ user ? user.email : "" }} successfully!
+    <br/>
+    Your user id is : <code>{{ user.userId }}</code>
+</p>
 
 <a type="button" (click)="logout()">Logout</a>

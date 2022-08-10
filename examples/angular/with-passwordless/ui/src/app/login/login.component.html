@@ -3,7 +3,7 @@
     <br/>
     <input [(ngModel)]="email" name="email" type="email" placeholder="Email" required>
     <small><a *ngIf="isCodeDelivered" (click)="onSubmit(loginForm.value)">Resend code</a></small>
-    <br/><br/>
+    <br/>
     <button *ngIf="!isCodeDelivered" type="submit">Email login link/code</button>
     <span class="success" *ngIf="successText">{{successText}}</span>
     <br/>

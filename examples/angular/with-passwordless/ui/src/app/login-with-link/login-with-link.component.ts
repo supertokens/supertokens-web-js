@@ -13,6 +13,7 @@ export class LoginWithLinkComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Automatically picks the code from the link in address bar and authenticates
     this.authService.consumeCodeFromLink().then((successText) => {
       // User authenticated. Redirect to the next page.
       this.router.navigate(["/dashboard"]);
