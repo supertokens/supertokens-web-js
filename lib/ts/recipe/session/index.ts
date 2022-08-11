@@ -15,7 +15,7 @@
 import { getNormalisedUserContext } from "../../utils";
 import SessionRecipe from "./recipe";
 import { UserInput } from "./types";
-import { RecipeInterface, ClaimValidationError, SessionClaimValidator } from "supertokens-website";
+import { RecipeInterface, ClaimValidationError, SessionClaimValidator, SessionClaim } from "supertokens-website";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -55,7 +55,14 @@ export default class RecipeWrapper {
         });
     }
 
-    static validateClaims(input: {
+    static getClaimValue<T>(input: { claim: SessionClaim<T>; userContext?: any }): Promise<T | undefined> {
+        return SessionRecipe.getInstanceOrThrow().getClaimValue({
+            claim: input.claim,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    static validateClaims(input?: {
         overrideGlobalClaimValidators?: (
             globalClaimValidators: SessionClaimValidator[],
             userContext: any
@@ -63,7 +70,7 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<ClaimValidationError[]> | ClaimValidationError[] {
         return SessionRecipe.getInstanceOrThrow().validateClaims({
-            overrideGlobalClaimValidators: input.overrideGlobalClaimValidators,
+            overrideGlobalClaimValidators: input?.overrideGlobalClaimValidators,
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
@@ -88,6 +95,7 @@ const doesSessionExist = RecipeWrapper.doesSessionExist;
 const addAxiosInterceptors = RecipeWrapper.addAxiosInterceptors;
 const signOut = RecipeWrapper.signOut;
 const validateClaims = RecipeWrapper.validateClaims;
+const getClaimValue = RecipeWrapper.getClaimValue;
 const getInvalidClaimsFromResponse = RecipeWrapper.getInvalidClaimsFromResponse;
 
 export {
@@ -108,6 +116,7 @@ export {
     addAxiosInterceptors,
     signOut,
     validateClaims,
+    getClaimValue,
     getInvalidClaimsFromResponse,
     RecipeInterface,
     UserInput,

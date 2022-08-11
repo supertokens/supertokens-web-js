@@ -13,7 +13,7 @@
  * under the License.
  */
 import RecipeModule from "../recipeModule";
-import SuperTokensWebsite, { ClaimValidationError, SessionClaimValidator } from "supertokens-website";
+import SuperTokensWebsite, { ClaimValidationError, SessionClaimValidator, SessionClaim } from "supertokens-website";
 import { InputType, UserInput } from "./types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
@@ -89,6 +89,10 @@ export default class Recipe extends RecipeModule<unknown, any> {
     attemptRefreshingSession = async (): Promise<boolean> => {
         return SuperTokensWebsite.attemptRefreshingSession();
     };
+
+    getClaimValue<T>(input: { claim: SessionClaim<T>; userContext: any }): Promise<T | undefined> {
+        return SuperTokensWebsite.getClaimValue(input);
+    }
 
     validateClaims = (input: {
         overrideGlobalClaimValidators?: (
