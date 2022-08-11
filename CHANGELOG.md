@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Refactors the way the SDK exports recipe functions and utilities
 
+## [0.1.4] - 2022-07-30
+
+-   Corrects error message thrown from ThirdParty recipe if its init function is not called.
+
 ## [0.1.3] - 2022-07-18
 
 ## Bug fixes
