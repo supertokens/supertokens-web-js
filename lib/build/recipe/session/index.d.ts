@@ -39,6 +39,7 @@ export {
     ClaimValidationError,
     ClaimValidationResult,
     SessionClaimValidator,
+    SessionClaim,
     PrimitiveClaim,
     PrimitiveArrayClaim,
     BooleanClaim,
