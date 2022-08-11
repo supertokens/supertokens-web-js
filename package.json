@@ -93,6 +93,10 @@
         {
             "path": "recipe/thirdpartypasswordless/index.js",
             "limit": "21kb"
+        },
+        {
+            "path": "recipe/userroles/index.js",
+            "limit": "18kb"
         }
     ]
 }

@@ -54,6 +54,11 @@ var config = {
             filename: "thirdpartypasswordless.js",
             dependOn: "supertokensWebsite",
         },
+        supertokensUserRoles: {
+            import: APP_DIR + "/lib/build/recipe/userroles/index.js",
+            filename: "userroles.js",
+            dependOn: "supertokensWebsite",
+        },
         /**
          * Without this webpack will bundle supertokens-website as independent references
          * within each recipe bundle. Any shared resources (WindowHandler for example) will no

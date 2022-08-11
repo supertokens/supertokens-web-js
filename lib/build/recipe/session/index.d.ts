@@ -1,5 +1,5 @@
 import { UserInput } from "./types";
-import { RecipeInterface, ClaimValidationError, SessionClaimValidator } from "supertokens-website";
+import { RecipeInterface, ClaimValidationError, SessionClaimValidator, SessionClaim } from "supertokens-website";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<unknown>;
     static getUserId(input?: { userContext?: any }): Promise<string>;
@@ -8,7 +8,8 @@ export default class RecipeWrapper {
     static doesSessionExist(input?: { userContext?: any }): Promise<boolean>;
     static addAxiosInterceptors(axiosInstance: any, userContext?: any): void;
     static signOut(input?: { userContext?: any }): Promise<void>;
-    static validateClaims(input: {
+    static getClaimValue<T>(input: { claim: SessionClaim<T>; userContext?: any }): Promise<T | undefined>;
+    static validateClaims(input?: {
         overrideGlobalClaimValidators?: (
             globalClaimValidators: SessionClaimValidator[],
             userContext: any
@@ -32,11 +33,13 @@ declare const doesSessionExist: typeof RecipeWrapper.doesSessionExist;
 declare const addAxiosInterceptors: typeof RecipeWrapper.addAxiosInterceptors;
 declare const signOut: typeof RecipeWrapper.signOut;
 declare const validateClaims: typeof RecipeWrapper.validateClaims;
+declare const getClaimValue: typeof RecipeWrapper.getClaimValue;
 declare const getInvalidClaimsFromResponse: typeof RecipeWrapper.getInvalidClaimsFromResponse;
 export {
     ClaimValidationError,
     ClaimValidationResult,
     SessionClaimValidator,
+    SessionClaim,
     PrimitiveClaim,
     PrimitiveArrayClaim,
     BooleanClaim,
@@ -50,6 +53,7 @@ export {
     addAxiosInterceptors,
     signOut,
     validateClaims,
+    getClaimValue,
     getInvalidClaimsFromResponse,
     RecipeInterface,
     UserInput,

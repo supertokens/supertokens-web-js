@@ -1,5 +1,5 @@
 import RecipeModule from "../recipeModule";
-import { ClaimValidationError, SessionClaimValidator } from "supertokens-website";
+import { ClaimValidationError, SessionClaimValidator, SessionClaim } from "supertokens-website";
 import { InputType, UserInput } from "./types";
 import { CreateRecipeFunction } from "../../types";
 export default class Recipe extends RecipeModule<unknown, any> {
@@ -12,6 +12,7 @@ export default class Recipe extends RecipeModule<unknown, any> {
     doesSessionExist: (input: { userContext: any }) => Promise<boolean>;
     signOut: (input: { userContext: any }) => Promise<void>;
     attemptRefreshingSession: () => Promise<boolean>;
+    getClaimValue<T>(input: { claim: SessionClaim<T>; userContext: any }): Promise<T | undefined>;
     validateClaims: (input: {
         overrideGlobalClaimValidators?:
             | ((globalClaimValidators: SessionClaimValidator[], userContext: any) => SessionClaimValidator[])
