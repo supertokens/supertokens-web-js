@@ -18,7 +18,7 @@ function __export(m) {
 }
 exports.__esModule = true;
 
-let d = require("../../lib/build/error");
+let d = require("../lib/build/error");
 
 if (d.default !== undefined) {
     __export(d);

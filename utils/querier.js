@@ -18,7 +18,7 @@ function __export(m) {
 }
 exports.__esModule = true;
 
-let d = require("../../lib/build/querier");
+let d = require("../lib/build/querier");
 
 if (d.default !== undefined) {
     __export(d);

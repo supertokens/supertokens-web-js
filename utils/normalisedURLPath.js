@@ -18,7 +18,7 @@ function __export(m) {
 }
 exports.__esModule = true;
 
-let d = require("../../lib/build/normalisedURLPath");
+let d = require("../lib/build/normalisedURLPath");
 
 if (d.default !== undefined) {
     __export(d);
