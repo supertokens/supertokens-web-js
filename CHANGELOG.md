@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Session claims related types/classes and the validateClaims function
+-   Session claims related types/classes and the `validateClaims` & `getClaimValue` functions
 -   Added `getInvalidClaimsFromResponse` to the SessionClass to help parsing responses with invalid claim errors
 -   Added `API_INVALID_CLAIM` event to the Session recipe
 -   Added UserRoleClaim and PermissionClaim
