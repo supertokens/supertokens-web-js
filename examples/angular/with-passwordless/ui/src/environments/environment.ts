@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  apiDomain: "http://localhost:3000",
+  apiBasePath: "/api",
+  appName: "SuperTokens Passwordless Demo - Angular"
 };
 
 /*

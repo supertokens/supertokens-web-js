@@ -27,12 +27,12 @@ export class LoginComponent implements OnInit {
       this.authService.sendCode(inputs).then((successText) => {
         this.successText = successText;
         this.errorText = "";
-        this.isCodeDelivered = true; // Show popup for login code when this is true
+        this.isCodeDelivered = true; // Show the input field to enter code now
       }).catch((err) => {
         // Set the error message
         this.errorText = err;
         this.successText = "";
-        this.isCodeDelivered = false;
+        this.isCodeDelivered = false; // Hide the input field to enter code now
       })
   }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import SuperTokens from 'supertokens-web-js';
 import Session from 'supertokens-web-js/recipe/session';
 import Passwordless from 'supertokens-web-js/recipe/passwordless';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,9 @@ export class AuthService {
   configureAuth(){
     SuperTokens.init({
       appInfo: {
-          apiDomain: "http://localhost:3000",
-          apiBasePath: "/api",
-          appName: "SuperTokens-Passwordless-Demo",
+          apiDomain: environment.apiDomain,
+          apiBasePath: environment.apiBasePath,
+          appName: environment.appName,
       },
       recipeList: [
           Session.init({
@@ -67,6 +68,10 @@ export class AuthService {
     })
   }
 
+  /**
+   * Call the backend API to email a unique code or magic link. Uses supertokens-web-js sdk function to do this.
+   * @param inputs { email?: string }
+   */
   sendCode(inputs: { email?: string }): Promise<string>{
     if(!inputs || !inputs.hasOwnProperty("email")){
       return Promise.reject("Invalid input. Please provide email.");
