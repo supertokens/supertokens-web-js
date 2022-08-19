@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.1.5] - 2022-08-11
+
 ### Changed
 
 -   Refactors the way the SDK exports recipe functions and utilities
