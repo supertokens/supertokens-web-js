@@ -2134,10 +2134,6 @@ ThirdPartyPasswordless.consumePasswordlessCode({
         preAPIHook: undefined,
     },
 });
-// @ts-expect-error
-ThirdPartyPasswordless.consumePasswordlessCode(undefined);
-// @ts-expect-error
-ThirdPartyPasswordless.consumePasswordlessCode();
 
 ThirdPartyPasswordless.createPasswordlessCode({
     email: "",
