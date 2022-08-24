@@ -215,7 +215,7 @@ export default class RecipeWrapper {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static consumePasswordlessCode(
-        input:
+        input?:
             | {
                   userInputCode: string;
                   userContext?: any;

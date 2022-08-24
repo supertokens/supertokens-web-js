@@ -74,6 +74,18 @@ SuperTokens.init({
 });
 ```
 
+## [0.1.6] - 2022-08-23
+
+### Changed
+
+-   Makes the input argument for `consumePasswordlessCode` in ThirdPartyPasswordless optional.
+
+## [0.1.5] - 2022-08-11
+
+### Changed
+
+-   Refactors the way the SDK exports recipe functions and utilities
+
 ## [0.1.4] - 2022-07-30
 
 -   Corrects error message thrown from ThirdParty recipe if its init function is not called.
