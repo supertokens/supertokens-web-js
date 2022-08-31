@@ -2429,7 +2429,7 @@ const TestPrimitiveClaim = new PrimitiveClaim<number>({
     },
 });
 
-const primitiveValidator = TestPrimitiveClaim.validators.hasFreshValue(321, 600);
+const primitiveValidator = TestPrimitiveClaim.validators.hasValue(321, 600);
 
 Session.validateClaims({
     overrideGlobalClaimValidators: () => [primitiveValidator, customClaimInstance.validators.custVal(1)],
