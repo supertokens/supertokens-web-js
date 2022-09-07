@@ -1,0 +1,8 @@
+<form  #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)">
+    <span class="success" *ngIf="successText">{{successText}}</span>
+    <span class="error" *ngIf="errorText">{{errorText}}</span>
+    <br/>
+    <input [(ngModel)]="userInputCode" name="userInputCode" type="text" placeholder="Login code" required>
+    <br/><br/>
+    <button type="submit">Login</button>
+</form>

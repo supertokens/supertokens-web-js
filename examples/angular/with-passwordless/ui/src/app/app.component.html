@@ -1,0 +1,17 @@
+<html>
+<head>
+  <title>{{ title }}</title>
+  <!--A no class CSS. Remove this if you want to add your own CSS.-->
+  <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" />
+</head>
+<body>
+<h2>{{ title }}</h2>
+<!-- This nav gives you links to click, which tells the router which route to use (defined in the routes constant in  AppRoutingModule) -->
+<nav>
+  <ul>
+    <li><a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Login</a></li>
+  </ul>
+</nav>
+<!-- The routed views render in the <router-outlet>-->
+<router-outlet></router-outlet>
+</body>
