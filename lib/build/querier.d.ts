@@ -23,9 +23,9 @@ export default class Querier {
     get: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        queryParams?: Record<string, string> | undefined,
-        preAPIHook?: PreAPIHookFunction | undefined,
-        postAPIHook?: PostAPIHookFunction | undefined
+        queryParams?: Record<string, string>,
+        preAPIHook?: PreAPIHookFunction,
+        postAPIHook?: PostAPIHookFunction
     ) => Promise<{
         jsonBody: JsonBodyType;
         fetchResponse: Response;
@@ -33,8 +33,8 @@ export default class Querier {
     post: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        preAPIHook?: PreAPIHookFunction | undefined,
-        postAPIHook?: PostAPIHookFunction | undefined
+        preAPIHook?: PreAPIHookFunction,
+        postAPIHook?: PostAPIHookFunction
     ) => Promise<{
         jsonBody: JsonBodyType;
         fetchResponse: Response;
@@ -42,8 +42,8 @@ export default class Querier {
     delete: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        preAPIHook?: PreAPIHookFunction | undefined,
-        postAPIHook?: PostAPIHookFunction | undefined
+        preAPIHook?: PreAPIHookFunction,
+        postAPIHook?: PostAPIHookFunction
     ) => Promise<{
         jsonBody: JsonBodyType;
         fetchResponse: Response;
@@ -51,8 +51,8 @@ export default class Querier {
     put: <JsonBodyType>(
         path: string,
         config: RequestInit,
-        preAPIHook?: PreAPIHookFunction | undefined,
-        postAPIHook?: PostAPIHookFunction | undefined
+        preAPIHook?: PreAPIHookFunction,
+        postAPIHook?: PostAPIHookFunction
     ) => Promise<{
         jsonBody: JsonBodyType;
         fetchResponse: Response;
@@ -60,14 +60,14 @@ export default class Querier {
     fetch: (
         url: string,
         config: RequestInit,
-        preAPIHook?: PreAPIHookFunction | undefined,
-        postAPIHook?: PostAPIHookFunction | undefined
+        preAPIHook?: PreAPIHookFunction,
+        postAPIHook?: PostAPIHookFunction
     ) => Promise<Response>;
     callPreAPIHook: (context: { preAPIHook?: PreAPIHookFunction; requestInit: RequestInit; url: string }) => Promise<{
         url: string;
         requestInit: RequestInit;
     }>;
-    getFullUrl: (pathStr: string, queryParams?: Record<string, string> | undefined) => string;
+    getFullUrl: (pathStr: string, queryParams?: Record<string, string>) => string;
     getResponseJsonOrThrowGeneralError: (response: Response) => Promise<any>;
     static preparePreAPIHook: <Action>({
         recipePreAPIHook,

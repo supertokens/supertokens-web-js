@@ -1,4 +1,3 @@
-"use strict";
 /* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
@@ -13,4 +12,11 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+import { PrimitiveArrayClaim } from "../session";
+
+export const UserRoleClaim = new PrimitiveArrayClaim<string>({
+    id: "st-role",
+    refresh: async () => {
+        // Right now we can't refresh this claim from the client side automatically
+    },
+});

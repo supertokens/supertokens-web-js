@@ -18,6 +18,7 @@ import { NormalisedAppInfo, SuperTokensConfig } from "./types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest, normaliseInputAppInfoOrThrowError } from "./utils";
 import { CookieHandlerReference } from "supertokens-website/utils/cookieHandler";
 import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
+import { PostSuperTokensInitCallbacks } from "./postSuperTokensInitCallbacks";
 
 export default class SuperTokens {
     /*
@@ -66,6 +67,7 @@ export default class SuperTokens {
         }
 
         SuperTokens.instance = new SuperTokens(config);
+        PostSuperTokensInitCallbacks.runPostInitCallbacks();
     }
 
     /**

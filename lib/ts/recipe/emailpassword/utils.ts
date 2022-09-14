@@ -13,7 +13,7 @@
  * under the License.
  */
 
-import { normaliseAuthRecipeWithEmailVerificationConfig } from "../authRecipeWithEmailVerification/utils";
+import { normaliseAuthRecipe } from "../authRecipe/utils";
 import { InputType, NormalisedInputType, RecipeInterface } from "./types";
 
 export function normaliseUserInput(config: InputType): NormalisedInputType {
@@ -23,7 +23,7 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
     };
 
     return {
-        ...normaliseAuthRecipeWithEmailVerificationConfig(config),
+        ...normaliseAuthRecipe(config),
         override,
     };
 }

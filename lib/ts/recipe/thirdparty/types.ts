@@ -15,22 +15,16 @@
 import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
-    UserType,
-    PreAndPostAPIHookAction as AuthRecipePreAndPostAPIHookAction,
-} from "../authRecipeWithEmailVerification/types";
+} from "../authRecipe/types";
 import {
     RecipePostAPIHookContext,
     RecipePreAPIHookContext,
     RecipeFunctionOptions,
     UserInput as RecipeModuleUserInput,
 } from "../recipeModule/types";
-import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 import OverrideableBuilder from "supertokens-js-override";
 
-export type PreAndPostAPIHookAction =
-    | AuthRecipePreAndPostAPIHookAction
-    | "GET_AUTHORISATION_URL"
-    | "THIRD_PARTY_SIGN_IN_UP";
+export type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP";
 
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
@@ -40,7 +34,6 @@ export type UserInput = {
      * Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/frontend-functions-override/about the documentation}
      */
     override?: {
-        emailVerification?: EmailVerificationOverride;
         functions?: (
             originalImplementation: RecipeInterface,
             builder: OverrideableBuilder<RecipeInterface>
@@ -67,7 +60,10 @@ export type StateObject = {
     providerClientId?: string;
 };
 
-export type ThirdPartyUserType = UserType & {
+export type ThirdPartyUserType = {
+    id: string;
+    email: string;
+    timeJoined: number;
     thirdParty: {
         id: string;
         userId: string;
