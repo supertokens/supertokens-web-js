@@ -130,6 +130,7 @@ export default class RecipeWrapper {
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
+            | undefined
     ): Promise<
         | {
               status: "OK";
