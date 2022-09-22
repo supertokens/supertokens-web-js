@@ -91,7 +91,7 @@ export default class RecipeWrapper {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static consumeCode(
-        input:
+        input?:
             | {
                   userInputCode: string;
                   userContext?: any;
@@ -101,7 +101,6 @@ export default class RecipeWrapper {
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
-            | undefined
     ): Promise<
         | {
               status: "OK";
