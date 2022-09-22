@@ -120,7 +120,7 @@ export default class RecipeWrapper {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static async consumeCode(
-        input:
+        input?:
             | {
                   userInputCode: string;
                   userContext?: any;
