@@ -33,7 +33,7 @@ export default defineComponent({
         },
 
         callAPI: async function () {
-            const response = await fetch(`${apiDomain}/sessionInfo`);
+            const response = await fetch(`${apiDomain}/sessioninfo`);
 
             if (response.status === 401) {
                 // this means that the session has expired and the
