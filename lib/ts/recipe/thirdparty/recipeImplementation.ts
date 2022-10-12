@@ -14,7 +14,7 @@
  */
 
 import Querier from "../../querier";
-import { appendQueryParamsToURL, getQueryParams } from "../../utils";
+import { appendQueryParamsToURL, getAllQueryParams, getQueryParams } from "../../utils";
 import { RecipeInterface, StateObject, ThirdPartyUserType } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
@@ -65,69 +65,80 @@ export default function getRecipeImplementation(
         },
 
         getAuthorisationURLWithQueryParamsAndSetState: async function (input: {
-            providerId: string;
-            authorisationURL: string;
+            thirdPartyId: string;
+            clientId?: string;
+            frontendRedirectURI: string;
+            redirectURIOnProviderDashboard?: string;
             userContext: any;
-            providerClientId?: string;
             options?: RecipeFunctionOptions;
         }): Promise<string> {
-            // 1. Generate state.
-            const stateToSendToAuthProvider = this.generateStateToSendToOAuthProvider({
-                userContext: input.userContext,
-            });
-
-            const stateExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
-            // 2. Store state in Session Storage.
-            await this.setStateAndOtherInfoToStorage<{}>({
-                state: {
-                    stateForAuthProvider: stateToSendToAuthProvider,
-                    providerId: input.providerId,
-                    expiresAt: stateExpiry,
-                    authorisationURL: input.authorisationURL,
-                    providerClientId: input.providerClientId,
-                },
-                userContext: input.userContext,
-            });
-
-            // 3. Get Authorisation URL.
+            // 1. Call AuthorisationUrlGET
             const urlResponse = await this.getAuthorisationURLFromBackend({
-                providerId: input.providerId,
+                thirdPartyId: input.thirdPartyId,
+                clientId: input.clientId,
+                redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard || input.frontendRedirectURI,
                 userContext: input.userContext,
                 options: input.options,
             });
 
-            // for some third party providers, the redirect_uri is set on the backend itself (for example in the case of apple). In these cases, we don't set them here...
-            const urlObj = new URL(urlResponse.url);
-            const alreadyContainsRedirectURI = urlObj.searchParams.get("redirect_uri") !== null;
+            // 2. Generate state.
+            let frontendRedirectURIToSave: string | undefined =
+                input.redirectURIOnProviderDashboard !== undefined &&
+                input.frontendRedirectURI !== input.redirectURIOnProviderDashboard
+                    ? input.frontendRedirectURI
+                    : undefined;
+            const stateToSendToAuthProvider = this.generateStateToSendToOAuthProvider({
+                frontendRedirectURI: frontendRedirectURIToSave,
+                userContext: input.userContext,
+            });
 
-            const urlWithState = alreadyContainsRedirectURI
-                ? appendQueryParamsToURL(urlResponse.url, {
-                      state: stateToSendToAuthProvider,
-                  })
-                : appendQueryParamsToURL(urlResponse.url, {
-                      state: stateToSendToAuthProvider,
-                      redirect_uri: input.authorisationURL,
-                  });
+            // 3. Store state in Session Storage.
+            const stateExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
+            await this.setStateAndOtherInfoToStorage<{}>({
+                state: {
+                    stateForAuthProvider: stateToSendToAuthProvider,
+                    thirdPartyId: input.thirdPartyId,
+                    clientId: input.clientId,
+                    expiresAt: stateExpiry,
+                    redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard || input.frontendRedirectURI,
+                    pkceCodeVerifier: urlResponse.pkceCodeVerifier,
+                },
+                userContext: input.userContext,
+            });
+
+            const urlWithState = appendQueryParamsToURL(urlResponse.url, {
+                state: stateToSendToAuthProvider,
+            });
 
             return urlWithState;
         },
 
         getAuthorisationURLFromBackend: async function (input: {
-            providerId: string;
+            thirdPartyId: string;
+            clientId?: string;
+            redirectURIOnProviderDashboard: string;
             userContext: any;
             options?: RecipeFunctionOptions;
         }): Promise<{
             status: "OK";
             url: string;
+            pkceCodeVerifier?: string;
             fetchResponse: Response;
         }> {
+            const params: Record<string, string> = {
+                thirdPartyId: input.thirdPartyId,
+                redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard,
+            };
+            if (input.clientId !== undefined) params.clientId = input.clientId;
+
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
                 url: string;
+                pkceCodeVerifier?: string;
             }>(
                 "/authorisationurl",
                 {},
-                { thirdPartyId: input.providerId },
+                params,
                 Querier.preparePreAPIHook({
                     recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "GET_AUTHORISATION_URL",
@@ -144,6 +155,7 @@ export default function getRecipeImplementation(
             return {
                 status: "OK",
                 url: jsonBody.url,
+                pkceCodeVerifier: jsonBody.pkceCodeVerifier,
                 fetchResponse,
             };
         },
@@ -174,7 +186,7 @@ export default function getRecipeImplementation(
                 userContext: input.userContext,
             });
 
-            const code = this.getAuthCodeFromURL({
+            const queryParams = this.getQueryParamsFromURL({
                 userContext: input.userContext,
             });
 
@@ -212,10 +224,13 @@ export default function getRecipeImplementation(
                 "/signinup",
                 {
                     body: JSON.stringify({
-                        code,
-                        thirdPartyId: verifiedState.providerId,
-                        redirectURI: verifiedState.authorisationURL,
-                        clientId: verifiedState.providerClientId,
+                        thirdPartyId: verifiedState.thirdPartyId,
+                        clientId: verifiedState.clientId,
+                        redirectURIInfo: {
+                            redirectURIOnProviderDashboard: verifiedState.redirectURIOnProviderDashboard,
+                            redirectURIQueryParams: queryParams,
+                            pkceCodeVerifier: verifiedState.pkceCodeVerifier,
+                        },
                     }),
                 },
                 Querier.preparePreAPIHook({
@@ -240,11 +255,26 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        generateStateToSendToOAuthProvider: function (): string {
+        generateStateToSendToOAuthProvider: function (input?: {
+            frontendRedirectURI?: string;
+            userContext: any;
+        }): string {
             // Generate state using algorithm described in https://github.com/supertokens/supertokens-auth-react/issues/154#issue-796867579
-            return `${1e20}`.replace(/[018]/g, (c) =>
-                (parseInt(c) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (parseInt(c) / 4)))).toString(16)
-            );
+            let state: {
+                state: string;
+                frontendRedirectURI?: string;
+            } = {
+                state: `${1e20}`.replace(/[018]/g, (c) =>
+                    (parseInt(c) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (parseInt(c) / 4)))).toString(
+                        16
+                    )
+                ),
+            };
+
+            if (input !== undefined && input.frontendRedirectURI !== undefined) {
+                state.frontendRedirectURI = input.frontendRedirectURI;
+            }
+            return btoa(JSON.stringify(state));
         },
         verifyAndGetStateOrThrowError: async function <CustomStateProperties>(input: {
             stateFromAuthProvider: string | undefined;
@@ -273,16 +303,6 @@ export default function getRecipeImplementation(
             return input.stateObjectFromStorage;
         },
 
-        getAuthCodeFromURL: function (): string {
-            const authCodeFromURL = getQueryParams("code");
-
-            if (authCodeFromURL === undefined) {
-                return "";
-            }
-
-            return authCodeFromURL;
-        },
-
         getAuthErrorFromURL: function (): string | undefined {
             return getQueryParams("error");
         },
@@ -295,6 +315,10 @@ export default function getRecipeImplementation(
             }
 
             return stateFromURL;
+        },
+
+        getQueryParamsFromURL: function (): URLSearchParams {
+            return getAllQueryParams();
         },
     };
 }

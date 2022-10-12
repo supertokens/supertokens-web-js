@@ -198,12 +198,15 @@ export default class RecipeWrapper {
      * @returns `{status: "OK", url}`
      */
     static getAuthorisationURLFromBackend(input: {
-        providerId: string;
-        userContext?: any;
+        thirdPartyId: string;
+        clientId?: string;
+        redirectURIOnProviderDashboard: string;
+        userContext: any;
         options?: RecipeFunctionOptions;
     }): Promise<{
         status: "OK";
         url: string;
+        pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;
     /**
@@ -266,10 +269,11 @@ export default class RecipeWrapper {
      * @returns URL string
      */
     static getAuthorisationURLWithQueryParamsAndSetState(input: {
-        providerId: string;
-        authorisationURL: string;
-        userContext?: any;
-        providerClientId?: string;
+        thirdPartyId: string;
+        clientId?: string;
+        frontendRedirectURI: string;
+        redirectURIOnProviderDashboard?: string;
+        userContext: any;
         options?: RecipeFunctionOptions;
     }): Promise<string>;
     /**
@@ -295,13 +299,13 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<StateObject & CustomStateProperties>;
     /**
-     * Returns the auth code from the current URL
+     * Returns the query params from the current URL
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
      *
-     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
+     * @returns The "URLSearchParams" that contains all the query params from the current URL
      */
-    static getAuthCodeFromURL(input?: { userContext?: any }): string;
+    static getQueryParamsFromURL(input?: { userContext?: any }): URLSearchParams;
     /**
      * Returns the error from the current URL
      *
@@ -384,7 +388,7 @@ declare const getStateAndOtherInfoFromStorage: typeof RecipeWrapper.getStateAndO
 declare const setStateAndOtherInfoToStorage: typeof RecipeWrapper.setStateAndOtherInfoToStorage;
 declare const generateStateToSendToOAuthProvider: typeof RecipeWrapper.generateStateToSendToOAuthProvider;
 declare const verifyAndGetStateOrThrowError: typeof RecipeWrapper.verifyAndGetStateOrThrowError;
-declare const getAuthCodeFromURL: typeof RecipeWrapper.getAuthCodeFromURL;
+declare const getQueryParamsFromURL: typeof RecipeWrapper.getQueryParamsFromURL;
 declare const getAuthErrorFromURL: typeof RecipeWrapper.getAuthErrorFromURL;
 declare const getAuthStateFromURL: typeof RecipeWrapper.getAuthStateFromURL;
 declare const signOut: typeof RecipeWrapper.signOut;
@@ -407,7 +411,7 @@ export {
     setStateAndOtherInfoToStorage,
     generateStateToSendToOAuthProvider,
     verifyAndGetStateOrThrowError,
-    getAuthCodeFromURL,
+    getQueryParamsFromURL,
     getAuthErrorFromURL,
     getAuthStateFromURL,
     EmailPasswordUserType,

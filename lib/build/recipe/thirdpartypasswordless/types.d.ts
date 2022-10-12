@@ -56,12 +56,15 @@ export declare type RecipeInterface = {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getAuthorisationURLFromBackend: (input: {
-        providerId: string;
+        thirdPartyId: string;
+        clientId?: string;
+        redirectURIOnProviderDashboard: string;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
         status: "OK";
         url: string;
+        pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;
     /**
@@ -128,10 +131,11 @@ export declare type RecipeInterface = {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getThirdPartyAuthorisationURLWithQueryParamsAndSetState: (input: {
-        providerId: string;
-        authorisationURL: string;
+        thirdPartyId: string;
+        clientId?: string;
+        frontendRedirectURI: string;
+        redirectURIOnProviderDashboard?: string;
         userContext: any;
-        providerClientId?: string;
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
     /**
@@ -141,7 +145,10 @@ export declare type RecipeInterface = {
      *
      * @returns string
      */
-    generateThirdPartyStateToSendToOAuthProvider: (input: { userContext: any }) => string;
+    generateThirdPartyStateToSendToOAuthProvider: (input?: {
+        frontendRedirectURI?: string;
+        userContext: any;
+    }) => string;
     /**
      * Verify that the state recieved from the third party provider matches the one in storage
      *
@@ -157,13 +164,13 @@ export declare type RecipeInterface = {
         userContext: any;
     }) => Promise<StateObject & CustomStateProperties>;
     /**
-     * Returns the auth code from the current URL
+     * Returns the query params from the current URL
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
      *
-     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
+     * @returns The "URLSearchParams" that contains all the query params from the current URL
      */
-    getThirdPartyAuthCodeFromURL: (input: { userContext: any }) => string;
+    getThirdPartyQueryParamsFromURL: (input: { userContext: any }) => URLSearchParams;
     /**
      * Returns the error from the current URL
      *

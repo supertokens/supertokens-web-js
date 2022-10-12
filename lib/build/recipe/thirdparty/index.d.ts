@@ -50,10 +50,11 @@ export default class RecipeWrapper {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static getAuthorisationURLWithQueryParamsAndSetState(input: {
-        providerId: string;
-        authorisationURL: string;
-        providerClientId?: string;
-        userContext?: any;
+        thirdPartyId: string;
+        clientId?: string;
+        frontendRedirectURI: string;
+        redirectURIOnProviderDashboard?: string;
+        userContext: any;
         options?: RecipeFunctionOptions;
     }): Promise<string>;
     /**
@@ -70,12 +71,15 @@ export default class RecipeWrapper {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static getAuthorisationURLFromBackend(input: {
-        providerId: string;
-        userContext?: any;
+        thirdPartyId: string;
+        clientId?: string;
+        redirectURIOnProviderDashboard: string;
+        userContext: any;
         options?: RecipeFunctionOptions;
     }): Promise<{
         status: "OK";
         url: string;
+        pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;
     /**
@@ -110,7 +114,11 @@ export default class RecipeWrapper {
      *
      * @returns string
      */
-    static generateStateToSendToOAuthProvider(input?: { userContext?: any }): string;
+    static generateStateToSendToOAuthProvider(input?: {
+        includeOriginInState?: boolean;
+        authorisationURL?: string;
+        userContext?: any;
+    }): string;
     /**
      * Verify that the state recieved from the third party provider matches the one in storage
      *
@@ -126,13 +134,13 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<StateObject & CustomStateProperties>;
     /**
-     * Returns the auth code from the current URL
+     * Returns the query params from the current URL
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
-     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
+     * @returns The "URLSearchParams" that contains all the query params from the current URL
      */
-    static getAuthCodeFromURL(input?: { userContext?: any }): string;
+    static getQueryParamsFromURL(input?: { userContext?: any }): URLSearchParams;
     /**
      * Returns the error from the current URL
      *
@@ -209,7 +217,7 @@ declare const setStateAndOtherInfoToStorage: typeof RecipeWrapper.setStateAndOth
 declare const getAuthorisationURLFromBackend: typeof RecipeWrapper.getAuthorisationURLFromBackend;
 declare const generateStateToSendToOAuthProvider: typeof RecipeWrapper.generateStateToSendToOAuthProvider;
 declare const verifyAndGetStateOrThrowError: typeof RecipeWrapper.verifyAndGetStateOrThrowError;
-declare const getAuthCodeFromURL: typeof RecipeWrapper.getAuthCodeFromURL;
+declare const getQueryParamsFromURL: typeof RecipeWrapper.getQueryParamsFromURL;
 declare const getAuthErrorFromURL: typeof RecipeWrapper.getAuthErrorFromURL;
 declare const getAuthStateFromURL: typeof RecipeWrapper.getAuthStateFromURL;
 declare const signOut: typeof RecipeWrapper.signOut;
@@ -226,7 +234,7 @@ export {
     getAuthorisationURLFromBackend,
     generateStateToSendToOAuthProvider,
     verifyAndGetStateOrThrowError,
-    getAuthCodeFromURL,
+    getQueryParamsFromURL,
     getAuthErrorFromURL,
     getAuthStateFromURL,
     RecipeInterface,

@@ -60,11 +60,12 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
 };
 
 export type StateObject = {
-    expiresAt: number;
-    providerId: string;
-    authorisationURL: string;
     stateForAuthProvider: string;
-    providerClientId?: string;
+    thirdPartyId: string;
+    clientId?: string;
+    expiresAt: number;
+    redirectURIOnProviderDashboard: string;
+    pkceCodeVerifier?: string;
 };
 
 export type ThirdPartyUserType = UserType & {
@@ -116,10 +117,11 @@ export type RecipeInterface = {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getAuthorisationURLWithQueryParamsAndSetState: (input: {
-        providerId: string;
-        authorisationURL: string;
+        thirdPartyId: string;
+        clientId?: string;
+        frontendRedirectURI: string;
+        redirectURIOnProviderDashboard?: string;
         userContext: any;
-        providerClientId?: string;
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
 
@@ -137,12 +139,15 @@ export type RecipeInterface = {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getAuthorisationURLFromBackend: (input: {
-        providerId: string;
+        thirdPartyId: string;
+        clientId?: string;
+        redirectURIOnProviderDashboard: string;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
         status: "OK";
         url: string;
+        pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;
 
@@ -179,7 +184,7 @@ export type RecipeInterface = {
      *
      * @returns string
      */
-    generateStateToSendToOAuthProvider: (input: { userContext: any }) => string;
+    generateStateToSendToOAuthProvider: (input?: { frontendRedirectURI?: string; userContext: any }) => string;
 
     /**
      * Verify that the state recieved from the third party provider matches the one in storage
@@ -195,15 +200,6 @@ export type RecipeInterface = {
         stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
         userContext: any;
     }) => Promise<StateObject & CustomStateProperties>;
-
-    /**
-     * Returns the auth code from the current URL
-     *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
-     *
-     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
-     */
-    getAuthCodeFromURL: (input: { userContext: any }) => string;
 
     /**
      * Returns the error from the current URL
@@ -222,4 +218,13 @@ export type RecipeInterface = {
      * @returns The "state" query param from the current URL. Returns an empty string if no state exists
      */
     getAuthStateFromURL: (input: { userContext: any }) => string;
+
+    /**
+     * Returns the query params from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "URLSearchParams" that contains all the query params from the current URL
+     */
+    getQueryParamsFromURL: (input: { userContext: any }) => URLSearchParams;
 };

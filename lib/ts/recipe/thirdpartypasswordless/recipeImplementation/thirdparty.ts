@@ -29,7 +29,7 @@ export default function getRecipeImplementation(
             originalImplementation.setThirdPartyStateAndOtherInfoToStorage.bind(originalImplementation),
         generateStateToSendToOAuthProvider:
             originalImplementation.generateThirdPartyStateToSendToOAuthProvider.bind(originalImplementation),
-        getAuthCodeFromURL: originalImplementation.getThirdPartyAuthCodeFromURL.bind(originalImplementation),
+        getQueryParamsFromURL: originalImplementation.getThirdPartyQueryParamsFromURL.bind(originalImplementation),
         getAuthErrorFromURL: originalImplementation.getThirdPartyAuthErrorFromURL.bind(originalImplementation),
         getAuthStateFromURL: originalImplementation.getThirdPartyAuthStateFromURL.bind(originalImplementation),
         verifyAndGetStateOrThrowError:
