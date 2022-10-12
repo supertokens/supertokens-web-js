@@ -208,7 +208,7 @@ export default class RecipeWrapper {
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: "OK", user, createdUser: bool}` if succesful
+     * @returns `{status: "OK", user, createdNewUser: bool}` if succesful
      *
      * @returns `{status: "INCORRECT_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is incorrect
      *
@@ -232,7 +232,7 @@ export default class RecipeWrapper {
     ): Promise<
         | {
               status: "OK";
-              createdUser: boolean;
+              createdNewUser: boolean;
               user: PasswordlessUser;
               fetchResponse: Response;
           }
@@ -263,54 +263,6 @@ export default class RecipeWrapper {
      * @returns The "preAuthSessionId" query parameter from the current URL
      */
     static getPasswordlessPreAuthSessionIdFromURL(input?: { userContext?: any }): string;
-    /**
-     * Verify an email
-     *
-     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
-     *
-     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
-     *
-     * @returns `{status: "OK"}` if successfull
-     * @returns `{status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR"}` if token is invalid
-     *
-     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
-     */
-    static verifyEmail(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
-        status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-        fetchResponse: Response;
-    }>;
-    /**
-     * Send an email to the user for verification.
-     *
-     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
-     *
-     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
-     *
-     * @returns `{status: "OK"}` if successfull
-     * @returns `{status: "EMAIL_ALREADY_VERIFIED_ERROR"}` if the email has already been verified
-     *
-     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
-     */
-    static sendVerificationEmail(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
-        status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
-        fetchResponse: Response;
-    }>;
-    /**
-     * Check if an email has been verified
-     *
-     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
-     *
-     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
-     *
-     * @returns `{status: "OK", isVerified: boolean}`
-     *
-     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
-     */
-    static isEmailVerified(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
-        status: "OK";
-        isVerified: boolean;
-        fetchResponse: Response;
-    }>;
     /**
      * Check if a user with the given email exists
      *
@@ -393,9 +345,6 @@ export default class RecipeWrapper {
 declare const init: typeof RecipeWrapper.init;
 declare const getThirdPartyAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getThirdPartyAuthorisationURLWithQueryParamsAndSetState;
 declare const thirdPartySignInAndUp: typeof RecipeWrapper.thirdPartySignInAndUp;
-declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
-declare const sendVerificationEmail: typeof RecipeWrapper.sendVerificationEmail;
-declare const isEmailVerified: typeof RecipeWrapper.isEmailVerified;
 declare const createPasswordlessCode: typeof RecipeWrapper.createPasswordlessCode;
 declare const resendPasswordlessCode: typeof RecipeWrapper.resendPasswordlessCode;
 declare const consumePasswordlessCode: typeof RecipeWrapper.consumePasswordlessCode;
@@ -419,9 +368,6 @@ export {
     init,
     getThirdPartyAuthorisationURLWithQueryParamsAndSetState,
     thirdPartySignInAndUp,
-    verifyEmail,
-    sendVerificationEmail,
-    isEmailVerified,
     createPasswordlessCode,
     resendPasswordlessCode,
     consumePasswordlessCode,

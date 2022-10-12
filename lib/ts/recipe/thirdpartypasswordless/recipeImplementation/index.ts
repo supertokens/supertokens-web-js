@@ -155,7 +155,7 @@ export default function getRecipeImplementation(
         ): Promise<
             | {
                   status: "OK";
-                  createdUser: boolean;
+                  createdNewUser: boolean;
                   user: PasswordlessUser;
                   fetchResponse: Response;
               }

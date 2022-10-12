@@ -132,7 +132,7 @@ export default function getRecipeImplementation(
         ): Promise<
             | {
                   status: "OK";
-                  createdUser: boolean;
+                  createdNewUser: boolean;
                   user: PasswordlessUser;
                   fetchResponse: Response;
               }
@@ -191,19 +191,6 @@ export default function getRecipeImplementation(
                     userContext: input.userContext,
                 })
             );
-
-            /**
-             * Originally this function was incorrectly consuming the FDI spec,
-             * this change is done this way to avoid needing a breaking change to fix this
-             */
-            if (jsonBody.status === "OK") {
-                return {
-                    status: "OK",
-                    createdUser: jsonBody.createdNewUser,
-                    user: jsonBody.user,
-                    fetchResponse,
-                };
-            }
 
             return {
                 ...jsonBody,

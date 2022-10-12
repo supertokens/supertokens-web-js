@@ -7,6 +7,82 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.2.1] - 2022-09-14
+
+### Changes
+
+-   Fix type of parameter for `Passwordless.consumeCode`
+
+## [0.2.0] - 2022-09-14
+
+### Added
+
+-   Session claims related types/classes and the `validateClaims` & `getClaimValue` functions
+-   Added `getInvalidClaimsFromResponse` to the SessionClass to help parsing responses with invalid claim errors
+-   Added `API_INVALID_CLAIM` event to the Session recipe
+-   Added `UserRoleClaim` and `PermissionClaim`
+
+### Breaking changes
+
+-   Only supporting FDI 1.15
+-   Backend SDKs have to be updated first to a version that supports session claims before enabling EmailVerification!
+    -   supertokens-node: >= 12.0
+    -   supertokens-golang: >= 0.9
+    -   supertokens-python >= 0.11
+-   EmailVerification recipe is now not initialized as part of auth recipes. You can add it to the recipe list as `EmailVerification.init` like other recipes.
+-   Removed `verifyEmail`, `sendVerificationEmail` and `isEmailVerified` from auth recipes. These should now be called on the `EmailVerification` recipe
+-   Moved email verification related events, overrides, pre-api hooks and redirection contexts into the `EmailVerification` recipe. You should configure them while initializing the `EmailVerification` recipe.
+-   Fix typing of `consumeCode` in the passwordless recipe
+
+### Migration
+
+#### EmailVerification recipe init
+
+```ts
+SuperTokens.init({
+    // Normal init conf...
+    recipeList: [
+        EmailPassword.init({
+            preAPIHook: (context) => {
+                // Move email verification related pre-API hooks into the preAPIHook of the EmailVerification config
+            },
+            postAPIHook: (context) => {
+                // Move email verification related post-API hooks into the postAPIHook of the EmailVerification config
+            }
+            override: {
+                emailVerificationFeature: {
+                    // These overrides should be moved into the config of the EmailVerification recipe
+                }
+            }
+        }),
+    ]
+})
+```
+
+Should become:
+
+```ts
+SuperTokens.init({
+    // Normal init conf...
+    recipeList: [
+        EmailVerification.init({
+            // Props from emailVerificationFeature of the EmailPassword.init config should be moved here.
+            override: {
+                // The overrides from emailVerificationFeature in the overrides of the EmailPassword config should be moved here
+            },
+
+            preAPIHook: (context) => {
+                // Move email verification related pre-API hooks here
+            },
+            postAPIHook: (context) => {
+                // Move email verification related post-API hooks here
+            },
+        }),
+        EmailPassword.init({}),
+    ],
+});
+```
+
 ## [0.1.6] - 2022-08-23
 
 ### Changed

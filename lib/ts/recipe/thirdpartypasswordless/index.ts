@@ -305,7 +305,7 @@ export default class RecipeWrapper {
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: "OK", user, createdUser: bool}` if succesful
+     * @returns `{status: "OK", user, createdNewUser: bool}` if succesful
      *
      * @returns `{status: "INCORRECT_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is incorrect
      *
@@ -329,7 +329,7 @@ export default class RecipeWrapper {
     ): Promise<
         | {
               status: "OK";
-              createdUser: boolean;
+              createdNewUser: boolean;
               user: PasswordlessUser;
               fetchResponse: Response;
           }
@@ -372,72 +372,6 @@ export default class RecipeWrapper {
      */
     static getPasswordlessPreAuthSessionIdFromURL(input?: { userContext?: any }): string {
         return Recipe.getInstanceOrThrow().recipeImplementation.getPasswordlessPreAuthSessionIdFromURL({
-            ...input,
-            userContext: getNormalisedUserContext(input?.userContext),
-        });
-    }
-
-    /**
-     * Verify an email
-     *
-     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
-     *
-     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
-     *
-     * @returns `{status: "OK"}` if successfull
-     * @returns `{status: "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR"}` if token is invalid
-     *
-     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
-     */
-    static async verifyEmail(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
-        status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
-        fetchResponse: Response;
-    }> {
-        return Recipe.getInstanceOrThrow().emailVerificationRecipe.recipeImplementation.verifyEmail({
-            ...input,
-            userContext: getNormalisedUserContext(input?.userContext),
-        });
-    }
-
-    /**
-     * Send an email to the user for verification.
-     *
-     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
-     *
-     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
-     *
-     * @returns `{status: "OK"}` if successfull
-     * @returns `{status: "EMAIL_ALREADY_VERIFIED_ERROR"}` if the email has already been verified
-     *
-     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
-     */
-    static async sendVerificationEmail(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
-        status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
-        fetchResponse: Response;
-    }> {
-        return Recipe.getInstanceOrThrow().emailVerificationRecipe.recipeImplementation.sendVerificationEmail({
-            ...input,
-            userContext: getNormalisedUserContext(input?.userContext),
-        });
-    }
-
-    /**
-     * Check if an email has been verified
-     *
-     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
-     *
-     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
-     *
-     * @returns `{status: "OK", isVerified: boolean}`
-     *
-     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
-     */
-    static async isEmailVerified(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
-        status: "OK";
-        isVerified: boolean;
-        fetchResponse: Response;
-    }> {
-        return Recipe.getInstanceOrThrow().emailVerificationRecipe.recipeImplementation.isEmailVerified({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
         });
@@ -556,9 +490,6 @@ const init = RecipeWrapper.init;
 const getThirdPartyAuthorisationURLWithQueryParamsAndSetState =
     RecipeWrapper.getThirdPartyAuthorisationURLWithQueryParamsAndSetState;
 const thirdPartySignInAndUp = RecipeWrapper.thirdPartySignInAndUp;
-const verifyEmail = RecipeWrapper.verifyEmail;
-const sendVerificationEmail = RecipeWrapper.sendVerificationEmail;
-const isEmailVerified = RecipeWrapper.isEmailVerified;
 const createPasswordlessCode = RecipeWrapper.createPasswordlessCode;
 const resendPasswordlessCode = RecipeWrapper.resendPasswordlessCode;
 const consumePasswordlessCode = RecipeWrapper.consumePasswordlessCode;
@@ -583,9 +514,6 @@ export {
     init,
     getThirdPartyAuthorisationURLWithQueryParamsAndSetState,
     thirdPartySignInAndUp,
-    verifyEmail,
-    sendVerificationEmail,
-    isEmailVerified,
     createPasswordlessCode,
     resendPasswordlessCode,
     consumePasswordlessCode,

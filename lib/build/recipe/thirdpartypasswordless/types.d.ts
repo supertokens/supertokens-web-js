@@ -1,7 +1,7 @@
 import {
     InputType as AuthRecipeInputType,
     NormalisedInputType as AuthRecipeNormalisedInputType,
-} from "../authRecipeWithEmailVerification/types";
+} from "../authRecipe/types";
 import {
     PasswordlessFlowType,
     PasswordlessUser,
@@ -14,7 +14,6 @@ import {
     UserInput as RecipeModuleUserInput,
 } from "../recipeModule/types";
 import { StateObject, PreAndPostAPIHookAction as ThirdPartyPreAndPostAPIHookAction } from "../thirdparty/types";
-import { InputTypeOverride as EmailVerificationOverride } from "../emailverification/types";
 import OverrideableBuilder from "supertokens-js-override";
 import { ThirdPartyUserType } from "../thirdparty/types";
 export declare type PreAndPostAPIHookAction = ThirdPartyPreAndPostAPIHookAction | PasswordlessPreAndPostAPIHookAction;
@@ -25,7 +24,6 @@ export declare type UserInput = {
      * Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/frontend-functions-override/about the documentation}
      */
     override?: {
-        emailVerification?: EmailVerificationOverride;
         functions?: (
             originalImplementation: RecipeInterface,
             builder: OverrideableBuilder<RecipeInterface>
@@ -262,7 +260,7 @@ export declare type RecipeInterface = {
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: "OK", user, createdUser: bool}` if succesful
+     * @returns `{status: "OK", user, createdNewUser: bool}` if succesful
      *
      * @returns `{status: "INCORRECT_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is incorrect
      *
@@ -290,7 +288,7 @@ export declare type RecipeInterface = {
     ) => Promise<
         | {
               status: "OK";
-              createdUser: boolean;
+              createdNewUser: boolean;
               user: PasswordlessUser;
               fetchResponse: Response;
           }

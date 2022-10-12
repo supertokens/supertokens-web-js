@@ -95,7 +95,8 @@ import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
 import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
 import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
-
+import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recipe/session";
+import { PermissionClaim, UserRoleClaim } from "../../recipe/userroles";
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
     return {
@@ -197,13 +198,7 @@ function getEmailPasswordFunctions(original: EmailPasswordRecipeInterface): Emai
 const emailPasswordPreAPIHook: RecipePreAPIHookFunction<EmailPasswordAction> = async function (
     context: RecipePreAPIHookContext<EmailPasswordAction>
 ) {
-    if (context.action === "IS_EMAIL_VERIFIED") {
-        //
-    } else if (context.action === "SEND_VERIFY_EMAIL") {
-        //
-    } else if (context.action === "VERIFY_EMAIL") {
-        //
-    } else if (context.action === "EMAIL_EXISTS") {
+    if (context.action === "EMAIL_EXISTS") {
         //
     } else if (context.action === "EMAIL_PASSWORD_SIGN_IN") {
         //
@@ -231,13 +226,7 @@ const emailPasswordPreAPIHook: RecipePreAPIHookFunction<EmailPasswordAction> = a
 const emailPasswordPostAPIHook: RecipePostAPIHookFunction<EmailPasswordAction> = async function (
     context: RecipePostAPIHookContext<EmailPasswordAction>
 ) {
-    if (context.action === "IS_EMAIL_VERIFIED") {
-        //
-    } else if (context.action === "SEND_VERIFY_EMAIL") {
-        //
-    } else if (context.action === "VERIFY_EMAIL") {
-        //
-    } else if (context.action === "EMAIL_EXISTS") {
+    if (context.action === "EMAIL_EXISTS") {
         //
     } else if (context.action === "EMAIL_PASSWORD_SIGN_IN") {
         //
@@ -261,9 +250,6 @@ const emailPasswordPostAPIHook: RecipePostAPIHookFunction<EmailPasswordAction> =
 function getEmailPassword(): CreateRecipeFunction<EmailPasswordAction> {
     const config: EmailPasswordUserInput = {
         override: {
-            emailVerification: {
-                functions: getEmailVerificationFunctions,
-            },
             functions: getEmailPasswordFunctions,
         },
         preAPIHook: emailPasswordPreAPIHook,
@@ -313,13 +299,7 @@ function getThirdPartyFunctions(original: ThirdPartyRecipeInterface): ThirdParty
 const thirdPartyPreAPIHook: RecipePreAPIHookFunction<ThirdPartyAction> = async function (
     context: RecipePreAPIHookContext<ThirdPartyAction>
 ) {
-    if (context.action === "IS_EMAIL_VERIFIED") {
-        //
-    } else if (context.action === "SEND_VERIFY_EMAIL") {
-        //
-    } else if (context.action === "VERIFY_EMAIL") {
-        //
-    } else if (context.action === "GET_AUTHORISATION_URL") {
+    if (context.action === "GET_AUTHORISATION_URL") {
         //
     } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
         //
@@ -341,13 +321,7 @@ const thirdPartyPreAPIHook: RecipePreAPIHookFunction<ThirdPartyAction> = async f
 const thirdPartyPostAPIHook: RecipePostAPIHookFunction<ThirdPartyAction> = async function (
     context: RecipePostAPIHookContext<ThirdPartyAction>
 ) {
-    if (context.action === "IS_EMAIL_VERIFIED") {
-        //
-    } else if (context.action === "SEND_VERIFY_EMAIL") {
-        //
-    } else if (context.action === "VERIFY_EMAIL") {
-        //
-    } else if (context.action === "GET_AUTHORISATION_URL") {
+    if (context.action === "GET_AUTHORISATION_URL") {
         //
     } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
         //
@@ -365,9 +339,6 @@ const thirdPartyPostAPIHook: RecipePostAPIHookFunction<ThirdPartyAction> = async
 function getThirdParty(): CreateRecipeFunction<ThirdPartyAction> {
     const config: ThirdPartyUserInput = {
         override: {
-            emailVerification: {
-                functions: getEmailVerificationFunctions,
-            },
             functions: getThirdPartyFunctions,
         },
         preAPIHook: thirdPartyPreAPIHook,
@@ -435,13 +406,7 @@ function getThirdPartyEmailPasswordFunctions(original: TPEPRecipeInterface): TPE
 const tpepPreAPIHook: RecipePreAPIHookFunction<TPEPPartyAction> = async function (
     context: RecipePreAPIHookContext<TPEPPartyAction>
 ) {
-    if (context.action === "IS_EMAIL_VERIFIED") {
-        //
-    } else if (context.action === "SEND_VERIFY_EMAIL") {
-        //
-    } else if (context.action === "VERIFY_EMAIL") {
-        //
-    } else if (context.action === "GET_AUTHORISATION_URL") {
+    if (context.action === "GET_AUTHORISATION_URL") {
         //
     } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
         //
@@ -473,13 +438,7 @@ const tpepPreAPIHook: RecipePreAPIHookFunction<TPEPPartyAction> = async function
 const tpepPostAPIHook: RecipePostAPIHookFunction<TPEPPartyAction> = async function (
     context: RecipePostAPIHookContext<TPEPPartyAction>
 ) {
-    if (context.action === "IS_EMAIL_VERIFIED") {
-        //
-    } else if (context.action === "SEND_VERIFY_EMAIL") {
-        //
-    } else if (context.action === "VERIFY_EMAIL") {
-        //
-    } else if (context.action === "GET_AUTHORISATION_URL") {
+    if (context.action === "GET_AUTHORISATION_URL") {
         //
     } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
         //
@@ -507,9 +466,6 @@ const tpepPostAPIHook: RecipePostAPIHookFunction<TPEPPartyAction> = async functi
 function getThirdPartyEmailPassword(): CreateRecipeFunction<TPEPPartyAction> {
     const config: TPEPPartyUserInput = {
         override: {
-            emailVerification: {
-                functions: getEmailVerificationFunctions,
-            },
             functions: getThirdPartyEmailPasswordFunctions,
         },
         preAPIHook: tpepPreAPIHook,
@@ -762,9 +718,6 @@ const tppPostAPIHook: RecipePostAPIHookFunction<TPPlessAction> = async function 
 function getThirdPartyPasswordless(): CreateRecipeFunction<TPPlessAction> {
     const config: TPPUserInput = {
         override: {
-            emailVerification: {
-                functions: getEmailVerificationFunctions,
-            },
             functions: getThirdPartyPasswordlessFunctions,
         },
         preAPIHook: tppPreAPIHook,
@@ -795,6 +748,15 @@ function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInt
         },
         getUserId: async function (input) {
             return original.getUserId(input);
+        },
+        getInvalidClaimsFromResponse: async function (input) {
+            return original.getInvalidClaimsFromResponse(input);
+        },
+        getGlobalClaimValidators: function (input) {
+            return original.getGlobalClaimValidators(input);
+        },
+        validateClaims: async function (input) {
+            return original.validateClaims(input);
         },
     };
 }
@@ -854,6 +816,8 @@ function getSession(): CreateRecipeFunction<"SIGN_OUT" | "REFRESH_SESSION"> {
             } else if (event.action === "SIGN_OUT") {
                 //
             } else if (event.action === "UNAUTHORISED") {
+                //
+            } else if (event.action === "API_INVALID_CLAIM") {
                 //
             }
 
@@ -1250,15 +1214,6 @@ EmailPassword.getResetPasswordTokenFromURL({
 EmailPassword.getResetPasswordTokenFromURL(undefined);
 EmailPassword.getResetPasswordTokenFromURL();
 
-EmailPassword.isEmailVerified({
-    options: {
-        preAPIHook: undefined,
-    },
-    userContext: undefined,
-});
-EmailPassword.isEmailVerified(undefined);
-EmailPassword.isEmailVerified();
-
 EmailPassword.sendPasswordResetEmail({
     userContext: undefined,
     options: {
@@ -1275,15 +1230,6 @@ EmailPassword.sendPasswordResetEmail({
 EmailPassword.sendPasswordResetEmail(undefined);
 //@ts-expect-error
 EmailPassword.sendPasswordResetEmail();
-
-EmailPassword.sendVerificationEmail({
-    options: {
-        preAPIHook: undefined,
-    },
-    userContext: undefined,
-});
-EmailPassword.sendVerificationEmail(undefined);
-EmailPassword.sendVerificationEmail();
 
 EmailPassword.signIn({
     userContext: undefined,
@@ -1342,15 +1288,6 @@ EmailPassword.submitNewPassword(undefined);
 // @ts-expect-error
 EmailPassword.submitNewPassword();
 
-EmailPassword.verifyEmail({
-    userContext: undefined,
-    options: {
-        preAPIHook: undefined,
-    },
-});
-EmailPassword.verifyEmail(undefined);
-EmailPassword.verifyEmail();
-
 // Passwordless
 Passwordless.clearLoginAttemptInfo({
     userContext: undefined,
@@ -1371,9 +1308,7 @@ Passwordless.consumeCode({
         preAPIHook: undefined,
     },
 });
-// @ts-expect-error
 Passwordless.consumeCode(undefined);
-// @ts-expect-error
 Passwordless.consumeCode();
 
 Passwordless.createCode({
@@ -1644,24 +1579,6 @@ function getStateAndOtherInfoFromStorage() {
         | undefined = ThirdParty.getStateAndOtherInfoFromStorage();
 }
 
-ThirdParty.isEmailVerified({
-    userContext: undefined,
-    options: {
-        preAPIHook: undefined,
-    },
-});
-ThirdParty.isEmailVerified(undefined);
-ThirdParty.isEmailVerified();
-
-ThirdParty.sendVerificationEmail({
-    userContext: undefined,
-    options: {
-        preAPIHook: undefined,
-    },
-});
-ThirdParty.sendVerificationEmail(undefined);
-ThirdParty.sendVerificationEmail();
-
 ThirdParty.setStateAndOtherInfoToStorage({
     userContext: undefined,
     state: {
@@ -1779,15 +1696,6 @@ ThirdParty.verifyAndGetStateOrThrowError<{
         customData: "",
     },
 });
-
-ThirdParty.verifyEmail({
-    userContext: undefined,
-    options: {
-        preAPIHook: undefined,
-    },
-});
-ThirdParty.verifyEmail(undefined);
-ThirdParty.verifyEmail();
 
 // TPEP
 ThirdPartyEmailPassword.doesEmailExist({
@@ -1937,13 +1845,6 @@ function tpepgetStateAndOtherInfoFromStorage() {
     });
 }
 
-ThirdPartyEmailPassword.isEmailVerified({
-    userContext: undefined,
-    options: undefined,
-});
-ThirdPartyEmailPassword.isEmailVerified(undefined);
-ThirdPartyEmailPassword.isEmailVerified();
-
 ThirdPartyEmailPassword.sendPasswordResetEmail({
     userContext: undefined,
     options: {
@@ -1960,15 +1861,6 @@ ThirdPartyEmailPassword.sendPasswordResetEmail({
 ThirdPartyEmailPassword.sendPasswordResetEmail(undefined);
 // @ts-expect-error
 ThirdPartyEmailPassword.sendPasswordResetEmail();
-
-ThirdPartyEmailPassword.sendVerificationEmail({
-    userContext: undefined,
-    options: {
-        preAPIHook: undefined,
-    },
-});
-ThirdPartyEmailPassword.sendVerificationEmail(undefined);
-ThirdPartyEmailPassword.sendVerificationEmail();
 
 ThirdPartyEmailPassword.setStateAndOtherInfoToStorage({
     userContext: undefined,
@@ -2104,15 +1996,6 @@ ThirdPartyEmailPassword.verifyAndGetStateOrThrowError<{
         customData: "",
     },
 });
-
-ThirdPartyEmailPassword.verifyEmail({
-    userContext: undefined,
-    options: {
-        preAPIHook: undefined,
-    },
-});
-ThirdPartyEmailPassword.verifyEmail(undefined);
-ThirdPartyEmailPassword.verifyEmail();
 
 // TPP
 ThirdPartyPasswordless.clearPasswordlessLoginAttemptInfo({
@@ -2320,13 +2203,6 @@ function tppgetThirdPartyStateAndOtherInfoFromStorage() {
     });
 }
 
-ThirdPartyPasswordless.isEmailVerified({
-    userContext: undefined,
-    options: undefined,
-});
-ThirdPartyPasswordless.isEmailVerified(undefined);
-ThirdPartyPasswordless.isEmailVerified();
-
 ThirdPartyPasswordless.resendPasswordlessCode({
     userContext: undefined,
     options: {
@@ -2335,15 +2211,6 @@ ThirdPartyPasswordless.resendPasswordlessCode({
 });
 ThirdPartyPasswordless.resendPasswordlessCode(undefined);
 ThirdPartyPasswordless.resendPasswordlessCode();
-
-ThirdPartyPasswordless.sendVerificationEmail({
-    userContext: undefined,
-    options: {
-        preAPIHook: undefined,
-    },
-});
-ThirdPartyPasswordless.sendVerificationEmail(undefined);
-ThirdPartyPasswordless.sendVerificationEmail();
 
 ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo({
     attemptInfo: {
@@ -2526,11 +2393,55 @@ ThirdPartyPasswordless.verifyAndGetThirdPartyStateOrThrowError<{
     },
 });
 
-ThirdPartyPasswordless.verifyEmail({
-    userContext: undefined,
-    options: {
-        preAPIHook: undefined,
+class TestBoolClaimWithCustomValidators extends BooleanClaim {
+    constructor() {
+        super({
+            id: "custom",
+            refresh: async () => {
+                console.log("refresh...");
+            },
+        });
+
+        this.validators = {
+            ...this.validators,
+            custVal: (minTimeStamp: number) => ({
+                id: "test1-v1",
+                refresh: this.refresh,
+                shouldRefresh: (payload: any) => payload[this.id] === undefined || payload[this.id].t <= minTimeStamp,
+                validate: () => ({ isValid: true }),
+            }),
+        };
+    }
+
+    validators!: BooleanClaim["validators"] & { custVal: (minTimeStamp: number) => SessionClaimValidator };
+}
+
+const customClaimInstance = new TestBoolClaimWithCustomValidators();
+
+const TestPrimitiveClaim = new PrimitiveClaim<number>({
+    id: "test2",
+    refresh: async (ctx) => {
+        if (ctx) {
+            ctx.refreshCalled = 1;
+        }
     },
 });
-ThirdPartyPasswordless.verifyEmail(undefined);
-ThirdPartyPasswordless.verifyEmail();
+
+const primitiveValidator = TestPrimitiveClaim.validators.hasValue(321, 600);
+
+Session.validateClaims({
+    overrideGlobalClaimValidators: () => [primitiveValidator, customClaimInstance.validators.custVal(1)],
+});
+
+Session.validateClaims({
+    overrideGlobalClaimValidators: (globalClaimValidators) => [
+        ...globalClaimValidators,
+        primitiveValidator,
+        customClaimInstance.validators.custVal(1),
+        UserRoleClaim.validators.excludes("admin", 15),
+        PermissionClaim.validators.includesAll(["support", "moderator"]),
+    ],
+    userContext: {
+        refreshCalled: 0,
+    },
+});

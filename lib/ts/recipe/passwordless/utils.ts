@@ -113,7 +113,7 @@ export async function consumeCode(
 ): Promise<
     | {
           status: "OK";
-          createdUser: boolean;
+          createdNewUser: boolean;
           user: PasswordlessUser;
           fetchResponse: Response;
       }

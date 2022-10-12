@@ -15,7 +15,7 @@
 import { getNormalisedUserContext } from "../../utils";
 import SessionRecipe from "./recipe";
 import { UserInput } from "./types";
-import { RecipeInterface } from "supertokens-website";
+import { RecipeInterface, ClaimValidationError, SessionClaimValidator, SessionClaim } from "supertokens-website";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -54,6 +54,37 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
+
+    static getClaimValue<T>(input: { claim: SessionClaim<T>; userContext?: any }): Promise<T | undefined> {
+        return SessionRecipe.getInstanceOrThrow().getClaimValue({
+            claim: input.claim,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    static validateClaims(input?: {
+        overrideGlobalClaimValidators?: (
+            globalClaimValidators: SessionClaimValidator[],
+            userContext: any
+        ) => SessionClaimValidator[];
+        userContext?: any;
+    }): Promise<ClaimValidationError[]> | ClaimValidationError[] {
+        return SessionRecipe.getInstanceOrThrow().validateClaims({
+            overrideGlobalClaimValidators: input?.overrideGlobalClaimValidators,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    // The strange typing is to avoid adding a dependency to axios
+    static getInvalidClaimsFromResponse(input: {
+        response: { data: any } | Response;
+        userContext?: any;
+    }): Promise<ClaimValidationError[]> {
+        return SessionRecipe.getInstanceOrThrow().getInvalidClaimsFromResponse({
+            response: input.response,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
@@ -63,6 +94,19 @@ const attemptRefreshingSession = RecipeWrapper.attemptRefreshingSession;
 const doesSessionExist = RecipeWrapper.doesSessionExist;
 const addAxiosInterceptors = RecipeWrapper.addAxiosInterceptors;
 const signOut = RecipeWrapper.signOut;
+const validateClaims = RecipeWrapper.validateClaims;
+const getClaimValue = RecipeWrapper.getClaimValue;
+const getInvalidClaimsFromResponse = RecipeWrapper.getInvalidClaimsFromResponse;
+
+export {
+    ClaimValidationError,
+    ClaimValidationResult,
+    SessionClaimValidator,
+    SessionClaim,
+    PrimitiveClaim,
+    PrimitiveArrayClaim,
+    BooleanClaim,
+} from "supertokens-website";
 
 export {
     init,
@@ -72,6 +116,9 @@ export {
     doesSessionExist,
     addAxiosInterceptors,
     signOut,
+    validateClaims,
+    getClaimValue,
+    getInvalidClaimsFromResponse,
     RecipeInterface,
     UserInput,
 };
