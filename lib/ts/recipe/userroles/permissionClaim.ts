@@ -19,4 +19,6 @@ export const PermissionClaim = new PrimitiveArrayClaim<string>({
     refresh: async () => {
         // Right now we can't refresh this claim from the client side automatically
     },
+    // We set this to basically infinity, because we have no built-in mechanism to update this claim
+    defaultMaxAgeInSeconds: Number.MAX_SAFE_INTEGER,
 });
