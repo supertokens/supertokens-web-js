@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Changes
+
+-   Make the UserRoleClaim and PermissionClaim never expire by default (you can still use the `maxAgeInSeconds` param of validators to check expiration)
+
 ## [0.2.1] - 2022-09-14
 
 ### Changes
