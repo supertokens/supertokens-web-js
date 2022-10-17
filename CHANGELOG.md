@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.3.0] - 2022-10-17
+
+### Added
+
+-   Adding an interceptor for XMLHttpRequest by default upon initializing SuperTokens
+-   Marked `addAxiosInterceptors` as deprecated
+-   Request interception can now be disabled by adding `superTokensDoNotDoInterception` to the hash of the request (works as a queryparam as well)
+
 ### Changes
 
 -   Make the UserRoleClaim and PermissionClaim never expire by default (you can still use the `maxAgeInSeconds` param of validators to check expiration)

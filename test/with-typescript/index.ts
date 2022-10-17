@@ -737,6 +737,9 @@ function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInt
         addAxiosInterceptors: function (input) {
             return original.addAxiosInterceptors(input);
         },
+        addXMLHttpRequestInterceptor: function (input) {
+            return original.addXMLHttpRequestInterceptor(input);
+        },
         addFetchInterceptorsAndReturnModifiedFetch: function (input) {
             return original.addFetchInterceptorsAndReturnModifiedFetch(input);
         },
@@ -2445,3 +2448,5 @@ Session.validateClaims({
         refreshCalled: 0,
     },
 });
+
+Session.addAxiosInterceptors({});
