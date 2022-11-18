@@ -44,6 +44,9 @@ export default class RecipeWrapper {
         });
     }
 
+    /**
+     * @deprecated
+     */
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     static addAxiosInterceptors(axiosInstance: any, userContext?: any): void {
         return SessionRecipe.addAxiosInterceptors(axiosInstance, getNormalisedUserContext(userContext));
@@ -92,6 +95,9 @@ const getUserId = RecipeWrapper.getUserId;
 const getAccessTokenPayloadSecurely = RecipeWrapper.getAccessTokenPayloadSecurely;
 const attemptRefreshingSession = RecipeWrapper.attemptRefreshingSession;
 const doesSessionExist = RecipeWrapper.doesSessionExist;
+/**
+ * @deprecated
+ */
 const addAxiosInterceptors = RecipeWrapper.addAxiosInterceptors;
 const signOut = RecipeWrapper.signOut;
 const validateClaims = RecipeWrapper.validateClaims;
