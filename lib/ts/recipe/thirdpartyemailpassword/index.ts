@@ -258,15 +258,12 @@ export default class RecipeWrapper {
      * @returns `{status: "OK", url}`
      */
     static getAuthorisationURLFromBackend(input: {
-        thirdPartyId: string;
-        clientId?: string;
-        redirectURIOnProviderDashboard: string;
-        userContext: any;
+        providerId: string;
+        userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<{
         status: "OK";
         url: string;
-        pkceCodeVerifier?: string;
         fetchResponse: Response;
     }> {
         return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLFromBackend({
@@ -353,11 +350,10 @@ export default class RecipeWrapper {
      * @returns URL string
      */
     static getAuthorisationURLWithQueryParamsAndSetState(input: {
-        thirdPartyId: string;
-        clientId?: string;
-        frontendRedirectURI: string;
-        redirectURIOnProviderDashboard?: string;
-        userContext: any;
+        providerId: string;
+        authorisationURL: string;
+        userContext?: any;
+        providerClientId?: string;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
         return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLWithQueryParamsAndSetState({
@@ -401,14 +397,14 @@ export default class RecipeWrapper {
     }
 
     /**
-     * Returns the query params from the current URL
+     * Returns the auth code from the current URL
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
      *
-     * @returns The "URLSearchParams" that contains all the query params from the current URL
+     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
      */
-    static getQueryParamsFromURL(input?: { userContext?: any }): URLSearchParams {
-        return Recipe.getInstanceOrThrow().recipeImplementation.getQueryParamsFromURL({
+    static getAuthCodeFromURL(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthCodeFromURL({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
         });
@@ -457,7 +453,7 @@ const getStateAndOtherInfoFromStorage = RecipeWrapper.getStateAndOtherInfoFromSt
 const setStateAndOtherInfoToStorage = RecipeWrapper.setStateAndOtherInfoToStorage;
 const generateStateToSendToOAuthProvider = RecipeWrapper.generateStateToSendToOAuthProvider;
 const verifyAndGetStateOrThrowError = RecipeWrapper.verifyAndGetStateOrThrowError;
-const getQueryParamsFromURL = RecipeWrapper.getQueryParamsFromURL;
+const getAuthCodeFromURL = RecipeWrapper.getAuthCodeFromURL;
 const getAuthErrorFromURL = RecipeWrapper.getAuthErrorFromURL;
 const getAuthStateFromURL = RecipeWrapper.getAuthStateFromURL;
 const signOut = RecipeWrapper.signOut;
@@ -478,7 +474,7 @@ export {
     setStateAndOtherInfoToStorage,
     generateStateToSendToOAuthProvider,
     verifyAndGetStateOrThrowError,
-    getQueryParamsFromURL,
+    getAuthCodeFromURL,
     getAuthErrorFromURL,
     getAuthStateFromURL,
     EmailPasswordUserType,

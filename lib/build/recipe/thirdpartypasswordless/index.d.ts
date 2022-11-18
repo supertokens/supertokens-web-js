@@ -20,15 +20,12 @@ export default class RecipeWrapper {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static getAuthorisationURLFromBackend(input: {
-        thirdPartyId: string;
-        clientId?: string;
-        redirectURIOnProviderDashboard: string;
-        userContext: any;
+        providerId: string;
+        userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<{
         status: "OK";
         url: string;
-        pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;
     /**
@@ -95,11 +92,10 @@ export default class RecipeWrapper {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static getThirdPartyAuthorisationURLWithQueryParamsAndSetState(input: {
-        thirdPartyId: string;
-        clientId?: string;
-        frontendRedirectURI: string;
-        redirectURIOnProviderDashboard?: string;
-        userContext: any;
+        providerId: string;
+        authorisationURL: string;
+        userContext?: any;
+        providerClientId?: string;
         options?: RecipeFunctionOptions;
     }): Promise<string>;
     /**
@@ -125,13 +121,13 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<StateObject & CustomStateProperties>;
     /**
-     * Returns the query params from the current URL
+     * Returns the auth code from the current URL
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
      *
-     * @returns The "URLSearchParams" that contains all the query params from the current URL
+     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
      */
-    static getThirdPartyQueryParamsFromURL(input?: { userContext?: any }): URLSearchParams;
+    static getThirdPartyAuthCodeFromURL(input?: { userContext?: any }): string;
     /**
      * Returns the error from the current URL
      *
@@ -355,7 +351,7 @@ declare const getThirdPartyStateAndOtherInfoFromStorage: typeof RecipeWrapper.ge
 declare const setThirdPartyStateAndOtherInfoToStorage: typeof RecipeWrapper.setThirdPartyStateAndOtherInfoToStorage;
 declare const generateThirdPartyStateToSendToOAuthProvider: typeof RecipeWrapper.generateThirdPartyStateToSendToOAuthProvider;
 declare const verifyAndGetThirdPartyStateOrThrowError: typeof RecipeWrapper.verifyAndGetThirdPartyStateOrThrowError;
-declare const getThirdPartyQueryParamsFromURL: typeof RecipeWrapper.getThirdPartyQueryParamsFromURL;
+declare const getThirdPartyAuthCodeFromURL: typeof RecipeWrapper.getThirdPartyAuthCodeFromURL;
 declare const getThirdPartyAuthErrorFromURL: typeof RecipeWrapper.getThirdPartyAuthErrorFromURL;
 declare const getThirdPartyAuthStateFromURL: typeof RecipeWrapper.getThirdPartyAuthStateFromURL;
 declare const getPasswordlessLinkCodeFromURL: typeof RecipeWrapper.getPasswordlessLinkCodeFromURL;
@@ -379,7 +375,7 @@ export {
     setThirdPartyStateAndOtherInfoToStorage,
     generateThirdPartyStateToSendToOAuthProvider,
     verifyAndGetThirdPartyStateOrThrowError,
-    getThirdPartyQueryParamsFromURL,
+    getThirdPartyAuthCodeFromURL,
     getThirdPartyAuthErrorFromURL,
     getThirdPartyAuthStateFromURL,
     getPasswordlessLinkCodeFromURL,

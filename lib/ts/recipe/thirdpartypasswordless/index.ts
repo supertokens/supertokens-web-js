@@ -47,15 +47,12 @@ export default class RecipeWrapper {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static getAuthorisationURLFromBackend(input: {
-        thirdPartyId: string;
-        clientId?: string;
-        redirectURIOnProviderDashboard: string;
-        userContext: any;
+        providerId: string;
+        userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<{
         status: "OK";
         url: string;
-        pkceCodeVerifier?: string;
         fetchResponse: Response;
     }> {
         return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLFromBackend({
@@ -146,11 +143,10 @@ export default class RecipeWrapper {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static getThirdPartyAuthorisationURLWithQueryParamsAndSetState(input: {
-        thirdPartyId: string;
-        clientId?: string;
-        frontendRedirectURI: string;
-        redirectURIOnProviderDashboard?: string;
-        userContext: any;
+        providerId: string;
+        authorisationURL: string;
+        userContext?: any;
+        providerClientId?: string;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
         return Recipe.getInstanceOrThrow().recipeImplementation.getThirdPartyAuthorisationURLWithQueryParamsAndSetState(
@@ -196,14 +192,14 @@ export default class RecipeWrapper {
     }
 
     /**
-     * Returns the query params from the current URL
+     * Returns the auth code from the current URL
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
      *
-     * @returns The "URLSearchParams" that contains all the query params from the current URL
+     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
      */
-    static getThirdPartyQueryParamsFromURL(input?: { userContext?: any }): URLSearchParams {
-        return Recipe.getInstanceOrThrow().recipeImplementation.getThirdPartyQueryParamsFromURL({
+    static getThirdPartyAuthCodeFromURL(input?: { userContext?: any }): string {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getThirdPartyAuthCodeFromURL({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
         });
@@ -500,7 +496,7 @@ const getThirdPartyStateAndOtherInfoFromStorage = RecipeWrapper.getThirdPartySta
 const setThirdPartyStateAndOtherInfoToStorage = RecipeWrapper.setThirdPartyStateAndOtherInfoToStorage;
 const generateThirdPartyStateToSendToOAuthProvider = RecipeWrapper.generateThirdPartyStateToSendToOAuthProvider;
 const verifyAndGetThirdPartyStateOrThrowError = RecipeWrapper.verifyAndGetThirdPartyStateOrThrowError;
-const getThirdPartyQueryParamsFromURL = RecipeWrapper.getThirdPartyQueryParamsFromURL;
+const getThirdPartyAuthCodeFromURL = RecipeWrapper.getThirdPartyAuthCodeFromURL;
 const getThirdPartyAuthErrorFromURL = RecipeWrapper.getThirdPartyAuthErrorFromURL;
 const getThirdPartyAuthStateFromURL = RecipeWrapper.getThirdPartyAuthStateFromURL;
 const getPasswordlessLinkCodeFromURL = RecipeWrapper.getPasswordlessLinkCodeFromURL;
@@ -525,7 +521,7 @@ export {
     setThirdPartyStateAndOtherInfoToStorage,
     generateThirdPartyStateToSendToOAuthProvider,
     verifyAndGetThirdPartyStateOrThrowError,
-    getThirdPartyQueryParamsFromURL,
+    getThirdPartyAuthCodeFromURL,
     getThirdPartyAuthErrorFromURL,
     getThirdPartyAuthStateFromURL,
     getPasswordlessLinkCodeFromURL,

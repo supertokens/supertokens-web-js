@@ -31,15 +31,12 @@ export default function getRecipeImplementation(
 
     return {
         getAuthorisationURLFromBackend: async function (input: {
-            thirdPartyId: string;
-            clientId?: string;
-            redirectURIOnProviderDashboard: string;
+            providerId: string;
             userContext: any;
             options?: RecipeFunctionOptions;
         }): Promise<{
             status: "OK";
             url: string;
-            pkceCodeVerifier?: string;
             fetchResponse: Response;
         }> {
             return thirdPartyImpl.getAuthorisationURLFromBackend.bind(DerivedThirdParty(this))(input);
@@ -74,20 +71,16 @@ export default function getRecipeImplementation(
         },
 
         getThirdPartyAuthorisationURLWithQueryParamsAndSetState: async function (input: {
-            thirdPartyId: string;
-            clientId?: string;
-            frontendRedirectURI: string;
-            redirectURIOnProviderDashboard?: string;
+            providerId: string;
+            authorisationURL: string;
             userContext: any;
+            providerClientId?: string;
             options?: RecipeFunctionOptions;
         }): Promise<string> {
             return thirdPartyImpl.getAuthorisationURLWithQueryParamsAndSetState.bind(DerivedThirdParty(this))(input);
         },
 
-        generateThirdPartyStateToSendToOAuthProvider: function (input?: {
-            frontendRedirectURI?: string;
-            userContext: any;
-        }): string {
+        generateThirdPartyStateToSendToOAuthProvider: function (input: { userContext: any }): string {
             return thirdPartyImpl.generateStateToSendToOAuthProvider.bind(DerivedThirdParty(this))(input);
         },
 
@@ -99,8 +92,8 @@ export default function getRecipeImplementation(
             return thirdPartyImpl.verifyAndGetStateOrThrowError.bind(DerivedThirdParty(this))(input);
         },
 
-        getThirdPartyQueryParamsFromURL: function (input: { userContext: any }): URLSearchParams {
-            return thirdPartyImpl.getQueryParamsFromURL.bind(DerivedThirdParty(this))(input);
+        getThirdPartyAuthCodeFromURL: function (input: { userContext: any }): string {
+            return thirdPartyImpl.getAuthCodeFromURL.bind(DerivedThirdParty(this))(input);
         },
 
         getThirdPartyAuthErrorFromURL: function (input: { userContext: any }): string | undefined {
