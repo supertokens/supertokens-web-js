@@ -73,11 +73,11 @@ export default class RecipeWrapper {
     /**
      * Get the URL that should be opened for third party authentication
      *
-     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
      *
-     * @param authorisationURL The URL that should be used for redirection after the third party flow finishes. This is ignored if the backend has a pre-configured redirect_url
+     * @param frontendRedirectURI The URL that should be used for redirection after the third party flow finishes.
      *
-     * @param providerClientId (OPTIONAL) Client id to be used for the third party provider
+     * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Optional if this is same as frontendRedirectURI
      *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
@@ -89,7 +89,6 @@ export default class RecipeWrapper {
      */
     static getAuthorisationURLWithQueryParamsAndSetState(input: {
         thirdPartyId: string;
-        clientId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
         userContext: any;
@@ -104,7 +103,9 @@ export default class RecipeWrapper {
     /**
      * Get the URL to be used by the third party provider for redirecting after the auth flow
      *
-     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     *
+     * @param redirectURIOnProviderDashboard The redirect URL that is configured on the provider dashboard
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
@@ -116,7 +117,6 @@ export default class RecipeWrapper {
      */
     static getAuthorisationURLFromBackend(input: {
         thirdPartyId: string;
-        clientId?: string;
         redirectURIOnProviderDashboard: string;
         userContext: any;
         options?: RecipeFunctionOptions;

@@ -232,7 +232,7 @@ export declare type RecipeInterface = {
      */
     getAuthorisationURLFromBackend: (input: {
         thirdPartyId: string;
-        clientId?: string;
+        clientType?: string;
         redirectURIOnProviderDashboard: string;
         userContext: any;
         options?: RecipeFunctionOptions;

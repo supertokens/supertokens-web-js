@@ -13,6 +13,8 @@ export declare type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_P
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 export declare type UserInput = {
+    clientType?: string;
+    getTenantId?: () => Promise<string | undefined>;
     /**
      * Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/frontend-functions-override/about the documentation}
      */
@@ -25,6 +27,8 @@ export declare type UserInput = {
 } & RecipeModuleUserInput<PreAndPostAPIHookAction>;
 export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
+    clientType: string;
+    getTenantId: () => Promise<string | undefined>;
     override: {
         functions: (
             originalImplementation: RecipeInterface,
@@ -35,7 +39,7 @@ export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPo
 export declare type StateObject = {
     stateForAuthProvider: string;
     thirdPartyId: string;
-    clientId?: string;
+    tenantId?: string;
     expiresAt: number;
     redirectURIOnProviderDashboard: string;
     pkceCodeVerifier?: string;
@@ -47,6 +51,12 @@ export declare type ThirdPartyUserType = {
     thirdParty: {
         id: string;
         userId: string;
+    };
+};
+export declare type ThirdPartyInput = {
+    thirdParty: {
+        clientType: string;
+        getTenantId: () => Promise<string | undefined>;
     };
 };
 export declare type RecipeInterface = {
@@ -74,11 +84,11 @@ export declare type RecipeInterface = {
     /**
      * Get the URL that should be opened for third party authentication
      *
-     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
      *
-     * @param authorisationURL The URL that should be used for redirection after the third party flow finishes. This is ignored if the backend has a pre-configured redirect_url
+     * @param frontendRedirectURI The URL that should be used for redirection after the third party flow finishes.
      *
-     * @param providerClientId (OPTIONAL) Client id to be used for the third party provider
+     * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Optional if this is same as frontendRedirectURI
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
@@ -90,28 +100,28 @@ export declare type RecipeInterface = {
      */
     getAuthorisationURLWithQueryParamsAndSetState: (input: {
         thirdPartyId: string;
-        clientId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
     /**
-     * Get the URL to be used by the third party provider for redirecting after the auth flow
+     * Get the URL to be used by the third party provider for redirecting after the auth flow. Also returns PKCE Code Verifier if using PKCE.
      *
-     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     *
+     * @param redirectURIOnProviderDashboard The redirect URL that is configured on the provider dashboard
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: "OK", url}`
+     * @returns `{status: "OK", url, pkceCodeVerifier?}`
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getAuthorisationURLFromBackend: (input: {
         thirdPartyId: string;
-        clientId?: string;
         redirectURIOnProviderDashboard: string;
         userContext: any;
         options?: RecipeFunctionOptions;
@@ -148,6 +158,8 @@ export declare type RecipeInterface = {
     >;
     /**
      * Generate a new state that will be sent to the third party provider
+     *
+     * @param frontendRedirectURI (OPTIONAL) The URL that should be saved in the state object which can be used for redirection from the backend
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *

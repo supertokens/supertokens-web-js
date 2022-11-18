@@ -1,7 +1,7 @@
-import { RecipeInterface } from "./types";
+import { RecipeInterface, ThirdPartyInput } from "./types";
 import { RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
 export default function getRecipeImplementation(
-    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
+    recipeImplInput: ThirdPartyInput & RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface;
 export { getRecipeImplementation };

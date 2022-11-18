@@ -15,14 +15,14 @@
 
 import Querier from "../../querier";
 import { appendQueryParamsToURL, getAllQueryParams, getQueryParams } from "../../utils";
-import { RecipeInterface, StateObject, ThirdPartyUserType } from "./types";
+import { RecipeInterface, StateObject, ThirdPartyInput, ThirdPartyUserType } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
 import { PreAndPostAPIHookAction } from "./types";
 import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
 
 export default function getRecipeImplementation(
-    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
+    recipeImplInput: ThirdPartyInput & RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
@@ -66,7 +66,6 @@ export default function getRecipeImplementation(
 
         getAuthorisationURLWithQueryParamsAndSetState: async function (input: {
             thirdPartyId: string;
-            clientId?: string;
             frontendRedirectURI: string;
             redirectURIOnProviderDashboard?: string;
             userContext: any;
@@ -75,7 +74,6 @@ export default function getRecipeImplementation(
             // 1. Call AuthorisationUrlGET
             const urlResponse = await this.getAuthorisationURLFromBackend({
                 thirdPartyId: input.thirdPartyId,
-                clientId: input.clientId,
                 redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard || input.frontendRedirectURI,
                 userContext: input.userContext,
                 options: input.options,
@@ -98,7 +96,7 @@ export default function getRecipeImplementation(
                 state: {
                     stateForAuthProvider: stateToSendToAuthProvider,
                     thirdPartyId: input.thirdPartyId,
-                    clientId: input.clientId,
+                    tenantId: await recipeImplInput.thirdParty.getTenantId(),
                     expiresAt: stateExpiry,
                     redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard || input.frontendRedirectURI,
                     pkceCodeVerifier: urlResponse.pkceCodeVerifier,
@@ -115,7 +113,6 @@ export default function getRecipeImplementation(
 
         getAuthorisationURLFromBackend: async function (input: {
             thirdPartyId: string;
-            clientId?: string;
             redirectURIOnProviderDashboard: string;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -129,7 +126,9 @@ export default function getRecipeImplementation(
                 thirdPartyId: input.thirdPartyId,
                 redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard,
             };
-            if (input.clientId !== undefined) params.clientId = input.clientId;
+            params.clientType = recipeImplInput.thirdParty.clientType;
+            const tenantId = await recipeImplInput.thirdParty.getTenantId();
+            if (tenantId !== undefined) params.tenantId = tenantId;
 
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
@@ -190,6 +189,8 @@ export default function getRecipeImplementation(
                 userContext: input.userContext,
             });
 
+            const queryParamsObj: any = Object.fromEntries(queryParams);
+
             const errorInQuery = this.getAuthErrorFromURL({
                 userContext: input.userContext,
             });
@@ -225,10 +226,11 @@ export default function getRecipeImplementation(
                 {
                     body: JSON.stringify({
                         thirdPartyId: verifiedState.thirdPartyId,
-                        clientId: verifiedState.clientId,
+                        clientType: recipeImplInput.thirdParty.clientType,
+                        tenantId: verifiedState.tenantId,
                         redirectURIInfo: {
                             redirectURIOnProviderDashboard: verifiedState.redirectURIOnProviderDashboard,
-                            redirectURIQueryParams: queryParams,
+                            redirectURIQueryParams: queryParamsObj,
                             pkceCodeVerifier: verifiedState.pkceCodeVerifier,
                         },
                     }),
