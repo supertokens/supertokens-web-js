@@ -15,7 +15,7 @@
 
 import Querier from "../../querier";
 import { appendQueryParamsToURL, getAllQueryParams, getQueryParams } from "../../utils";
-import { RecipeInterface, StateObject, ThirdPartyInput, ThirdPartyUserType } from "./types";
+import { ProviderInfo, RecipeInterface, StateObject, ThirdPartyInput, ThirdPartyUserType } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
 import { PreAndPostAPIHookAction } from "./types";
@@ -257,6 +257,43 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
+
+        getProviders: async function (input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+            status: "OK";
+            providers: ProviderInfo[];
+            fetchResponse: Response;
+        }> {
+            const params: Record<string, string> = {};
+            const tenantId = await recipeImplInput.thirdParty.getTenantId();
+            if (tenantId !== undefined) params.tenantId = tenantId;
+
+            const { jsonBody, fetchResponse } = await querier.get<{
+                status: "OK";
+                providers: ProviderInfo[];
+            }>(
+                "/tenant/providers",
+                {},
+                params,
+                Querier.preparePreAPIHook({
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
+                    action: "GET_PROVIDERS",
+                    options: input.options,
+                    userContext: input.userContext,
+                }),
+                Querier.preparePostAPIHook({
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
+                    action: "GET_PROVIDERS",
+                    userContext: input?.userContext,
+                })
+            );
+
+            return {
+                status: "OK",
+                providers: jsonBody.providers,
+                fetchResponse,
+            };
+        },
+
         generateStateToSendToOAuthProvider: function (input?: {
             frontendRedirectURI?: string;
             userContext: any;
@@ -278,6 +315,7 @@ export default function getRecipeImplementation(
             }
             return btoa(JSON.stringify(state));
         },
+
         verifyAndGetStateOrThrowError: async function <CustomStateProperties>(input: {
             stateFromAuthProvider: string | undefined;
             stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;

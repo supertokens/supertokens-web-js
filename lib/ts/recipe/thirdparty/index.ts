@@ -24,6 +24,7 @@ import {
     RecipeInterface,
     UserInput,
     ThirdPartyUserType,
+    ProviderInfo,
 } from "./types";
 
 export default class RecipeWrapper {
@@ -242,6 +243,17 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
+
+    static getProviders(input?: { userContext?: any }): Promise<{
+        status: "OK";
+        providers: ProviderInfo[];
+        fetchResponse: Response;
+    }> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getProviders({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
@@ -255,6 +267,7 @@ const verifyAndGetStateOrThrowError = RecipeWrapper.verifyAndGetStateOrThrowErro
 const getQueryParamsFromURL = RecipeWrapper.getQueryParamsFromURL;
 const getAuthErrorFromURL = RecipeWrapper.getAuthErrorFromURL;
 const getAuthStateFromURL = RecipeWrapper.getAuthStateFromURL;
+const getProviders = RecipeWrapper.getProviders;
 const signOut = RecipeWrapper.signOut;
 
 export {
@@ -270,6 +283,7 @@ export {
     getQueryParamsFromURL,
     getAuthErrorFromURL,
     getAuthStateFromURL,
+    getProviders,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

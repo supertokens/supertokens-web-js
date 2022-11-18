@@ -7,6 +7,7 @@ import {
     RecipeInterface,
     UserInput,
     ThirdPartyUserType,
+    ProviderInfo,
 } from "./types";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
@@ -157,6 +158,11 @@ export default class RecipeWrapper {
      * @returns The "state" query param from the current URL. Returns an empty string if no state exists
      */
     static getAuthStateFromURL(input?: { userContext?: any }): string;
+    static getProviders(input?: { userContext?: any }): Promise<{
+        status: "OK";
+        providers: ProviderInfo[];
+        fetchResponse: Response;
+    }>;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
@@ -169,6 +175,7 @@ declare const verifyAndGetStateOrThrowError: typeof RecipeWrapper.verifyAndGetSt
 declare const getQueryParamsFromURL: typeof RecipeWrapper.getQueryParamsFromURL;
 declare const getAuthErrorFromURL: typeof RecipeWrapper.getAuthErrorFromURL;
 declare const getAuthStateFromURL: typeof RecipeWrapper.getAuthStateFromURL;
+declare const getProviders: typeof RecipeWrapper.getProviders;
 declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
@@ -183,6 +190,7 @@ export {
     getQueryParamsFromURL,
     getAuthErrorFromURL,
     getAuthStateFromURL,
+    getProviders,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

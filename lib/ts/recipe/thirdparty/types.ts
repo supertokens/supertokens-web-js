@@ -24,7 +24,7 @@ import {
 } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 
-export type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP";
+export type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP" | "GET_PROVIDERS";
 
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
@@ -80,6 +80,11 @@ export type ThirdPartyInput = {
         clientType: string;
         getTenantId: () => Promise<string | undefined>;
     };
+};
+
+export type ProviderInfo = {
+    id: string;
+    name?: string;
 };
 
 export type RecipeInterface = {
@@ -183,6 +188,12 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
+
+    getProviders: (input: { userContext?: any; options?: RecipeFunctionOptions }) => Promise<{
+        status: "OK";
+        providers: ProviderInfo[];
+        fetchResponse: Response;
+    }>;
 
     /**
      * Generate a new state that will be sent to the third party provider

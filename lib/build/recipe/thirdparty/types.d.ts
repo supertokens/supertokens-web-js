@@ -9,7 +9,7 @@ import {
     UserInput as RecipeModuleUserInput,
 } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
-export declare type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP";
+export declare type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP" | "GET_PROVIDERS";
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 export declare type UserInput = {
@@ -58,6 +58,10 @@ export declare type ThirdPartyInput = {
         clientType: string;
         getTenantId: () => Promise<string | undefined>;
     };
+};
+export declare type ProviderInfo = {
+    id: string;
+    name?: string;
 };
 export declare type RecipeInterface = {
     /**
@@ -156,6 +160,11 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
+    getProviders: (input: { userContext?: any; options?: RecipeFunctionOptions }) => Promise<{
+        status: "OK";
+        providers: ProviderInfo[];
+        fetchResponse: Response;
+    }>;
     /**
      * Generate a new state that will be sent to the third party provider
      *
