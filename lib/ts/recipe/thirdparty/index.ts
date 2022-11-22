@@ -56,6 +56,7 @@ export default class RecipeWrapper {
      */
     static getAuthorisationURLWithQueryParamsAndSetState(input: {
         thirdPartyId: string;
+        tenantId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
         userContext: any;
@@ -98,7 +99,7 @@ export default class RecipeWrapper {
         });
     }
 
-    static getProviders(input?: { userContext?: any }): Promise<{
+    static getProviders(input?: { tenantId?: string; userContext?: any }): Promise<{
         status: "OK";
         providers: {
             id: string;
