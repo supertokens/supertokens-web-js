@@ -35,7 +35,6 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
                 recipeId: this.config.recipeId,
                 thirdParty: {
                     clientType: this.config.clientType,
-                    getTenantId: this.config.getTenantId,
                 },
                 appInfo: this.config.appInfo,
                 preAPIHook: this.config.preAPIHook,
