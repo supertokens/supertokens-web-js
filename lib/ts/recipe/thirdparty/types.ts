@@ -31,7 +31,7 @@ export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookActio
 
 export type UserInput = {
     clientType?: string;
-    getTenantId?: () => Promise<string | undefined>;
+
     /**
      * Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/frontend-functions-override/about the documentation}
      */
@@ -47,7 +47,7 @@ export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput
 
 export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     clientType: string;
-    getTenantId: () => Promise<string | undefined>;
+
     override: {
         functions: (
             originalImplementation: RecipeInterface,
@@ -73,18 +73,6 @@ export type ThirdPartyUserType = {
         id: string;
         userId: string;
     };
-};
-
-export type ThirdPartyInput = {
-    thirdParty: {
-        clientType: string;
-        getTenantId: () => Promise<string | undefined>;
-    };
-};
-
-export type ProviderInfo = {
-    id: string;
-    name?: string;
 };
 
 export type RecipeInterface = {
@@ -131,6 +119,7 @@ export type RecipeInterface = {
     getAuthorisationURLWithQueryParamsAndSetState: (input: {
         thirdPartyId: string;
         frontendRedirectURI: string;
+        tenantId?: string;
         redirectURIOnProviderDashboard?: string;
         userContext: any;
         options?: RecipeFunctionOptions;
@@ -154,6 +143,7 @@ export type RecipeInterface = {
     getAuthorisationURLFromBackend: (input: {
         thirdPartyId: string;
         redirectURIOnProviderDashboard: string;
+        tenantId?: string;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
@@ -181,6 +171,7 @@ export type RecipeInterface = {
               status: "OK";
               user: ThirdPartyUserType;
               createdNewUser: boolean;
+              tenantId?: string;
               fetchResponse: Response;
           }
         | {
@@ -189,9 +180,12 @@ export type RecipeInterface = {
           }
     >;
 
-    getProviders: (input: { userContext?: any; options?: RecipeFunctionOptions }) => Promise<{
+    getProviders: (input: { tenantId?: string; userContext?: any; options?: RecipeFunctionOptions }) => Promise<{
         status: "OK";
-        providers: ProviderInfo[];
+        providers: {
+            id: string;
+            name?: string;
+        }[];
         fetchResponse: Response;
     }>;
 
@@ -238,13 +232,4 @@ export type RecipeInterface = {
      * @returns The "state" query param from the current URL. Returns an empty string if no state exists
      */
     getAuthStateFromURL: (input: { userContext: any }) => string;
-
-    /**
-     * Returns the query params from the current URL
-     *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
-     *
-     * @returns The "URLSearchParams" that contains all the query params from the current URL
-     */
-    getQueryParamsFromURL: (input: { userContext: any }) => URLSearchParams;
 };

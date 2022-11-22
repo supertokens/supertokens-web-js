@@ -15,14 +15,18 @@
 
 import Querier from "../../querier";
 import { appendQueryParamsToURL, getAllQueryParams, getQueryParams } from "../../utils";
-import { ProviderInfo, RecipeInterface, StateObject, ThirdPartyInput, ThirdPartyUserType } from "./types";
+import { RecipeInterface, StateObject, ThirdPartyUserType } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
 import { PreAndPostAPIHookAction } from "./types";
 import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
 
 export default function getRecipeImplementation(
-    recipeImplInput: ThirdPartyInput & RecipeImplementationInput<PreAndPostAPIHookAction>
+    recipeImplInput: {
+        thirdParty: {
+            clientType: string;
+        };
+    } & RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
@@ -66,6 +70,7 @@ export default function getRecipeImplementation(
 
         getAuthorisationURLWithQueryParamsAndSetState: async function (input: {
             thirdPartyId: string;
+            tenantId?: string;
             frontendRedirectURI: string;
             redirectURIOnProviderDashboard?: string;
             userContext: any;
@@ -96,7 +101,7 @@ export default function getRecipeImplementation(
                 state: {
                     stateForAuthProvider: stateToSendToAuthProvider,
                     thirdPartyId: input.thirdPartyId,
-                    tenantId: await recipeImplInput.thirdParty.getTenantId(),
+                    tenantId: input.tenantId,
                     expiresAt: stateExpiry,
                     redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard || input.frontendRedirectURI,
                     pkceCodeVerifier: urlResponse.pkceCodeVerifier,
@@ -113,6 +118,7 @@ export default function getRecipeImplementation(
 
         getAuthorisationURLFromBackend: async function (input: {
             thirdPartyId: string;
+            tenantId?: string;
             redirectURIOnProviderDashboard: string;
             userContext: any;
             options?: RecipeFunctionOptions;
@@ -127,8 +133,7 @@ export default function getRecipeImplementation(
                 redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard,
             };
             params.clientType = recipeImplInput.thirdParty.clientType;
-            const tenantId = await recipeImplInput.thirdParty.getTenantId();
-            if (tenantId !== undefined) params.tenantId = tenantId;
+            if (input.tenantId !== undefined) params.tenantId = input.tenantId;
 
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
@@ -185,10 +190,7 @@ export default function getRecipeImplementation(
                 userContext: input.userContext,
             });
 
-            const queryParams = this.getQueryParamsFromURL({
-                userContext: input.userContext,
-            });
-
+            const queryParams = getAllQueryParams();
             const queryParamsObj: any = Object.fromEntries(queryParams);
 
             const errorInQuery = this.getAuthErrorFromURL({
@@ -258,18 +260,27 @@ export default function getRecipeImplementation(
             };
         },
 
-        getProviders: async function (input: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+        getProviders: async function (input: {
+            tenantId?: string;
+            userContext?: any;
+            options?: RecipeFunctionOptions;
+        }): Promise<{
             status: "OK";
-            providers: ProviderInfo[];
+            providers: {
+                id: string;
+                name?: string;
+            }[];
             fetchResponse: Response;
         }> {
             const params: Record<string, string> = {};
-            const tenantId = await recipeImplInput.thirdParty.getTenantId();
-            if (tenantId !== undefined) params.tenantId = tenantId;
+            if (input.tenantId !== undefined) params.tenantId = input.tenantId;
 
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
-                providers: ProviderInfo[];
+                providers: {
+                    id: string;
+                    name?: string;
+                }[];
             }>(
                 "/tenant/providers",
                 {},
@@ -355,10 +366,6 @@ export default function getRecipeImplementation(
             }
 
             return stateFromURL;
-        },
-
-        getQueryParamsFromURL: function (): URLSearchParams {
-            return getAllQueryParams();
         },
     };
 }
