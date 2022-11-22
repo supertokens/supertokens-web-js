@@ -23,7 +23,6 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
 
     return {
         clientType: config.clientType || "web",
-        getTenantId: config.getTenantId || (() => Promise.resolve(undefined)),
         ...normaliseAuthRecipe(config),
         override,
     };
