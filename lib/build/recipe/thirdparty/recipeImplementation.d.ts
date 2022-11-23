@@ -3,9 +3,7 @@ import { RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
 export default function getRecipeImplementation(
     recipeImplInput: {
-        thirdParty: {
-            clientType: string;
-        };
+        clientType?: string;
     } & RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface;
 export { getRecipeImplementation };

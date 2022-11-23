@@ -33,9 +33,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
         const builder = new OverrideableBuilder(
             RecipeImplementation({
                 recipeId: this.config.recipeId,
-                thirdParty: {
-                    clientType: this.config.clientType,
-                },
+                clientType: this.config.clientType,
                 appInfo: this.config.appInfo,
                 preAPIHook: this.config.preAPIHook,
                 postAPIHook: this.config.postAPIHook,

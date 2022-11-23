@@ -23,9 +23,7 @@ import { WindowHandlerReference } from "supertokens-website/utils/windowHandler"
 
 export default function getRecipeImplementation(
     recipeImplInput: {
-        thirdParty: {
-            clientType: string;
-        };
+        clientType?: string;
     } & RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
@@ -128,13 +126,16 @@ export default function getRecipeImplementation(
             pkceCodeVerifier?: string;
             fetchResponse: Response;
         }> {
-            const params: Record<string, string> = {
+            const queryParams: Record<string, string> = {
                 thirdPartyId: input.thirdPartyId,
                 redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard,
             };
-            params.clientType = recipeImplInput.thirdParty.clientType;
-            if (input.tenantId !== undefined) params.tenantId = input.tenantId;
-
+            if (recipeImplInput.clientType !== undefined) {
+                queryParams.clientType = recipeImplInput.clientType;
+            }
+            if (input.tenantId !== undefined) {
+                queryParams.tenantId = input.tenantId;
+            }
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
                 url: string;
@@ -142,7 +143,7 @@ export default function getRecipeImplementation(
             }>(
                 "/authorisationurl",
                 {},
-                params,
+                queryParams,
                 Querier.preparePreAPIHook({
                     recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "GET_AUTHORISATION_URL",
@@ -190,9 +191,6 @@ export default function getRecipeImplementation(
                 userContext: input.userContext,
             });
 
-            const queryParams = getAllQueryParams();
-            const queryParamsObj: any = Object.fromEntries(queryParams);
-
             const errorInQuery = this.getAuthErrorFromURL({
                 userContext: input.userContext,
             });
@@ -209,6 +207,9 @@ export default function getRecipeImplementation(
                  */
                 throw new Error(`Auth provider responded with error: ${errorInQuery}`);
             }
+
+            const queryParams = getAllQueryParams();
+            const queryParamsObj: any = Object.fromEntries(queryParams);
 
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
@@ -228,7 +229,7 @@ export default function getRecipeImplementation(
                 {
                     body: JSON.stringify({
                         thirdPartyId: verifiedState.thirdPartyId,
-                        clientType: recipeImplInput.thirdParty.clientType,
+                        clientType: recipeImplInput.clientType,
                         tenantId: verifiedState.tenantId,
                         redirectURIInfo: {
                             redirectURIOnProviderDashboard: verifiedState.redirectURIOnProviderDashboard,
@@ -260,7 +261,7 @@ export default function getRecipeImplementation(
             };
         },
 
-        getProviders: async function (input: {
+        getConfiguredProviders: async function (input: {
             tenantId?: string;
             userContext?: any;
             options?: RecipeFunctionOptions;
@@ -272,8 +273,10 @@ export default function getRecipeImplementation(
             }[];
             fetchResponse: Response;
         }> {
-            const params: Record<string, string> = {};
-            if (input.tenantId !== undefined) params.tenantId = input.tenantId;
+            const queryParams: Record<string, string> = {};
+            if (input.tenantId !== undefined) {
+                queryParams.tenantId = input.tenantId;
+            }
 
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
@@ -282,9 +285,9 @@ export default function getRecipeImplementation(
                     name?: string;
                 }[];
             }>(
-                "/tenant/providers",
+                "/providers",
                 {},
-                params,
+                queryParams,
                 Querier.preparePreAPIHook({
                     recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "GET_PROVIDERS",

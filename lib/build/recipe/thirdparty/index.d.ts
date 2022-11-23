@@ -61,7 +61,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     >;
-    static getProviders(input?: { tenantId?: string; userContext?: any }): Promise<{
+    static getConfiguredProviders(input?: { tenantId?: string; userContext?: any }): Promise<{
         status: "OK";
         providers: {
             id: string;
@@ -73,14 +73,14 @@ export default class RecipeWrapper {
 declare const init: typeof RecipeWrapper.init;
 declare const getAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 declare const signInAndUp: typeof RecipeWrapper.signInAndUp;
-declare const getProviders: typeof RecipeWrapper.getProviders;
+declare const getConfiguredProviders: typeof RecipeWrapper.getConfiguredProviders;
 declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
     getAuthorisationURLWithQueryParamsAndSetState,
     signInAndUp,
     signOut,
-    getProviders,
+    getConfiguredProviders,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

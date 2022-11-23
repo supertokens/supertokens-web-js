@@ -46,7 +46,7 @@ export type UserInput = {
 export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 
 export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
-    clientType: string;
+    clientType?: string;
 
     override: {
         functions: (
@@ -180,7 +180,11 @@ export type RecipeInterface = {
           }
     >;
 
-    getProviders: (input: { tenantId?: string; userContext?: any; options?: RecipeFunctionOptions }) => Promise<{
+    getConfiguredProviders: (input: {
+        tenantId?: string;
+        userContext?: any;
+        options?: RecipeFunctionOptions;
+    }) => Promise<{
         status: "OK";
         providers: {
             id: string;

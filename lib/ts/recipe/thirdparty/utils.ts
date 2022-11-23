@@ -22,7 +22,7 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
     };
 
     return {
-        clientType: config.clientType || "web",
+        clientType: config.clientType,
         ...normaliseAuthRecipe(config),
         override,
     };
