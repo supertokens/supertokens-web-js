@@ -694,11 +694,7 @@ const tppPostAPIHook: RecipePostAPIHookFunction<TPPlessAction> = async function 
         //
     } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
         //
-    } else if (context.action === "IS_EMAIL_VERIFIED") {
-        //
-    } else if (context.action === "SEND_VERIFY_EMAIL") {
-        //
-    } else if (context.action === "VERIFY_EMAIL") {
+    } else if (context.action === "GET_PROVIDERS") {
         //
     }
 
