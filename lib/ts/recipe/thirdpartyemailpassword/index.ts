@@ -15,7 +15,7 @@
 
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions, UserType as EmailPasswordUserType } from "../emailpassword";
-import { StateObject, ThirdPartyUserType } from "../thirdparty/types";
+import { ThirdPartyUserType } from "../thirdparty/types";
 import Recipe from "./recipe";
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 

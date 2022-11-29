@@ -285,7 +285,7 @@ export declare type RecipeInterface = {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    thirdPartyGetConfiguredProviders: (input: {
+    getThirdPartyConfiguredProviders: (input: {
         tenantId?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;

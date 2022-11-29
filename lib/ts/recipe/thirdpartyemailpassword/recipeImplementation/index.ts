@@ -202,7 +202,7 @@ export default function getRecipeImplementation(
             return thirdPartyImpl.generateStateToSendToOAuthProvider.bind(DerivedThirdParty(this))(input);
         },
 
-        thirdPartyGetConfiguredProviders: async function (input: {
+        getThirdPartyConfiguredProviders: async function (input: {
             tenantId?: string;
             userContext?: any;
             options?: RecipeFunctionOptions;

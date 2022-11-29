@@ -29,11 +29,11 @@ export default function getRecipeImplementation(
             originalImplementation.setThirdPartyStateAndOtherInfoToStorage.bind(originalImplementation),
         generateStateToSendToOAuthProvider:
             originalImplementation.generateThirdPartyStateToSendToOAuthProvider.bind(originalImplementation),
-        getAuthCodeFromURL: originalImplementation.getThirdPartyAuthCodeFromURL.bind(originalImplementation),
         getAuthErrorFromURL: originalImplementation.getThirdPartyAuthErrorFromURL.bind(originalImplementation),
         getAuthStateFromURL: originalImplementation.getThirdPartyAuthStateFromURL.bind(originalImplementation),
         verifyAndGetStateOrThrowError:
             originalImplementation.verifyAndGetThirdPartyStateOrThrowError.bind(originalImplementation),
         signInAndUp: originalImplementation.thirdPartySignInAndUp.bind(originalImplementation),
+        getConfiguredProviders: originalImplementation.getThirdPartyConfiguredProviders.bind(originalImplementation),
     };
 }
