@@ -147,16 +147,20 @@ export default function getRecipeImplementation(
         },
 
         getAuthorisationURLFromBackend: async function (input: {
-            providerId: string;
+            thirdPartyId: string;
+            tenantId?: string;
+            redirectURIOnProviderDashboard: string;
             userContext: any;
             options?: RecipeFunctionOptions;
         }): Promise<{
             status: "OK";
             url: string;
+            pkceCodeVerifier?: string;
             fetchResponse: Response;
         }> {
             return thirdPartyImpl.getAuthorisationURLFromBackend.bind(DerivedThirdParty(this))(input);
         },
+
         thirdPartySignInAndUp: async function (input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
             | {
                   status: "OK";
@@ -171,6 +175,7 @@ export default function getRecipeImplementation(
         > {
             return thirdPartyImpl.signInAndUp.bind(DerivedThirdParty(this))(input);
         },
+
         getStateAndOtherInfoFromStorage: function <CustomStateProperties>(input: {
             userContext: any;
         }): (StateObject & CustomStateProperties) | undefined {
@@ -180,17 +185,36 @@ export default function getRecipeImplementation(
             return thirdPartyImpl.setStateAndOtherInfoToStorage.bind(DerivedThirdParty(this))(input);
         },
         getAuthorisationURLWithQueryParamsAndSetState: async function (input: {
-            providerId: string;
-            authorisationURL: string;
+            thirdPartyId: string;
+            tenantId?: string;
+            frontendRedirectURI: string;
+            redirectURIOnProviderDashboard?: string;
             userContext: any;
-            providerClientId?: string;
             options?: RecipeFunctionOptions;
         }): Promise<string> {
             return thirdPartyImpl.getAuthorisationURLWithQueryParamsAndSetState.bind(DerivedThirdParty(this))(input);
         },
 
-        generateStateToSendToOAuthProvider: function (input: { userContext: any }): string {
+        generateStateToSendToOAuthProvider: function (input?: {
+            frontendRedirectURI?: string;
+            userContext: any;
+        }): string {
             return thirdPartyImpl.generateStateToSendToOAuthProvider.bind(DerivedThirdParty(this))(input);
+        },
+
+        thirdPartyGetConfiguredProviders: async function (input: {
+            tenantId?: string;
+            userContext?: any;
+            options?: RecipeFunctionOptions;
+        }): Promise<{
+            status: "OK";
+            providers: {
+                id: string;
+                name?: string;
+            }[];
+            fetchResponse: Response;
+        }> {
+            return thirdPartyImpl.getConfiguredProviders.bind(DerivedThirdParty(this))(input);
         },
 
         verifyAndGetStateOrThrowError: async function <CustomStateProperties>(input: {
@@ -199,9 +223,6 @@ export default function getRecipeImplementation(
             userContext: any;
         }): Promise<StateObject & CustomStateProperties> {
             return thirdPartyImpl.verifyAndGetStateOrThrowError.bind(DerivedThirdParty(this))(input);
-        },
-        getAuthCodeFromURL: function (input: { userContext: any }): string {
-            return thirdPartyImpl.getAuthCodeFromURL.bind(DerivedThirdParty(this))(input);
         },
 
         getAuthErrorFromURL: function (input: { userContext: any }): string | undefined {

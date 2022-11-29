@@ -220,41 +220,51 @@ export declare type RecipeInterface = {
      */
     getResetPasswordTokenFromURL: (input: { userContext: any }) => string;
     /**
-     * Get the URL to be used by the third party provider for redirecting after the auth flow
+     * Get the URL to be used by the third party provider for redirecting after the auth flow. Also returns PKCE Code Verifier if using PKCE.
      *
-     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
      *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
+     * @param redirectURIOnProviderDashboard The redirect URL that is configured on the provider dashboard
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: "OK", url}`
+     * @returns `{status: "OK", url, pkceCodeVerifier?}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getAuthorisationURLFromBackend: (input: {
-        providerId: string;
+        thirdPartyId: string;
+        redirectURIOnProviderDashboard: string;
+        tenantId?: string;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
         status: "OK";
         url: string;
+        pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;
     /**
      * Sign up/Sign in the user, this method uses the login attempt information from storage
      *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
      * @returns `{status: OK, user, createdNewUser: boolean}` if succesful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     thirdPartySignInAndUp: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
               status: "OK";
               user: ThirdPartyUserType;
               createdNewUser: boolean;
+              tenantId?: string;
               fetchResponse: Response;
           }
         | {
@@ -262,6 +272,31 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
+    /**
+     * Get the list of configured third party providers from the backend
+     *
+     * @param tenantId (OPTIONAL) The tenant ID for which the providers should be fetched
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     *
+     * @param options Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: OK, providers: Array<{id: string, name: string}>}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
+    thirdPartyGetConfiguredProviders: (input: {
+        tenantId?: string;
+        userContext?: any;
+        options?: RecipeFunctionOptions;
+    }) => Promise<{
+        status: "OK";
+        providers: {
+            id: string;
+            name?: string;
+        }[];
+        fetchResponse: Response;
+    }>;
     /**
      * Get the current login state from storage, this is also used when calling signInUp
      *
@@ -299,20 +334,23 @@ export declare type RecipeInterface = {
      * @returns URL string
      */
     getAuthorisationURLWithQueryParamsAndSetState: (input: {
-        providerId: string;
-        authorisationURL: string;
+        thirdPartyId: string;
+        frontendRedirectURI: string;
+        tenantId?: string;
+        redirectURIOnProviderDashboard?: string;
         userContext: any;
-        providerClientId?: string;
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
     /**
      * Generate a new state that will be sent to the thirs party provider
      *
+     * @param frontendRedirectURI (OPTIONAL) The URL that should be saved in the state object which can be used for redirection from the backend
+     *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
      *
      * @returns string
      */
-    generateStateToSendToOAuthProvider: (input: { userContext: any }) => string;
+    generateStateToSendToOAuthProvider: (input?: { frontendRedirectURI?: string; userContext: any }) => string;
     /**
      * Verify that the state recieved from the third party provider matches the one in storage
      *
@@ -327,14 +365,6 @@ export declare type RecipeInterface = {
         stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
         userContext: any;
     }) => Promise<StateObject & CustomStateProperties>;
-    /**
-     * Returns the auth code from the current URL
-     *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
-     *
-     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
-     */
-    getAuthCodeFromURL: (input: { userContext: any }) => string;
     /**
      * Returns the error from the current URL
      *
