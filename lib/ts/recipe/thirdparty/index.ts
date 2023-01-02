@@ -98,26 +98,11 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
-
-    static getConfiguredProviders(input?: { tenantId?: string; userContext?: any }): Promise<{
-        status: "OK";
-        providers: {
-            id: string;
-            name?: string;
-        }[];
-        fetchResponse: Response;
-    }> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.getConfiguredProviders({
-            ...input,
-            userContext: getNormalisedUserContext(input?.userContext),
-        });
-    }
 }
 
 const init = RecipeWrapper.init;
 const getAuthorisationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 const signInAndUp = RecipeWrapper.signInAndUp;
-const getConfiguredProviders = RecipeWrapper.getConfiguredProviders;
 const signOut = RecipeWrapper.signOut;
 
 export {
@@ -125,7 +110,6 @@ export {
     getAuthorisationURLWithQueryParamsAndSetState,
     signInAndUp,
     signOut,
-    getConfiguredProviders,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

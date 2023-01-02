@@ -202,21 +202,6 @@ export default function getRecipeImplementation(
             return thirdPartyImpl.generateStateToSendToOAuthProvider.bind(DerivedThirdParty(this))(input);
         },
 
-        getThirdPartyConfiguredProviders: async function (input: {
-            tenantId?: string;
-            userContext?: any;
-            options?: RecipeFunctionOptions;
-        }): Promise<{
-            status: "OK";
-            providers: {
-                id: string;
-                name?: string;
-            }[];
-            fetchResponse: Response;
-        }> {
-            return thirdPartyImpl.getConfiguredProviders.bind(DerivedThirdParty(this))(input);
-        },
-
         verifyAndGetStateOrThrowError: async function <CustomStateProperties>(input: {
             stateFromAuthProvider: string | undefined;
             stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;

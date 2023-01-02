@@ -34,6 +34,5 @@ export default function getRecipeImplementation(
         verifyAndGetStateOrThrowError:
             originalImplementation.verifyAndGetStateOrThrowError.bind(originalImplementation),
         signInAndUp: originalImplementation.thirdPartySignInAndUp.bind(originalImplementation),
-        getConfiguredProviders: originalImplementation.getThirdPartyConfiguredProviders.bind(originalImplementation),
     };
 }

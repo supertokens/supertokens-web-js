@@ -61,26 +61,16 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     >;
-    static getConfiguredProviders(input?: { tenantId?: string; userContext?: any }): Promise<{
-        status: "OK";
-        providers: {
-            id: string;
-            name?: string;
-        }[];
-        fetchResponse: Response;
-    }>;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 declare const signInAndUp: typeof RecipeWrapper.signInAndUp;
-declare const getConfiguredProviders: typeof RecipeWrapper.getConfiguredProviders;
 declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
     getAuthorisationURLWithQueryParamsAndSetState,
     signInAndUp,
     signOut,
-    getConfiguredProviders,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

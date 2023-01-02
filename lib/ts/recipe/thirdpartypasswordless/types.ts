@@ -213,32 +213,6 @@ export type RecipeInterface = {
     getThirdPartyAuthStateFromURL: (input: { userContext: any }) => string;
 
     /**
-     * Get the list of configured third party providers from the backend
-     *
-     * @param tenantId (OPTIONAL) The tenant ID for which the providers should be fetched
-     *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
-     *
-     * @param options Use this to configure additional properties (for example pre api hooks)
-     *
-     * @returns `{status: OK, providers: Array<{id: string, name: string}>}`
-     *
-     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
-     */
-    getThirdPartyConfiguredProviders: (input: {
-        tenantId?: string;
-        userContext?: any;
-        options?: RecipeFunctionOptions;
-    }) => Promise<{
-        status: "OK";
-        providers: {
-            id: string;
-            name?: string;
-        }[];
-        fetchResponse: Response;
-    }>;
-
-    /**
      * Create and send a code to the user for passwordless auth
      *
      * @param email Email of the user, ignored if `phoneNumber` is provided

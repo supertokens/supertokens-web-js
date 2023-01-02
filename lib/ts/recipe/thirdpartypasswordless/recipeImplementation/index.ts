@@ -107,21 +107,6 @@ export default function getRecipeImplementation(
             return thirdPartyImpl.getAuthStateFromURL.bind(DerivedThirdParty(this))(input);
         },
 
-        getThirdPartyConfiguredProviders: async function (input: {
-            tenantId?: string;
-            userContext?: any;
-            options?: RecipeFunctionOptions;
-        }): Promise<{
-            status: "OK";
-            providers: {
-                id: string;
-                name?: string;
-            }[];
-            fetchResponse: Response;
-        }> {
-            return thirdPartyImpl.getConfiguredProviders.bind(DerivedThirdParty(this))(input);
-        },
-
         createPasswordlessCode: async function (
             input:
                 | { email: string; userContext: any; options?: RecipeFunctionOptions }

@@ -152,31 +152,6 @@ export declare type RecipeInterface = {
           }
     >;
     /**
-     * Get the list of configured third party providers from the backend
-     *
-     * @param tenantId (OPTIONAL) The tenant ID for which the providers should be fetched
-     *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
-     *
-     * @param options Use this to configure additional properties (for example pre api hooks)
-     *
-     * @returns `{status: OK, providers: Array<{id: string, name: string}>}`
-     *
-     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
-     */
-    getConfiguredProviders: (input: {
-        tenantId?: string;
-        userContext?: any;
-        options?: RecipeFunctionOptions;
-    }) => Promise<{
-        status: "OK";
-        providers: {
-            id: string;
-            name?: string;
-        }[];
-        fetchResponse: Response;
-    }>;
-    /**
      * Generate a new state that will be sent to the third party provider
      *
      * @param frontendRedirectURI (OPTIONAL) The URL that should be saved in the state object which can be used for redirection from the backend

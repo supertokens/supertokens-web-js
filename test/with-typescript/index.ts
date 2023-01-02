@@ -290,9 +290,6 @@ function getThirdPartyFunctions(original: ThirdPartyRecipeInterface): ThirdParty
         verifyAndGetStateOrThrowError: function (input) {
             return original.verifyAndGetStateOrThrowError(input);
         },
-        getConfiguredProviders: function (input) {
-            return original.getConfiguredProviders(input);
-        },
     };
 }
 
@@ -375,9 +372,6 @@ function getThirdPartyEmailPasswordFunctions(original: TPEPRecipeInterface): TPE
         },
         getAuthorisationURLWithQueryParamsAndSetState: async function (input) {
             return original.getAuthorisationURLWithQueryParamsAndSetState(input);
-        },
-        getThirdPartyConfiguredProviders: async function (input) {
-            return original.getThirdPartyConfiguredProviders(input);
         },
         getResetPasswordTokenFromURL: function (input) {
             return original.getResetPasswordTokenFromURL(input);
@@ -636,9 +630,6 @@ function getThirdPartyPasswordlessFunctions(original: TPPRecipeInterface): TPPRe
         },
         getThirdPartyStateAndOtherInfoFromStorage: function (input) {
             return original.getThirdPartyStateAndOtherInfoFromStorage(input);
-        },
-        getThirdPartyConfiguredProviders: function (input) {
-            return original.getThirdPartyConfiguredProviders(input);
         },
     };
 }
