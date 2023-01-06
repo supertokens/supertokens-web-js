@@ -17,7 +17,6 @@ import Querier from "../../querier";
 import { RecipeInterface } from "./types";
 import { RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
-import SuperTokens from "../../supertokens";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -28,14 +27,12 @@ export default function getRecipeImplementation(
         getLoginMethods: async function ({ tenantId, options, userContext }) {
             const queryParams: Record<string, string> = {};
 
-            const st = SuperTokens.getInstanceOrThrow();
-
             if (tenantId !== undefined) {
                 queryParams.tenantId = tenantId;
             }
 
-            if (st.clientType !== undefined) {
-                queryParams.clientType = st.clientType;
+            if (recipeImplInput.clientType !== undefined) {
+                queryParams.clientType = recipeImplInput.clientType;
             }
 
             const { jsonBody, fetchResponse } = await querier.get<{

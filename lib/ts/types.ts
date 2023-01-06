@@ -71,6 +71,7 @@ export type SuperTokensConfig = {
 
 export type CreateRecipeFunction<Action> = (
     appInfo: NormalisedAppInfo,
+    clientType: string | undefined,
     enableDebugLogs: boolean
 ) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 

@@ -20,7 +20,6 @@ import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModul
 import STGeneralError from "../../error";
 import { PreAndPostAPIHookAction } from "./types";
 import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
-import SuperTokens from "../../supertokens";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -130,10 +129,8 @@ export default function getRecipeImplementation(
                 redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard,
             };
 
-            const st = SuperTokens.getInstanceOrThrow();
-
-            if (st.clientType !== undefined) {
-                queryParams.clientType = st.clientType;
+            if (recipeImplInput.clientType !== undefined) {
+                queryParams.clientType = recipeImplInput.clientType;
             }
             if (input.tenantId !== undefined) {
                 queryParams.tenantId = input.tenantId;
@@ -213,8 +210,6 @@ export default function getRecipeImplementation(
             const queryParams = getAllQueryParams();
             const queryParamsObj: any = Object.fromEntries(queryParams);
 
-            const st = SuperTokens.getInstanceOrThrow();
-
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
@@ -233,7 +228,7 @@ export default function getRecipeImplementation(
                 {
                     body: JSON.stringify({
                         thirdPartyId: verifiedState.thirdPartyId,
-                        clientType: st.clientType,
+                        clientType: recipeImplInput.clientType,
                         tenantId: verifiedState.tenantId,
                         redirectURIInfo: {
                             redirectURIOnProviderDashboard: verifiedState.redirectURIOnProviderDashboard,
