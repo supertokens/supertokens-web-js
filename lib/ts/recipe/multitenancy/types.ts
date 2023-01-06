@@ -53,9 +53,15 @@ export type RecipeInterface = {
     /**
      * Gets enabled login methods and their configuration
      *
-     * @param userContext
+     * @param tenantId (OPTIONAL) The identifier for the tenant.
      *
-     * @returns Dynamic login methods
+     * @param userContext (OPTIONAL) Refer to {@link TODO the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     *
+     * @returns `{status: OK, emailpassword, passwordless, thirdParty}` if successful
      */
     getLoginMethods: (input: { tenantId?: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<{
         status: "OK";

@@ -63,6 +63,11 @@ import {
     PreAndPostAPIHookAction as TPPlessAction,
     UserInput as TPPUserInput,
 } from "../../recipe/thirdpartypasswordless";
+import {
+    RecipeInterface as MultitenancyRecipeInterface,
+    PreAndPostAPIHookAction as MultitenancyAction,
+    UserInput as MultitenancyUserInput,
+} from "../../recipe/multitenancy";
 import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
 import { RecipeInterface as SessionRecipeInterface, UserInput as SessionUserInput } from "../../recipe/session/types";
 import Session from "../../recipe/session";
@@ -93,6 +98,9 @@ import PasswordlessUtils from "../../recipe/passwordless/utils";
 import { Recipe as TPPRecipe } from "../../recipe/thirdpartypasswordless/recipe";
 import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe/thirdpartypasswordless/recipeImplementation";
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
+import { Recipe as MultitenancyRecipe } from "../../recipe/multitenancy/recipe";
+import { getRecipeImplementation as MultitenancyRecipeImplementation } from "../../recipe/multitenancy/recipeImplementation";
+import MultitenancyUtils from "../../recipe/multitenancy/utils";
 import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
 import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
 import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recipe/session";
@@ -710,6 +718,52 @@ function getThirdPartyPasswordless(): CreateRecipeFunction<TPPlessAction> {
     return ThirdPartyPasswordless.init(config);
 }
 
+// Multitenancy init
+
+const multitenancyPreAPIHook: RecipePreAPIHookFunction<MultitenancyAction> = async function (
+    context: RecipePreAPIHookContext<MultitenancyAction>
+) {
+    if (context.action === "GET_LOGIN_METHODS") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const requestInit: RequestInit = context.requestInit;
+
+    return {
+        requestInit: context.requestInit,
+        url: context.url,
+    };
+};
+
+const multitenancyPostAPIHook: RecipePostAPIHookFunction<MultitenancyAction> = async function (
+    context: RecipePostAPIHookContext<MultitenancyAction>
+) {
+    if (context.action === "GET_LOGIN_METHODS") {
+        //
+    }
+
+    if (context.userContext === undefined) {
+        //
+    }
+
+    const url: string = context.url;
+    const fetchResponse: Response = context.fetchResponse;
+    const requestInit: RequestInit = context.requestInit;
+};
+
+function getMultitenancyFunctions(original: MultitenancyRecipeInterface): MultitenancyRecipeInterface {
+    return {
+        getLoginMethods: async function (input) {
+            return original.getLoginMethods(input);
+        },
+    };
+}
+
 // Session init
 
 function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInterface {
@@ -1128,7 +1182,7 @@ TPPRecipe.reset();
 
 TPPUtils.normaliseUserInput({
     appInfo: normalisedAppInfo,
-    recipeId: passwordlessId,
+    recipeId: tppId,
     override: {
         functions: getThirdPartyPasswordlessFunctions,
     },
@@ -1141,6 +1195,28 @@ TPPRecipeImplementation({
     postAPIHook: tppPostAPIHook,
     preAPIHook: tppPreAPIHook,
     recipeId: tppId,
+});
+
+const mtId: string = MultitenancyRecipe.RECIPE_ID;
+MultitenancyRecipe.init();
+MultitenancyRecipe.getInstanceOrThrow();
+MultitenancyRecipe.reset();
+
+MultitenancyUtils.normaliseUserInput({
+    appInfo: normalisedAppInfo,
+    recipeId: mtId,
+    override: {
+        functions: getMultitenancyFunctions,
+    },
+    preAPIHook: multitenancyPreAPIHook,
+    postAPIHook: multitenancyPostAPIHook,
+});
+
+MultitenancyRecipeImplementation({
+    appInfo: normalisedAppInfo,
+    postAPIHook: multitenancyPostAPIHook,
+    preAPIHook: multitenancyPreAPIHook,
+    recipeId: mtId,
 });
 
 /**

@@ -28,11 +28,13 @@ export default class RecipeWrapper {
      *
      * @param tenantId (OPTIONAL) The identifier for the tenant.
      *
-     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     * @param userContext (OPTIONAL) Refer to {@link TODO the documentation}
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns Dynamic login methods
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     *
+     * @returns `{status: OK, emailpassword, passwordless, thirdParty}` if successful
      */
     static getLoginMethods(input: { tenantId?: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
