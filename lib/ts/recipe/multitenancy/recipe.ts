@@ -23,7 +23,7 @@ import AuthRecipe from "../authRecipe";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
-    static RECIPE_ID = "thirdparty";
+    static RECIPE_ID = "multitenancy";
 
     recipeImplementation: RecipeInterface;
 
@@ -55,7 +55,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
 
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
-            let error = "No instance of ThirdParty found. Make sure to call the ThirdParty.init method.";
+            let error = "No instance of Multitenancy found. Make sure to call the Multitenancy.init method.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);

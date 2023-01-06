@@ -35,7 +35,7 @@ export default class RecipeWrapper {
         tenantId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
-        userContext: any;
+        userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string>;
     /**
@@ -45,7 +45,7 @@ export default class RecipeWrapper {
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: OK, user, createdNewUser: boolean}` if succesful
+     * @returns `{status: OK, user, createdNewUser: boolean}` if successful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
      *

@@ -30,9 +30,6 @@ export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
 export type UserInput = {
-    /**
-     * Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/frontend-functions-override/about the documentation}
-     */
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
@@ -56,7 +53,7 @@ export type RecipeInterface = {
     /**
      * Gets enabled login methods and their configuration
      *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     * @param userContext
      *
      * @returns Dynamic login methods
      */

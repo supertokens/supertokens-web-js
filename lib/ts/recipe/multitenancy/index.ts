@@ -34,7 +34,7 @@ export default class RecipeWrapper {
      *
      * @returns Dynamic login methods
      */
-    static getLoginMethods(input: { tenantId?: string; options?: RecipeFunctionOptions; userContext: any }): Promise<{
+    static getLoginMethods(input: { tenantId?: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
         emailpassword: {
             enabled: boolean;

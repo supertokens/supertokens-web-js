@@ -20,9 +20,7 @@ import { PreAndPostAPIHookAction } from "./types";
 import SuperTokens from "../../supertokens";
 
 export default function getRecipeImplementation(
-    recipeImplInput: {
-        clientType?: string;
-    } & RecipeImplementationInput<PreAndPostAPIHookAction>
+    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
