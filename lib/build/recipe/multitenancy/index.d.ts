@@ -15,7 +15,7 @@ export default class RecipeWrapper {
      *
      * @returns `{status: OK, emailpassword, passwordless, thirdParty}` if successful
      */
-    static getLoginMethods(input: { tenantId?: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
+    static getLoginMethods(input?: { tenantId?: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
         emailpassword: {
             enabled: boolean;
