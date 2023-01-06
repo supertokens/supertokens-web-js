@@ -1,4 +1,4 @@
-import { RecipeFunctionOptions } from "../emailpassword";
+import { RecipeFunctionOptions } from "../recipeModule/types";
 import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeInterface, UserInput } from "./types";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<"GET_LOGIN_METHODS">;

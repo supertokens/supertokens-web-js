@@ -1,4 +1,4 @@
-import { RecipeFunctionOptions } from "../emailpassword";
+import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
     PreAndPostAPIHookAction,
     PreAPIHookContext,

@@ -14,7 +14,7 @@
  */
 
 import { getNormalisedUserContext } from "../../utils";
-import { RecipeFunctionOptions } from "../emailpassword";
+import { RecipeFunctionOptions } from "../recipeModule/types";
 import Recipe from "./recipe";
 import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeInterface, UserInput } from "./types";
 

@@ -1,4 +1,5 @@
-import { RecipeFunctionOptions, UserType as EmailPasswordUserType } from "../emailpassword";
+import { RecipeFunctionOptions } from "../recipeModule/types";
+import { UserType as EmailPasswordUserType } from "../emailpassword";
 import { ThirdPartyUserType } from "../thirdparty/types";
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 export default class RecipeWrapper {
