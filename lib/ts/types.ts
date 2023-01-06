@@ -30,6 +30,11 @@ export type SuperTokensConfig = {
     appInfo: AppInfoUserInput;
 
     /**
+     * Identifier for the client, such as `web`, `ios`, etc. to be used with thirdparty, multitenancy recipes.
+     */
+    clientType?: string;
+
+    /**
      * List of recipes that you want to use. Refer to the documentation for the recipe
      * that you want to use to know how this property should be set.
      */

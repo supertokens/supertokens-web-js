@@ -20,11 +20,10 @@ import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModul
 import STGeneralError from "../../error";
 import { PreAndPostAPIHookAction } from "./types";
 import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
+import SuperTokens from "../../supertokens";
 
 export default function getRecipeImplementation(
-    recipeImplInput: {
-        clientType?: string;
-    } & RecipeImplementationInput<PreAndPostAPIHookAction>
+    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
@@ -130,8 +129,11 @@ export default function getRecipeImplementation(
                 thirdPartyId: input.thirdPartyId,
                 redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard,
             };
-            if (recipeImplInput.clientType !== undefined) {
-                queryParams.clientType = recipeImplInput.clientType;
+
+            const st = SuperTokens.getInstanceOrThrow();
+
+            if (st.clientType !== undefined) {
+                queryParams.clientType = st.clientType;
             }
             if (input.tenantId !== undefined) {
                 queryParams.tenantId = input.tenantId;
@@ -211,6 +213,8 @@ export default function getRecipeImplementation(
             const queryParams = getAllQueryParams();
             const queryParamsObj: any = Object.fromEntries(queryParams);
 
+            const st = SuperTokens.getInstanceOrThrow();
+
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
@@ -229,7 +233,7 @@ export default function getRecipeImplementation(
                 {
                     body: JSON.stringify({
                         thirdPartyId: verifiedState.thirdPartyId,
-                        clientType: recipeImplInput.clientType,
+                        clientType: st.clientType,
                         tenantId: verifiedState.tenantId,
                         redirectURIInfo: {
                             redirectURIOnProviderDashboard: verifiedState.redirectURIOnProviderDashboard,

@@ -30,10 +30,12 @@ export default class SuperTokens {
      * Instance Attributes.
      */
     appInfo: NormalisedAppInfo;
+    clientType?: string;
     recipeList: RecipeModule<any, any>[] = [];
 
     constructor(config: SuperTokensConfig) {
         this.appInfo = normaliseInputAppInfoOrThrowError(config.appInfo);
+        this.clientType = config.clientType;
 
         if (config.recipeList === undefined || config.recipeList.length === 0) {
             throw new Error(

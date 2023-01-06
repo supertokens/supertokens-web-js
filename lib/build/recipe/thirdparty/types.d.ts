@@ -13,7 +13,6 @@ export declare type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_P
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 export declare type UserInput = {
-    clientType?: string;
     /**
      * Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/frontend-functions-override/about the documentation}
      */
