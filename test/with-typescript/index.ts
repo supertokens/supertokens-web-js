@@ -99,8 +99,6 @@ import { Recipe as TPPRecipe } from "../../recipe/thirdpartypasswordless/recipe"
 import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe/thirdpartypasswordless/recipeImplementation";
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
 import { Recipe as MultitenancyRecipe } from "../../recipe/multitenancy/recipe";
-import { getRecipeImplementation as MultitenancyRecipeImplementation } from "../../recipe/multitenancy/recipeImplementation";
-import MultitenancyUtils from "../../recipe/multitenancy/utils";
 import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
 import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
 import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recipe/session";
@@ -1030,6 +1028,7 @@ const cookieHandlerInput: CookieHandlerInput = (original: CookieHandlerInterface
 const config: SuperTokensConfig = {
     appInfo,
     recipeList,
+    clientType: "web",
     windowHandler: windowHandlerInput,
     cookieHandler: cookieHandlerInput,
 };
@@ -1197,27 +1196,15 @@ TPPRecipeImplementation({
     recipeId: tppId,
 });
 
-const mtId: string = MultitenancyRecipe.RECIPE_ID;
-MultitenancyRecipe.init();
-MultitenancyRecipe.getInstanceOrThrow();
-MultitenancyRecipe.reset();
-
-MultitenancyUtils.normaliseUserInput({
-    appInfo: normalisedAppInfo,
-    recipeId: mtId,
+MultitenancyRecipe.init({
     override: {
         functions: getMultitenancyFunctions,
     },
-    preAPIHook: multitenancyPreAPIHook,
-    postAPIHook: multitenancyPostAPIHook,
-});
-
-MultitenancyRecipeImplementation({
-    appInfo: normalisedAppInfo,
     postAPIHook: multitenancyPostAPIHook,
     preAPIHook: multitenancyPreAPIHook,
-    recipeId: mtId,
 });
+MultitenancyRecipe.getInstanceOrThrow();
+MultitenancyRecipe.reset();
 
 /**
  * Calling recipe functions exported from recipe/index files
