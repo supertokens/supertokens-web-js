@@ -25,7 +25,7 @@
  * The differences in tsconfig for with-typescript compared to the main project:
  * - noUnusedLocals is set to false
  */
-import { SuperTokensConfig, AppInfoUserInput, CreateRecipeFunction, NormalisedAppInfo } from "../../types";
+import { AppInfoUserInput, CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import SuperTokens from "../../";
 import {
     RecipeInterface as EmailVerificationRecipeInterface,
@@ -66,7 +66,6 @@ import {
 import {
     RecipeInterface as MultitenancyRecipeInterface,
     PreAndPostAPIHookAction as MultitenancyAction,
-    UserInput as MultitenancyUserInput,
 } from "../../recipe/multitenancy";
 import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
 import { RecipeInterface as SessionRecipeInterface, UserInput as SessionUserInput } from "../../recipe/session/types";
@@ -98,7 +97,7 @@ import PasswordlessUtils from "../../recipe/passwordless/utils";
 import { Recipe as TPPRecipe } from "../../recipe/thirdpartypasswordless/recipe";
 import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe/thirdpartypasswordless/recipeImplementation";
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
-import { Recipe as MultitenancyRecipe } from "../../recipe/multitenancy/recipe";
+import Multitenancy from "../../recipe/multitenancy";
 import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
 import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
 import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recipe/session";
@@ -762,6 +761,25 @@ function getMultitenancyFunctions(original: MultitenancyRecipeInterface): Multit
     };
 }
 
+Multitenancy.init();
+Multitenancy.init({});
+Multitenancy.init({ override: { functions: getMultitenancyFunctions } });
+Multitenancy.init({
+    postAPIHook: multitenancyPostAPIHook,
+    preAPIHook: multitenancyPreAPIHook,
+});
+
+Multitenancy.getLoginMethods();
+Multitenancy.getLoginMethods({});
+Multitenancy.getLoginMethods({ tenantId: "supertokens" });
+Multitenancy.getLoginMethods({
+    options: {
+        preAPIHook: async function name({ url, requestInit }) {
+            return { url, requestInit };
+        },
+    },
+});
+
 // Session init
 
 function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInterface {
@@ -1025,15 +1043,20 @@ const cookieHandlerInput: CookieHandlerInput = (original: CookieHandlerInterface
     };
 };
 
-const config: SuperTokensConfig = {
+SuperTokens.init({
+    appInfo,
+    recipeList,
+    windowHandler: windowHandlerInput,
+    cookieHandler: cookieHandlerInput,
+});
+
+SuperTokens.init({
     appInfo,
     recipeList,
     clientType: "web",
     windowHandler: windowHandlerInput,
     cookieHandler: cookieHandlerInput,
-};
-
-SuperTokens.init(config);
+});
 
 // General
 
@@ -1195,16 +1218,6 @@ TPPRecipeImplementation({
     preAPIHook: tppPreAPIHook,
     recipeId: tppId,
 });
-
-MultitenancyRecipe.init({
-    override: {
-        functions: getMultitenancyFunctions,
-    },
-    postAPIHook: multitenancyPostAPIHook,
-    preAPIHook: multitenancyPreAPIHook,
-});
-MultitenancyRecipe.getInstanceOrThrow();
-MultitenancyRecipe.reset();
 
 /**
  * Calling recipe functions exported from recipe/index files
