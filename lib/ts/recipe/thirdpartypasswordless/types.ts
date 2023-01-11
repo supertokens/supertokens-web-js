@@ -68,6 +68,8 @@ export type RecipeInterface = {
      *
      * @param redirectURIOnProviderDashboard The redirect URL that is configured on the provider dashboard
      *
+     * @param tenantId (OPTIONAL) The identifier for the tenant, in case you are using multi-tenancy
+     *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
@@ -147,6 +149,8 @@ export type RecipeInterface = {
      * @param frontendRedirectURI The URL that should be used for redirection after the third party flow finishes.
      *
      * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
+     *
+     * @param tenantId (OPTIONAL) The identifier for the tenant, in case you are using multi-tenancy
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *

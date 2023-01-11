@@ -219,6 +219,8 @@ export default class RecipeWrapper {
      *
      * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
      *
+     * @param tenantId (OPTIONAL) The identifier for the tenant.
+     *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)

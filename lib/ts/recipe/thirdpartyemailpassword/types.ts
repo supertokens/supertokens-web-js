@@ -253,6 +253,8 @@ export type RecipeInterface = {
      *
      * @param redirectURIOnProviderDashboard The redirect URL that is configured on the provider dashboard
      *
+     * @param tenantId (OPTIONAL) The identifier for the tenant, in case you are using multi-tenancy
+     *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
@@ -327,11 +329,13 @@ export type RecipeInterface = {
     /**
      * Get the URL that should be opened for third party authentication
      *
-     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
      *
-     * @param authorisationURL The URL that should be used for redirection after the third party flow finishes. This is ignored if the backend has a pre-configured redirect_url
+     * @param frontendRedirectURI The URL that should be used for redirection after the third party flow finishes.
      *
-     * @param providerClientId (OPTIONAL) Client id to be used for the third party provider
+     * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
+     *
+     * @param tenantId (OPTIONAL) The identifier for the tenant, in case you are using multi-tenancy
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
      *
