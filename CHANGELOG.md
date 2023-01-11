@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Added
+
+-   Multitenancy recipe
+-   Optional `clientType` config in the input for `SuperTokens.init` function, that is used by thirdparty and multitenancy recipes.
+
+### Breaking changes
+
+-   Only supporting FDI TODO
+-   Backend SDKs have to be updated first to a version that supports multi-tenancy for thirdparty
+    -   supertokens-node: >= TODO
+    -   supertokens-golang: >= TODO
+    -   supertokens-python >= TODO
+-   In ThirdParty recipe,
+    -   Changed signatures of the functions `getAuthorisationURLWithQueryParamsAndSetState`
+    -   Removed functions - `getStateAndOtherInfoFromStorage`, `setStateAndOtherInfoToStorage`, `getAuthorisationURLFromBackend`, `generateStateToSendToOAuthProvider`, `verifyAndGetStateOrThrowError`, `getAuthCodeFromURL`, `getAuthErrorFromURL`, `getAuthStateFromURL`
+-   In ThirdPartyEmailpassword recipe,
+    -   Changed signatures of the functions `getAuthorisationURLWithQueryParamsAndSetState`
+    -   Removed functions - `getStateAndOtherInfoFromStorage`, `setStateAndOtherInfoToStorage`, `getAuthorisationURLFromBackend`, `generateStateToSendToOAuthProvider`, `verifyAndGetStateOrThrowError`, `getAuthCodeFromURL`, `getAuthErrorFromURL`, `getAuthStateFromURL`
+-   In ThirdPartyPasswordless recipe,
+    -   Changed signatures of the functions `getThirdPartyAuthorisationURLWithQueryParamsAndSetState`
+    -   Removed functions - `getThirdPartyStateAndOtherInfoFromStorage`, `setThirdPartyStateAndOtherInfoToStorage`, `getAuthorisationURLFromBackend`, `generateThirdPartyStateToSendToOAuthProvider`, `verifyAndGetThirdPartyStateOrThrowError`, `getThirdPartyAuthCodeFromURL`, `getThirdPartyAuthErrorFromURL`, `getThirdPartyAuthStateFromURL`
+
 ## [0.3.0] - 2022-10-17
 
 ### Added
