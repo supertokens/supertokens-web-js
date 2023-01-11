@@ -50,7 +50,7 @@ export default class Recipe extends RecipeModule<unknown, any> {
     }
 
     static init(config?: UserInput): CreateRecipeFunction<unknown> {
-        return (appInfo: NormalisedAppInfo, enableDebugLogs: boolean) => {
+        return (appInfo: NormalisedAppInfo, _: string | undefined, enableDebugLogs: boolean) => {
             Recipe.instance = new Recipe({
                 ...config,
                 appInfo,

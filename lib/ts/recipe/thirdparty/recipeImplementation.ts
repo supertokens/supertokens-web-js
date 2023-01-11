@@ -22,9 +22,7 @@ import { PreAndPostAPIHookAction } from "./types";
 import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
 
 export default function getRecipeImplementation(
-    recipeImplInput: {
-        clientType?: string;
-    } & RecipeImplementationInput<PreAndPostAPIHookAction>
+    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
@@ -130,6 +128,7 @@ export default function getRecipeImplementation(
                 thirdPartyId: input.thirdPartyId,
                 redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard,
             };
+
             if (recipeImplInput.clientType !== undefined) {
                 queryParams.clientType = recipeImplInput.clientType;
             }
@@ -257,53 +256,6 @@ export default function getRecipeImplementation(
 
             return {
                 ...jsonBody,
-                fetchResponse,
-            };
-        },
-
-        getConfiguredProviders: async function (input: {
-            tenantId?: string;
-            userContext?: any;
-            options?: RecipeFunctionOptions;
-        }): Promise<{
-            status: "OK";
-            providers: {
-                id: string;
-                name?: string;
-            }[];
-            fetchResponse: Response;
-        }> {
-            const queryParams: Record<string, string> = {};
-            if (input.tenantId !== undefined) {
-                queryParams.tenantId = input.tenantId;
-            }
-
-            const { jsonBody, fetchResponse } = await querier.get<{
-                status: "OK";
-                providers: {
-                    id: string;
-                    name?: string;
-                }[];
-            }>(
-                "/providers",
-                {},
-                queryParams,
-                Querier.preparePreAPIHook({
-                    recipePreAPIHook: recipeImplInput.preAPIHook,
-                    action: "GET_PROVIDERS",
-                    options: input.options,
-                    userContext: input.userContext,
-                }),
-                Querier.preparePostAPIHook({
-                    recipePostAPIHook: recipeImplInput.postAPIHook,
-                    action: "GET_PROVIDERS",
-                    userContext: input?.userContext,
-                })
-            );
-
-            return {
-                status: "OK",
-                providers: jsonBody.providers,
                 fetchResponse,
             };
         },

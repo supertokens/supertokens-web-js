@@ -14,7 +14,7 @@
  */
 
 import { getNormalisedUserContext } from "../../utils";
-import { RecipeFunctionOptions } from "../emailpassword";
+import { RecipeFunctionOptions } from "../recipeModule/types";
 import Recipe from "./recipe";
 import {
     PreAndPostAPIHookAction,
@@ -42,9 +42,11 @@ export default class RecipeWrapper {
      *
      * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
      *
+     * @param tenantId (OPTIONAL) The identifier for the tenant.
+     *
      * @param frontendRedirectURI The URL that should be used for redirection after the third party flow finishes.
      *
-     * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Optional if this is same as frontendRedirectURI
+     * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
      *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
@@ -59,7 +61,7 @@ export default class RecipeWrapper {
         tenantId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
-        userContext: any;
+        userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
         return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLWithQueryParamsAndSetState({
@@ -75,7 +77,7 @@ export default class RecipeWrapper {
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: OK, user, createdNewUser: boolean}` if succesful
+     * @returns `{status: OK, user, createdNewUser: boolean}` if successful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
      *
@@ -98,26 +100,11 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
-
-    static getConfiguredProviders(input?: { tenantId?: string; userContext?: any }): Promise<{
-        status: "OK";
-        providers: {
-            id: string;
-            name?: string;
-        }[];
-        fetchResponse: Response;
-    }> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.getConfiguredProviders({
-            ...input,
-            userContext: getNormalisedUserContext(input?.userContext),
-        });
-    }
 }
 
 const init = RecipeWrapper.init;
 const getAuthorisationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 const signInAndUp = RecipeWrapper.signInAndUp;
-const getConfiguredProviders = RecipeWrapper.getConfiguredProviders;
 const signOut = RecipeWrapper.signOut;
 
 export {
@@ -125,7 +112,6 @@ export {
     getAuthorisationURLWithQueryParamsAndSetState,
     signInAndUp,
     signOut,
-    getConfiguredProviders,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,
