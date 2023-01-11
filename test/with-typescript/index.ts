@@ -779,6 +779,9 @@ Multitenancy.getLoginMethods({
         },
     },
 });
+Multitenancy.getLoginMethods({
+    userContext: { test: "value" },
+});
 
 // Session init
 
