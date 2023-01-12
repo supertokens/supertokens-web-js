@@ -806,10 +806,10 @@ const sessionPostAPIHook: RecipePostAPIHookFunction<"SIGN_OUT" | "REFRESH_SESSIO
 
 function getSession(): CreateRecipeFunction<"SIGN_OUT" | "REFRESH_SESSION"> {
     const config: SessionUserInput = {
-        sessionScope: undefined,
+        sessionTokenFrontendDomain: undefined,
         sessionExpiredStatusCode: undefined,
         autoAddCredentials: undefined,
-        cookieDomain: undefined,
+        sessionTokenBackendDomain: undefined,
         isInIframe: undefined,
         onHandleEvent: function (event) {
             if (event.action === "REFRESH_SESSION") {
@@ -975,6 +975,7 @@ const windowHandlerInput: WindowHandlerInput = (original: WindowHandlerInterface
                 window.location.href = newHref;
             },
         },
+        getWindowUnsafe: () => window,
     };
 };
 
