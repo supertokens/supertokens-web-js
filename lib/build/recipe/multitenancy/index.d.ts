@@ -17,7 +17,7 @@ export default class RecipeWrapper {
      */
     static getLoginMethods(input?: { tenantId?: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
-        emailpassword: {
+        emailPassword: {
             enabled: boolean;
         };
         passwordless: {

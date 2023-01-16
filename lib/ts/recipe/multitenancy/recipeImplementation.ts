@@ -37,7 +37,7 @@ export default function getRecipeImplementation(
 
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
-                emailpassword: {
+                emailPassword: {
                     enabled: boolean;
                 };
                 passwordless: {
