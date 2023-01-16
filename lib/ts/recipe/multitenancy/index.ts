@@ -15,6 +15,7 @@
 
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
+import { AllowedDomainsClaim } from "./allowedDomainsClaim";
 import Recipe from "./recipe";
 import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeInterface, UserInput } from "./types";
 
@@ -58,6 +59,8 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
+
+    static AllowedDomainsClaim = AllowedDomainsClaim;
 }
 
 const init = RecipeWrapper.init;
@@ -71,4 +74,5 @@ export {
     PostAPIHookContext,
     PreAndPostAPIHookAction,
     UserInput,
+    AllowedDomainsClaim,
 };

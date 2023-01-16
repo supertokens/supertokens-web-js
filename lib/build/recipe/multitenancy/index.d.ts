@@ -1,4 +1,5 @@
 import { RecipeFunctionOptions } from "../recipeModule/types";
+import { AllowedDomainsClaim } from "./allowedDomainsClaim";
 import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeInterface, UserInput } from "./types";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<"GET_LOGIN_METHODS">;
@@ -32,6 +33,7 @@ export default class RecipeWrapper {
         };
         fetchResponse: Response;
     }>;
+    static AllowedDomainsClaim: import("./allowedDomainsClaim").AllowedDomainsClaimClass;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getLoginMethods: typeof RecipeWrapper.getLoginMethods;
@@ -43,4 +45,5 @@ export {
     PostAPIHookContext,
     PreAndPostAPIHookAction,
     UserInput,
+    AllowedDomainsClaim,
 };
