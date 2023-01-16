@@ -14,26 +14,23 @@ export class AllowedDomainsClaimClass extends PrimitiveArrayClaim<string> {
             defaultMaxAgeInSeconds: Number.MAX_SAFE_INTEGER,
         });
 
-        // FIXME - maybe it's better if we can add getHost to the interface we are using below, that's in `supertokens-website` npm library
-        const currentDomain = WindowHandlerReference.getReferenceOrThrow()
-            .windowHandler.location.getOrigin()
-            .split("://")[1];
-
         this.validators = {
             ...this.validators,
-            hasAccessToCurrentDomain: () => {
-                const includesValidator = this.validators.includes(currentDomain, Number.MAX_SAFE_INTEGER, this.id);
-                return {
-                    id: this.id,
-                    refresh: this.refresh,
-                    shouldRefresh: () => {
-                        return false; // Can't automatically refresh
-                    },
-                    validate: async (payload, userContext) => {
-                        return includesValidator.validate(payload, userContext);
-                    },
-                };
-            },
+            hasAccessToCurrentDomain: () => ({
+                id: this.id,
+                refresh: this.refresh,
+                shouldRefresh: () => {
+                    return false; // Can't automatically refresh
+                },
+                validate: async (payload, userContext) => {
+                    // FIXME - maybe it's better if we can add getHost to the interface we are using below, that's in `supertokens-website` npm library
+                    const currentDomain = WindowHandlerReference.getReferenceOrThrow()
+                        .windowHandler.location.getOrigin()
+                        .split("://")[1];
+                    const includesValidator = this.validators.includes(currentDomain, Number.MAX_SAFE_INTEGER, this.id);
+                    return includesValidator.validate(payload, userContext);
+                },
+            }),
         };
     }
 
