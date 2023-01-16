@@ -14,7 +14,10 @@ export class AllowedDomainsClaimClass extends PrimitiveArrayClaim<string> {
             defaultMaxAgeInSeconds: Number.MAX_SAFE_INTEGER,
         });
 
-        const currentDomain = WindowHandlerReference.getReferenceOrThrow().windowHandler.location.getHostName();
+        // FIXME - maybe it's better if we can add getHost to the interface we are using below, that's in `supertokens-website` npm library
+        const currentDomain = WindowHandlerReference.getReferenceOrThrow()
+            .windowHandler.location.getOrigin()
+            .split("://")[1];
 
         this.validators = {
             ...this.validators,
