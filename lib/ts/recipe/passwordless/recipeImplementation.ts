@@ -13,7 +13,7 @@
  * under the License.
  */
 
-import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
+import { WindowHandlerReference } from "../../windowHandler";
 import Querier from "../../querier";
 import { getHashFromLocation, getQueryParams } from "../../utils";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";

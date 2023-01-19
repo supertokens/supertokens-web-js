@@ -12,6 +12,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-export const package_version = "0.4.0";
 
-export const supported_fdi = ["1.15"];
+export {
+    StorageHandler,
+    WindowHandlerInput,
+    WindowHandlerInterface,
+} from "supertokens-website/utils/windowHandler/types";

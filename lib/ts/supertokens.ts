@@ -16,8 +16,8 @@
 import RecipeModule from "./recipe/recipeModule";
 import { NormalisedAppInfo, SuperTokensConfig } from "./types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest, normaliseInputAppInfoOrThrowError } from "./utils";
-import { CookieHandlerReference } from "supertokens-website/utils/cookieHandler";
-import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
+import { CookieHandlerReference } from "./cookieHandler";
+import { WindowHandlerReference } from "./windowHandler";
 import { PostSuperTokensInitCallbacks } from "./postSuperTokensInitCallbacks";
 
 export default class SuperTokens {

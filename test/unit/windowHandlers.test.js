@@ -17,8 +17,8 @@ import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
 import Session from "../../recipe/session";
 import SuperTokens from "../../lib/build/supertokens";
 import assert from "assert";
-import { CookieHandlerReference } from "supertokens-website/utils/cookieHandler";
-import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
+import { CookieHandlerReference } from "../../utils/cookieHandler";
+import { WindowHandlerReference } from "../../utils/windowHandler";
 
 describe("Window handlers test", function () {
     let storageLogs = [];
