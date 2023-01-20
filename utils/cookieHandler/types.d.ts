@@ -12,6 +12,13 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-export const package_version = "0.4.0";
-
-export const supported_fdi = ["1.15"];
+export * from "../../lib/build/cookieHandler/types";
+/**
+ * 'export *' does not re-export a default.
+ * import CookieHanlder from "supertokens-web-js/utils/cookieHandler/types";
+ * the above import statement won't be possible unless either
+ * - user add "esModuleInterop": true in their tsconfig.json file
+ * - we do the following change:
+ */
+import * as _default from "../../lib/build/cookieHandler/types";
+export default _default;

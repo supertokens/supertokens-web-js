@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.4.0] - 2023-01-19
+
+### Added
+
+-   Re-exporting `cookiHandler`, `windowHandler` and `sessionClaimValidatorStore` from supertokens-website.
+
+### Breaking Changes
+
+-   Updated website dependency, which added `getWindowUnsafe` to the WindowHandlerInterface. This function should return the raw window object.
+
 ## [0.3.0] - 2022-10-17
 
 ### Added

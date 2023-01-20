@@ -19,7 +19,7 @@ import { RecipeInterface, StateObject, ThirdPartyUserType } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
 import { PreAndPostAPIHookAction } from "./types";
-import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
+import { WindowHandlerReference } from "../../windowHandler";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>

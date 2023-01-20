@@ -12,6 +12,19 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-export const package_version = "0.4.0";
+"use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
+exports.__esModule = true;
 
-export const supported_fdi = ["1.15"];
+let d = require("../lib/build/sessionClaimValidatorStore");
+
+if (d.default !== undefined) {
+    __export(d);
+} else {
+    __export({
+        default: d,
+        ...d,
+    });
+}

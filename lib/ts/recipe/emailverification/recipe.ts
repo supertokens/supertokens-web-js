@@ -14,7 +14,7 @@
  */
 
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
-import { SessionClaimValidatorStore } from "supertokens-website/utils/sessionClaimValidatorStore";
+import { SessionClaimValidatorStore } from "../../sessionClaimValidatorStore";
 import RecipeModule from "../recipeModule";
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
 import { normaliseUserInput } from "./utils";
