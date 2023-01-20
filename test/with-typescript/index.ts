@@ -93,10 +93,13 @@ import PasswordlessUtils from "../../recipe/passwordless/utils";
 import { Recipe as TPPRecipe } from "../../recipe/thirdpartypasswordless/recipe";
 import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe/thirdpartypasswordless/recipeImplementation";
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
-import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
-import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
+import { WindowHandlerInput, WindowHandlerInterface } from "../../utils/windowHandler/types";
+import { CookieHandlerInput, CookieHandlerInterface } from "../../utils/cookieHandler/types";
 import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recipe/session";
 import { PermissionClaim, UserRoleClaim } from "../../recipe/userroles";
+import { CookieHandlerReference } from "../../utils/cookieHandler";
+import { WindowHandlerReference } from "../../utils/windowHandler";
+
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
     return {
@@ -2451,3 +2454,8 @@ Session.validateClaims({
 });
 
 Session.addAxiosInterceptors({});
+
+function reexportedHandlers() {
+    CookieHandlerReference.getReferenceOrThrow();
+    WindowHandlerReference.getReferenceOrThrow();
+}
