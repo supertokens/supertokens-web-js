@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.4.1] - 2023-01-26
+
+### Fixed
+
+-   Fixed the typings of the `isVerified` validator of the `EmailVerificationClaim`
+
 ## [0.4.0] - 2023-01-19
 
 ### Added

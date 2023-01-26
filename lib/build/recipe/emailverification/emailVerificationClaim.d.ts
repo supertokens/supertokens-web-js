@@ -9,6 +9,6 @@ export declare class EmailVerificationClaimClass extends BooleanClaim {
         updateContextOnIsVerifiedFalse?: (userContext: any) => void | Promise<void>
     );
     validators: BooleanClaim["validators"] & {
-        isVerified: (refetchTimeOnFalseInSeconds?: number) => SessionClaimValidator;
+        isVerified: (refetchTimeOnFalseInSeconds?: number, maxAgeInSeconds?: number) => SessionClaimValidator;
     };
 }

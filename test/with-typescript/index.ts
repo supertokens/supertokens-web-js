@@ -32,7 +32,7 @@ import {
     PreAndPostAPIHookAction as EmailVerificationAction,
     UserInput as EmailVerificationUserInput,
 } from "../../recipe/emailverification/types";
-import EmailVerification from "../../recipe/emailverification";
+import EmailVerification, { EmailVerificationClaim } from "../../recipe/emailverification";
 import {
     RecipeInterface as EmailPasswordRecipeInterface,
     PreAndPostAPIHookAction as EmailPasswordAction,
@@ -2447,6 +2447,7 @@ Session.validateClaims({
         customClaimInstance.validators.custVal(1),
         UserRoleClaim.validators.excludes("admin", 15),
         PermissionClaim.validators.includesAll(["support", "moderator"]),
+        EmailVerificationClaim.validators.isVerified(10, 3600),
     ],
     userContext: {
         refreshCalled: 0,
