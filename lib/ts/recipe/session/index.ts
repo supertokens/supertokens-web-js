@@ -16,6 +16,8 @@ import { getNormalisedUserContext } from "../../utils";
 import SessionRecipe from "./recipe";
 import { UserInput } from "./types";
 import { RecipeInterface, ClaimValidationError, SessionClaimValidator, SessionClaim } from "supertokens-website";
+import { PrimitiveClaimConfig } from "supertokens-website/lib/build/claims/primitiveClaim";
+import { PrimitiveArrayClaimConfig } from "supertokens-website/lib/build/claims/primitiveArrayClaim";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -126,5 +128,7 @@ export {
     getClaimValue,
     getInvalidClaimsFromResponse,
     RecipeInterface,
+    PrimitiveArrayClaimConfig,
+    PrimitiveClaimConfig,
     UserInput,
 };

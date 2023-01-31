@@ -1,5 +1,7 @@
 import { UserInput } from "./types";
 import { RecipeInterface, ClaimValidationError, SessionClaimValidator, SessionClaim } from "supertokens-website";
+import { PrimitiveClaimConfig } from "supertokens-website/lib/build/claims/primitiveClaim";
+import { PrimitiveArrayClaimConfig } from "supertokens-website/lib/build/claims/primitiveArrayClaim";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<unknown>;
     static getUserId(input?: { userContext?: any }): Promise<string>;
@@ -62,5 +64,7 @@ export {
     getClaimValue,
     getInvalidClaimsFromResponse,
     RecipeInterface,
+    PrimitiveArrayClaimConfig,
+    PrimitiveClaimConfig,
     UserInput,
 };
