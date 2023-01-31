@@ -115,12 +115,15 @@ export function getHashFromLocation(): string {
     return WindowHandlerReference.getReferenceOrThrow().windowHandler.location.getHash().substring(1);
 }
 
-export function getGlobalClaimValidators(
+export function getGlobalClaimValidators({
+    overrideGlobalClaimValidators,
+    userContext,
+}: {
     overrideGlobalClaimValidators?: (
         globalClaimValidators: SessionClaimValidator[],
         userContext: any
-    ) => SessionClaimValidator[],
-    userContext?: any
-) {
+    ) => SessionClaimValidator[];
+    userContext?: any;
+}) {
     return getGlobalClaimValidatorsWebsite(overrideGlobalClaimValidators, userContext);
 }

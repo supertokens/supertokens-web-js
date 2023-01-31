@@ -7,10 +7,13 @@ export declare function getQueryParams(param: string): string | undefined;
 export declare function checkForSSRErrorAndAppendIfNeeded(error: string): string;
 export declare function getNormalisedUserContext(userContext?: any): any;
 export declare function getHashFromLocation(): string;
-export declare function getGlobalClaimValidators(
+export declare function getGlobalClaimValidators({
+    overrideGlobalClaimValidators,
+    userContext,
+}: {
     overrideGlobalClaimValidators?: (
         globalClaimValidators: SessionClaimValidator[],
         userContext: any
-    ) => SessionClaimValidator[],
-    userContext?: any
-): SessionClaimValidator[];
+    ) => SessionClaimValidator[];
+    userContext?: any;
+}): SessionClaimValidator[];
