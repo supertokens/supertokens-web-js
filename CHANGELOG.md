@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-## [0.5.0] - 2023-01-XX
+## [0.5.0] - 2023-02-01
 
 ## Breaking changes
 
@@ -16,7 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     -   supertokens-node: >= 13.0.0
     -   supertokens-python: >= 0.12.0
     -   supertokens-golang: >= 0.10.0
-    -   !!!TODO: re-check before release
 -   Renamed configuration options:
     -   `sessionScope` renamed to `sessionTokenFrontendDomain`
     -   `cookieDomain` renamed to `sessionTokenBackendDomain`
@@ -31,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Re-exporting `cookiHandler`, `windowHandler` and `sessionClaimValidatorStore` from supertokens-website.
+-   Re-exporting `cookieHandler`, `windowHandler` and `sessionClaimValidatorStore` from supertokens-website.
 
 ### Breaking Changes
 

@@ -50,6 +50,6 @@ export class EmailVerificationClaimClass extends BooleanClaim {
     }
 
     validators!: BooleanClaim["validators"] & {
-        isVerified: (refetchTimeOnFalseInSeconds?: number) => SessionClaimValidator;
+        isVerified: (refetchTimeOnFalseInSeconds?: number, maxAgeInSeconds?: number) => SessionClaimValidator;
     };
 }
