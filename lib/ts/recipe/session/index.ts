@@ -28,6 +28,12 @@ export default class RecipeWrapper {
         });
     }
 
+    static getAccessToken(input?: { userContext?: any }): Promise<string | undefined> {
+        return SessionRecipe.getInstanceOrThrow().getAccessToken({
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
     static async getAccessTokenPayloadSecurely(input?: { userContext?: any }): Promise<any> {
         return SessionRecipe.getInstanceOrThrow().getAccessTokenPayloadSecurely({
             userContext: getNormalisedUserContext(input?.userContext),
@@ -93,6 +99,7 @@ export default class RecipeWrapper {
 const init = RecipeWrapper.init;
 const getUserId = RecipeWrapper.getUserId;
 const getAccessTokenPayloadSecurely = RecipeWrapper.getAccessTokenPayloadSecurely;
+const getAccessToken = RecipeWrapper.getAccessToken;
 const attemptRefreshingSession = RecipeWrapper.attemptRefreshingSession;
 const doesSessionExist = RecipeWrapper.doesSessionExist;
 /**
@@ -118,6 +125,7 @@ export {
     init,
     getUserId,
     getAccessTokenPayloadSecurely,
+    getAccessToken,
     attemptRefreshingSession,
     doesSessionExist,
     addAxiosInterceptors,

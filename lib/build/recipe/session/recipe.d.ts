@@ -8,6 +8,7 @@ export default class Recipe extends RecipeModule<unknown, any> {
     constructor(config: InputType);
     static init(config?: UserInput): CreateRecipeFunction<unknown>;
     getUserId: (input: { userContext: any }) => Promise<string>;
+    getAccessToken: (input: { userContext: any }) => Promise<string | undefined>;
     getAccessTokenPayloadSecurely: (input: { userContext: any }) => Promise<any>;
     doesSessionExist: (input: { userContext: any }) => Promise<boolean>;
     signOut: (input: { userContext: any }) => Promise<void>;
