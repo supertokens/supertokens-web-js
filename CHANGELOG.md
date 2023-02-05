@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## Changes
+
+-   Make normaliseURLPathOrThrowError include search and hash in its return value
+
 ## [0.5.0] - 2023-02-01
 
 ## Breaking changes
