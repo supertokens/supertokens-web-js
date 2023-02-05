@@ -15,9 +15,11 @@
 
 export default class NormalisedURLPath {
     private value: string;
+    private includeSearch: boolean;
 
-    constructor(url: string) {
-        this.value = normaliseURLPathOrThrowError(url);
+    constructor(url: string, { includeSearch } = { includeSearch: false }) {
+        this.value = normaliseURLPathOrThrowError(url, includeSearch);
+        this.includeSearch = includeSearch;
     }
 
     startsWith = (other: NormalisedURLPath): boolean => {
@@ -25,7 +27,7 @@ export default class NormalisedURLPath {
     };
 
     appendPath = (other: NormalisedURLPath): NormalisedURLPath => {
-        return new NormalisedURLPath(this.value + other.value);
+        return new NormalisedURLPath(this.value + other.value, { includeSearch: this.includeSearch });
     };
 
     getAsStringDangerous = (): string => {
@@ -34,14 +36,17 @@ export default class NormalisedURLPath {
     };
 }
 
-function normaliseURLPathOrThrowError(input: string): string {
+function normaliseURLPathOrThrowError(input: string, includeSearch: boolean): string {
     input = input.trim();
     try {
         if (!input.startsWith("http://") && !input.startsWith("https://")) {
             throw new Error("Error converting to proper URL");
         }
-        const { pathname, search, hash }: URL = new URL(input);
-        input = pathname + search + hash;
+        const { pathname, search }: URL = new URL(input);
+        input = pathname;
+        if (includeSearch) {
+            input = input + search;
+        }
 
         if (input.charAt(input.length - 1) === "/") {
             return input.substr(0, input.length - 1);
@@ -59,7 +64,7 @@ function normaliseURLPathOrThrowError(input: string): string {
         !input.startsWith("https://")
     ) {
         input = "http://" + input;
-        return normaliseURLPathOrThrowError(input);
+        return normaliseURLPathOrThrowError(input, includeSearch);
     }
 
     if (input.charAt(0) !== "/") {
@@ -70,7 +75,7 @@ function normaliseURLPathOrThrowError(input: string): string {
     try {
         // test that we can convert this to prevent an infinite loop
         new URL("http://example.com" + input);
-        return normaliseURLPathOrThrowError("http://example.com" + input);
+        return normaliseURLPathOrThrowError("http://example.com" + input, includeSearch);
     } catch (err) {
         throw new Error("Please provide a valid URL path");
     }
