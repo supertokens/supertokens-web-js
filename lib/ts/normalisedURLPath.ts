@@ -40,8 +40,8 @@ function normaliseURLPathOrThrowError(input: string): string {
         if (!input.startsWith("http://") && !input.startsWith("https://")) {
             throw new Error("Error converting to proper URL");
         }
-        const urlObj: URL = new URL(input);
-        input = urlObj.pathname;
+        const { pathname, search, hash }: URL = new URL(input);
+        input = pathname + search + hash;
 
         if (input.charAt(input.length - 1) === "/") {
             return input.substr(0, input.length - 1);
