@@ -28,14 +28,13 @@ export default class Recipe extends RecipeModule<unknown, any> {
         SuperTokensWebsite.init({
             ...config,
             preAPIHook: async (context) => {
+                const headers = new Headers(context.requestInit.headers);
+                headers.set("rid", config.recipeId);
                 const response = {
                     ...context,
                     requestInit: {
                         ...context.requestInit,
-                        headers: {
-                            ...context.requestInit.headers,
-                            rid: config.recipeId,
-                        },
+                        headers,
                     },
                 };
                 if (config.preAPIHook === undefined) {
@@ -64,6 +63,12 @@ export default class Recipe extends RecipeModule<unknown, any> {
 
     getUserId = (input: { userContext: any }): Promise<string> => {
         return SuperTokensWebsite.getUserId({
+            userContext: input.userContext,
+        });
+    };
+
+    getAccessToken = async (input: { userContext: any }): Promise<string | undefined> => {
+        return SuperTokensWebsite.getAccessToken({
             userContext: input.userContext,
         });
     };
