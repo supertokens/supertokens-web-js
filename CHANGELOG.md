@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## Changes
+
+-   Re-export getGlobalClaimValidators function from supertokens-website
+
 ## [0.5.0] - 2023-02-01
 
 ## Breaking changes
