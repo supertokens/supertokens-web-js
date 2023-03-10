@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changes
 
 -   Re-export getGlobalClaimValidators function from supertokens-website
+-   Re-export PrimitiveArrayClaimConfig & PrimitiveClaimConfig from supertokens-website
+-   Remove EmailVerificationClaimClass constructor's updateContextOnIsVerifiedFalse prop
 
 ## [0.5.0] - 2023-02-01
 
