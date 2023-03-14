@@ -40,7 +40,7 @@
     "homepage": "https://github.com/supertokens/supertokens-web-js#readme",
     "dependencies": {
         "supertokens-js-override": "0.0.4",
-        "supertokens-website": "^16.0.3"
+        "supertokens-website": "^17.0.0"
     },
     "devDependencies": {
         "@babel/core": "^7.17.8",
@@ -64,39 +64,39 @@
     "size-limit": [
         {
             "path": "lib/build/index.js",
-            "limit": "5kb"
+            "limit": "13kb"
         },
         {
             "path": "recipe/emailverification/index.js",
-            "limit": "25kb"
+            "limit": "26kb"
         },
         {
             "path": "recipe/emailpassword/index.js",
-            "limit": "25kb"
+            "limit": "26kb"
         },
         {
             "path": "recipe/thirdparty/index.js",
-            "limit": "25kb"
-        },
-        {
-            "path": "recipe/thirdpartyemailpassword/index.js",
             "limit": "27kb"
         },
         {
+            "path": "recipe/thirdpartyemailpassword/index.js",
+            "limit": "29kb"
+        },
+        {
             "path": "recipe/session/index.js",
-            "limit": "22kb"
+            "limit": "23kb"
         },
         {
             "path": "recipe/passwordless/index.js",
-            "limit": "25kb"
+            "limit": "26kb"
         },
         {
             "path": "recipe/thirdpartypasswordless/index.js",
-            "limit": "28kb"
+            "limit": "29kb"
         },
         {
             "path": "recipe/userroles/index.js",
-            "limit": "22kb"
+            "limit": "23kb"
         }
     ]
 }
