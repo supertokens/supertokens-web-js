@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Breaking changes
 
 -   Remove EmailVerificationClaimClass constructor's updateContextOnIsVerifiedFalse prop
+-   Update to web-js interface version
 
 ## [0.5.0] - 2023-02-01
 
