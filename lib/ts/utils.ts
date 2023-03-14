@@ -17,6 +17,8 @@ import { DEFAULT_API_BASE_PATH, SSR_ERROR } from "./constants";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import NormalisedURLPath from "./normalisedURLPath";
 import { AppInfoUserInput, NormalisedAppInfo } from "./types";
+import { SessionClaimValidator } from "supertokens-website";
+import { getGlobalClaimValidators as getGlobalClaimValidatorsWebsite } from "supertokens-website/utils/globalClaimValidators";
 
 export function appendQueryParamsToURL(stringUrl: string, queryParams?: Record<string, string>): string {
     if (queryParams === undefined) {
@@ -111,4 +113,17 @@ export function getNormalisedUserContext(userContext?: any) {
 export function getHashFromLocation(): string {
     // By default it is returned with the "#" at the beginning, we cut that off here.
     return WindowHandlerReference.getReferenceOrThrow().windowHandler.location.getHash().substring(1);
+}
+
+export function getGlobalClaimValidators({
+    overrideGlobalClaimValidators,
+    userContext,
+}: {
+    overrideGlobalClaimValidators?: (
+        globalClaimValidators: SessionClaimValidator[],
+        userContext: any
+    ) => SessionClaimValidator[];
+    userContext?: any;
+}) {
+    return getGlobalClaimValidatorsWebsite(overrideGlobalClaimValidators, userContext);
 }
