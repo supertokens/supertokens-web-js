@@ -2,8 +2,8 @@ import RecipeModule from "./recipe/recipeModule";
 import NormalisedURLPath from "./normalisedURLPath";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
-import { CookieHandlerInput } from "supertokens-website/utils/cookieHandler/types";
-import { WindowHandlerInput } from "supertokens-website/utils/windowHandler/types";
+import { CookieHandlerInput } from "./cookieHandler/types";
+import { WindowHandlerInput } from "./windowHandler/types";
 /**
  * The configuration object to be passed when calling SuperTokens.init
  */

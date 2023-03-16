@@ -32,7 +32,7 @@ import {
     PreAndPostAPIHookAction as EmailVerificationAction,
     UserInput as EmailVerificationUserInput,
 } from "../../recipe/emailverification/types";
-import EmailVerification from "../../recipe/emailverification";
+import EmailVerification, { EmailVerificationClaim } from "../../recipe/emailverification";
 import {
     RecipeInterface as EmailPasswordRecipeInterface,
     PreAndPostAPIHookAction as EmailPasswordAction,
@@ -98,10 +98,13 @@ import { Recipe as TPPRecipe } from "../../recipe/thirdpartypasswordless/recipe"
 import { getRecipeImplementation as TPPRecipeImplementation } from "../../recipe/thirdpartypasswordless/recipeImplementation";
 import TPPUtils from "../../recipe/thirdpartypasswordless/utils";
 import Multitenancy from "../../recipe/multitenancy";
-import { WindowHandlerInput, WindowHandlerInterface } from "supertokens-website/utils/windowHandler/types";
-import { CookieHandlerInput, CookieHandlerInterface } from "supertokens-website/utils/cookieHandler/types";
+import { WindowHandlerInput, WindowHandlerInterface } from "../../utils/windowHandler/types";
+import { CookieHandlerInput, CookieHandlerInterface } from "../../utils/cookieHandler/types";
 import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recipe/session";
 import { PermissionClaim, UserRoleClaim } from "../../recipe/userroles";
+import { CookieHandlerReference } from "../../utils/cookieHandler";
+import { WindowHandlerReference } from "../../utils/windowHandler";
+
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
     return {
@@ -862,10 +865,10 @@ const sessionPostAPIHook: RecipePostAPIHookFunction<"SIGN_OUT" | "REFRESH_SESSIO
 
 function getSession(): CreateRecipeFunction<"SIGN_OUT" | "REFRESH_SESSION"> {
     const config: SessionUserInput = {
-        sessionScope: undefined,
+        sessionTokenFrontendDomain: undefined,
         sessionExpiredStatusCode: undefined,
         autoAddCredentials: undefined,
-        cookieDomain: undefined,
+        sessionTokenBackendDomain: undefined,
         isInIframe: undefined,
         onHandleEvent: function (event) {
             if (event.action === "REFRESH_SESSION") {
@@ -1031,6 +1034,7 @@ const windowHandlerInput: WindowHandlerInput = (original: WindowHandlerInterface
                 window.location.href = newHref;
             },
         },
+        getWindowUnsafe: () => window,
     };
 };
 
@@ -1972,6 +1976,7 @@ Session.validateClaims({
         customClaimInstance.validators.custVal(1),
         UserRoleClaim.validators.excludes("admin", 15),
         PermissionClaim.validators.includesAll(["support", "moderator"]),
+        EmailVerificationClaim.validators.isVerified(10, 3600),
     ],
     userContext: {
         refreshCalled: 0,
@@ -1979,3 +1984,8 @@ Session.validateClaims({
 });
 
 Session.addAxiosInterceptors({});
+
+function reexportedHandlers() {
+    CookieHandlerReference.getReferenceOrThrow();
+    WindowHandlerReference.getReferenceOrThrow();
+}

@@ -29,6 +29,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     -   Changed signatures of the functions `getThirdPartyAuthorisationURLWithQueryParamsAndSetState`
     -   Removed functions - `getThirdPartyStateAndOtherInfoFromStorage`, `setThirdPartyStateAndOtherInfoToStorage`, `getAuthorisationURLFromBackend`, `generateThirdPartyStateToSendToOAuthProvider`, `verifyAndGetThirdPartyStateOrThrowError`, `getThirdPartyAuthCodeFromURL`, `getThirdPartyAuthErrorFromURL`, `getThirdPartyAuthStateFromURL`
 
+## [0.6.0] - 2023-03-14
+
+## Additions
+
+-   Re-export getGlobalClaimValidators function from supertokens-website
+-   Re-export PrimitiveArrayClaimConfig & PrimitiveClaimConfig from supertokens-website
+
+## Breaking changes
+
+-   Remove EmailVerificationClaimClass constructor's updateContextOnIsVerifiedFalse prop
+-   Update to web-js interface version
+
+## [0.5.0] - 2023-02-01
+
+## Breaking changes
+
+-   Only supporting FDI 1.16
+-   Updated `supertokens-website` dependency that requires a backend SDK update to:
+    -   supertokens-node: >= 13.0.0
+    -   supertokens-python: >= 0.12.0
+    -   supertokens-golang: >= 0.10.0
+-   Renamed configuration options:
+    -   `sessionScope` renamed to `sessionTokenFrontendDomain`
+    -   `cookieDomain` renamed to `sessionTokenBackendDomain`
+
+### Added
+
+-   Added support for authorizing requests using the `Authorization` header instead of cookies
+    -   Added `tokenTransferMethod` config option
+    -   Check out https://supertokens.com/docs/thirdpartyemailpassword/common-customizations/sessions/token-transfer-method for more information
+
+## [0.4.0] - 2023-01-19
+
+### Added
+
+-   Re-exporting `cookieHandler`, `windowHandler` and `sessionClaimValidatorStore` from supertokens-website.
+
+### Breaking Changes
+
+-   Updated website dependency, which added `getWindowUnsafe` to the WindowHandlerInterface. This function should return the raw window object.
+
 ## [0.3.0] - 2022-10-17
 
 ### Added

@@ -1,8 +1,11 @@
 import { UserInput } from "./types";
 import { RecipeInterface, ClaimValidationError, SessionClaimValidator, SessionClaim } from "supertokens-website";
+import { PrimitiveClaimConfig } from "supertokens-website/lib/build/claims/primitiveClaim";
+import { PrimitiveArrayClaimConfig } from "supertokens-website/lib/build/claims/primitiveArrayClaim";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<unknown>;
     static getUserId(input?: { userContext?: any }): Promise<string>;
+    static getAccessToken(input?: { userContext?: any }): Promise<string | undefined>;
     static getAccessTokenPayloadSecurely(input?: { userContext?: any }): Promise<any>;
     static attemptRefreshingSession(): Promise<boolean>;
     static doesSessionExist(input?: { userContext?: any }): Promise<boolean>;
@@ -31,6 +34,7 @@ export default class RecipeWrapper {
 declare const init: typeof RecipeWrapper.init;
 declare const getUserId: typeof RecipeWrapper.getUserId;
 declare const getAccessTokenPayloadSecurely: typeof RecipeWrapper.getAccessTokenPayloadSecurely;
+declare const getAccessToken: typeof RecipeWrapper.getAccessToken;
 declare const attemptRefreshingSession: typeof RecipeWrapper.attemptRefreshingSession;
 declare const doesSessionExist: typeof RecipeWrapper.doesSessionExist;
 /**
@@ -54,6 +58,7 @@ export {
     init,
     getUserId,
     getAccessTokenPayloadSecurely,
+    getAccessToken,
     attemptRefreshingSession,
     doesSessionExist,
     addAxiosInterceptors,
@@ -62,5 +67,7 @@ export {
     getClaimValue,
     getInvalidClaimsFromResponse,
     RecipeInterface,
+    PrimitiveArrayClaimConfig,
+    PrimitiveClaimConfig,
     UserInput,
 };

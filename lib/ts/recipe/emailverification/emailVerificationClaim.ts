@@ -5,10 +5,7 @@ import { RecipeInterface } from "./types";
  * We include "Class" in the class name, because it makes it easier to import/use the right thing (the instance exported by the recipe) instead of this.
  * */
 export class EmailVerificationClaimClass extends BooleanClaim {
-    constructor(
-        getRecipeImpl: () => RecipeInterface,
-        updateContextOnIsVerifiedFalse?: (userContext: any) => void | Promise<void>
-    ) {
+    constructor(getRecipeImpl: () => RecipeInterface) {
         super({
             id: "st-ev",
             refresh: async (userContext) => {
@@ -35,9 +32,6 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                 },
                 validate: async (payload, userContext) => {
                     const value = this.getValueFromPayload(payload, userContext);
-                    if (value !== true && updateContextOnIsVerifiedFalse !== undefined) {
-                        await updateContextOnIsVerifiedFalse(userContext);
-                    }
                     return value === true
                         ? { isValid: true }
                         : {
@@ -50,6 +44,6 @@ export class EmailVerificationClaimClass extends BooleanClaim {
     }
 
     validators!: BooleanClaim["validators"] & {
-        isVerified: (refetchTimeOnFalseInSeconds?: number) => SessionClaimValidator;
+        isVerified: (refetchTimeOnFalseInSeconds?: number, maxAgeInSeconds?: number) => SessionClaimValidator;
     };
 }

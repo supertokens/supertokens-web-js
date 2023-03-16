@@ -16,6 +16,8 @@ import { getNormalisedUserContext } from "../../utils";
 import SessionRecipe from "./recipe";
 import { UserInput } from "./types";
 import { RecipeInterface, ClaimValidationError, SessionClaimValidator, SessionClaim } from "supertokens-website";
+import { PrimitiveClaimConfig } from "supertokens-website/lib/build/claims/primitiveClaim";
+import { PrimitiveArrayClaimConfig } from "supertokens-website/lib/build/claims/primitiveArrayClaim";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -24,6 +26,12 @@ export default class RecipeWrapper {
 
     static getUserId(input?: { userContext?: any }): Promise<string> {
         return SessionRecipe.getInstanceOrThrow().getUserId({
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    static getAccessToken(input?: { userContext?: any }): Promise<string | undefined> {
+        return SessionRecipe.getInstanceOrThrow().getAccessToken({
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
@@ -93,6 +101,7 @@ export default class RecipeWrapper {
 const init = RecipeWrapper.init;
 const getUserId = RecipeWrapper.getUserId;
 const getAccessTokenPayloadSecurely = RecipeWrapper.getAccessTokenPayloadSecurely;
+const getAccessToken = RecipeWrapper.getAccessToken;
 const attemptRefreshingSession = RecipeWrapper.attemptRefreshingSession;
 const doesSessionExist = RecipeWrapper.doesSessionExist;
 /**
@@ -118,6 +127,7 @@ export {
     init,
     getUserId,
     getAccessTokenPayloadSecurely,
+    getAccessToken,
     attemptRefreshingSession,
     doesSessionExist,
     addAxiosInterceptors,
@@ -126,5 +136,7 @@ export {
     getClaimValue,
     getInvalidClaimsFromResponse,
     RecipeInterface,
+    PrimitiveArrayClaimConfig,
+    PrimitiveClaimConfig,
     UserInput,
 };
