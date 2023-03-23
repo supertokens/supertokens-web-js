@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Changes
+
+-   Updates dependencies and backend config for the vue with-thirdpartyemailpassword example app
+
 ## [0.6.0] - 2023-03-14
 
 ## Additions
