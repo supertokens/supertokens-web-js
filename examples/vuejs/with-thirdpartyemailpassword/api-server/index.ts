@@ -5,6 +5,7 @@ import Session from "supertokens-node/recipe/session";
 import { verifySession } from "supertokens-node/recipe/session/framework/express";
 import { middleware, errorHandler, SessionRequest } from "supertokens-node/framework/express";
 import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
+import Dashboard from "supertokens-node/recipe/dashboard";
 require("dotenv").config();
 
 const apiPort = process.env.REACT_APP_API_PORT || 3001;
@@ -49,6 +50,7 @@ supertokens.init({
             ],
         }),
         Session.init(),
+        Dashboard.init(),
     ],
 });
 
