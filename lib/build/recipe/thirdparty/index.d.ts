@@ -12,6 +12,16 @@ export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     static signOut(input?: { userContext?: any }): Promise<void>;
     /**
+     * Get the current login state from storage, this is also used when calling signInUp
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
+     *
+     * @returns State object from storage
+     */
+    static getStateAndOtherInfoFromStorage<CustomStateProperties>(input?: {
+        userContext?: any;
+    }): (StateObject & CustomStateProperties) | undefined;
+    /**
      * Get the URL that should be opened for third party authentication
      *
      * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
@@ -67,12 +77,14 @@ export default class RecipeWrapper {
 declare const init: typeof RecipeWrapper.init;
 declare const getAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 declare const signInAndUp: typeof RecipeWrapper.signInAndUp;
+declare const getStateAndOtherInfoFromStorage: typeof RecipeWrapper.getStateAndOtherInfoFromStorage;
 declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
     getAuthorisationURLWithQueryParamsAndSetState,
     signInAndUp,
     signOut,
+    getStateAndOtherInfoFromStorage,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

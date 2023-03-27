@@ -16,7 +16,7 @@
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { UserType as EmailPasswordUserType } from "../emailpassword";
-import { ThirdPartyUserType } from "../thirdparty/types";
+import { StateObject, ThirdPartyUserType } from "../thirdparty/types";
 import Recipe from "./recipe";
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 
@@ -114,6 +114,22 @@ export default class RecipeWrapper {
         return Recipe.getInstanceOrThrow().recipeImplementation.sendPasswordResetEmail({
             ...input,
             userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
+
+    /**
+     * Get the current login state from storage, this is also used when calling signInUp
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns State object from storage
+     */
+    static getStateAndOtherInfoFromStorage<CustomStateProperties>(input?: {
+        userContext?: any;
+    }): (StateObject & CustomStateProperties) | undefined {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getStateAndOtherInfoFromStorage({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 
@@ -317,6 +333,7 @@ const doesEmailExist = RecipeWrapper.doesEmailExist;
 const emailPasswordSignUp = RecipeWrapper.emailPasswordSignUp;
 const emailPasswordSignIn = RecipeWrapper.emailPasswordSignIn;
 const thirdPartySignInAndUp = RecipeWrapper.thirdPartySignInAndUp;
+const getStateAndOtherInfoFromStorage = RecipeWrapper.getStateAndOtherInfoFromStorage;
 const getAuthorisationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 const getResetPasswordTokenFromURL = RecipeWrapper.getResetPasswordTokenFromURL;
 const signOut = RecipeWrapper.signOut;
@@ -329,6 +346,7 @@ export {
     emailPasswordSignUp,
     emailPasswordSignIn,
     thirdPartySignInAndUp,
+    getStateAndOtherInfoFromStorage,
     getAuthorisationURLWithQueryParamsAndSetState,
     signOut,
     getResetPasswordTokenFromURL,

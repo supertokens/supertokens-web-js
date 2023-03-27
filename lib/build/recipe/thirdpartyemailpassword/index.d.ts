@@ -1,6 +1,6 @@
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { UserType as EmailPasswordUserType } from "../emailpassword";
-import { ThirdPartyUserType } from "../thirdparty/types";
+import { StateObject, ThirdPartyUserType } from "../thirdparty/types";
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
 export default class RecipeWrapper {
     static init(
@@ -81,6 +81,16 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     >;
+    /**
+     * Get the current login state from storage, this is also used when calling signInUp
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns State object from storage
+     */
+    static getStateAndOtherInfoFromStorage<CustomStateProperties>(input?: {
+        userContext?: any;
+    }): (StateObject & CustomStateProperties) | undefined;
     /**
      * Check if an email exists
      *
@@ -245,6 +255,7 @@ declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
 declare const emailPasswordSignUp: typeof RecipeWrapper.emailPasswordSignUp;
 declare const emailPasswordSignIn: typeof RecipeWrapper.emailPasswordSignIn;
 declare const thirdPartySignInAndUp: typeof RecipeWrapper.thirdPartySignInAndUp;
+declare const getStateAndOtherInfoFromStorage: typeof RecipeWrapper.getStateAndOtherInfoFromStorage;
 declare const getAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 declare const getResetPasswordTokenFromURL: typeof RecipeWrapper.getResetPasswordTokenFromURL;
 declare const signOut: typeof RecipeWrapper.signOut;
@@ -256,6 +267,7 @@ export {
     emailPasswordSignUp,
     emailPasswordSignIn,
     thirdPartySignInAndUp,
+    getStateAndOtherInfoFromStorage,
     getAuthorisationURLWithQueryParamsAndSetState,
     signOut,
     getResetPasswordTokenFromURL,
