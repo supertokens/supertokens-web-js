@@ -659,8 +659,6 @@ const tppPreAPIHook: RecipePreAPIHookFunction<TPPlessAction> = async function (
         //
     } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
         //
-    } else if (context.action === "GET_PROVIDERS") {
-        //
     }
 
     if (context.userContext === undefined) {
@@ -692,8 +690,6 @@ const tppPostAPIHook: RecipePostAPIHookFunction<TPPlessAction> = async function 
     } else if (context.action === "GET_AUTHORISATION_URL") {
         //
     } else if (context.action === "THIRD_PARTY_SIGN_IN_UP") {
-        //
-    } else if (context.action === "GET_PROVIDERS") {
         //
     }
 

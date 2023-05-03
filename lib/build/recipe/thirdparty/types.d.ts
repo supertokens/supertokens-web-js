@@ -9,7 +9,7 @@ import {
     UserInput as RecipeModuleUserInput,
 } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
-export declare type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP" | "GET_PROVIDERS";
+export declare type PreAndPostAPIHookAction = "GET_AUTHORISATION_URL" | "THIRD_PARTY_SIGN_IN_UP";
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 export declare type UserInput = {
