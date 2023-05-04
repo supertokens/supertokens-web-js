@@ -1,6 +1,6 @@
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { ThirdPartyUserType } from "../thirdparty/types";
+import { StateObject, ThirdPartyUserType } from "../thirdparty/types";
 import { PasswordlessFlowType, PasswordlessUser } from "../passwordless/types";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
@@ -57,6 +57,16 @@ export default class RecipeWrapper {
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string>;
+    /**
+     * Get the current login state from storage, this is also used when calling signInUp
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns State object from storage
+     */
+    static getThirdPartyStateAndOtherInfoFromStorage<CustomStateProperties>(input?: {
+        userContext?: any;
+    }): (StateObject & CustomStateProperties) | undefined;
     /**
      * Create and send a code to the user for passwordless auth
      *
@@ -253,6 +263,7 @@ export default class RecipeWrapper {
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getThirdPartyAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getThirdPartyAuthorisationURLWithQueryParamsAndSetState;
+declare const getThirdPartyStateAndOtherInfoFromStorage: typeof RecipeWrapper.getThirdPartyStateAndOtherInfoFromStorage;
 declare const thirdPartySignInAndUp: typeof RecipeWrapper.thirdPartySignInAndUp;
 declare const createPasswordlessCode: typeof RecipeWrapper.createPasswordlessCode;
 declare const resendPasswordlessCode: typeof RecipeWrapper.resendPasswordlessCode;
@@ -268,6 +279,7 @@ declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
     getThirdPartyAuthorisationURLWithQueryParamsAndSetState,
+    getThirdPartyStateAndOtherInfoFromStorage,
     thirdPartySignInAndUp,
     createPasswordlessCode,
     resendPasswordlessCode,

@@ -17,7 +17,7 @@ import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreA
 import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
-import { ThirdPartyUserType } from "../thirdparty/types";
+import { StateObject, ThirdPartyUserType } from "../thirdparty/types";
 import * as PasswordlessUtilsFunctions from "../passwordless/utils";
 import { PasswordlessFlowType, PasswordlessUser } from "../passwordless/types";
 
@@ -96,6 +96,22 @@ export default class RecipeWrapper {
                 userContext: getNormalisedUserContext(input.userContext),
             }
         );
+    }
+
+    /**
+     * Get the current login state from storage, this is also used when calling signInUp
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns State object from storage
+     */
+    static getThirdPartyStateAndOtherInfoFromStorage<CustomStateProperties>(input?: {
+        userContext?: any;
+    }): (StateObject & CustomStateProperties) | undefined {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getThirdPartyStateAndOtherInfoFromStorage({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
     }
 
     /**
@@ -350,6 +366,7 @@ export default class RecipeWrapper {
 const init = RecipeWrapper.init;
 const getThirdPartyAuthorisationURLWithQueryParamsAndSetState =
     RecipeWrapper.getThirdPartyAuthorisationURLWithQueryParamsAndSetState;
+const getThirdPartyStateAndOtherInfoFromStorage = RecipeWrapper.getThirdPartyStateAndOtherInfoFromStorage;
 const thirdPartySignInAndUp = RecipeWrapper.thirdPartySignInAndUp;
 const createPasswordlessCode = RecipeWrapper.createPasswordlessCode;
 const resendPasswordlessCode = RecipeWrapper.resendPasswordlessCode;
@@ -366,6 +383,7 @@ const signOut = RecipeWrapper.signOut;
 export {
     init,
     getThirdPartyAuthorisationURLWithQueryParamsAndSetState,
+    getThirdPartyStateAndOtherInfoFromStorage,
     thirdPartySignInAndUp,
     createPasswordlessCode,
     resendPasswordlessCode,
