@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Remove EmailVerificationClaimClass constructor's updateContextOnIsVerifiedFalse prop
 -   Update to web-js interface version
+-   Updated supertokens website dependency, which made SessionClaimValidator a type instead of an abstract class
 
 ## [0.5.0] - 2023-02-01
 
