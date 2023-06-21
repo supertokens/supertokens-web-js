@@ -26,8 +26,6 @@ export default class RecipeWrapper {
      *
      * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
      *
-     * @param tenantId (OPTIONAL) The identifier for the tenant.
-     *
      * @param frontendRedirectURI The URL that should be used for redirection after the third party flow finishes.
      *
      * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
@@ -42,7 +40,6 @@ export default class RecipeWrapper {
      */
     static getAuthorisationURLWithQueryParamsAndSetState(input: {
         thirdPartyId: string;
-        tenantId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
         userContext?: any;
@@ -76,15 +73,15 @@ export default class RecipeWrapper {
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
-declare const signInAndUp: typeof RecipeWrapper.signInAndUp;
 declare const getStateAndOtherInfoFromStorage: typeof RecipeWrapper.getStateAndOtherInfoFromStorage;
+declare const signInAndUp: typeof RecipeWrapper.signInAndUp;
 declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
+    getStateAndOtherInfoFromStorage,
     getAuthorisationURLWithQueryParamsAndSetState,
     signInAndUp,
     signOut,
-    getStateAndOtherInfoFromStorage,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

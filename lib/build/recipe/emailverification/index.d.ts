@@ -55,12 +55,21 @@ export default class RecipeWrapper {
         fetchResponse: Response;
     }>;
     static getEmailVerificationTokenFromURL(input?: { userContext?: any }): string;
+    /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current location
+     */
+    static getTenantIdFromURL(input?: { userContext?: any }): string | undefined;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
 declare const sendVerificationEmail: typeof RecipeWrapper.sendVerificationEmail;
 declare const isEmailVerified: typeof RecipeWrapper.isEmailVerified;
 declare const getEmailVerificationTokenFromURL: typeof RecipeWrapper.getEmailVerificationTokenFromURL;
+declare const getTenantIdFromURL: typeof RecipeWrapper.getTenantIdFromURL;
 declare const EmailVerificationClaim: EmailVerificationClaimClass;
 export {
     init,
@@ -68,6 +77,7 @@ export {
     sendVerificationEmail,
     isEmailVerified,
     getEmailVerificationTokenFromURL,
+    getTenantIdFromURL,
     EmailVerificationClaim,
     UserInput,
     RecipeInterface,

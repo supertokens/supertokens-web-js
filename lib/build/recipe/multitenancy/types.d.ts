@@ -30,6 +30,7 @@ export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPo
     };
 };
 export declare type RecipeInterface = {
+    getTenantId: (input: { userContext: any }) => Promise<string | undefined> | string | undefined;
     /**
      * Gets enabled login methods and their configuration
      *

@@ -60,12 +60,12 @@ export declare type RecipeInterface = {
     getAuthorisationURLFromBackend: (input: {
         thirdPartyId: string;
         redirectURIOnProviderDashboard: string;
-        tenantId?: string;
+        tenantId: string | undefined;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
         status: "OK";
-        url: string;
+        urlWithQueryParams: string;
         pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;
@@ -138,7 +138,7 @@ export declare type RecipeInterface = {
     getThirdPartyAuthorisationURLWithQueryParamsAndSetState: (input: {
         thirdPartyId: string;
         frontendRedirectURI: string;
-        tenantId?: string;
+        tenantId: string | undefined;
         redirectURIOnProviderDashboard?: string;
         userContext: any;
         options?: RecipeFunctionOptions;
@@ -240,6 +240,7 @@ export declare type RecipeInterface = {
     resendPasswordlessCode: (input: {
         userContext: any;
         deviceId: string;
+        tenantId: string | undefined;
         preAuthSessionId: string;
         options?: RecipeFunctionOptions;
     }) => Promise<{
@@ -276,11 +277,13 @@ export declare type RecipeInterface = {
             | {
                   userInputCode: string;
                   deviceId: string;
+                  tenantId: string | undefined;
                   preAuthSessionId: string;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
             | {
+                  tenantId: string | undefined;
                   preAuthSessionId: string;
                   linkCode: string;
                   userContext: any;
@@ -320,6 +323,14 @@ export declare type RecipeInterface = {
      * @returns The "preAuthSessionId" query parameter from the current URL
      */
     getPasswordlessPreAuthSessionIdFromURL: (input: { userContext: any }) => string;
+    /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current URL
+     */
+    getTenantIdFromURL: (input: { userContext: any }) => string | undefined;
     /**
      * Check if a user with the given email exists
      *
@@ -387,6 +398,7 @@ export declare type RecipeInterface = {
     setPasswordlessLoginAttemptInfo: <CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
+            tenantId?: string;
             preAuthSessionId: string;
             flowType: PasswordlessFlowType;
         } & CustomStateProperties;

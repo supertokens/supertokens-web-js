@@ -16,6 +16,7 @@
 import { WindowHandlerReference } from "../../windowHandler";
 import Querier from "../../querier";
 import { getHashFromLocation, getQueryParams } from "../../utils";
+import Multitenancy from "../multitenancy/recipe";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY } from "./constants";
 import { PreAndPostAPIHookAction, RecipeInterface, PasswordlessFlowType, PasswordlessUser } from "./types";
@@ -57,6 +58,9 @@ export default function getRecipeImplementation(
                 preAuthSessionId: string;
                 flowType: PasswordlessFlowType;
             }>(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+                    userContext: input.userContext,
+                }),
                 "/signinup/code",
                 { body: JSON.stringify(bodyObj) },
                 Querier.preparePreAPIHook({
@@ -78,6 +82,7 @@ export default function getRecipeImplementation(
             };
         },
         resendCode: async function (input: {
+            tenantId: string | undefined;
             deviceId: string;
             preAuthSessionId: string;
             userContext: any;
@@ -94,6 +99,7 @@ export default function getRecipeImplementation(
             const { jsonBody, fetchResponse } = await querier.post<{
                 status: "OK" | "RESTART_FLOW_ERROR";
             }>(
+                input.tenantId,
                 "/signinup/code/resend",
                 { body: JSON.stringify(bodyObj) },
                 Querier.preparePreAPIHook({
@@ -117,6 +123,7 @@ export default function getRecipeImplementation(
         consumeCode: async function (
             input:
                 | {
+                      tenantId: string | undefined;
                       userInputCode: string;
                       deviceId: string;
                       preAuthSessionId: string;
@@ -124,6 +131,7 @@ export default function getRecipeImplementation(
                       options?: RecipeFunctionOptions;
                   }
                 | {
+                      tenantId: string | undefined;
                       preAuthSessionId: string;
                       linkCode: string;
                       userContext: any;
@@ -177,6 +185,7 @@ export default function getRecipeImplementation(
                 | { status: "RESTART_FLOW_ERROR" };
 
             const { jsonBody, fetchResponse } = await querier.post<ResponseType>(
+                input.tenantId,
                 "/signinup/code/consume",
                 { body: JSON.stringify(bodyObj) },
                 Querier.preparePreAPIHook({
@@ -196,6 +205,9 @@ export default function getRecipeImplementation(
                 ...jsonBody,
                 fetchResponse,
             };
+        },
+        getTenantIdFromURL: function () {
+            return getQueryParams("tenantId");
         },
         getLinkCodeFromURL: function () {
             return getHashFromLocation();
@@ -222,6 +234,9 @@ export default function getRecipeImplementation(
                 status: "OK";
                 exists: boolean;
             }>(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+                    userContext: input.userContext,
+                }),
                 "/signup/email/exists",
                 {},
                 { email: input.email },
@@ -257,6 +272,9 @@ export default function getRecipeImplementation(
                 status: "OK";
                 exists: boolean;
             }>(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+                    userContext: input.userContext,
+                }),
                 "/signup/phoneNumber/exists",
                 {},
                 { phoneNumber: input.phoneNumber },
@@ -283,6 +301,7 @@ export default function getRecipeImplementation(
             | undefined
             | ({
                   deviceId: string;
+                  tenantId?: string;
                   preAuthSessionId: string;
                   flowType: PasswordlessFlowType;
               } & CustomLoginAttemptInfoProperties)
@@ -304,6 +323,7 @@ export default function getRecipeImplementation(
         setLoginAttemptInfo: async function <CustomStateProperties>(input: {
             attemptInfo: {
                 deviceId: string;
+                tenantId?: string;
                 preAuthSessionId: string;
                 flowType: PasswordlessFlowType;
             } & CustomStateProperties;

@@ -111,4 +111,13 @@ export type RecipeInterface = {
      * @returns The "token" query parameter from the current location
      */
     getEmailVerificationTokenFromURL: (input: { userContext: any }) => string;
+
+    /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current location
+     */
+    getTenantIdFromURL: (input: { userContext: any }) => string | undefined;
 };

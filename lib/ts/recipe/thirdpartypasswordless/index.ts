@@ -18,6 +18,7 @@ import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
 import { StateObject, ThirdPartyUserType } from "../thirdparty/types";
+import Multitenancy from "../multitenancy/recipe";
 import * as PasswordlessUtilsFunctions from "../passwordless/utils";
 import { PasswordlessFlowType, PasswordlessUser } from "../passwordless/types";
 
@@ -82,18 +83,21 @@ export default class RecipeWrapper {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    static getThirdPartyAuthorisationURLWithQueryParamsAndSetState(input: {
+    static async getThirdPartyAuthorisationURLWithQueryParamsAndSetState(input: {
         thirdPartyId: string;
-        tenantId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
+        const userContext = getNormalisedUserContext(input.userContext);
+        const tenantId = await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext });
+
         return Recipe.getInstanceOrThrow().recipeImplementation.getThirdPartyAuthorisationURLWithQueryParamsAndSetState(
             {
+                tenantId,
                 ...input,
-                userContext: getNormalisedUserContext(input.userContext),
+                userContext,
             }
         );
     }
@@ -255,6 +259,20 @@ export default class RecipeWrapper {
     }
 
     /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current location
+     */
+    static getTenantIdFromURL(input?: { userContext?: any }): string | undefined {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getTenantIdFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
      * Check if a user with the given email exists
      *
      * @param email Email to check
@@ -321,6 +339,7 @@ export default class RecipeWrapper {
         | undefined
         | ({
               deviceId: string;
+              tenantId: string | undefined;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
@@ -336,7 +355,7 @@ export default class RecipeWrapper {
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
      */
-    static setPasswordlessLoginAttemptInfo<CustomStateProperties>(input: {
+    static async setPasswordlessLoginAttemptInfo<CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
             preAuthSessionId: string;
@@ -344,9 +363,15 @@ export default class RecipeWrapper {
         } & CustomStateProperties;
         userContext?: any;
     }): Promise<void> {
+        const userContext = getNormalisedUserContext(input.userContext);
+        const tenantId = await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext });
+
         return Recipe.getInstanceOrThrow().recipeImplementation.setPasswordlessLoginAttemptInfo({
-            ...input,
-            userContext: getNormalisedUserContext(input?.userContext),
+            attemptInfo: {
+                tenantId,
+                ...input.attemptInfo,
+            },
+            userContext,
         });
     }
 
@@ -373,6 +398,7 @@ const resendPasswordlessCode = RecipeWrapper.resendPasswordlessCode;
 const consumePasswordlessCode = RecipeWrapper.consumePasswordlessCode;
 const doesPasswordlessUserEmailExist = RecipeWrapper.doesPasswordlessUserEmailExist;
 const doesPasswordlessUserPhoneNumberExist = RecipeWrapper.doesPasswordlessUserPhoneNumberExist;
+const getTenantIdFromURL = RecipeWrapper.getTenantIdFromURL;
 const getPasswordlessLinkCodeFromURL = RecipeWrapper.getPasswordlessLinkCodeFromURL;
 const getPasswordlessPreAuthSessionIdFromURL = RecipeWrapper.getPasswordlessPreAuthSessionIdFromURL;
 const getPasswordlessLoginAttemptInfo = RecipeWrapper.getPasswordlessLoginAttemptInfo;
@@ -391,6 +417,7 @@ export {
     doesPasswordlessUserEmailExist,
     doesPasswordlessUserPhoneNumberExist,
     signOut,
+    getTenantIdFromURL,
     getPasswordlessLinkCodeFromURL,
     getPasswordlessPreAuthSessionIdFromURL,
     getPasswordlessLoginAttemptInfo,

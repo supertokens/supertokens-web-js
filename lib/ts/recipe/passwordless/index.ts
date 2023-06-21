@@ -14,6 +14,7 @@
  */
 
 import { getNormalisedUserContext } from "../../utils";
+import Multitenancy from "../multitenancy/recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import Recipe from "./recipe";
 import {
@@ -182,6 +183,20 @@ export default class RecipeWrapper {
     }
 
     /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current location
+     */
+    static getTenantIdFromURL(input?: { userContext?: any }): string | undefined {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getTenantIdFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
      * Check if a user with the given email exists
      *
      * @param email Email to check
@@ -244,6 +259,7 @@ export default class RecipeWrapper {
         | undefined
         | ({
               deviceId: string;
+              tenantId?: string | string;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
@@ -259,7 +275,7 @@ export default class RecipeWrapper {
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      */
-    static setLoginAttemptInfo<CustomStateProperties>(input: {
+    static async setLoginAttemptInfo<CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
             preAuthSessionId: string;
@@ -267,9 +283,14 @@ export default class RecipeWrapper {
         } & CustomStateProperties;
         userContext?: any;
     }): Promise<void> {
+        const userContext = getNormalisedUserContext(input.userContext);
+        const tenantId = await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext });
         return Recipe.getInstanceOrThrow().recipeImplementation.setLoginAttemptInfo({
-            ...input,
-            userContext: getNormalisedUserContext(input.userContext),
+            attemptInfo: {
+                tenantId,
+                ...input.attemptInfo,
+            },
+            userContext,
         });
     }
 
@@ -301,6 +322,7 @@ const doesPhoneNumberExist = RecipeWrapper.doesPhoneNumberExist;
 const signOut = RecipeWrapper.signOut;
 const getLinkCodeFromURL = RecipeWrapper.getLinkCodeFromURL;
 const getPreAuthSessionIdFromURL = RecipeWrapper.getPreAuthSessionIdFromURL;
+const getTenantIdFromURL = RecipeWrapper.getTenantIdFromURL;
 const getLoginAttemptInfo = RecipeWrapper.getLoginAttemptInfo;
 const setLoginAttemptInfo = RecipeWrapper.setLoginAttemptInfo;
 const clearLoginAttemptInfo = RecipeWrapper.clearLoginAttemptInfo;
@@ -315,6 +337,7 @@ export {
     signOut,
     getLinkCodeFromURL,
     getPreAuthSessionIdFromURL,
+    getTenantIdFromURL,
     getLoginAttemptInfo,
     setLoginAttemptInfo,
     clearLoginAttemptInfo,

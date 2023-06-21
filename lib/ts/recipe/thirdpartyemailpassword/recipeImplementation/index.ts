@@ -148,13 +148,13 @@ export default function getRecipeImplementation(
 
         getAuthorisationURLFromBackend: async function (input: {
             thirdPartyId: string;
-            tenantId?: string;
+            tenantId: string | undefined;
             redirectURIOnProviderDashboard: string;
             userContext: any;
             options?: RecipeFunctionOptions;
         }): Promise<{
             status: "OK";
-            url: string;
+            urlWithQueryParams: string;
             pkceCodeVerifier?: string;
             fetchResponse: Response;
         }> {
@@ -186,7 +186,7 @@ export default function getRecipeImplementation(
         },
         getAuthorisationURLWithQueryParamsAndSetState: async function (input: {
             thirdPartyId: string;
-            tenantId?: string;
+            tenantId: string | undefined;
             frontendRedirectURI: string;
             redirectURIOnProviderDashboard?: string;
             userContext: any;
@@ -216,6 +216,9 @@ export default function getRecipeImplementation(
 
         getAuthStateFromURL: function (input: { userContext: any }): string {
             return thirdPartyImpl.getAuthStateFromURL.bind(DerivedThirdParty(this))(input);
+        },
+        getTenantIdFromURL: function (input: { userContext: any }): string | undefined {
+            return emailPasswordImpl.getTenantIdFromURL.bind(DerivedEmailPassword(this))(input);
         },
     };
 }

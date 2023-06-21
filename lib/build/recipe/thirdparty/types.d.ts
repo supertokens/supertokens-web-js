@@ -94,7 +94,7 @@ export declare type RecipeInterface = {
     getAuthorisationURLWithQueryParamsAndSetState: (input: {
         thirdPartyId: string;
         frontendRedirectURI: string;
-        tenantId?: string;
+        tenantId: string | undefined;
         redirectURIOnProviderDashboard?: string;
         userContext: any;
         options?: RecipeFunctionOptions;
@@ -119,12 +119,12 @@ export declare type RecipeInterface = {
     getAuthorisationURLFromBackend: (input: {
         thirdPartyId: string;
         redirectURIOnProviderDashboard: string;
-        tenantId?: string;
+        tenantId: string | undefined;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
         status: "OK";
-        url: string;
+        urlWithQueryParams: string;
         pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;

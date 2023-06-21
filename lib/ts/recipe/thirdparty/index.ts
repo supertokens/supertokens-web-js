@@ -14,6 +14,7 @@
  */
 
 import { getNormalisedUserContext } from "../../utils";
+import Multitenancy from "../multitenancy/recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import Recipe from "./recipe";
 import {
@@ -58,8 +59,6 @@ export default class RecipeWrapper {
      *
      * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
      *
-     * @param tenantId (OPTIONAL) The identifier for the tenant.
-     *
      * @param frontendRedirectURI The URL that should be used for redirection after the third party flow finishes.
      *
      * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
@@ -72,17 +71,19 @@ export default class RecipeWrapper {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    static getAuthorisationURLWithQueryParamsAndSetState(input: {
+    static async getAuthorisationURLWithQueryParamsAndSetState(input: {
         thirdPartyId: string;
-        tenantId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
+        const userContext = getNormalisedUserContext(input.userContext);
+        const tenantId = await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext });
         return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLWithQueryParamsAndSetState({
+            tenantId,
             ...input,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext,
         });
     }
 
@@ -120,16 +121,16 @@ export default class RecipeWrapper {
 
 const init = RecipeWrapper.init;
 const getAuthorisationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
-const signInAndUp = RecipeWrapper.signInAndUp;
 const getStateAndOtherInfoFromStorage = RecipeWrapper.getStateAndOtherInfoFromStorage;
+const signInAndUp = RecipeWrapper.signInAndUp;
 const signOut = RecipeWrapper.signOut;
 
 export {
     init,
+    getStateAndOtherInfoFromStorage,
     getAuthorisationURLWithQueryParamsAndSetState,
     signInAndUp,
     signOut,
-    getStateAndOtherInfoFromStorage,
     RecipeInterface,
     StateObject,
     PreAPIHookContext,

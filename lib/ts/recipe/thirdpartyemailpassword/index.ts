@@ -15,6 +15,7 @@
 
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
+import Multitenancy from "../multitenancy/recipe";
 import { UserType as EmailPasswordUserType } from "../emailpassword";
 import { StateObject, ThirdPartyUserType } from "../thirdparty/types";
 import Recipe from "./recipe";
@@ -264,6 +265,20 @@ export default class RecipeWrapper {
     }
 
     /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current location
+     */
+    static getTenantIdFromURL(input?: { userContext?: any }): string | undefined {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getTenantIdFromURL({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    /**
      * Sign up/Sign in the user, this method uses the login attempt information from storage
      *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
@@ -301,8 +316,6 @@ export default class RecipeWrapper {
      *
      * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
      *
-     * @param tenantId (OPTIONAL) The identifier for the tenant.
-     *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
@@ -311,17 +324,19 @@ export default class RecipeWrapper {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    static getAuthorisationURLWithQueryParamsAndSetState(input: {
+    static async getAuthorisationURLWithQueryParamsAndSetState(input: {
         thirdPartyId: string;
-        tenantId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
+        const userContext = getNormalisedUserContext(input.userContext);
+        const tenantId = await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext });
         return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLWithQueryParamsAndSetState({
+            tenantId,
             ...input,
-            userContext: getNormalisedUserContext(input.userContext),
+            userContext,
         });
     }
 }
@@ -329,27 +344,29 @@ export default class RecipeWrapper {
 const init = RecipeWrapper.init;
 const submitNewPassword = RecipeWrapper.submitNewPassword;
 const sendPasswordResetEmail = RecipeWrapper.sendPasswordResetEmail;
+const getStateAndOtherInfoFromStorage = RecipeWrapper.getStateAndOtherInfoFromStorage;
 const doesEmailExist = RecipeWrapper.doesEmailExist;
 const emailPasswordSignUp = RecipeWrapper.emailPasswordSignUp;
 const emailPasswordSignIn = RecipeWrapper.emailPasswordSignIn;
 const thirdPartySignInAndUp = RecipeWrapper.thirdPartySignInAndUp;
-const getStateAndOtherInfoFromStorage = RecipeWrapper.getStateAndOtherInfoFromStorage;
 const getAuthorisationURLWithQueryParamsAndSetState = RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 const getResetPasswordTokenFromURL = RecipeWrapper.getResetPasswordTokenFromURL;
+const getTenantIdFromURL = RecipeWrapper.getTenantIdFromURL;
 const signOut = RecipeWrapper.signOut;
 
 export {
     init,
     submitNewPassword,
     sendPasswordResetEmail,
+    getStateAndOtherInfoFromStorage,
     doesEmailExist,
     emailPasswordSignUp,
     emailPasswordSignIn,
     thirdPartySignInAndUp,
-    getStateAndOtherInfoFromStorage,
     getAuthorisationURLWithQueryParamsAndSetState,
     signOut,
     getResetPasswordTokenFromURL,
+    getTenantIdFromURL,
     EmailPasswordUserType,
     ThirdPartyUserType,
     UserInput,

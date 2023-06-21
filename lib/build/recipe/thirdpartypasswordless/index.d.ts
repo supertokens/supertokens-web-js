@@ -51,7 +51,6 @@ export default class RecipeWrapper {
      */
     static getThirdPartyAuthorisationURLWithQueryParamsAndSetState(input: {
         thirdPartyId: string;
-        tenantId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
         userContext?: any;
@@ -183,6 +182,14 @@ export default class RecipeWrapper {
      */
     static getPasswordlessPreAuthSessionIdFromURL(input?: { userContext?: any }): string;
     /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current location
+     */
+    static getTenantIdFromURL(input?: { userContext?: any }): string | undefined;
+    /**
      * Check if a user with the given email exists
      *
      * @param email Email to check
@@ -237,6 +244,7 @@ export default class RecipeWrapper {
         | undefined
         | ({
               deviceId: string;
+              tenantId: string | undefined;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
@@ -270,6 +278,7 @@ declare const resendPasswordlessCode: typeof RecipeWrapper.resendPasswordlessCod
 declare const consumePasswordlessCode: typeof RecipeWrapper.consumePasswordlessCode;
 declare const doesPasswordlessUserEmailExist: typeof RecipeWrapper.doesPasswordlessUserEmailExist;
 declare const doesPasswordlessUserPhoneNumberExist: typeof RecipeWrapper.doesPasswordlessUserPhoneNumberExist;
+declare const getTenantIdFromURL: typeof RecipeWrapper.getTenantIdFromURL;
 declare const getPasswordlessLinkCodeFromURL: typeof RecipeWrapper.getPasswordlessLinkCodeFromURL;
 declare const getPasswordlessPreAuthSessionIdFromURL: typeof RecipeWrapper.getPasswordlessPreAuthSessionIdFromURL;
 declare const getPasswordlessLoginAttemptInfo: typeof RecipeWrapper.getPasswordlessLoginAttemptInfo;
@@ -287,6 +296,7 @@ export {
     doesPasswordlessUserEmailExist,
     doesPasswordlessUserPhoneNumberExist,
     signOut,
+    getTenantIdFromURL,
     getPasswordlessLinkCodeFromURL,
     getPasswordlessPreAuthSessionIdFromURL,
     getPasswordlessLoginAttemptInfo,

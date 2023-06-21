@@ -24,12 +24,12 @@ export default function getRecipeImplementation(
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
     return {
+        getTenantId() {
+            return undefined; // This defaults to the "public" tenant
+        },
+
         getLoginMethods: async function ({ tenantId, options, userContext }) {
             const queryParams: Record<string, string> = {};
-
-            if (tenantId !== undefined) {
-                queryParams.tenantId = tenantId;
-            }
 
             if (recipeImplInput.clientType !== undefined) {
                 queryParams.clientType = recipeImplInput.clientType;
@@ -51,6 +51,7 @@ export default function getRecipeImplementation(
                     }[];
                 };
             }>(
+                tenantId,
                 "/loginmethods",
                 {},
                 queryParams,

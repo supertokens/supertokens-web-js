@@ -239,12 +239,12 @@ export declare type RecipeInterface = {
     getAuthorisationURLFromBackend: (input: {
         thirdPartyId: string;
         redirectURIOnProviderDashboard: string;
-        tenantId?: string;
+        tenantId: string | undefined;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
         status: "OK";
-        url: string;
+        urlWithQueryParams: string;
         pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;
@@ -315,7 +315,7 @@ export declare type RecipeInterface = {
     getAuthorisationURLWithQueryParamsAndSetState: (input: {
         thirdPartyId: string;
         frontendRedirectURI: string;
-        tenantId?: string;
+        tenantId: string | undefined;
         redirectURIOnProviderDashboard?: string;
         userContext: any;
         options?: RecipeFunctionOptions;
@@ -360,4 +360,12 @@ export declare type RecipeInterface = {
      * @returns The "state" query param from the current URL. Returns an empty string if no state exists
      */
     getAuthStateFromURL: (input: { userContext: any }) => string;
+    /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current URL
+     */
+    getTenantIdFromURL: (input: { userContext: any }) => string | undefined;
 };

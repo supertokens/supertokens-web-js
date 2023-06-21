@@ -33,13 +33,23 @@ export default class RecipeWrapper {
         };
         fetchResponse: Response;
     }>;
+    /**
+     * Gets enabled login methods and their configuration from the backend
+     *
+     * @param userContext (OPTIONAL) Refer to {@link TODO the documentation}
+     *
+     * @returns `Promise<string | undefined> | string | undefined`
+     */
+    static getTenantId(input?: { userContext?: any }): Promise<string | undefined> | string | undefined;
     static AllowedDomainsClaim: import("./allowedDomainsClaim").AllowedDomainsClaimClass;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getLoginMethods: typeof RecipeWrapper.getLoginMethods;
+declare const getTenantId: typeof RecipeWrapper.getTenantId;
 export {
     init,
     getLoginMethods,
+    getTenantId,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,

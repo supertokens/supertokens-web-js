@@ -60,15 +60,30 @@ export default class RecipeWrapper {
         });
     }
 
+    /**
+     * Gets enabled login methods and their configuration from the backend
+     *
+     * @param userContext (OPTIONAL) Refer to {@link TODO the documentation}
+     *
+     * @returns `Promise<string | undefined> | string | undefined`
+     */
+    static getTenantId(input?: { userContext?: any }): Promise<string | undefined> | string | undefined {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getTenantId({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
     static AllowedDomainsClaim = AllowedDomainsClaim;
 }
 
 const init = RecipeWrapper.init;
 const getLoginMethods = RecipeWrapper.getLoginMethods;
+const getTenantId = RecipeWrapper.getTenantId;
 
 export {
     init,
     getLoginMethods,
+    getTenantId,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,

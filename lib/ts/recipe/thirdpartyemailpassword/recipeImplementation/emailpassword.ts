@@ -25,5 +25,6 @@ export default function getRecipeImplementation(
         getResetPasswordTokenFromURL: originalImplementation.getResetPasswordTokenFromURL.bind(originalImplementation),
         signIn: originalImplementation.emailPasswordSignIn.bind(originalImplementation),
         signUp: originalImplementation.emailPasswordSignUp.bind(originalImplementation),
+        getTenantIdFromURL: originalImplementation.getTenantIdFromURL.bind(originalImplementation),
     };
 }

@@ -13,6 +13,7 @@
  * under the License.
  */
 import Querier from "../../querier";
+import Multitenancy from "../multitenancy/recipe";
 import { PreAndPostAPIHookAction, RecipeInterface } from "./types";
 import { getQueryParams } from "../../utils";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
@@ -22,6 +23,7 @@ export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
+
     return {
         submitNewPassword: async function ({
             formFields,
@@ -48,6 +50,7 @@ export default function getRecipeImplementation(
                   fetchResponse: Response;
               }
         > {
+            const tenantId = this.getTenantIdFromURL({ userContext });
             const token = this.getResetPasswordTokenFromURL({
                 userContext,
             });
@@ -64,6 +67,7 @@ export default function getRecipeImplementation(
                       }[];
                   }
             >(
+                tenantId,
                 "/user/password/reset",
                 { body: JSON.stringify({ formFields, token, method: "token" }) },
                 Querier.preparePreAPIHook({
@@ -130,6 +134,7 @@ export default function getRecipeImplementation(
                       }[];
                   }
             >(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/user/password/reset/token",
                 { body: JSON.stringify({ formFields }) },
                 Querier.preparePreAPIHook({
@@ -198,6 +203,7 @@ export default function getRecipeImplementation(
                       }[];
                   }
             >(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/signup",
                 { body: JSON.stringify({ formFields }) },
                 Querier.preparePreAPIHook({
@@ -274,6 +280,7 @@ export default function getRecipeImplementation(
                       status: "WRONG_CREDENTIALS_ERROR";
                   }
             >(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/signin",
                 { body: JSON.stringify({ formFields }) },
                 Querier.preparePreAPIHook({
@@ -328,6 +335,7 @@ export default function getRecipeImplementation(
                 status: "OK";
                 exists: boolean;
             }>(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/signup/email/exists",
                 {},
                 { email },
@@ -359,6 +367,10 @@ export default function getRecipeImplementation(
             }
 
             return token;
+        },
+
+        getTenantIdFromURL: function (): string | undefined {
+            return getQueryParams("tenantId");
         },
     };
 }

@@ -198,6 +198,14 @@ export default class RecipeWrapper {
      */
     static getResetPasswordTokenFromURL(input?: { userContext?: any }): string;
     /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current location
+     */
+    static getTenantIdFromURL(input?: { userContext?: any }): string | undefined;
+    /**
      * Sign up/Sign in the user, this method uses the login attempt information from storage
      *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdpartyemailpassword/advanced-customizations/user-context the documentation}
@@ -229,8 +237,6 @@ export default class RecipeWrapper {
      *
      * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
      *
-     * @param tenantId (OPTIONAL) The identifier for the tenant.
-     *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
@@ -241,7 +247,6 @@ export default class RecipeWrapper {
      */
     static getAuthorisationURLWithQueryParamsAndSetState(input: {
         thirdPartyId: string;
-        tenantId?: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
         userContext?: any;
@@ -251,26 +256,28 @@ export default class RecipeWrapper {
 declare const init: typeof RecipeWrapper.init;
 declare const submitNewPassword: typeof RecipeWrapper.submitNewPassword;
 declare const sendPasswordResetEmail: typeof RecipeWrapper.sendPasswordResetEmail;
+declare const getStateAndOtherInfoFromStorage: typeof RecipeWrapper.getStateAndOtherInfoFromStorage;
 declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
 declare const emailPasswordSignUp: typeof RecipeWrapper.emailPasswordSignUp;
 declare const emailPasswordSignIn: typeof RecipeWrapper.emailPasswordSignIn;
 declare const thirdPartySignInAndUp: typeof RecipeWrapper.thirdPartySignInAndUp;
-declare const getStateAndOtherInfoFromStorage: typeof RecipeWrapper.getStateAndOtherInfoFromStorage;
 declare const getAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 declare const getResetPasswordTokenFromURL: typeof RecipeWrapper.getResetPasswordTokenFromURL;
+declare const getTenantIdFromURL: typeof RecipeWrapper.getTenantIdFromURL;
 declare const signOut: typeof RecipeWrapper.signOut;
 export {
     init,
     submitNewPassword,
     sendPasswordResetEmail,
+    getStateAndOtherInfoFromStorage,
     doesEmailExist,
     emailPasswordSignUp,
     emailPasswordSignIn,
     thirdPartySignInAndUp,
-    getStateAndOtherInfoFromStorage,
     getAuthorisationURLWithQueryParamsAndSetState,
     signOut,
     getResetPasswordTokenFromURL,
+    getTenantIdFromURL,
     EmailPasswordUserType,
     ThirdPartyUserType,
     UserInput,

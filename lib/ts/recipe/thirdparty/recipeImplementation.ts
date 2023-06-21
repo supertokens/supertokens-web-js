@@ -64,17 +64,21 @@ export default function getRecipeImplementation(
             );
         },
 
-        getAuthorisationURLWithQueryParamsAndSetState: async function (input: {
-            thirdPartyId: string;
-            tenantId?: string;
-            frontendRedirectURI: string;
-            redirectURIOnProviderDashboard?: string;
-            userContext: any;
-            options?: RecipeFunctionOptions;
-        }): Promise<string> {
+        getAuthorisationURLWithQueryParamsAndSetState: async function (
+            this: RecipeInterface,
+            input: {
+                thirdPartyId: string;
+                tenantId: string | undefined;
+                frontendRedirectURI: string;
+                redirectURIOnProviderDashboard?: string;
+                userContext: any;
+                options?: RecipeFunctionOptions;
+            }
+        ): Promise<string> {
             // 1. Call AuthorisationUrlGET
             const urlResponse = await this.getAuthorisationURLFromBackend({
                 thirdPartyId: input.thirdPartyId,
+                tenantId: input.tenantId,
                 redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard || input.frontendRedirectURI,
                 userContext: input.userContext,
                 options: input.options,
@@ -105,7 +109,7 @@ export default function getRecipeImplementation(
                 userContext: input.userContext,
             });
 
-            const urlWithState = appendQueryParamsToURL(urlResponse.url, {
+            const urlWithState = appendQueryParamsToURL(urlResponse.urlWithQueryParams, {
                 state: stateToSendToAuthProvider,
             });
 
@@ -114,13 +118,13 @@ export default function getRecipeImplementation(
 
         getAuthorisationURLFromBackend: async function (input: {
             thirdPartyId: string;
-            tenantId?: string;
+            tenantId: string | undefined;
             redirectURIOnProviderDashboard: string;
             userContext: any;
             options?: RecipeFunctionOptions;
         }): Promise<{
             status: "OK";
-            url: string;
+            urlWithQueryParams: string;
             pkceCodeVerifier?: string;
             fetchResponse: Response;
         }> {
@@ -132,14 +136,13 @@ export default function getRecipeImplementation(
             if (recipeImplInput.clientType !== undefined) {
                 queryParams.clientType = recipeImplInput.clientType;
             }
-            if (input.tenantId !== undefined) {
-                queryParams.tenantId = input.tenantId;
-            }
+
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
-                url: string;
+                urlWithQueryParams: string;
                 pkceCodeVerifier?: string;
             }>(
+                input.tenantId,
                 "/authorisationurl",
                 {},
                 queryParams,
@@ -158,13 +161,16 @@ export default function getRecipeImplementation(
 
             return {
                 status: "OK",
-                url: jsonBody.url,
+                urlWithQueryParams: jsonBody.urlWithQueryParams,
                 pkceCodeVerifier: jsonBody.pkceCodeVerifier,
                 fetchResponse,
             };
         },
 
-        signInAndUp: async function (input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
+        signInAndUp: async function (
+            this: RecipeInterface,
+            input: { userContext: any; options?: RecipeFunctionOptions }
+        ): Promise<
             | {
                   status: "OK";
                   user: ThirdPartyUserType;
@@ -224,12 +230,12 @@ export default function getRecipeImplementation(
                       error: string;
                   }
             >(
+                verifiedState.tenantId,
                 "/signinup",
                 {
                     body: JSON.stringify({
                         thirdPartyId: verifiedState.thirdPartyId,
                         clientType: recipeImplInput.clientType,
-                        tenantId: verifiedState.tenantId,
                         redirectURIInfo: {
                             redirectURIOnProviderDashboard: verifiedState.redirectURIOnProviderDashboard,
                             redirectURIQueryParams: queryParamsObj,

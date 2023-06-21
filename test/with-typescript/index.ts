@@ -120,6 +120,9 @@ function getEmailVerificationFunctions(original: EmailVerificationRecipeInterfac
         getEmailVerificationTokenFromURL: function (input) {
             return original.getEmailVerificationTokenFromURL(input);
         },
+        getTenantIdFromURL: function (input) {
+            return original.getTenantIdFromURL(input);
+        },
     };
 }
 
@@ -199,6 +202,9 @@ function getEmailPasswordFunctions(original: EmailPasswordRecipeInterface): Emai
         },
         signUp: async function (input) {
             return original.signUp(input);
+        },
+        getTenantIdFromURL: function (input) {
+            return original.getTenantIdFromURL(input);
         },
     };
 }
@@ -402,6 +408,9 @@ function getThirdPartyEmailPasswordFunctions(original: TPEPRecipeInterface): TPE
         verifyAndGetStateOrThrowError: function (input) {
             return original.verifyAndGetStateOrThrowError(input);
         },
+        getTenantIdFromURL: function (input) {
+            return original.getTenantIdFromURL(input);
+        },
     };
 }
 
@@ -510,6 +519,9 @@ function getPasswordlessFunctions(original: PasswordlessRecipeInterface): Passwo
         },
         getPreAuthSessionIdFromURL: function (input) {
             return original.getPreAuthSessionIdFromURL(input);
+        },
+        getTenantIdFromURL: function (input) {
+            return original.getTenantIdFromURL(input);
         },
     };
 }
@@ -639,6 +651,9 @@ function getThirdPartyPasswordlessFunctions(original: TPPRecipeInterface): TPPRe
         getThirdPartyStateAndOtherInfoFromStorage: function (input) {
             return original.getThirdPartyStateAndOtherInfoFromStorage(input);
         },
+        getTenantIdFromURL: function (input) {
+            return original.getTenantIdFromURL(input);
+        },
     };
 }
 
@@ -757,6 +772,7 @@ function getMultitenancyFunctions(original: MultitenancyRecipeInterface): Multit
         getLoginMethods: async function (input) {
             return original.getLoginMethods(input);
         },
+        getTenantId: () => undefined,
     };
 }
 
@@ -1486,6 +1502,7 @@ Passwordless.resendCode();
 Passwordless.setLoginAttemptInfo({
     attemptInfo: {
         deviceId: "",
+        tenantId: undefined,
         preAuthSessionId: "",
         flowType: "USER_INPUT_CODE",
     },
@@ -1494,6 +1511,7 @@ Passwordless.setLoginAttemptInfo({
 Passwordless.setLoginAttemptInfo({
     attemptInfo: {
         deviceId: "",
+        tenantId: undefined,
         preAuthSessionId: "",
         flowType: "MAGIC_LINK",
     },
@@ -1502,6 +1520,7 @@ Passwordless.setLoginAttemptInfo({
 Passwordless.setLoginAttemptInfo({
     attemptInfo: {
         deviceId: "",
+        tenantId: undefined,
         preAuthSessionId: "",
         flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
     },
@@ -1645,7 +1664,6 @@ ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
         preAPIHook: undefined,
     },
     redirectURIOnProviderDashboard: "",
-    tenantId: "",
     userContext: undefined,
 });
 // @ts-expect-error
@@ -1826,7 +1844,6 @@ ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
         preAPIHook: undefined,
     },
     redirectURIOnProviderDashboard: "",
-    tenantId: "",
     userContext: undefined,
 });
 ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
@@ -1850,6 +1867,7 @@ ThirdPartyPasswordless.resendPasswordlessCode();
 ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo({
     attemptInfo: {
         deviceId: "",
+        tenantId: undefined,
         preAuthSessionId: "",
         flowType: "USER_INPUT_CODE",
     },
@@ -1858,6 +1876,7 @@ ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo({
 ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo({
     attemptInfo: {
         deviceId: "",
+        tenantId: undefined,
         preAuthSessionId: "",
         flowType: "MAGIC_LINK",
     },
@@ -1866,6 +1885,7 @@ ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo({
 ThirdPartyPasswordless.setPasswordlessLoginAttemptInfo({
     attemptInfo: {
         deviceId: "",
+        tenantId: undefined,
         preAuthSessionId: "",
         flowType: "USER_INPUT_CODE_AND_MAGIC_LINK",
     },

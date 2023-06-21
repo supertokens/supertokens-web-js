@@ -23,10 +23,8 @@ export class AllowedDomainsClaimClass extends PrimitiveArrayClaim<string> {
                     return false; // Can't automatically refresh
                 },
                 validate: async (payload, userContext) => {
-                    // FIXME - maybe it's better if we can add getHost to the interface we are using below, that's in `supertokens-website` npm library
-                    const currentDomain = WindowHandlerReference.getReferenceOrThrow()
-                        .windowHandler.location.getOrigin()
-                        .split("://")[1];
+                    const currentDomain =
+                        WindowHandlerReference.getReferenceOrThrow().windowHandler.location.getHostName();
                     const includesValidator = this.validators.includes(currentDomain, Number.MAX_SAFE_INTEGER, this.id);
                     return includesValidator.validate(payload, userContext);
                 },
