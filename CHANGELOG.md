@@ -29,6 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     -   Changed signatures of the functions `getThirdPartyAuthorisationURLWithQueryParamsAndSetState`
     -   Removed functions - `getThirdPartyStateAndOtherInfoFromStorage`, `setThirdPartyStateAndOtherInfoToStorage`, `getAuthorisationURLFromBackend`, `generateThirdPartyStateToSendToOAuthProvider`, `verifyAndGetThirdPartyStateOrThrowError`, `getThirdPartyAuthCodeFromURL`, `getThirdPartyAuthErrorFromURL`, `getThirdPartyAuthStateFromURL`
 
+### Changes
+
+-   Updates dependencies and backend config for the vue with-thirdpartyemailpassword example app
+
 ## [0.6.0] - 2023-03-14
 
 ## Additions
@@ -40,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Remove EmailVerificationClaimClass constructor's updateContextOnIsVerifiedFalse prop
 -   Update to web-js interface version
+-   Updated supertokens website dependency, which made SessionClaimValidator a type instead of an abstract class
 
 ## [0.5.0] - 2023-02-01
 
