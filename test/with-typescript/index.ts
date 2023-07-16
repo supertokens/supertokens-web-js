@@ -832,6 +832,9 @@ function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInt
         validateClaims: async function (input) {
             return original.validateClaims(input);
         },
+        shouldDoInterceptionBasedOnUrl: function (...input) {
+            return original.shouldDoInterceptionBasedOnUrl(...input);
+        },
     };
 }
 

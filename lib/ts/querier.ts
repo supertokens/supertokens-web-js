@@ -227,7 +227,7 @@ export default class Querier {
         queryParams?: Record<string, string>
     ): Promise<string> => {
         let basePath = this.appInfo.apiBasePath.getAsStringDangerous();
-        if (tenantId !== undefined) {
+        if (tenantId !== undefined && tenantId !== "public") {
             basePath = `${basePath}/${tenantId}`;
         }
 
