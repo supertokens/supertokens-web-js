@@ -29,7 +29,7 @@ export default class RecipeWrapper {
      *
      * @param tenantId (OPTIONAL) The identifier for the tenant.
      *
-     * @param userContext (OPTIONAL) Refer to {@link TODO the documentation}
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
      *
@@ -63,7 +63,7 @@ export default class RecipeWrapper {
     /**
      * Gets enabled login methods and their configuration from the backend
      *
-     * @param userContext (OPTIONAL) Refer to {@link TODO the documentation}
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
      *
      * @returns `Promise<string | undefined> | string | undefined`
      */

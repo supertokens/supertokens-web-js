@@ -25,7 +25,6 @@ export declare type UserInput = {
 } & RecipeModuleUserInput<PreAndPostAPIHookAction>;
 export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
-    clientType?: string;
     override: {
         functions: (
             originalImplementation: RecipeInterface,

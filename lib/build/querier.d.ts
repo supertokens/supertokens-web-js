@@ -71,11 +71,7 @@ export default class Querier {
         url: string;
         requestInit: RequestInit;
     }>;
-    getFullUrl: (
-        tenantId: string | undefined,
-        pathStr: string,
-        queryParams?: Record<string, string>
-    ) => Promise<string>;
+    getFullUrl: (tenantId: string | undefined, pathStr: string, queryParams?: Record<string, string>) => string;
     getResponseJsonOrThrowGeneralError: (response: Response) => Promise<any>;
     static preparePreAPIHook: <Action>({
         recipePreAPIHook,

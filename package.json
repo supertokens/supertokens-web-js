@@ -1,6 +1,6 @@
 {
     "name": "supertokens-web-js",
-    "version": "0.6.0",
+    "version": "0.7.0",
     "description": "SuperTokens SDK for vanilla JS for all recipes",
     "main": "./index.js",
     "scripts": {
@@ -96,6 +96,10 @@
         },
         {
             "path": "recipe/userroles/index.js",
+            "limit": "23kb"
+        },
+        {
+            "path": "recipe/multitenancy/index.js",
             "limit": "23kb"
         }
     ]

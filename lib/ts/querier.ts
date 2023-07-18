@@ -49,7 +49,7 @@ export default class Querier {
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
-            await this.getFullUrl(tenantId, path, queryParams),
+            this.getFullUrl(tenantId, path, queryParams),
             {
                 method: "GET",
                 ...config,
@@ -81,7 +81,7 @@ export default class Querier {
         }
 
         const result = await this.fetch(
-            await this.getFullUrl(tenantId, path),
+            this.getFullUrl(tenantId, path),
             {
                 method: "POST",
                 ...config,
@@ -109,7 +109,7 @@ export default class Querier {
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
-            await this.getFullUrl(tenantId, path),
+            this.getFullUrl(tenantId, path),
             {
                 method: "DELETE",
                 ...config,
@@ -137,7 +137,7 @@ export default class Querier {
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
-            await this.getFullUrl(tenantId, path),
+            this.getFullUrl(tenantId, path),
             {
                 method: "PUT",
                 ...config,
@@ -221,11 +221,7 @@ export default class Querier {
         return result;
     };
 
-    getFullUrl = async (
-        tenantId: string | undefined,
-        pathStr: string,
-        queryParams?: Record<string, string>
-    ): Promise<string> => {
+    getFullUrl = (tenantId: string | undefined, pathStr: string, queryParams?: Record<string, string>): string => {
         let basePath = this.appInfo.apiBasePath.getAsStringDangerous();
         if (tenantId !== undefined && tenantId !== "public") {
             basePath = `${basePath}/${tenantId}`;
