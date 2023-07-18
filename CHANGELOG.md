@@ -17,11 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking changes
 
--   Only supporting FDI TODO
+-   Only supporting FDI 1.17
 -   Backend SDKs have to be updated first to a version that supports multi-tenancy for thirdparty
-    -   supertokens-node: >= TODO
-    -   supertokens-golang: >= TODO
-    -   supertokens-python >= TODO
+    -   supertokens-node: >= 15.0.0
 -   In ThirdParty recipe,
     -   Changed signatures of the functions `getAuthorisationURLWithQueryParamsAndSetState`
     -   Removed functions - `setStateAndOtherInfoToStorage`, `getAuthorisationURLFromBackend`, `generateStateToSendToOAuthProvider`, `verifyAndGetStateOrThrowError`, `getAuthCodeFromURL`, `getAuthErrorFromURL`, `getAuthStateFromURL`
