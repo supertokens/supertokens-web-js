@@ -7,7 +7,7 @@ import { SessionClaimValidator, PrimitiveArrayClaim } from "../session";
 export class AllowedDomainsClaimClass extends PrimitiveArrayClaim<string> {
     constructor() {
         super({
-            id: "st-tenant-domains",
+            id: "st-t-dmns",
             refresh: async () => {
                 // Can't automatically refresh
             },
