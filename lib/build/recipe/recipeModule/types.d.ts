@@ -74,10 +74,12 @@ export declare type UserInput<Action> = {
 export declare type RecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
+    clientType?: string;
 } & UserInput<Action>;
 export declare type NormalisedRecipeConfig<Action> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
+    clientType?: string;
     preAPIHook: RecipePreAPIHookFunction<Action>;
     postAPIHook: RecipePostAPIHookFunction<Action>;
 };
@@ -97,6 +99,7 @@ export declare type RecipeFunctionOptions = {
 export declare type RecipeImplementationInput<PrePostAPIHookAction> = {
     recipeId: string;
     appInfo: NormalisedAppInfo;
+    clientType?: string;
     preAPIHook: RecipePreAPIHookFunction<PrePostAPIHookAction>;
     postAPIHook: RecipePostAPIHookFunction<PrePostAPIHookAction>;
 };

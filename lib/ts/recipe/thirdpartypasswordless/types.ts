@@ -62,25 +62,32 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
 
 export type RecipeInterface = {
     /**
-     * Get the URL to be used by the third party provider for redirecting after the auth flow
+     * Get the URL to be used by the third party provider for redirecting after the auth flow. Also returns PKCE Code Verifier if using PKCE.
      *
-     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
      *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     * @param redirectURIOnProviderDashboard The redirect URL that is configured on the provider dashboard
+     *
+     * @param tenantId (OPTIONAL) The identifier for the tenant, in case you are using multi-tenancy
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: "OK", url}`
+     * @returns `{status: "OK", url, pkceCodeVerifier?}`
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getAuthorisationURLFromBackend: (input: {
-        providerId: string;
+        thirdPartyId: string;
+        redirectURIOnProviderDashboard: string;
+        tenantId: string | undefined;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
         status: "OK";
-        url: string;
+        urlWithQueryParams: string;
+        pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;
 
@@ -102,6 +109,7 @@ export type RecipeInterface = {
               status: "OK";
               user: ThirdPartyUserType;
               createdNewUser: boolean;
+              tenantId?: string;
               fetchResponse: Response;
           }
         | {
@@ -136,13 +144,15 @@ export type RecipeInterface = {
     /**
      * Get the URL that should be opened for third party authentication
      *
-     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
      *
-     * @param authorisationURL The URL that should be used for redirection after the third party flow finishes. This is ignored if the backend has a pre-configured redirect_url
+     * @param frontendRedirectURI The URL that should be used for redirection after the third party flow finishes.
      *
-     * @param providerClientId (OPTIONAL) Client id to be used for the third party provider
+     * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
      *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     * @param tenantId (OPTIONAL) The identifier for the tenant, in case you are using multi-tenancy
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
@@ -151,21 +161,27 @@ export type RecipeInterface = {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getThirdPartyAuthorisationURLWithQueryParamsAndSetState: (input: {
-        providerId: string;
-        authorisationURL: string;
+        thirdPartyId: string;
+        frontendRedirectURI: string;
+        tenantId: string | undefined;
+        redirectURIOnProviderDashboard?: string;
         userContext: any;
-        providerClientId?: string;
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
 
     /**
-     * Generate a new state that will be sent to the thirs party provider
+     * Generate a new state that will be sent to the third party provider
      *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
+     * @param frontendRedirectURI (OPTIONAL) The URL that should be saved in the state object which can be used for redirection from the backend
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @returns string
      */
-    generateThirdPartyStateToSendToOAuthProvider: (input: { userContext: any }) => string;
+    generateThirdPartyStateToSendToOAuthProvider: (input?: {
+        frontendRedirectURI?: string;
+        userContext: any;
+    }) => string;
 
     /**
      * Verify that the state recieved from the third party provider matches the one in storage
@@ -181,15 +197,6 @@ export type RecipeInterface = {
         stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
         userContext: any;
     }) => Promise<StateObject & CustomStateProperties>;
-
-    /**
-     * Returns the auth code from the current URL
-     *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdpartypasswordless/advanced-customizations/user-context the documentation}
-     *
-     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
-     */
-    getThirdPartyAuthCodeFromURL: (input: { userContext: any }) => string;
 
     /**
      * Returns the error from the current URL
@@ -256,6 +263,7 @@ export type RecipeInterface = {
     resendPasswordlessCode: (input: {
         userContext: any;
         deviceId: string;
+        tenantId: string | undefined;
         preAuthSessionId: string;
         options?: RecipeFunctionOptions;
     }) => Promise<{
@@ -293,11 +301,13 @@ export type RecipeInterface = {
             | {
                   userInputCode: string;
                   deviceId: string;
+                  tenantId: string | undefined;
                   preAuthSessionId: string;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
             | {
+                  tenantId: string | undefined;
                   preAuthSessionId: string;
                   linkCode: string;
                   userContext: any;
@@ -336,6 +346,15 @@ export type RecipeInterface = {
      * @returns The "preAuthSessionId" query parameter from the current URL
      */
     getPasswordlessPreAuthSessionIdFromURL: (input: { userContext: any }) => string;
+
+    /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current URL
+     */
+    getTenantIdFromURL: (input: { userContext: any }) => string | undefined;
 
     /**
      * Check if a user with the given email exists
@@ -407,6 +426,7 @@ export type RecipeInterface = {
     setPasswordlessLoginAttemptInfo: <CustomStateProperties>(input: {
         attemptInfo: {
             deviceId: string;
+            tenantId?: string;
             preAuthSessionId: string;
             flowType: PasswordlessFlowType;
         } & CustomStateProperties;

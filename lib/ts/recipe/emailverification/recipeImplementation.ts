@@ -14,6 +14,7 @@
  */
 import Querier from "../../querier";
 import { getQueryParams } from "../../utils";
+import Multitenancy from "../multitenancy/recipe";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction, RecipeInterface } from "./types";
 
@@ -35,10 +36,14 @@ export default function getRecipeImplementation(
             const token = this.getEmailVerificationTokenFromURL({
                 userContext,
             });
+            const tenantId = this.getTenantIdFromURL({
+                userContext,
+            });
 
             const { jsonBody, fetchResponse } = await querier.post<{
                 status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
             }>(
+                tenantId,
                 "/user/email/verify",
                 {
                     body: JSON.stringify({
@@ -77,6 +82,7 @@ export default function getRecipeImplementation(
             fetchResponse: Response;
         }> {
             const { jsonBody, fetchResponse } = await querier.get<{ status: "OK"; isVerified: boolean }>(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/user/email/verify",
                 {},
                 undefined,
@@ -111,6 +117,7 @@ export default function getRecipeImplementation(
             fetchResponse: Response;
         }> {
             const { jsonBody, fetchResponse } = await querier.post<{ status: "OK" | "EMAIL_ALREADY_VERIFIED_ERROR" }>(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/user/email/verify/token",
                 { body: JSON.stringify({}) },
                 Querier.preparePreAPIHook({
@@ -140,6 +147,10 @@ export default function getRecipeImplementation(
             }
 
             return token;
+        },
+
+        getTenantIdFromURL: function (): string | undefined {
+            return getQueryParams("tenantId");
         },
     };
 }

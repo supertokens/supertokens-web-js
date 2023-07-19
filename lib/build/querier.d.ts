@@ -17,10 +17,11 @@ import {
  * for multiple reads.
  */
 export default class Querier {
-    recipeId: string;
-    appInfo: NormalisedAppInfo;
+    private readonly recipeId;
+    private readonly appInfo;
     constructor(recipeId: string, appInfo: NormalisedAppInfo);
     get: <JsonBodyType>(
+        tenantId: string | undefined,
         path: string,
         config: RequestInit,
         queryParams?: Record<string, string>,
@@ -31,6 +32,7 @@ export default class Querier {
         fetchResponse: Response;
     }>;
     post: <JsonBodyType>(
+        tenantId: string | undefined,
         path: string,
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction,
@@ -40,6 +42,7 @@ export default class Querier {
         fetchResponse: Response;
     }>;
     delete: <JsonBodyType>(
+        tenantId: string | undefined,
         path: string,
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction,
@@ -49,6 +52,7 @@ export default class Querier {
         fetchResponse: Response;
     }>;
     put: <JsonBodyType>(
+        tenantId: string | undefined,
         path: string,
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction,
@@ -67,7 +71,7 @@ export default class Querier {
         url: string;
         requestInit: RequestInit;
     }>;
-    getFullUrl: (pathStr: string, queryParams?: Record<string, string>) => string;
+    getFullUrl: (tenantId: string | undefined, pathStr: string, queryParams?: Record<string, string>) => string;
     getResponseJsonOrThrowGeneralError: (response: Response) => Promise<any>;
     static preparePreAPIHook: <Action>({
         recipePreAPIHook,

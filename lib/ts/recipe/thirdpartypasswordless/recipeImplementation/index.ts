@@ -31,12 +31,15 @@ export default function getRecipeImplementation(
 
     return {
         getAuthorisationURLFromBackend: async function (input: {
-            providerId: string;
+            thirdPartyId: string;
+            tenantId: string | undefined;
+            redirectURIOnProviderDashboard: string;
             userContext: any;
             options?: RecipeFunctionOptions;
         }): Promise<{
             status: "OK";
-            url: string;
+            urlWithQueryParams: string;
+            pkceCodeVerifier?: string;
             fetchResponse: Response;
         }> {
             return thirdPartyImpl.getAuthorisationURLFromBackend.bind(DerivedThirdParty(this))(input);
@@ -71,16 +74,20 @@ export default function getRecipeImplementation(
         },
 
         getThirdPartyAuthorisationURLWithQueryParamsAndSetState: async function (input: {
-            providerId: string;
-            authorisationURL: string;
+            thirdPartyId: string;
+            tenantId: string | undefined;
+            frontendRedirectURI: string;
+            redirectURIOnProviderDashboard?: string;
             userContext: any;
-            providerClientId?: string;
             options?: RecipeFunctionOptions;
         }): Promise<string> {
             return thirdPartyImpl.getAuthorisationURLWithQueryParamsAndSetState.bind(DerivedThirdParty(this))(input);
         },
 
-        generateThirdPartyStateToSendToOAuthProvider: function (input: { userContext: any }): string {
+        generateThirdPartyStateToSendToOAuthProvider: function (input?: {
+            frontendRedirectURI?: string;
+            userContext: any;
+        }): string {
             return thirdPartyImpl.generateStateToSendToOAuthProvider.bind(DerivedThirdParty(this))(input);
         },
 
@@ -90,10 +97,6 @@ export default function getRecipeImplementation(
             userContext: any;
         }): Promise<StateObject & CustomStateProperties> {
             return thirdPartyImpl.verifyAndGetStateOrThrowError.bind(DerivedThirdParty(this))(input);
-        },
-
-        getThirdPartyAuthCodeFromURL: function (input: { userContext: any }): string {
-            return thirdPartyImpl.getAuthCodeFromURL.bind(DerivedThirdParty(this))(input);
         },
 
         getThirdPartyAuthErrorFromURL: function (input: { userContext: any }): string | undefined {
@@ -121,6 +124,7 @@ export default function getRecipeImplementation(
         resendPasswordlessCode: async function (input: {
             userContext: any;
             deviceId: string;
+            tenantId: string | undefined;
             preAuthSessionId: string;
             options?: RecipeFunctionOptions;
         }): Promise<{
@@ -135,11 +139,13 @@ export default function getRecipeImplementation(
                 | {
                       userInputCode: string;
                       deviceId: string;
+                      tenantId: string | undefined;
                       preAuthSessionId: string;
                       userContext: any;
                       options?: RecipeFunctionOptions;
                   }
                 | {
+                      tenantId: string | undefined;
                       preAuthSessionId: string;
                       linkCode: string;
                       userContext: any;
@@ -169,6 +175,10 @@ export default function getRecipeImplementation(
 
         getPasswordlessPreAuthSessionIdFromURL: function (input: { userContext: any }): string {
             return passwordlessImpl.getPreAuthSessionIdFromURL.bind(DerivedPasswordless(this))(input);
+        },
+
+        getTenantIdFromURL: function (input: { userContext: any }): string | undefined {
+            return passwordlessImpl.getTenantIdFromURL.bind(DerivedPasswordless(this))(input);
         },
 
         doesPasswordlessUserEmailExist: async function (input: {
@@ -201,6 +211,7 @@ export default function getRecipeImplementation(
             | undefined
             | ({
                   deviceId: string;
+                  tenantId: string | undefined;
                   preAuthSessionId: string;
                   flowType: PasswordlessFlowType;
               } & CustomLoginAttemptInfoProperties)
@@ -211,6 +222,7 @@ export default function getRecipeImplementation(
         setPasswordlessLoginAttemptInfo: function <CustomStateProperties>(input: {
             attemptInfo: {
                 deviceId: string;
+                tenantId?: string;
                 preAuthSessionId: string;
                 flowType: PasswordlessFlowType;
             } & CustomStateProperties;

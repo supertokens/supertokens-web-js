@@ -15,6 +15,7 @@
 
 import { getNormalisedUserContext } from "../../utils";
 import { normaliseAuthRecipe } from "../authRecipe/utils";
+import Multitenancy from "../multitenancy/recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { InputType, NormalisedInputType, PasswordlessFlowType, PasswordlessUser, RecipeInterface } from "./types";
 
@@ -53,6 +54,9 @@ export async function createCode(
 }> {
     const normalisedUserContext = getNormalisedUserContext(input.userContext);
 
+    const tenantId = await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+        userContext: input.userContext,
+    });
     const createCodeResponse = await input.recipeImplementation.createCode({
         ...input,
         userContext: normalisedUserContext,
@@ -60,6 +64,7 @@ export async function createCode(
 
     await input.recipeImplementation.setLoginAttemptInfo({
         attemptInfo: {
+            tenantId,
             deviceId: createCodeResponse.deviceId,
             preAuthSessionId: createCodeResponse.preAuthSessionId,
             flowType: createCodeResponse.flowType,
@@ -91,6 +96,7 @@ export async function resendCode(input: {
      */
     return input.recipeImplementation.resendCode({
         ...input,
+        tenantId: previousAttemptInfo?.tenantId,
         userContext: normalisedUserContext,
         deviceId: previousAttemptInfo === undefined ? "" : previousAttemptInfo.deviceId,
         preAuthSessionId: previousAttemptInfo === undefined ? "" : previousAttemptInfo.preAuthSessionId,
@@ -129,11 +135,13 @@ export async function consumeCode(
 
     let additionalParams:
         | {
+              tenantId: string | undefined;
               userInputCode: string;
               deviceId: string;
               preAuthSessionId: string;
           }
         | {
+              tenantId: string | undefined;
               linkCode: string;
               preAuthSessionId: string;
           };
@@ -155,9 +163,14 @@ export async function consumeCode(
             userInputCode: input.userInputCode,
             deviceId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.deviceId,
             preAuthSessionId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.preAuthSessionId,
+            tenantId: attemptInfoFromStorage?.tenantId,
         };
     } else {
         const linkCode = input.recipeImplementation.getLinkCodeFromURL({
+            userContext: input.userContext,
+        });
+
+        const tenantId = input.recipeImplementation.getTenantIdFromURL({
             userContext: input.userContext,
         });
 
@@ -166,6 +179,7 @@ export async function consumeCode(
         });
 
         additionalParams = {
+            tenantId,
             linkCode,
             preAuthSessionId,
         };

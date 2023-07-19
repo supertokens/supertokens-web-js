@@ -96,6 +96,10 @@ describe("Window handlers test", function () {
                                 return {
                                     ...original,
                                     generateThirdPartyStateToSendToOAuthProvider: () => "state",
+                                    getAuthorisationURLFromBackend: () => ({
+                                        status: "OK",
+                                        url: "https://test.provider.com/authorize",
+                                    }),
                                 };
                             },
                         },
@@ -169,6 +173,10 @@ describe("Window handlers test", function () {
                                 return {
                                     ...original,
                                     generateThirdPartyStateToSendToOAuthProvider: () => "state",
+                                    getAuthorisationURLFromBackend: () => ({
+                                        status: "OK",
+                                        url: "https://test.provider.com/authorize",
+                                    }),
                                 };
                             },
                         },

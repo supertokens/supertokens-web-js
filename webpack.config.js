@@ -59,6 +59,11 @@ var config = {
             filename: "userroles.js",
             dependOn: "supertokensWebsite",
         },
+        supertokensMultitenancy: {
+            import: APP_DIR + "/lib/build/recipe/multitenancy/index.js",
+            filename: "multitenancy.js",
+            dependOn: "supertokensWebsite",
+        },
         /**
          * Without this webpack will bundle supertokens-website as independent references
          * within each recipe bundle. Any shared resources (WindowHandler for example) will no

@@ -53,11 +53,12 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
 };
 
 export type StateObject = {
-    expiresAt: number;
-    providerId: string;
-    authorisationURL: string;
     stateForAuthProvider: string;
-    providerClientId?: string;
+    thirdPartyId: string;
+    tenantId?: string;
+    expiresAt: number;
+    redirectURIOnProviderDashboard: string;
+    pkceCodeVerifier?: string;
 };
 
 export type ThirdPartyUserType = {
@@ -97,11 +98,13 @@ export type RecipeInterface = {
     /**
      * Get the URL that should be opened for third party authentication
      *
-     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
      *
-     * @param authorisationURL The URL that should be used for redirection after the third party flow finishes. This is ignored if the backend has a pre-configured redirect_url
+     * @param frontendRedirectURI The URL that should be used for redirection after the third party flow finishes.
      *
-     * @param providerClientId (OPTIONAL) Client id to be used for the third party provider
+     * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
+     *
+     * @param tenantId (OPTIONAL) The identifier for the tenant, in case you are using multi-tenancy
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
@@ -112,33 +115,41 @@ export type RecipeInterface = {
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getAuthorisationURLWithQueryParamsAndSetState: (input: {
-        providerId: string;
-        authorisationURL: string;
+        thirdPartyId: string;
+        frontendRedirectURI: string;
+        tenantId: string | undefined;
+        redirectURIOnProviderDashboard?: string;
         userContext: any;
-        providerClientId?: string;
         options?: RecipeFunctionOptions;
     }) => Promise<string>;
 
     /**
-     * Get the URL to be used by the third party provider for redirecting after the auth flow
+     * Get the URL to be used by the third party provider for redirecting after the auth flow. Also returns PKCE Code Verifier if using PKCE.
      *
-     * @param providerId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     * @param thirdPartyId The identifier for the third party provider. The value must match one of the providers configured with the backend SDK
+     *
+     * @param redirectURIOnProviderDashboard The redirect URL that is configured on the provider dashboard
+     *
+     * @param tenantId (OPTIONAL) The identifier for the tenant, in case you are using multi-tenancy
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: "OK", url}`
+     * @returns `{status: "OK", url, pkceCodeVerifier?}`
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     getAuthorisationURLFromBackend: (input: {
-        providerId: string;
+        thirdPartyId: string;
+        redirectURIOnProviderDashboard: string;
+        tenantId: string | undefined;
         userContext: any;
         options?: RecipeFunctionOptions;
     }) => Promise<{
         status: "OK";
-        url: string;
+        urlWithQueryParams: string;
+        pkceCodeVerifier?: string;
         fetchResponse: Response;
     }>;
 
@@ -160,6 +171,7 @@ export type RecipeInterface = {
               status: "OK";
               user: ThirdPartyUserType;
               createdNewUser: boolean;
+              tenantId?: string;
               fetchResponse: Response;
           }
         | {
@@ -171,11 +183,13 @@ export type RecipeInterface = {
     /**
      * Generate a new state that will be sent to the third party provider
      *
+     * @param frontendRedirectURI (OPTIONAL) The URL that should be saved in the state object which can be used for redirection from the backend
+     *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @returns string
      */
-    generateStateToSendToOAuthProvider: (input: { userContext: any }) => string;
+    generateStateToSendToOAuthProvider: (input?: { frontendRedirectURI?: string; userContext: any }) => string;
 
     /**
      * Verify that the state recieved from the third party provider matches the one in storage
@@ -191,15 +205,6 @@ export type RecipeInterface = {
         stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
         userContext: any;
     }) => Promise<StateObject & CustomStateProperties>;
-
-    /**
-     * Returns the auth code from the current URL
-     *
-     * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
-     *
-     * @returns The "code" query param from the current URL. Returns an empty string if no code exists
-     */
-    getAuthCodeFromURL: (input: { userContext: any }) => string;
 
     /**
      * Returns the error from the current URL

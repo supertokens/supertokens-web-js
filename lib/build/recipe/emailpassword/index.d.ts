@@ -186,6 +186,14 @@ export default class RecipeWrapper {
      * @returns The "token" query parameter from the current location
      */
     static getResetPasswordTokenFromURL(input?: { userContext?: any }): string;
+    /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current location
+     */
+    static getTenantIdFromURL(input?: { userContext?: any }): string | undefined;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const submitNewPassword: typeof RecipeWrapper.submitNewPassword;
@@ -195,6 +203,7 @@ declare const signIn: typeof RecipeWrapper.signIn;
 declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
 declare const signOut: typeof RecipeWrapper.signOut;
 declare const getResetPasswordTokenFromURL: typeof RecipeWrapper.getResetPasswordTokenFromURL;
+declare const getTenantIdFromURL: typeof RecipeWrapper.getTenantIdFromURL;
 export {
     init,
     submitNewPassword,
@@ -203,6 +212,7 @@ export {
     signIn,
     doesEmailExist,
     getResetPasswordTokenFromURL,
+    getTenantIdFromURL,
     signOut,
     UserType,
     UserInput,

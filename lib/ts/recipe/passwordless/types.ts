@@ -114,6 +114,7 @@ export type RecipeInterface = {
         userContext: any;
         deviceId: string;
         preAuthSessionId: string;
+        tenantId: string | undefined;
         options?: RecipeFunctionOptions;
     }) => Promise<{
         status: "OK" | "RESTART_FLOW_ERROR";
@@ -150,11 +151,13 @@ export type RecipeInterface = {
             | {
                   userInputCode: string;
                   deviceId: string;
+                  tenantId: string | undefined;
                   preAuthSessionId: string;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
             | {
+                  tenantId: string | undefined;
                   preAuthSessionId: string;
                   linkCode: string;
                   userContext: any;
@@ -184,6 +187,15 @@ export type RecipeInterface = {
      * @returns The hash (#) property of the current URL
      */
     getLinkCodeFromURL: (input: { userContext: any }) => string;
+
+    /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current URL
+     */
+    getTenantIdFromURL: (input: { userContext: any }) => string | undefined;
 
     /**
      * Reads and returns the pre auth session id from the current URL
@@ -246,6 +258,7 @@ export type RecipeInterface = {
     getLoginAttemptInfo: <CustomLoginAttemptInfoProperties>(input: { userContext: any }) => Promise<
         | undefined
         | ({
+              tenantId?: string;
               deviceId: string;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
@@ -259,6 +272,7 @@ export type RecipeInterface = {
      */
     setLoginAttemptInfo: <CustomStateProperties>(input: {
         attemptInfo: {
+            tenantId?: string;
             deviceId: string;
             preAuthSessionId: string;
             flowType: PasswordlessFlowType;

@@ -35,16 +35,10 @@ import STGeneralError from "./error";
  * for multiple reads.
  */
 export default class Querier {
-    recipeId: string;
-
-    appInfo: NormalisedAppInfo;
-
-    constructor(recipeId: string, appInfo: NormalisedAppInfo) {
-        this.recipeId = recipeId;
-        this.appInfo = appInfo;
-    }
+    constructor(private readonly recipeId: string, private readonly appInfo: NormalisedAppInfo) {}
 
     get = async <JsonBodyType>(
+        tenantId: string | undefined,
         path: string,
         config: RequestInit,
         queryParams?: Record<string, string>,
@@ -55,7 +49,7 @@ export default class Querier {
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
-            this.getFullUrl(path, queryParams),
+            this.getFullUrl(tenantId, path, queryParams),
             {
                 method: "GET",
                 ...config,
@@ -73,6 +67,7 @@ export default class Querier {
     };
 
     post = async <JsonBodyType>(
+        tenantId: string | undefined,
         path: string,
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction,
@@ -86,7 +81,7 @@ export default class Querier {
         }
 
         const result = await this.fetch(
-            this.getFullUrl(path),
+            this.getFullUrl(tenantId, path),
             {
                 method: "POST",
                 ...config,
@@ -104,6 +99,7 @@ export default class Querier {
     };
 
     delete = async <JsonBodyType>(
+        tenantId: string | undefined,
         path: string,
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction,
@@ -113,7 +109,7 @@ export default class Querier {
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
-            this.getFullUrl(path),
+            this.getFullUrl(tenantId, path),
             {
                 method: "DELETE",
                 ...config,
@@ -131,6 +127,7 @@ export default class Querier {
     };
 
     put = async <JsonBodyType>(
+        tenantId: string | undefined,
         path: string,
         config: RequestInit,
         preAPIHook?: PreAPIHookFunction,
@@ -140,7 +137,7 @@ export default class Querier {
         fetchResponse: Response;
     }> => {
         const result = await this.fetch(
-            this.getFullUrl(path),
+            this.getFullUrl(tenantId, path),
             {
                 method: "PUT",
                 ...config,
@@ -224,9 +221,15 @@ export default class Querier {
         return result;
     };
 
-    getFullUrl = (pathStr: string, queryParams?: Record<string, string>): string => {
+    getFullUrl = (tenantId: string | undefined, pathStr: string, queryParams?: Record<string, string>): string => {
+        let basePath = this.appInfo.apiBasePath.getAsStringDangerous();
+        if (tenantId !== undefined && tenantId !== "public") {
+            basePath = `${basePath}/${tenantId}`;
+        }
+
         const path = new NormalisedURLPath(pathStr);
-        const fullUrl = `${this.appInfo.apiDomain.getAsStringDangerous()}${this.appInfo.apiBasePath.getAsStringDangerous()}${path.getAsStringDangerous()}`;
+
+        const fullUrl = `${this.appInfo.apiDomain.getAsStringDangerous()}${basePath}${path.getAsStringDangerous()}`;
 
         if (queryParams === undefined) {
             return fullUrl;

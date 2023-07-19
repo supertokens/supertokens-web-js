@@ -19,6 +19,7 @@ import { checkForSSRErrorAndAppendIfNeeded, isTest, normaliseInputAppInfoOrThrow
 import { CookieHandlerReference } from "./cookieHandler";
 import { WindowHandlerReference } from "./windowHandler";
 import { PostSuperTokensInitCallbacks } from "./postSuperTokensInitCallbacks";
+import { Recipe as MultitenancyRecipe } from "./recipe/multitenancy/recipe";
 
 export default class SuperTokens {
     /*
@@ -46,9 +47,19 @@ export default class SuperTokens {
             enableDebugLogs = config.enableDebugLogs;
         }
 
+        let multitenancyFound = false;
+
         this.recipeList = config.recipeList.map((recipe) => {
-            return recipe(this.appInfo, enableDebugLogs);
+            const recipeInstance = recipe(this.appInfo, config.clientType, enableDebugLogs);
+            if (recipeInstance.config.recipeId === MultitenancyRecipe.RECIPE_ID) {
+                multitenancyFound = true;
+            }
+            return recipeInstance;
         });
+
+        if (!multitenancyFound) {
+            this.recipeList.push(MultitenancyRecipe.init()(this.appInfo, config.clientType, enableDebugLogs));
+        }
     }
 
     /**

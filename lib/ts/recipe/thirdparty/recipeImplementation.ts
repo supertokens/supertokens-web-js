@@ -14,7 +14,7 @@
  */
 
 import Querier from "../../querier";
-import { appendQueryParamsToURL, getQueryParams } from "../../utils";
+import { appendQueryParamsToURL, getAllQueryParams, getQueryParams } from "../../utils";
 import { RecipeInterface, StateObject, ThirdPartyUserType } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
@@ -64,70 +64,88 @@ export default function getRecipeImplementation(
             );
         },
 
-        getAuthorisationURLWithQueryParamsAndSetState: async function (input: {
-            providerId: string;
-            authorisationURL: string;
-            userContext: any;
-            providerClientId?: string;
-            options?: RecipeFunctionOptions;
-        }): Promise<string> {
-            // 1. Generate state.
-            const stateToSendToAuthProvider = this.generateStateToSendToOAuthProvider({
-                userContext: input.userContext,
-            });
-
-            const stateExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
-            // 2. Store state in Session Storage.
-            await this.setStateAndOtherInfoToStorage<{}>({
-                state: {
-                    stateForAuthProvider: stateToSendToAuthProvider,
-                    providerId: input.providerId,
-                    expiresAt: stateExpiry,
-                    authorisationURL: input.authorisationURL,
-                    providerClientId: input.providerClientId,
-                },
-                userContext: input.userContext,
-            });
-
-            // 3. Get Authorisation URL.
+        getAuthorisationURLWithQueryParamsAndSetState: async function (
+            this: RecipeInterface,
+            input: {
+                thirdPartyId: string;
+                tenantId: string | undefined;
+                frontendRedirectURI: string;
+                redirectURIOnProviderDashboard?: string;
+                userContext: any;
+                options?: RecipeFunctionOptions;
+            }
+        ): Promise<string> {
+            // 1. Call AuthorisationUrlGET
             const urlResponse = await this.getAuthorisationURLFromBackend({
-                providerId: input.providerId,
+                thirdPartyId: input.thirdPartyId,
+                tenantId: input.tenantId,
+                redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard || input.frontendRedirectURI,
                 userContext: input.userContext,
                 options: input.options,
             });
 
-            // for some third party providers, the redirect_uri is set on the backend itself (for example in the case of apple). In these cases, we don't set them here...
-            const urlObj = new URL(urlResponse.url);
-            const alreadyContainsRedirectURI = urlObj.searchParams.get("redirect_uri") !== null;
+            // 2. Generate state.
+            let frontendRedirectURIToSave: string | undefined =
+                input.redirectURIOnProviderDashboard !== undefined &&
+                input.frontendRedirectURI !== input.redirectURIOnProviderDashboard
+                    ? input.frontendRedirectURI
+                    : undefined;
+            const stateToSendToAuthProvider = this.generateStateToSendToOAuthProvider({
+                frontendRedirectURI: frontendRedirectURIToSave,
+                userContext: input.userContext,
+            });
 
-            const urlWithState = alreadyContainsRedirectURI
-                ? appendQueryParamsToURL(urlResponse.url, {
-                      state: stateToSendToAuthProvider,
-                  })
-                : appendQueryParamsToURL(urlResponse.url, {
-                      state: stateToSendToAuthProvider,
-                      redirect_uri: input.authorisationURL,
-                  });
+            // 3. Store state in Session Storage.
+            const stateExpiry = Date.now() + 1000 * 60 * 10; // 10 minutes expiry.
+            await this.setStateAndOtherInfoToStorage<{}>({
+                state: {
+                    stateForAuthProvider: stateToSendToAuthProvider,
+                    thirdPartyId: input.thirdPartyId,
+                    tenantId: input.tenantId,
+                    expiresAt: stateExpiry,
+                    redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard || input.frontendRedirectURI,
+                    pkceCodeVerifier: urlResponse.pkceCodeVerifier,
+                },
+                userContext: input.userContext,
+            });
+
+            const urlWithState = appendQueryParamsToURL(urlResponse.urlWithQueryParams, {
+                state: stateToSendToAuthProvider,
+            });
 
             return urlWithState;
         },
 
         getAuthorisationURLFromBackend: async function (input: {
-            providerId: string;
+            thirdPartyId: string;
+            tenantId: string | undefined;
+            redirectURIOnProviderDashboard: string;
             userContext: any;
             options?: RecipeFunctionOptions;
         }): Promise<{
             status: "OK";
-            url: string;
+            urlWithQueryParams: string;
+            pkceCodeVerifier?: string;
             fetchResponse: Response;
         }> {
+            const queryParams: Record<string, string> = {
+                thirdPartyId: input.thirdPartyId,
+                redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard,
+            };
+
+            if (recipeImplInput.clientType !== undefined) {
+                queryParams.clientType = recipeImplInput.clientType;
+            }
+
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
-                url: string;
+                urlWithQueryParams: string;
+                pkceCodeVerifier?: string;
             }>(
+                input.tenantId,
                 "/authorisationurl",
                 {},
-                { thirdPartyId: input.providerId },
+                queryParams,
                 Querier.preparePreAPIHook({
                     recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "GET_AUTHORISATION_URL",
@@ -143,12 +161,16 @@ export default function getRecipeImplementation(
 
             return {
                 status: "OK",
-                url: jsonBody.url,
+                urlWithQueryParams: jsonBody.urlWithQueryParams,
+                pkceCodeVerifier: jsonBody.pkceCodeVerifier,
                 fetchResponse,
             };
         },
 
-        signInAndUp: async function (input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
+        signInAndUp: async function (
+            this: RecipeInterface,
+            input: { userContext: any; options?: RecipeFunctionOptions }
+        ): Promise<
             | {
                   status: "OK";
                   user: ThirdPartyUserType;
@@ -174,10 +196,6 @@ export default function getRecipeImplementation(
                 userContext: input.userContext,
             });
 
-            const code = this.getAuthCodeFromURL({
-                userContext: input.userContext,
-            });
-
             const errorInQuery = this.getAuthErrorFromURL({
                 userContext: input.userContext,
             });
@@ -195,6 +213,9 @@ export default function getRecipeImplementation(
                 throw new Error(`Auth provider responded with error: ${errorInQuery}`);
             }
 
+            const queryParams = getAllQueryParams();
+            const queryParamsObj: any = Object.fromEntries(queryParams);
+
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
@@ -209,13 +230,17 @@ export default function getRecipeImplementation(
                       error: string;
                   }
             >(
+                verifiedState.tenantId,
                 "/signinup",
                 {
                     body: JSON.stringify({
-                        code,
-                        thirdPartyId: verifiedState.providerId,
-                        redirectURI: verifiedState.authorisationURL,
-                        clientId: verifiedState.providerClientId,
+                        thirdPartyId: verifiedState.thirdPartyId,
+                        clientType: recipeImplInput.clientType,
+                        redirectURIInfo: {
+                            redirectURIOnProviderDashboard: verifiedState.redirectURIOnProviderDashboard,
+                            redirectURIQueryParams: queryParamsObj,
+                            pkceCodeVerifier: verifiedState.pkceCodeVerifier,
+                        },
                     }),
                 },
                 Querier.preparePreAPIHook({
@@ -240,12 +265,29 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        generateStateToSendToOAuthProvider: function (): string {
+
+        generateStateToSendToOAuthProvider: function (input?: {
+            frontendRedirectURI?: string;
+            userContext: any;
+        }): string {
             // Generate state using algorithm described in https://github.com/supertokens/supertokens-auth-react/issues/154#issue-796867579
-            return `${1e20}`.replace(/[018]/g, (c) =>
-                (parseInt(c) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (parseInt(c) / 4)))).toString(16)
-            );
+            let state: {
+                state: string;
+                frontendRedirectURI?: string;
+            } = {
+                state: `${1e20}`.replace(/[018]/g, (c) =>
+                    (parseInt(c) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (parseInt(c) / 4)))).toString(
+                        16
+                    )
+                ),
+            };
+
+            if (input !== undefined && input.frontendRedirectURI !== undefined) {
+                state.frontendRedirectURI = input.frontendRedirectURI;
+            }
+            return btoa(JSON.stringify(state));
         },
+
         verifyAndGetStateOrThrowError: async function <CustomStateProperties>(input: {
             stateFromAuthProvider: string | undefined;
             stateObjectFromStorage: (StateObject & CustomStateProperties) | undefined;
@@ -271,16 +313,6 @@ export default function getRecipeImplementation(
             }
 
             return input.stateObjectFromStorage;
-        },
-
-        getAuthCodeFromURL: function (): string {
-            const authCodeFromURL = getQueryParams("code");
-
-            if (authCodeFromURL === undefined) {
-                return "";
-            }
-
-            return authCodeFromURL;
         },
 
         getAuthErrorFromURL: function (): string | undefined {

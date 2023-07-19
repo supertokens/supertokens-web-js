@@ -97,6 +97,10 @@ export function getQueryParams(param: string): string | undefined {
     return queryParam;
 }
 
+export function getAllQueryParams(): URLSearchParams {
+    return new URLSearchParams(WindowHandlerReference.getReferenceOrThrow().windowHandler.location.getSearch());
+}
+
 export function checkForSSRErrorAndAppendIfNeeded(error: string): string {
     // tslint:disable-next-line
     if (typeof window === "undefined") {

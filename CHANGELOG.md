@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.7.0] - 2023-07-19
+
+### Added
+
+-   Multitenancy recipe
+-   Added an overrideable `getTenantIdFromURL` to multiple recipes
+-   Optional `clientType` config in the input for `SuperTokens.init` function, that is used by thirdparty and multitenancy recipes.
+
+### Breaking changes
+
+-   Only supporting FDI 1.17
+-   Backend SDKs have to be updated first to a version that supports multi-tenancy for thirdparty
+    -   supertokens-node: >= 15.0.0
+-   In ThirdParty recipe,
+    -   Changed signatures of the functions `getAuthorisationURLWithQueryParamsAndSetState`
+    -   Removed functions - `setStateAndOtherInfoToStorage`, `getAuthorisationURLFromBackend`, `generateStateToSendToOAuthProvider`, `verifyAndGetStateOrThrowError`, `getAuthCodeFromURL`, `getAuthErrorFromURL`, `getAuthStateFromURL`
+-   In ThirdPartyEmailpassword recipe,
+    -   Changed signatures of the functions `getAuthorisationURLWithQueryParamsAndSetState`
+    -   Removed functions - `setStateAndOtherInfoToStorage`, `getAuthorisationURLFromBackend`, `generateStateToSendToOAuthProvider`, `verifyAndGetStateOrThrowError`, `getAuthCodeFromURL`, `getAuthErrorFromURL`, `getAuthStateFromURL`
+-   In ThirdPartyPasswordless recipe,
+    -   Changed signatures of the functions `getThirdPartyAuthorisationURLWithQueryParamsAndSetState`
+    -   Removed functions - `setThirdPartyStateAndOtherInfoToStorage`, `getAuthorisationURLFromBackend`, `generateThirdPartyStateToSendToOAuthProvider`, `verifyAndGetThirdPartyStateOrThrowError`, `getThirdPartyAuthCodeFromURL`, `getThirdPartyAuthErrorFromURL`, `getThirdPartyAuthStateFromURL`
+
 ### Changes
 
 -   Updates dependencies and backend config for the vue with-thirdpartyemailpassword example app

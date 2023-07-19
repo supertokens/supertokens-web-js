@@ -136,6 +136,14 @@ export default class RecipeWrapper {
      */
     static getPreAuthSessionIdFromURL(input?: { userContext?: any }): string;
     /**
+     * Reads and returns the tenant id from the current URL
+     *
+     * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
+     *
+     * @returns The "tenantId" query parameter from the current location
+     */
+    static getTenantIdFromURL(input?: { userContext?: any }): string | undefined;
+    /**
      * Check if a user with the given email exists
      *
      * @param email Email to check
@@ -186,6 +194,7 @@ export default class RecipeWrapper {
         | undefined
         | ({
               deviceId: string;
+              tenantId?: string | string;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
@@ -220,6 +229,7 @@ declare const doesPhoneNumberExist: typeof RecipeWrapper.doesPhoneNumberExist;
 declare const signOut: typeof RecipeWrapper.signOut;
 declare const getLinkCodeFromURL: typeof RecipeWrapper.getLinkCodeFromURL;
 declare const getPreAuthSessionIdFromURL: typeof RecipeWrapper.getPreAuthSessionIdFromURL;
+declare const getTenantIdFromURL: typeof RecipeWrapper.getTenantIdFromURL;
 declare const getLoginAttemptInfo: typeof RecipeWrapper.getLoginAttemptInfo;
 declare const setLoginAttemptInfo: typeof RecipeWrapper.setLoginAttemptInfo;
 declare const clearLoginAttemptInfo: typeof RecipeWrapper.clearLoginAttemptInfo;
@@ -233,6 +243,7 @@ export {
     signOut,
     getLinkCodeFromURL,
     getPreAuthSessionIdFromURL,
+    getTenantIdFromURL,
     getLoginAttemptInfo,
     setLoginAttemptInfo,
     clearLoginAttemptInfo,
