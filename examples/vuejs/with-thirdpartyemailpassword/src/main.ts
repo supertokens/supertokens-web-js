@@ -8,7 +8,7 @@ import App from "./App.vue";
 import router from "./router";
 
 const apiPort = import.meta.env.VUE_APP_API_PORT || 3001;
-const apiDomain = import.meta.env.VUE_APP_API_URL || `http://localhost:${apiPort}`;
+export const apiDomain = import.meta.env.VUE_APP_API_URL || `http://localhost:${apiPort}`;
 
 SuperTokens.init({
     appInfo: {

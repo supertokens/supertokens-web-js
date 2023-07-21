@@ -34,6 +34,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Updates dependencies and backend config for the vue with-thirdpartyemailpassword example app
 
+### Migration
+
+#### Renamed parameters in `getAuthorisationURLWithQueryParamsAndSetState`
+
+Before:
+
+```
+    const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+        providerId: "google",
+        authorisationURL: `${websiteDomain}/auth/callback/google`,
+    });
+```
+
+After:
+
+```
+    const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+        thirdPartyId: "google",
+        frontendRedirectURI: `${websiteDomain}/auth/callback/google`,
+    });
+```
+
+##### If the provider is redirecting to the backend directly (i.e.: Apple)
+
+Before:
+
+```
+    const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+        providerId: "apple",
+        authorisationURL: `${websiteDomain}/auth/callback/apple`,
+    });
+```
+
+After:
+
+```
+    const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+        thirdPartyId: "apple",
+        frontendRedirectURI: `${websiteDomain}/auth/callback/apple`,
+        redirectURIOnProviderDashboard: `${apiDomain}/auth/callback/apple`
+    });
+```
+
 ## [0.6.0] - 2023-03-14
 
 ## Additions
