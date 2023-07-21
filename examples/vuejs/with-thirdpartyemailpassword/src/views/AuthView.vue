@@ -2,6 +2,7 @@
 import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
 import Session from "supertokens-web-js/recipe/session";
 import { defineComponent } from "vue";
+import { apiDomain } from "../main";
 
 const websitePort = import.meta.env.VUE_APP_WEB_PORT || 3000;
 const websiteDomain = import.meta.env.VUE_APP_WEB_URL || `http://localhost:${websitePort}`;
@@ -145,33 +146,34 @@ export default defineComponent({
         },
         onGithubPressed: async function () {
             const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
-                providerId: "github",
+                thirdPartyId: "github",
 
                 // This is where github should redirect the user back after login or error.
                 // This URL goes on the github dashboard as well.
-                authorisationURL: `${websiteDomain}/auth/callback/github`,
+                frontendRedirectURI: `${websiteDomain}/auth/callback/github`,
             });
 
             window.location.assign(authUrl);
         },
         onGooglePressed: async function () {
             const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
-                providerId: "google",
+                thirdPartyId: "google",
 
                 // This is where google should redirect the user back after login or error.
                 // This URL goes on the google dashboard as well.
-                authorisationURL: `${websiteDomain}/auth/callback/google`,
+                frontendRedirectURI: `${websiteDomain}/auth/callback/google`,
             });
 
             window.location.assign(authUrl);
         },
         onApplePressed: async function () {
             const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
-                providerId: "apple",
+                thirdPartyId: "apple",
 
                 // This is where apple should redirect the user back after login or error.
                 // This URL goes on the apple dashboard as well.
-                authorisationURL: `${websiteDomain}/auth/callback/apple`,
+                frontendRedirectURI: `${websiteDomain}/auth/callback/apple`,
+                redirectURIOnProviderDashboard: `${apiDomain}/auth/callback/apple`,
             });
 
             window.location.assign(authUrl);
