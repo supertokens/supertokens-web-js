@@ -14,7 +14,6 @@
  */
 import Querier from "../../querier";
 import { getQueryParams } from "../../utils";
-import Multitenancy from "../multitenancy/recipe";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction, RecipeInterface } from "./types";
 
@@ -82,7 +81,7 @@ export default function getRecipeImplementation(
             fetchResponse: Response;
         }> {
             const { jsonBody, fetchResponse } = await querier.get<{ status: "OK"; isVerified: boolean }>(
-                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
+                undefined,
                 "/user/email/verify",
                 {},
                 undefined,
@@ -117,7 +116,7 @@ export default function getRecipeImplementation(
             fetchResponse: Response;
         }> {
             const { jsonBody, fetchResponse } = await querier.post<{ status: "OK" | "EMAIL_ALREADY_VERIFIED_ERROR" }>(
-                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
+                undefined,
                 "/user/email/verify/token",
                 { body: JSON.stringify({}) },
                 Querier.preparePreAPIHook({
