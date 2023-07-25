@@ -73,17 +73,28 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
+
+    static async isTenantIdDefined(input?: { userContext?: any }): Promise<boolean> {
+        return (
+            (await Recipe.getInstanceOrThrow().recipeImplementation.getTenantId({
+                userContext: getNormalisedUserContext(input?.userContext),
+            })) !== undefined
+        );
+    }
+
     static AllowedDomainsClaim = AllowedDomainsClaim;
 }
 
 const init = RecipeWrapper.init;
 const getLoginMethods = RecipeWrapper.getLoginMethods;
 const getTenantId = RecipeWrapper.getTenantId;
+const isTenantIdDefined = RecipeWrapper.isTenantIdDefined;
 
 export {
     init,
     getLoginMethods,
     getTenantId,
+    isTenantIdDefined,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,

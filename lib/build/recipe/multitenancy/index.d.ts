@@ -41,15 +41,18 @@ export default class RecipeWrapper {
      * @returns `Promise<string | undefined> | string | undefined`
      */
     static getTenantId(input?: { userContext?: any }): Promise<string | undefined> | string | undefined;
+    static isTenantIdDefined(input?: { userContext?: any }): Promise<boolean>;
     static AllowedDomainsClaim: import("./allowedDomainsClaim").AllowedDomainsClaimClass;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getLoginMethods: typeof RecipeWrapper.getLoginMethods;
 declare const getTenantId: typeof RecipeWrapper.getTenantId;
+declare const isTenantIdDefined: typeof RecipeWrapper.isTenantIdDefined;
 export {
     init,
     getLoginMethods,
     getTenantId,
+    isTenantIdDefined,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,

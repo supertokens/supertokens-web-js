@@ -66,6 +66,7 @@ import {
 import {
     RecipeInterface as MultitenancyRecipeInterface,
     PreAndPostAPIHookAction as MultitenancyAction,
+    isTenantIdDefined,
 } from "../../recipe/multitenancy";
 import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
 import { RecipeInterface as SessionRecipeInterface, UserInput as SessionUserInput } from "../../recipe/session/types";
@@ -2008,3 +2009,9 @@ function reexportedHandlers() {
     CookieHandlerReference.getReferenceOrThrow();
     WindowHandlerReference.getReferenceOrThrow();
 }
+
+Multitenancy.isTenantIdDefined();
+isTenantIdDefined();
+
+Multitenancy.isTenantIdDefined({ userContext: {} });
+isTenantIdDefined({ userContext: {} });
