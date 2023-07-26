@@ -1,6 +1,6 @@
 {
     "name": "supertokens-web-js",
-    "version": "0.7.0",
+    "version": "0.7.1",
     "description": "SuperTokens SDK for vanilla JS for all recipes",
     "main": "./index.js",
     "scripts": {
