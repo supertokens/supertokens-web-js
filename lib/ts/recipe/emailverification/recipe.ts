@@ -41,6 +41,7 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
             RecipeImplementation({
                 recipeId: this.config.recipeId,
                 appInfo: this.config.appInfo,
+                clientType: this.config.clientType,
                 preAPIHook: this.config.preAPIHook,
                 postAPIHook: this.config.postAPIHook,
             })
