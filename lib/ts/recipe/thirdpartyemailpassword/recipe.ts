@@ -61,6 +61,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
                 ? new EmailPasswordRecipe({
                       recipeId: this.config.recipeId,
                       appInfo: this.config.appInfo,
+                      clientType: this.config.clientType,
                       preAPIHook: config.preAPIHook,
                       postAPIHook: config.postAPIHook,
                       override: {
@@ -80,6 +81,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
                 ? new ThirdPartyRecipe({
                       recipeId: this.config.recipeId,
                       appInfo: this.config.appInfo,
+                      clientType: this.config.clientType,
                       preAPIHook: config.preAPIHook,
                       postAPIHook: config.postAPIHook,
                       override: {
