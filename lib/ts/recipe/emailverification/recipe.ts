@@ -56,10 +56,11 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
     }
 
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo) => {
+        return (appInfo: NormalisedAppInfo, clientType: string | undefined) => {
             Recipe.instance = new Recipe({
                 ...config,
                 appInfo,
+                clientType,
                 recipeId: Recipe.RECIPE_ID,
             });
 
