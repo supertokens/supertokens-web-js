@@ -19,7 +19,8 @@ import { getHashFromLocation, getQueryParams } from "../../utils";
 import Multitenancy from "../multitenancy/recipe";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY } from "./constants";
-import { PreAndPostAPIHookAction, RecipeInterface, PasswordlessFlowType, PasswordlessUser } from "./types";
+import { PreAndPostAPIHookAction, RecipeInterface, PasswordlessFlowType } from "./types";
+import { User } from "../../types";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -31,13 +32,20 @@ export default function getRecipeImplementation(
             input:
                 | { email: string; userContext: any; options?: RecipeFunctionOptions }
                 | { phoneNumber: string; userContext: any; options?: RecipeFunctionOptions }
-        ): Promise<{
-            status: "OK";
-            deviceId: string;
-            preAuthSessionId: string;
-            flowType: PasswordlessFlowType;
-            fetchResponse: Response;
-        }> {
+        ): Promise<
+            | {
+                  status: "OK";
+                  deviceId: string;
+                  preAuthSessionId: string;
+                  flowType: PasswordlessFlowType;
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "SIGN_IN_UP_NOT_ALLOWED";
+                  reason: string;
+                  fetchResponse: Response;
+              }
+        > {
             let bodyObj;
 
             if ("email" in input) {
@@ -140,8 +148,8 @@ export default function getRecipeImplementation(
         ): Promise<
             | {
                   status: "OK";
-                  createdNewUser: boolean;
-                  user: PasswordlessUser;
+                  createdNewRecipeUser: boolean;
+                  user: User;
                   fetchResponse: Response;
               }
             | {
@@ -151,6 +159,7 @@ export default function getRecipeImplementation(
                   fetchResponse: Response;
               }
             | { status: "RESTART_FLOW_ERROR"; fetchResponse: Response }
+            | { status: "SIGN_IN_UP_NOT_ALLOWED"; reason: string; fetchResponse: Response }
         > {
             let bodyObj;
             if ("userInputCode" in input) {
@@ -169,20 +178,16 @@ export default function getRecipeImplementation(
             type ResponseType =
                 | {
                       status: "OK";
-                      createdNewUser: boolean;
-                      user: {
-                          id: string;
-                          email?: string;
-                          phoneNumber?: string;
-                          timeJoined: number;
-                      };
+                      createdNewRecipeUser: boolean;
+                      user: User;
                   }
                 | {
                       status: "INCORRECT_USER_INPUT_CODE_ERROR" | "EXPIRED_USER_INPUT_CODE_ERROR";
                       failedCodeInputAttemptCount: number;
                       maximumCodeInputAttempts: number;
                   }
-                | { status: "RESTART_FLOW_ERROR" };
+                | { status: "RESTART_FLOW_ERROR" }
+                | { status: "SIGN_IN_UP_NOT_ALLOWED"; reason: string };
 
             const { jsonBody, fetchResponse } = await querier.post<ResponseType>(
                 input.tenantId,

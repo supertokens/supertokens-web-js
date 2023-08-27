@@ -1,5 +1,6 @@
+import { User } from "../../types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { InputType, NormalisedInputType, PasswordlessFlowType, PasswordlessUser, RecipeInterface } from "./types";
+import { InputType, NormalisedInputType, PasswordlessFlowType, RecipeInterface } from "./types";
 export declare function normaliseUserInput(config: InputType): NormalisedInputType;
 /**
  * These functions are helper functions so that the logic can be exposed from both
@@ -19,13 +20,20 @@ export declare function createCode(
               options?: RecipeFunctionOptions;
               recipeImplementation: RecipeInterface;
           }
-): Promise<{
-    status: "OK";
-    deviceId: string;
-    preAuthSessionId: string;
-    flowType: PasswordlessFlowType;
-    fetchResponse: Response;
-}>;
+): Promise<
+    | {
+          status: "OK";
+          deviceId: string;
+          preAuthSessionId: string;
+          flowType: PasswordlessFlowType;
+          fetchResponse: Response;
+      }
+    | {
+          status: "SIGN_IN_UP_NOT_ALLOWED";
+          reason: string;
+          fetchResponse: Response;
+      }
+>;
 export declare function resendCode(input: {
     userContext?: any;
     options?: RecipeFunctionOptions;
@@ -50,8 +58,8 @@ export declare function consumeCode(
 ): Promise<
     | {
           status: "OK";
-          createdNewUser: boolean;
-          user: PasswordlessUser;
+          createdNewRecipeUser: boolean;
+          user: User;
           fetchResponse: Response;
       }
     | {
@@ -62,6 +70,11 @@ export declare function consumeCode(
       }
     | {
           status: "RESTART_FLOW_ERROR";
+          fetchResponse: Response;
+      }
+    | {
+          status: "SIGN_IN_UP_NOT_ALLOWED";
+          reason: string;
           fetchResponse: Response;
       }
 >;

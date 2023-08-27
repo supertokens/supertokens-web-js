@@ -1,7 +1,7 @@
+import { User } from "../../types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
     PasswordlessFlowType,
-    PasswordlessUser,
     PostAPIHookContext,
     PreAPIHookContext,
     RecipeInterface,
@@ -37,13 +37,20 @@ export default class RecipeWrapper {
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
-    ): Promise<{
-        status: "OK";
-        deviceId: string;
-        preAuthSessionId: string;
-        flowType: PasswordlessFlowType;
-        fetchResponse: Response;
-    }>;
+    ): Promise<
+        | {
+              status: "OK";
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_UP_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+    >;
     /**
      * Resend the code to the user
      *
@@ -80,13 +87,14 @@ export default class RecipeWrapper {
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: "OK", user, createdNewUser: bool}` if succesful
+     * @returns `{status: "OK", user, createdNewRecipeUser: bool}` if succesful
      *
      * @returns `{status: "INCORRECT_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is incorrect
      *
      * @returns `{status: "EXPIRED_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is expired
      *
      * @returns `{status: "RESTART_FLOW_ERROR"}` if the auth flow should be restarted
+     * @returns `{status: "SIGN_IN_UP_NOT_ALLOWED", reason: string}` if sign in or up is not allowed because of account-linking conflicts
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
@@ -104,8 +112,8 @@ export default class RecipeWrapper {
     ): Promise<
         | {
               status: "OK";
-              createdNewUser: boolean;
-              user: PasswordlessUser;
+              createdNewRecipeUser: boolean;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -116,6 +124,11 @@ export default class RecipeWrapper {
           }
         | {
               status: "RESTART_FLOW_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;
@@ -247,7 +260,6 @@ export {
     getLoginAttemptInfo,
     setLoginAttemptInfo,
     clearLoginAttemptInfo,
-    PasswordlessUser,
     UserInput,
     RecipeInterface,
     RecipeFunctionOptions,

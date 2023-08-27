@@ -1,6 +1,6 @@
 import { RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserInput } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { UserType } from "./types";
+import { User } from "../../types";
 export default class RecipeWrapper {
     static init(
         config?: UserInput
@@ -32,7 +32,13 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<
         | {
-              status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+              status: "OK";
+              user: User;
+              email: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -72,6 +78,11 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
+              status: "PASSWORD_RESET_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
               status: "FIELD_ERROR";
               formFields: {
                   id: string;
@@ -105,7 +116,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -144,7 +155,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -214,7 +225,6 @@ export {
     getResetPasswordTokenFromURL,
     getTenantIdFromURL,
     signOut,
-    UserType,
     UserInput,
     RecipeInterface,
     RecipeFunctionOptions,

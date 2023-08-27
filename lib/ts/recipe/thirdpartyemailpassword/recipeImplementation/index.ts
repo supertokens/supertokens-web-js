@@ -19,9 +19,9 @@ import ThirdPartyImplementation from "../../thirdparty/recipeImplementation";
 import DerivedEmailPassword from "./emailpassword";
 import DerivedThirdParty from "./thirdparty";
 import { StateObject } from "../../thirdparty/types";
-import { RecipeFunctionOptions, UserType as EmailPasswordUserType } from "../../emailpassword";
+import { RecipeFunctionOptions } from "../../emailpassword";
 import { RecipeImplementationInput } from "../../recipeModule/types";
-import { ThirdPartyUserType } from "../../thirdparty/types";
+import { User } from "../../../types";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -39,7 +39,13 @@ export default function getRecipeImplementation(
             userContext: any;
         }): Promise<
             | {
-                  status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+                  status: "OK";
+                  user: User;
+                  email: string;
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
                   fetchResponse: Response;
               }
             | {
@@ -63,6 +69,11 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "PASSWORD_RESET_NOT_ALLOWED";
+                  reason: string;
                   fetchResponse: Response;
               }
             | {
@@ -98,7 +109,7 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
-                  user: EmailPasswordUserType;
+                  user: User;
                   fetchResponse: Response;
               }
             | {
@@ -123,7 +134,7 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
-                  user: EmailPasswordUserType;
+                  user: User;
                   fetchResponse: Response;
               }
             | {
@@ -164,12 +175,17 @@ export default function getRecipeImplementation(
         thirdPartySignInAndUp: async function (input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
             | {
                   status: "OK";
-                  user: ThirdPartyUserType;
-                  createdNewUser: boolean;
+                  user: User;
+                  createdNewRecipeUser: boolean;
                   fetchResponse: Response;
               }
             | {
-                  status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+                  status: "NO_EMAIL_GIVEN_BY_PROVIDER" | "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT";
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "SIGN_IN_UP_NOT_ALLOWED";
+                  reason: string;
                   fetchResponse: Response;
               }
         > {

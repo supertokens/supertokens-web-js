@@ -20,8 +20,8 @@ import PasswordlessRecipeImplementation from "../../passwordless/recipeImplement
 import DerivedThirdParty from "./thirdparty";
 import DerivedPasswordless from "./passwordless";
 import { StateObject } from "../../thirdparty/types";
-import { PasswordlessFlowType, PasswordlessUser } from "../../passwordless/types";
-import { ThirdPartyUserType } from "../../thirdparty/types";
+import { PasswordlessFlowType } from "../../passwordless/types";
+import { User } from "../../../types";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -48,12 +48,17 @@ export default function getRecipeImplementation(
         thirdPartySignInAndUp: async function (input: { userContext: any; options?: RecipeFunctionOptions }): Promise<
             | {
                   status: "OK";
-                  user: ThirdPartyUserType;
-                  createdNewUser: boolean;
+                  user: User;
+                  createdNewRecipeUser: boolean;
                   fetchResponse: Response;
               }
             | {
-                  status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+                  status: "NO_EMAIL_GIVEN_BY_PROVIDER" | "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT";
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "SIGN_IN_UP_NOT_ALLOWED";
+                  reason: string;
                   fetchResponse: Response;
               }
         > {
@@ -111,13 +116,20 @@ export default function getRecipeImplementation(
             input:
                 | { email: string; userContext: any; options?: RecipeFunctionOptions }
                 | { phoneNumber: string; userContext: any; options?: RecipeFunctionOptions }
-        ): Promise<{
-            status: "OK";
-            deviceId: string;
-            preAuthSessionId: string;
-            flowType: PasswordlessFlowType;
-            fetchResponse: Response;
-        }> {
+        ): Promise<
+            | {
+                  status: "OK";
+                  deviceId: string;
+                  preAuthSessionId: string;
+                  flowType: PasswordlessFlowType;
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "SIGN_IN_UP_NOT_ALLOWED";
+                  reason: string;
+                  fetchResponse: Response;
+              }
+        > {
             return passwordlessImpl.createCode.bind(DerivedPasswordless(this))(input);
         },
 
@@ -154,8 +166,8 @@ export default function getRecipeImplementation(
         ): Promise<
             | {
                   status: "OK";
-                  createdNewUser: boolean;
-                  user: PasswordlessUser;
+                  createdNewRecipeUser: boolean;
+                  user: User;
                   fetchResponse: Response;
               }
             | {
@@ -165,6 +177,7 @@ export default function getRecipeImplementation(
                   fetchResponse: Response;
               }
             | { status: "RESTART_FLOW_ERROR"; fetchResponse: Response }
+            | { status: "SIGN_IN_UP_NOT_ALLOWED"; reason: string; fetchResponse: Response }
         > {
             return passwordlessImpl.consumeCode.bind(DerivedPasswordless(this))(input);
         },

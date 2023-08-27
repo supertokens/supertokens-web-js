@@ -16,10 +16,10 @@
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import Multitenancy from "../multitenancy/recipe";
-import { UserType as EmailPasswordUserType } from "../emailpassword";
-import { StateObject, ThirdPartyUserType } from "../thirdparty/types";
+import { StateObject } from "../thirdparty/types";
 import Recipe from "./recipe";
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
+import { User } from "../../types";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -58,7 +58,13 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<
         | {
-              status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+              status: "OK";
+              user: User;
+              email: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -101,6 +107,11 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
+              fetchResponse: Response;
+          }
+        | {
+              status: "PASSWORD_RESET_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
         | {
@@ -183,7 +194,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: EmailPasswordUserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -228,7 +239,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: EmailPasswordUserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -285,19 +296,26 @@ export default class RecipeWrapper {
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: OK, user, createdNewUser: boolean}` if succesful
+     * @returns `{status: OK, user, createdNewRecipeUser: boolean}` if succesful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
+     * @returns `{status: "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT"}` if signing up with this user/email address is not allowed because of account linking conflicts
+     * @returns `{status: "SIGN_IN_UP_NOT_ALLOWED", reason: string}` if signing in with this user is not allowed if because of account linking conflicts
      */
     static thirdPartySignInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
-              user: ThirdPartyUserType;
-              createdNewUser: boolean;
+              user: User;
+              createdNewRecipeUser: boolean;
               fetchResponse: Response;
           }
         | {
-              status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+              status: "NO_EMAIL_GIVEN_BY_PROVIDER" | "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     > {
@@ -367,8 +385,6 @@ export {
     signOut,
     getResetPasswordTokenFromURL,
     getTenantIdFromURL,
-    EmailPasswordUserType,
-    ThirdPartyUserType,
     UserInput,
     RecipeInterface,
     RecipeFunctionOptions,

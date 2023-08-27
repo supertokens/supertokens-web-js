@@ -17,7 +17,7 @@ import Multitenancy from "../multitenancy/recipe";
 import { PreAndPostAPIHookAction, RecipeInterface } from "./types";
 import { getQueryParams } from "../../utils";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
-import { UserType } from ".";
+import { User } from "../../types";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -38,7 +38,13 @@ export default function getRecipeImplementation(
             userContext: any;
         }): Promise<
             | {
-                  status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+                  status: "OK";
+                  user: User;
+                  email: string;
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
                   fetchResponse: Response;
               }
             | {
@@ -57,7 +63,12 @@ export default function getRecipeImplementation(
 
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
-                      status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+                      status: "OK";
+                      user: User;
+                      email: string;
+                  }
+                | {
+                      status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
                   }
                 | {
                       status: "FIELD_ERROR";
@@ -91,8 +102,16 @@ export default function getRecipeImplementation(
                 };
             }
 
+            if (jsonBody.status === "RESET_PASSWORD_INVALID_TOKEN_ERROR") {
+                return {
+                    status: jsonBody.status,
+                    fetchResponse,
+                };
+            }
             return {
                 status: jsonBody.status,
+                user: jsonBody.user,
+                email: jsonBody.email,
                 fetchResponse,
             };
         },
@@ -114,6 +133,11 @@ export default function getRecipeImplementation(
                   fetchResponse: Response;
               }
             | {
+                  status: "PASSWORD_RESET_NOT_ALLOWED";
+                  reason: string;
+                  fetchResponse: Response;
+              }
+            | {
                   status: "FIELD_ERROR";
                   formFields: {
                       id: string;
@@ -125,6 +149,10 @@ export default function getRecipeImplementation(
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
+                  }
+                | {
+                      status: "PASSWORD_RESET_NOT_ALLOWED";
+                      reason: string;
                   }
                 | {
                       status: "FIELD_ERROR";
@@ -158,6 +186,14 @@ export default function getRecipeImplementation(
                 };
             }
 
+            if (jsonBody.status === "PASSWORD_RESET_NOT_ALLOWED") {
+                return {
+                    status: jsonBody.status,
+                    reason: jsonBody.reason,
+                    fetchResponse,
+                };
+            }
+
             return {
                 status: jsonBody.status,
                 fetchResponse,
@@ -178,7 +214,7 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
-                  user: UserType;
+                  user: User;
                   fetchResponse: Response;
               }
             | {
@@ -193,7 +229,7 @@ export default function getRecipeImplementation(
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
-                      user: UserType;
+                      user: User;
                   }
                 | {
                       status: "FIELD_ERROR";
@@ -248,7 +284,7 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
-                  user: UserType;
+                  user: User;
                   fetchResponse: Response;
               }
             | {
@@ -267,7 +303,7 @@ export default function getRecipeImplementation(
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
-                      user: UserType;
+                      user: User;
                   }
                 | {
                       status: "FIELD_ERROR";

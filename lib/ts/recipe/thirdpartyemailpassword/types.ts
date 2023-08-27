@@ -12,10 +12,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-import {
-    UserType as EmailPasswordUserType,
-    PreAndPostAPIHookAction as EmailPasswordPreAndPostAPIHookAction,
-} from "../emailpassword/types";
+import { PreAndPostAPIHookAction as EmailPasswordPreAndPostAPIHookAction } from "../emailpassword/types";
 import {
     RecipePostAPIHookContext,
     RecipePreAPIHookContext,
@@ -29,7 +26,7 @@ import {
 } from "../authRecipe/types";
 
 import OverrideableBuilder from "supertokens-js-override";
-import { ThirdPartyUserType } from "../thirdparty/types";
+import { User } from "../../types";
 
 export type PreAndPostAPIHookAction = EmailPasswordPreAndPostAPIHookAction | ThirdPartyPreAndPostAPIHookAction;
 
@@ -86,7 +83,13 @@ export type RecipeInterface = {
         userContext: any;
     }) => Promise<
         | {
-              status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+              status: "OK";
+              user: User;
+              email: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -124,6 +127,11 @@ export type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
+              fetchResponse: Response;
+          }
+        | {
+              status: "PASSWORD_RESET_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
         | {
@@ -180,7 +188,7 @@ export type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: EmailPasswordUserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -220,7 +228,7 @@ export type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: EmailPasswordUserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -283,22 +291,29 @@ export type RecipeInterface = {
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: OK, user, createdNewUser: boolean}` if succesful
+     * @returns `{status: OK, user, createdNewRecipeUser: boolean}` if succesful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
+     * @returns `{status: "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT"}` if signing up with this user/email address is not allowed because of account linking conflicts
+     * @returns `{status: "SIGN_IN_UP_NOT_ALLOWED", reason: string}` if signing in with this user is not allowed if because of account linking conflicts
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     thirdPartySignInAndUp: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
               status: "OK";
-              user: ThirdPartyUserType;
-              createdNewUser: boolean;
+              user: User;
+              createdNewRecipeUser: boolean;
               tenantId?: string;
               fetchResponse: Response;
           }
         | {
-              status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+              status: "NO_EMAIL_GIVEN_BY_PROVIDER" | "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;

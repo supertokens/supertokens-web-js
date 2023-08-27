@@ -24,12 +24,7 @@ import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
 } from "../authRecipe/types";
-
-export type UserType = {
-    id: string;
-    email: string;
-    timeJoined: number;
-};
+import { User } from "../../types";
 
 export type PreAndPostAPIHookAction =
     | "EMAIL_PASSWORD_SIGN_UP"
@@ -91,7 +86,13 @@ export type RecipeInterface = {
         userContext: any;
     }) => Promise<
         | {
-              status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+              status: "OK";
+              user: User;
+              email: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -132,6 +133,11 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
+              status: "PASSWORD_RESET_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
               status: "FIELD_ERROR";
               formFields: {
                   id: string;
@@ -166,7 +172,7 @@ export type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -206,7 +212,7 @@ export type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: User;
               fetchResponse: Response;
           }
         | {

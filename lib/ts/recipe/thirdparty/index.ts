@@ -13,6 +13,7 @@
  * under the License.
  */
 
+import { User } from "../../types";
 import { getNormalisedUserContext } from "../../utils";
 import Multitenancy from "../multitenancy/recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
@@ -24,7 +25,6 @@ import {
     StateObject,
     RecipeInterface,
     UserInput,
-    ThirdPartyUserType,
 } from "./types";
 
 export default class RecipeWrapper {
@@ -94,21 +94,28 @@ export default class RecipeWrapper {
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: OK, user, createdNewUser: boolean}` if successful
+     * @returns `{status: OK, user, createdNewRecipeUser: boolean}` if successful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
+     * @returns `{status: "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT"}` if signing up with this user/email address is not allowed because of account linking conflicts
+     * @returns `{status: "SIGN_IN_UP_NOT_ALLOWED", reason: string}` if signing in with this user is not allowed if because of account linking conflicts
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static signInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
-              user: ThirdPartyUserType;
-              createdNewUser: boolean;
+              user: User;
+              createdNewRecipeUser: boolean;
               fetchResponse: Response;
           }
         | {
-              status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+              status: "NO_EMAIL_GIVEN_BY_PROVIDER" | "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     > {
@@ -137,5 +144,4 @@ export {
     PostAPIHookContext,
     PreAndPostAPIHookAction,
     UserInput,
-    ThirdPartyUserType,
 };
