@@ -34,6 +34,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
             RecipeImplementation({
                 recipeId: this.config.recipeId,
                 appInfo: this.config.appInfo,
+                clientType: this.config.clientType,
                 preAPIHook: this.config.preAPIHook,
                 postAPIHook: this.config.postAPIHook,
             })
@@ -42,10 +43,11 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     }
 
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo) => {
+        return (appInfo: NormalisedAppInfo, clientType: string | undefined) => {
             Recipe.instance = new Recipe({
                 ...config,
                 recipeId: Recipe.RECIPE_ID,
+                clientType,
                 appInfo,
             });
 

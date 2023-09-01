@@ -19,6 +19,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `sendPasswordResetEmail` can now return `status: "PASSWORD_RESET_NOT_ALLOWED"`
 -   `submitNewPassword` includes `user` and `email` in the `status: "OK"` response
 
+## [0.7.3] - 2023-08-21
+
+### Fixes
+
+-   Fixed `clientType` usage in `thirdpartypasswordless`
+
+## [0.7.2] - 2023-08-07
+
+### Fixes
+
+-   Fixed `clientType` usage in `thirdpartyemailpassword` and `thirdpartypasswordless`
+
 ## [0.7.1] - 2023-07-31
 
 ### Changes
