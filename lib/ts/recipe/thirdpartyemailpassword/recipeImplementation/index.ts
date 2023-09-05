@@ -40,8 +40,6 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
-                  user: User;
-                  email: string;
                   fetchResponse: Response;
               }
             | {

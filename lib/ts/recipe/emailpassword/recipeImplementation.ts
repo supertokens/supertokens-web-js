@@ -15,7 +15,7 @@
 import Querier from "../../querier";
 import Multitenancy from "../multitenancy/recipe";
 import { PreAndPostAPIHookAction, RecipeInterface } from "./types";
-import { getQueryParams } from "../../utils";
+import { getQueryParams, normaliseUser } from "../../utils";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { User } from "../../types";
 
@@ -39,8 +39,6 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
-                  user: User;
-                  email: string;
                   fetchResponse: Response;
               }
             | {
@@ -64,8 +62,6 @@ export default function getRecipeImplementation(
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
-                      user: User;
-                      email: string;
                   }
                 | {
                       status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
@@ -109,9 +105,7 @@ export default function getRecipeImplementation(
                 };
             }
             return {
-                status: jsonBody.status,
-                user: jsonBody.user,
-                email: jsonBody.email,
+                ...jsonBody,
                 fetchResponse,
             };
         },
@@ -265,7 +259,7 @@ export default function getRecipeImplementation(
 
             return {
                 status: jsonBody.status,
-                user: jsonBody.user,
+                user: normaliseUser("emailpassword", jsonBody.user),
                 fetchResponse,
             };
         },
@@ -349,7 +343,7 @@ export default function getRecipeImplementation(
 
             return {
                 status: "OK",
-                user: jsonBody.user,
+                user: normaliseUser("emailpassword", jsonBody.user),
                 fetchResponse,
             };
         },

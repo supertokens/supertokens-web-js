@@ -16,7 +16,7 @@ import { WindowHandlerReference } from "./windowHandler";
 import { DEFAULT_API_BASE_PATH, SSR_ERROR } from "./constants";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import NormalisedURLPath from "./normalisedURLPath";
-import { AppInfoUserInput, NormalisedAppInfo } from "./types";
+import { AppInfoUserInput, NormalisedAppInfo, User } from "./types";
 import { SessionClaimValidator } from "supertokens-website";
 import { getGlobalClaimValidators as getGlobalClaimValidatorsWebsite } from "supertokens-website/utils/globalClaimValidators";
 
@@ -130,4 +130,73 @@ export function getGlobalClaimValidators({
     userContext?: any;
 }) {
     return getGlobalClaimValidatorsWebsite(overrideGlobalClaimValidators, userContext);
+}
+
+export function normaliseUserResponse(
+    recipeId: "passwordless" | "emailpassword" | "thirdparty",
+    response:
+        | { createdNewRecipeUser: boolean; user: User }
+        | {
+              createdNewUser: boolean;
+              user: {
+                  id: string;
+                  email?: string;
+                  phoneNumber?: string;
+                  thirdParty?: {
+                      id: string;
+                      userId: string;
+                  };
+                  tenantIds: string[];
+                  timeJoined: number;
+              };
+          }
+): { createdNewRecipeUser: boolean; user: User } {
+    if ("createdNewRecipeUser" in response) {
+        return response;
+    }
+    return {
+        createdNewRecipeUser: response.createdNewUser,
+        user: normaliseUser(recipeId, response.user),
+    };
+}
+
+export function normaliseUser(
+    recipeId: "passwordless" | "emailpassword" | "thirdparty",
+    responseUser:
+        | User
+        | {
+              id: string;
+              email?: string | undefined;
+              phoneNumber?: string | undefined;
+              thirdParty?: { id: string; userId: string } | undefined;
+              tenantIds: string[];
+              timeJoined: number;
+          }
+) {
+    if ("loginMethods" in responseUser) {
+        return responseUser;
+    }
+
+    const emails = responseUser.email !== undefined ? [responseUser.email] : [];
+    const phoneNumbers = responseUser.phoneNumber !== undefined ? [responseUser.phoneNumber] : [];
+    const thirdParty = responseUser.thirdParty !== undefined ? [responseUser.thirdParty] : [];
+    return {
+        id: responseUser.id,
+        emails,
+        phoneNumbers,
+        thirdParty,
+        isPrimaryUser: false,
+        tenantIds: responseUser.tenantIds,
+        timeJoined: responseUser.timeJoined,
+        loginMethods: [
+            {
+                recipeId,
+                recipeUserId: responseUser.id,
+                timeJoined: responseUser.timeJoined,
+                tenantIds: responseUser.tenantIds,
+                email: responseUser.email,
+                phoneNumber: responseUser.email,
+            },
+        ],
+    };
 }

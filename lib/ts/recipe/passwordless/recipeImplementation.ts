@@ -15,7 +15,7 @@
 
 import { WindowHandlerReference } from "../../windowHandler";
 import Querier from "../../querier";
-import { getHashFromLocation, getQueryParams } from "../../utils";
+import { getHashFromLocation, getQueryParams, normaliseUserResponse } from "../../utils";
 import Multitenancy from "../multitenancy/recipe";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PASSWORDLESS_LOGIN_ATTEMPT_INFO_STORAGE_KEY } from "./constants";
@@ -206,8 +206,16 @@ export default function getRecipeImplementation(
                 })
             );
 
+            if (jsonBody.status !== "OK") {
+                return {
+                    ...jsonBody,
+                    fetchResponse,
+                };
+            }
+
             return {
-                ...jsonBody,
+                status: "OK",
+                ...normaliseUserResponse("passwordless", jsonBody),
                 fetchResponse,
             };
         },

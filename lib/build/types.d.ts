@@ -120,7 +120,7 @@ export declare type User = {
         timeJoined: number;
         recipeId: "emailpassword" | "thirdparty" | "passwordless";
         recipeUserId: string;
-        verified: boolean;
+        verified?: boolean;
         email?: string;
         phoneNumber?: string;
         thirdParty?: {

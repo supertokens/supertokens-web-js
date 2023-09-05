@@ -14,7 +14,7 @@
  */
 
 import Querier from "../../querier";
-import { appendQueryParamsToURL, getAllQueryParams, getQueryParams } from "../../utils";
+import { appendQueryParamsToURL, getAllQueryParams, getQueryParams, normaliseUserResponse } from "../../utils";
 import { RecipeInterface, StateObject } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
@@ -269,9 +269,15 @@ export default function getRecipeImplementation(
             if (jsonBody.status === "FIELD_ERROR") {
                 throw new STGeneralError(jsonBody.error);
             }
-
+            if (jsonBody.status !== "OK") {
+                return {
+                    ...jsonBody,
+                    fetchResponse,
+                };
+            }
             return {
-                ...jsonBody,
+                status: "OK",
+                ...normaliseUserResponse("thirdparty", jsonBody),
                 fetchResponse,
             };
         },

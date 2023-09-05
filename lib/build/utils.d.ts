@@ -1,4 +1,4 @@
-import { AppInfoUserInput, NormalisedAppInfo } from "./types";
+import { AppInfoUserInput, NormalisedAppInfo, User } from "./types";
 import { SessionClaimValidator } from "supertokens-website";
 export declare function appendQueryParamsToURL(stringUrl: string, queryParams?: Record<string, string>): string;
 export declare function normaliseInputAppInfoOrThrowError(appInfo: AppInfoUserInput): NormalisedAppInfo;
@@ -18,3 +18,46 @@ export declare function getGlobalClaimValidators({
     ) => SessionClaimValidator[];
     userContext?: any;
 }): SessionClaimValidator[];
+export declare function normaliseUserResponse(
+    recipeId: "passwordless" | "emailpassword" | "thirdparty",
+    response:
+        | {
+              createdNewRecipeUser: boolean;
+              user: User;
+          }
+        | {
+              createdNewUser: boolean;
+              user: {
+                  id: string;
+                  email?: string;
+                  phoneNumber?: string;
+                  thirdParty?: {
+                      id: string;
+                      userId: string;
+                  };
+                  tenantIds: string[];
+                  timeJoined: number;
+              };
+          }
+): {
+    createdNewRecipeUser: boolean;
+    user: User;
+};
+export declare function normaliseUser(
+    recipeId: "passwordless" | "emailpassword" | "thirdparty",
+    responseUser:
+        | User
+        | {
+              id: string;
+              email?: string | undefined;
+              phoneNumber?: string | undefined;
+              thirdParty?:
+                  | {
+                        id: string;
+                        userId: string;
+                    }
+                  | undefined;
+              tenantIds: string[];
+              timeJoined: number;
+          }
+): User;

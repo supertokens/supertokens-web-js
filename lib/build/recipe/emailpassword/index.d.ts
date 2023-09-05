@@ -33,8 +33,6 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: User;
-              email: string;
               fetchResponse: Response;
           }
         | {

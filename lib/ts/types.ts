@@ -150,7 +150,7 @@ export type User = {
         recipeId: "emailpassword" | "thirdparty" | "passwordless";
         recipeUserId: string;
 
-        verified: boolean;
+        verified?: boolean;
         email?: string;
         phoneNumber?: string;
         thirdParty?: {

@@ -66,8 +66,6 @@ export declare type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: User;
-              email: string;
               fetchResponse: Response;
           }
         | {
