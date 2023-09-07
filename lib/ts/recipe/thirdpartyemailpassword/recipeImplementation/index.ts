@@ -182,7 +182,7 @@ export default function getRecipeImplementation(
                   fetchResponse: Response;
               }
             | {
-                  status: "SIGN_IN_UP_NOT_ALLOWED" | "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT";
+                  status: "SIGN_IN_UP_NOT_ALLOWED";
                   reason: string;
                   fetchResponse: Response;
               }

@@ -16,7 +16,6 @@ export default class RecipeWrapper {
      * @returns `{status: OK, user, createdNewRecipeUser: boolean}` if succesful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
-     * @returns `{status: "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT"}` if signing up with this user/email address is not allowed because of account linking conflicts
      * @returns `{status: "SIGN_IN_UP_NOT_ALLOWED", reason: string}` if signing in with this user is not allowed if because of account linking conflicts
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
@@ -33,7 +32,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "SIGN_IN_UP_NOT_ALLOWED" | "EMAIL_ALREADY_USED_IN_ANOTHER_ACCOUNT";
+              status: "SIGN_IN_UP_NOT_ALLOWED";
               reason: string;
               fetchResponse: Response;
           }
