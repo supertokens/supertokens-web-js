@@ -180,6 +180,8 @@ export default class RecipeWrapper {
      *
      * @returns `{status: "FIELD_ERROR", formFields}` if the formFields dont match the ones in the configured in the backend SDKs
      *
+     * @returns `{status: "SIGN_UP_NOT_ALLOWED"}` if the user can't sign up because of security reasons
+     *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static emailPasswordSignUp(input: {
@@ -229,6 +231,8 @@ export default class RecipeWrapper {
      * @returns `{status: "FIELD_ERROR", formFields}` if the formFields dont match the ones in the configured in the backend SDKs
      *
      * @returns `{status: "WRONG_CREDENTIALS_ERROR"}` if the credentials are invalid
+     *
+     * @returns `{status: "SIGN_IN_NOT_ALLOWED"}` if the user can't sign in because of security reasons
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
