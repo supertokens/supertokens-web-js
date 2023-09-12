@@ -160,6 +160,11 @@ export default class RecipeWrapper {
               }[];
               fetchResponse: Response;
           }
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.signUp({
             ...input,
@@ -207,6 +212,11 @@ export default class RecipeWrapper {
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     > {

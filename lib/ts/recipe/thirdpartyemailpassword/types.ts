@@ -197,6 +197,11 @@ export type RecipeInterface = {
               }[];
               fetchResponse: Response;
           }
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
     >;
 
     /**
@@ -239,6 +244,11 @@ export type RecipeInterface = {
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;

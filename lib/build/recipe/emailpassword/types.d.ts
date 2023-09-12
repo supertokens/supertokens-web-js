@@ -158,6 +158,11 @@ export declare type RecipeInterface = {
               }[];
               fetchResponse: Response;
           }
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
     >;
     /**
      * Sign in a user with email and password
@@ -199,6 +204,11 @@ export declare type RecipeInterface = {
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;

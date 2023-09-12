@@ -154,6 +154,11 @@ export default class RecipeWrapper {
               }[];
               fetchResponse: Response;
           }
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
     >;
     /**
      * Sign in a user with email and password
@@ -195,6 +200,11 @@ export default class RecipeWrapper {
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;

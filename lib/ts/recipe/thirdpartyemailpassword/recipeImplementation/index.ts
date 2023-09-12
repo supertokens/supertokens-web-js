@@ -118,6 +118,11 @@ export default function getRecipeImplementation(
                   }[];
                   fetchResponse: Response;
               }
+            | {
+                  status: "SIGN_UP_NOT_ALLOWED";
+                  reason: string;
+                  fetchResponse: Response;
+              }
         > {
             return emailPasswordImpl.signUp.bind(DerivedEmailPassword(this))(input);
         },
@@ -145,6 +150,11 @@ export default function getRecipeImplementation(
               }
             | {
                   status: "WRONG_CREDENTIALS_ERROR";
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "SIGN_IN_NOT_ALLOWED";
+                  reason: string;
                   fetchResponse: Response;
               }
         > {

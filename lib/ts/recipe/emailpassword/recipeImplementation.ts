@@ -219,6 +219,11 @@ export default function getRecipeImplementation(
                   }[];
                   fetchResponse: Response;
               }
+            | {
+                  status: "SIGN_UP_NOT_ALLOWED";
+                  reason: string;
+                  fetchResponse: Response;
+              }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
@@ -231,6 +236,10 @@ export default function getRecipeImplementation(
                           id: string;
                           error: string;
                       }[];
+                  }
+                | {
+                      status: "SIGN_UP_NOT_ALLOWED";
+                      reason: string;
                   }
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
@@ -253,6 +262,13 @@ export default function getRecipeImplementation(
                 return {
                     status: "FIELD_ERROR",
                     formFields: jsonBody.formFields,
+                    fetchResponse,
+                };
+            }
+            if (jsonBody.status === "SIGN_UP_NOT_ALLOWED") {
+                return {
+                    status: "SIGN_UP_NOT_ALLOWED",
+                    reason: jsonBody.reason,
                     fetchResponse,
                 };
             }
@@ -293,6 +309,11 @@ export default function getRecipeImplementation(
                   status: "WRONG_CREDENTIALS_ERROR";
                   fetchResponse: Response;
               }
+            | {
+                  status: "SIGN_IN_NOT_ALLOWED";
+                  reason: string;
+                  fetchResponse: Response;
+              }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
@@ -308,6 +329,10 @@ export default function getRecipeImplementation(
                   }
                 | {
                       status: "WRONG_CREDENTIALS_ERROR";
+                  }
+                | {
+                      status: "SIGN_IN_NOT_ALLOWED";
+                      reason: string;
                   }
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
@@ -337,6 +362,13 @@ export default function getRecipeImplementation(
             if (jsonBody.status === "WRONG_CREDENTIALS_ERROR") {
                 return {
                     status: "WRONG_CREDENTIALS_ERROR",
+                    fetchResponse,
+                };
+            }
+            if (jsonBody.status === "SIGN_IN_NOT_ALLOWED") {
+                return {
+                    status: "SIGN_IN_NOT_ALLOWED",
+                    reason: jsonBody.reason,
                     fetchResponse,
                 };
             }
