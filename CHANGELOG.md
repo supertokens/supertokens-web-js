@@ -20,6 +20,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   `signIn` and `emailPasswordSignIn` can now return `SIGN_IN_NOT_ALLOWED`
 -   `signUp` and `emailPasswordSignUp` can now return `SIGN_UP_NOT_ALLOWED`
 
+### Migration
+
+#### New User structure
+
+We've added a generic `User` type instead of the old recipe specific ones. The mapping of old props to new in case you are not using account-linking:
+
+-   `user.id` stays `user.id`
+-   `user.email` becomes `user.emails[0]`
+-   `user.phoneNumber` becomes `user.phoneNumbers[0]`
+-   `user.thirdParty` becomes `user.thirdParty[0]`
+-   `user.timeJoined` is still `user.timeJoined`
+-   `user.tenantIds` is still `user.tenantIds`
+
 ## [0.7.3] - 2023-08-21
 
 ### Fixes
