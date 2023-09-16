@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Introducing account-linking
 
-With this release, we are introducing a new AccountLinking recipe, this will let you:
+With this release, we are introducing AccountLinking, this will let you:
 
 -   link accounts automatically,
 -   implement manual account linking flows.
