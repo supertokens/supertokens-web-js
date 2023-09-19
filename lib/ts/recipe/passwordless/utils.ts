@@ -13,11 +13,12 @@
  * under the License.
  */
 
+import { User } from "../../types";
 import { getNormalisedUserContext } from "../../utils";
 import { normaliseAuthRecipe } from "../authRecipe/utils";
 import Multitenancy from "../multitenancy/recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { InputType, NormalisedInputType, PasswordlessFlowType, PasswordlessUser, RecipeInterface } from "./types";
+import { InputType, NormalisedInputType, PasswordlessFlowType, RecipeInterface } from "./types";
 
 export function normaliseUserInput(config: InputType): NormalisedInputType {
     let override = {
@@ -45,13 +46,20 @@ export async function createCode(
               options?: RecipeFunctionOptions;
               recipeImplementation: RecipeInterface;
           }
-): Promise<{
-    status: "OK";
-    deviceId: string;
-    preAuthSessionId: string;
-    flowType: PasswordlessFlowType;
-    fetchResponse: Response;
-}> {
+): Promise<
+    | {
+          status: "OK";
+          deviceId: string;
+          preAuthSessionId: string;
+          flowType: PasswordlessFlowType;
+          fetchResponse: Response;
+      }
+    | {
+          status: "SIGN_IN_UP_NOT_ALLOWED";
+          reason: string;
+          fetchResponse: Response;
+      }
+> {
     const normalisedUserContext = getNormalisedUserContext(input.userContext);
 
     const tenantId = await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
@@ -62,15 +70,17 @@ export async function createCode(
         userContext: normalisedUserContext,
     });
 
-    await input.recipeImplementation.setLoginAttemptInfo({
-        attemptInfo: {
-            tenantId,
-            deviceId: createCodeResponse.deviceId,
-            preAuthSessionId: createCodeResponse.preAuthSessionId,
-            flowType: createCodeResponse.flowType,
-        },
-        userContext: normalisedUserContext,
-    });
+    if (createCodeResponse.status === "OK") {
+        await input.recipeImplementation.setLoginAttemptInfo({
+            attemptInfo: {
+                tenantId,
+                deviceId: createCodeResponse.deviceId,
+                preAuthSessionId: createCodeResponse.preAuthSessionId,
+                flowType: createCodeResponse.flowType,
+            },
+            userContext: normalisedUserContext,
+        });
+    }
 
     return createCodeResponse;
 }
@@ -119,8 +129,8 @@ export async function consumeCode(
 ): Promise<
     | {
           status: "OK";
-          createdNewUser: boolean;
-          user: PasswordlessUser;
+          createdNewRecipeUser: boolean;
+          user: User;
           fetchResponse: Response;
       }
     | {
@@ -130,6 +140,7 @@ export async function consumeCode(
           fetchResponse: Response;
       }
     | { status: "RESTART_FLOW_ERROR"; fetchResponse: Response }
+    | { status: "SIGN_IN_UP_NOT_ALLOWED"; reason: string; fetchResponse: Response }
 > {
     const normalisedUserContext = getNormalisedUserContext(input.userContext);
 

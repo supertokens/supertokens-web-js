@@ -24,12 +24,7 @@ import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
 } from "../authRecipe/types";
-
-export type UserType = {
-    id: string;
-    email: string;
-    timeJoined: number;
-};
+import { User } from "../../types";
 
 export type PreAndPostAPIHookAction =
     | "EMAIL_PASSWORD_SIGN_UP"
@@ -91,7 +86,11 @@ export type RecipeInterface = {
         userContext: any;
     }) => Promise<
         | {
-              status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+              status: "OK";
+              fetchResponse: Response;
+          }
+        | {
+              status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -132,6 +131,11 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
+              status: "PASSWORD_RESET_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
               status: "FIELD_ERROR";
               formFields: {
                   id: string;
@@ -166,7 +170,7 @@ export type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -175,6 +179,11 @@ export type RecipeInterface = {
                   id: string;
                   error: string;
               }[];
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;
@@ -206,7 +215,7 @@ export type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -219,6 +228,11 @@ export type RecipeInterface = {
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;

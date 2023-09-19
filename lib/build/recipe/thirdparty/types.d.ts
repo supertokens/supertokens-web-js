@@ -1,3 +1,4 @@
+import { User } from "../../types";
 import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
@@ -39,15 +40,6 @@ export declare type StateObject = {
     expiresAt: number;
     redirectURIOnProviderDashboard: string;
     pkceCodeVerifier?: string;
-};
-export declare type ThirdPartyUserType = {
-    id: string;
-    email: string;
-    timeJoined: number;
-    thirdParty: {
-        id: string;
-        userId: string;
-    };
 };
 export declare type RecipeInterface = {
     /**
@@ -134,22 +126,28 @@ export declare type RecipeInterface = {
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: OK, user, createdNewUser: boolean}` if succesful
+     * @returns `{status: OK, user, createdNewRecipeUser: boolean}` if succesful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
+     * @returns `{status: "SIGN_IN_UP_NOT_ALLOWED", reason: string}` if signing in with this user is not allowed if because of account linking conflicts
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     signInAndUp: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
               status: "OK";
-              user: ThirdPartyUserType;
-              createdNewUser: boolean;
+              user: User;
+              createdNewRecipeUser: boolean;
               tenantId?: string;
               fetchResponse: Response;
           }
         | {
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;

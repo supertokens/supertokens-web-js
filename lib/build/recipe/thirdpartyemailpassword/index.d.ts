@@ -1,7 +1,7 @@
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { UserType as EmailPasswordUserType } from "../emailpassword";
-import { StateObject, ThirdPartyUserType } from "../thirdparty/types";
+import { StateObject } from "../thirdparty/types";
 import { UserInput, RecipeInterface, PreAPIHookContext, PostAPIHookContext } from "./types";
+import { User } from "../../types";
 export default class RecipeWrapper {
     static init(
         config?: UserInput
@@ -33,7 +33,11 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<
         | {
-              status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+              status: "OK";
+              fetchResponse: Response;
+          }
+        | {
+              status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -70,6 +74,11 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
+              fetchResponse: Response;
+          }
+        | {
+              status: "PASSWORD_RESET_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
         | {
@@ -122,6 +131,8 @@ export default class RecipeWrapper {
      *
      * @returns `{status: "FIELD_ERROR", formFields}` if the formFields dont match the ones in the configured in the backend SDKs
      *
+     * @returns `{status: "SIGN_UP_NOT_ALLOWED"}` if the user can't sign up because of security reasons
+     *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static emailPasswordSignUp(input: {
@@ -134,7 +145,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: EmailPasswordUserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -143,6 +154,11 @@ export default class RecipeWrapper {
                   id: string;
                   error: string;
               }[];
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;
@@ -161,6 +177,8 @@ export default class RecipeWrapper {
      *
      * @returns `{status: "WRONG_CREDENTIALS_ERROR"}` if the credentials are invalid
      *
+     * @returns `{status: "SIGN_IN_NOT_ALLOWED"}` if the user can't sign in because of security reasons
+     *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static emailPasswordSignIn(input: {
@@ -173,7 +191,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: EmailPasswordUserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -186,6 +204,11 @@ export default class RecipeWrapper {
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;
@@ -212,19 +235,25 @@ export default class RecipeWrapper {
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: OK, user, createdNewUser: boolean}` if succesful
+     * @returns `{status: OK, user, createdNewRecipeUser: boolean}` if succesful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
+     * @returns `{status: "SIGN_IN_UP_NOT_ALLOWED", reason: string}` if signing in with this user is not allowed if because of account linking conflicts
      */
     static thirdPartySignInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
         | {
               status: "OK";
-              user: ThirdPartyUserType;
-              createdNewUser: boolean;
+              user: User;
+              createdNewRecipeUser: boolean;
               fetchResponse: Response;
           }
         | {
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;
@@ -278,8 +307,6 @@ export {
     signOut,
     getResetPasswordTokenFromURL,
     getTenantIdFromURL,
-    EmailPasswordUserType,
-    ThirdPartyUserType,
     UserInput,
     RecipeInterface,
     RecipeFunctionOptions,

@@ -14,12 +14,13 @@
  */
 
 import Querier from "../../querier";
-import { appendQueryParamsToURL, getAllQueryParams, getQueryParams } from "../../utils";
-import { RecipeInterface, StateObject, ThirdPartyUserType } from "./types";
+import { appendQueryParamsToURL, getAllQueryParams, getQueryParams, normaliseUserResponse } from "../../utils";
+import { RecipeInterface, StateObject } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import STGeneralError from "../../error";
 import { PreAndPostAPIHookAction } from "./types";
 import { WindowHandlerReference } from "../../windowHandler";
+import { User } from "../../types";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -173,12 +174,17 @@ export default function getRecipeImplementation(
         ): Promise<
             | {
                   status: "OK";
-                  user: ThirdPartyUserType;
-                  createdNewUser: boolean;
+                  user: User;
+                  createdNewRecipeUser: boolean;
                   fetchResponse: Response;
               }
             | {
                   status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "SIGN_IN_UP_NOT_ALLOWED";
+                  reason: string;
                   fetchResponse: Response;
               }
         > {
@@ -219,11 +225,15 @@ export default function getRecipeImplementation(
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
-                      createdNewUser: boolean;
-                      user: ThirdPartyUserType;
+                      createdNewRecipeUser: boolean;
+                      user: User;
                   }
                 | {
                       status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+                  }
+                | {
+                      status: "SIGN_IN_UP_NOT_ALLOWED";
+                      reason: string;
                   }
                 | {
                       status: "FIELD_ERROR";
@@ -259,9 +269,15 @@ export default function getRecipeImplementation(
             if (jsonBody.status === "FIELD_ERROR") {
                 throw new STGeneralError(jsonBody.error);
             }
-
+            if (jsonBody.status !== "OK") {
+                return {
+                    ...jsonBody,
+                    fetchResponse,
+                };
+            }
             return {
-                ...jsonBody,
+                status: "OK",
+                ...normaliseUserResponse("thirdparty", jsonBody),
                 fetchResponse,
             };
         },

@@ -15,9 +15,9 @@
 import Querier from "../../querier";
 import Multitenancy from "../multitenancy/recipe";
 import { PreAndPostAPIHookAction, RecipeInterface } from "./types";
-import { getQueryParams } from "../../utils";
+import { getQueryParams, normaliseUser } from "../../utils";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
-import { UserType } from ".";
+import { User } from "../../types";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -38,7 +38,11 @@ export default function getRecipeImplementation(
             userContext: any;
         }): Promise<
             | {
-                  status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+                  status: "OK";
+                  fetchResponse: Response;
+              }
+            | {
+                  status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
                   fetchResponse: Response;
               }
             | {
@@ -57,7 +61,10 @@ export default function getRecipeImplementation(
 
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
-                      status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+                      status: "OK";
+                  }
+                | {
+                      status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
                   }
                 | {
                       status: "FIELD_ERROR";
@@ -91,8 +98,14 @@ export default function getRecipeImplementation(
                 };
             }
 
+            if (jsonBody.status === "RESET_PASSWORD_INVALID_TOKEN_ERROR") {
+                return {
+                    status: jsonBody.status,
+                    fetchResponse,
+                };
+            }
             return {
-                status: jsonBody.status,
+                ...jsonBody,
                 fetchResponse,
             };
         },
@@ -114,6 +127,11 @@ export default function getRecipeImplementation(
                   fetchResponse: Response;
               }
             | {
+                  status: "PASSWORD_RESET_NOT_ALLOWED";
+                  reason: string;
+                  fetchResponse: Response;
+              }
+            | {
                   status: "FIELD_ERROR";
                   formFields: {
                       id: string;
@@ -125,6 +143,10 @@ export default function getRecipeImplementation(
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
+                  }
+                | {
+                      status: "PASSWORD_RESET_NOT_ALLOWED";
+                      reason: string;
                   }
                 | {
                       status: "FIELD_ERROR";
@@ -158,6 +180,14 @@ export default function getRecipeImplementation(
                 };
             }
 
+            if (jsonBody.status === "PASSWORD_RESET_NOT_ALLOWED") {
+                return {
+                    status: jsonBody.status,
+                    reason: jsonBody.reason,
+                    fetchResponse,
+                };
+            }
+
             return {
                 status: jsonBody.status,
                 fetchResponse,
@@ -178,7 +208,7 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
-                  user: UserType;
+                  user: User;
                   fetchResponse: Response;
               }
             | {
@@ -189,11 +219,16 @@ export default function getRecipeImplementation(
                   }[];
                   fetchResponse: Response;
               }
+            | {
+                  status: "SIGN_UP_NOT_ALLOWED";
+                  reason: string;
+                  fetchResponse: Response;
+              }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
-                      user: UserType;
+                      user: User;
                   }
                 | {
                       status: "FIELD_ERROR";
@@ -201,6 +236,10 @@ export default function getRecipeImplementation(
                           id: string;
                           error: string;
                       }[];
+                  }
+                | {
+                      status: "SIGN_UP_NOT_ALLOWED";
+                      reason: string;
                   }
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
@@ -226,10 +265,17 @@ export default function getRecipeImplementation(
                     fetchResponse,
                 };
             }
+            if (jsonBody.status === "SIGN_UP_NOT_ALLOWED") {
+                return {
+                    status: "SIGN_UP_NOT_ALLOWED",
+                    reason: jsonBody.reason,
+                    fetchResponse,
+                };
+            }
 
             return {
                 status: jsonBody.status,
-                user: jsonBody.user,
+                user: normaliseUser("emailpassword", jsonBody.user),
                 fetchResponse,
             };
         },
@@ -248,7 +294,7 @@ export default function getRecipeImplementation(
         }): Promise<
             | {
                   status: "OK";
-                  user: UserType;
+                  user: User;
                   fetchResponse: Response;
               }
             | {
@@ -263,11 +309,16 @@ export default function getRecipeImplementation(
                   status: "WRONG_CREDENTIALS_ERROR";
                   fetchResponse: Response;
               }
+            | {
+                  status: "SIGN_IN_NOT_ALLOWED";
+                  reason: string;
+                  fetchResponse: Response;
+              }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
-                      user: UserType;
+                      user: User;
                   }
                 | {
                       status: "FIELD_ERROR";
@@ -278,6 +329,10 @@ export default function getRecipeImplementation(
                   }
                 | {
                       status: "WRONG_CREDENTIALS_ERROR";
+                  }
+                | {
+                      status: "SIGN_IN_NOT_ALLOWED";
+                      reason: string;
                   }
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
@@ -310,10 +365,17 @@ export default function getRecipeImplementation(
                     fetchResponse,
                 };
             }
+            if (jsonBody.status === "SIGN_IN_NOT_ALLOWED") {
+                return {
+                    status: "SIGN_IN_NOT_ALLOWED",
+                    reason: jsonBody.reason,
+                    fetchResponse,
+                };
+            }
 
             return {
                 status: "OK",
-                user: jsonBody.user,
+                user: normaliseUser("emailpassword", jsonBody.user),
                 fetchResponse,
             };
         },

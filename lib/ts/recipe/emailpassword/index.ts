@@ -16,7 +16,7 @@ import { RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserInput } fro
 import Recipe from "./recipe";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { getNormalisedUserContext } from "../../utils";
-import { UserType } from "./types";
+import { User } from "../../types";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -55,7 +55,11 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<
         | {
-              status: "OK" | "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+              status: "OK";
+              fetchResponse: Response;
+          }
+        | {
+              status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -101,6 +105,11 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
+              status: "PASSWORD_RESET_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
               status: "FIELD_ERROR";
               formFields: {
                   id: string;
@@ -128,6 +137,8 @@ export default class RecipeWrapper {
      *
      * @returns `{status: "FIELD_ERROR", formFields}` if the formFields dont match the ones in the configured in the backend SDKs
      *
+     * @returns `{status: "SIGN_UP_NOT_ALLOWED"}` if the user can't sign up because of security reasons
+     *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static signUp(input: {
@@ -140,7 +151,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -149,6 +160,11 @@ export default class RecipeWrapper {
                   id: string;
                   error: string;
               }[];
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     > {
@@ -173,6 +189,8 @@ export default class RecipeWrapper {
      *
      * @returns `{status: "WRONG_CREDENTIALS_ERROR"}` if the credentials are invalid
      *
+     * @returns `{status: "SIGN_IN_NOT_ALLOWED"}` if the user can't sign in because of security reasons
+     *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     static signIn(input: {
@@ -185,7 +203,7 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
-              user: UserType;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -198,6 +216,11 @@ export default class RecipeWrapper {
           }
         | {
               status: "WRONG_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     > {
@@ -280,7 +303,6 @@ export {
     getResetPasswordTokenFromURL,
     getTenantIdFromURL,
     signOut,
-    UserType,
     UserInput,
     RecipeInterface,
     RecipeFunctionOptions,

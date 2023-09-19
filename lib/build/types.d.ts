@@ -104,3 +104,28 @@ export declare type NormalisedAppInfo = {
      */
     apiBasePath: NormalisedURLPath;
 };
+export declare type User = {
+    id: string;
+    timeJoined: number;
+    isPrimaryUser: boolean;
+    tenantIds: string[];
+    emails: string[];
+    phoneNumbers: string[];
+    thirdParty: {
+        id: string;
+        userId: string;
+    }[];
+    loginMethods: {
+        tenantIds: string[];
+        timeJoined: number;
+        recipeId: "emailpassword" | "thirdparty" | "passwordless";
+        recipeUserId: string;
+        verified?: boolean;
+        email?: string;
+        phoneNumber?: string;
+        thirdParty?: {
+            id: string;
+            userId: string;
+        };
+    }[];
+};

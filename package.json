@@ -1,6 +1,6 @@
 {
     "name": "supertokens-web-js",
-    "version": "0.7.3",
+    "version": "0.8.0",
     "description": "SuperTokens SDK for vanilla JS for all recipes",
     "main": "./index.js",
     "scripts": {
@@ -40,7 +40,7 @@
     "homepage": "https://github.com/supertokens/supertokens-web-js#readme",
     "dependencies": {
         "supertokens-js-override": "0.0.4",
-        "supertokens-website": "^17.0.1"
+        "supertokens-website": "^17.0.3"
     },
     "devDependencies": {
         "@babel/core": "^7.17.8",

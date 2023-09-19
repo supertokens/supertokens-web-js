@@ -1,10 +1,10 @@
+import { User } from "../../types";
 import {
     InputType as AuthRecipeInputType,
     NormalisedInputType as AuthRecipeNormalisedInputType,
 } from "../authRecipe/types";
 import {
     PasswordlessFlowType,
-    PasswordlessUser,
     PreAndPostAPIHookAction as PasswordlessPreAndPostAPIHookAction,
 } from "../passwordless/types";
 import {
@@ -15,7 +15,6 @@ import {
 } from "../recipeModule/types";
 import { StateObject, PreAndPostAPIHookAction as ThirdPartyPreAndPostAPIHookAction } from "../thirdparty/types";
 import OverrideableBuilder from "supertokens-js-override";
-import { ThirdPartyUserType } from "../thirdparty/types";
 export declare type PreAndPostAPIHookAction = ThirdPartyPreAndPostAPIHookAction | PasswordlessPreAndPostAPIHookAction;
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
@@ -76,22 +75,28 @@ export declare type RecipeInterface = {
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: OK, user, createdNewUser: boolean}` if succesful
+     * @returns `{status: OK, user, createdNewRecipeUser: boolean}` if succesful
      *
      * @returns `{status: "NO_EMAIL_GIVEN_BY_PROVIDER"}` if the correct scopes are not configured for the third party provider
+     * @returns `{status: "SIGN_IN_UP_NOT_ALLOWED", reason: string}` if signing in with this user is not allowed if because of account linking conflicts
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
     thirdPartySignInAndUp: (input: { userContext: any; options?: RecipeFunctionOptions }) => Promise<
         | {
               status: "OK";
-              user: ThirdPartyUserType;
-              createdNewUser: boolean;
+              user: User;
+              createdNewRecipeUser: boolean;
               tenantId?: string;
               fetchResponse: Response;
           }
         | {
               status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;
@@ -213,13 +218,20 @@ export declare type RecipeInterface = {
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
-    ) => Promise<{
-        status: "OK";
-        deviceId: string;
-        preAuthSessionId: string;
-        flowType: PasswordlessFlowType;
-        fetchResponse: Response;
-    }>;
+    ) => Promise<
+        | {
+              status: "OK";
+              deviceId: string;
+              preAuthSessionId: string;
+              flowType: PasswordlessFlowType;
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_UP_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+    >;
     /**
      * Resend the code to the user
      *
@@ -262,7 +274,7 @@ export declare type RecipeInterface = {
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
      *
-     * @returns `{status: "OK", user, createdNewUser: bool}` if succesful
+     * @returns `{status: "OK", user, createdNewRecipeUser: bool}` if succesful
      *
      * @returns `{status: "INCORRECT_USER_INPUT_CODE_ERROR", failedCodeInputAttemptCount, maximumCodeInputAttempts}` if the code is incorrect
      *
@@ -292,8 +304,8 @@ export declare type RecipeInterface = {
     ) => Promise<
         | {
               status: "OK";
-              createdNewUser: boolean;
-              user: PasswordlessUser;
+              createdNewRecipeUser: boolean;
+              user: User;
               fetchResponse: Response;
           }
         | {
@@ -304,6 +316,11 @@ export declare type RecipeInterface = {
           }
         | {
               status: "RESTART_FLOW_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_UP_NOT_ALLOWED";
+              reason: string;
               fetchResponse: Response;
           }
     >;
