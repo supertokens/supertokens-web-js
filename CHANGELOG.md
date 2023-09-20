@@ -98,6 +98,8 @@ We've added a generic `User` type instead of the old recipe specific ones. The m
 -   Only supporting FDI 1.17
 -   Backend SDKs have to be updated first to a version that supports multi-tenancy for thirdparty
     -   supertokens-node: >= 15.0.0
+    -   supertokens-golang: >= 0.13.0
+    -   supertokens-python: >= 0.15.0
 -   In ThirdParty recipe,
     -   Changed signatures of the functions `getAuthorisationURLWithQueryParamsAndSetState`
     -   Removed functions - `setStateAndOtherInfoToStorage`, `getAuthorisationURLFromBackend`, `generateStateToSendToOAuthProvider`, `verifyAndGetStateOrThrowError`, `getAuthCodeFromURL`, `getAuthErrorFromURL`, `getAuthStateFromURL`
