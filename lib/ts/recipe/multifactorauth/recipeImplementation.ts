@@ -14,7 +14,7 @@
  */
 
 import Querier from "../../querier";
-import { MFAInfo, RecipeInterface } from "./types";
+import { MFAFactorInfo, RecipeInterface } from "./types";
 import { RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
 
@@ -27,10 +27,10 @@ export default function getRecipeImplementation(
         getMFAInfo: async function ({ options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
-                info: MFAInfo;
+                factors: MFAFactorInfo;
             }>(
                 undefined,
-                "/getMFAInfo",
+                "/mfa/info",
                 {},
                 undefined,
                 Querier.preparePreAPIHook({
@@ -50,46 +50,6 @@ export default function getRecipeImplementation(
                 ...jsonBody,
                 fetchResponse,
             };
-        },
-
-        checkFactorRequirement({ completedFactors, req }) {
-            if (typeof req === "string") {
-                return {
-                    id: req,
-                    isValid: completedFactors[req] !== undefined,
-                    message: "Not completed",
-                };
-            } else {
-                // We could loop through factor validators added by other recipes here.
-                if (req.params === undefined) {
-                    return {
-                        id: req.id,
-                        isValid: completedFactors[req.id] !== undefined,
-                        message: "Not completed",
-                    };
-                }
-
-                if (req.params.maxAge !== undefined) {
-                    if (completedFactors[req.id] === undefined) {
-                        return {
-                            id: req.id,
-                            isValid: false,
-                            message: "Not completed",
-                        };
-                    }
-
-                    return {
-                        id: req.id,
-                        isValid: completedFactors[req.id] >= Math.floor(Date.now() / 1000) - req.params.maxAgeInSeconds,
-                        message: "Completed too long ago",
-                    };
-                }
-                return {
-                    id: req.id,
-                    isValid: false,
-                    message: "Factor checker not configured for " + req.id,
-                };
-            }
         },
     };
 }

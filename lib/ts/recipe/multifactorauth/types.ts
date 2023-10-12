@@ -81,30 +81,16 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
     };
 };
 
-export type MFAInfo = {
-    factorsEnabled: string[];
-    factorsSetup: string[];
-    nextFactors: string[];
+export type MFAFactorInfo = {
+    isAlreadySetup: string[];
+    isAllowedToSetup: string[];
 };
 
 export type RecipeInterface = {
     getMFAInfo: (input: {
         options?: RecipeFunctionOptions;
         userContext: any;
-    }) => Promise<{ status: "OK"; info: MFAInfo }>;
-
-    checkFactorRequirement: (input: {
-        completedFactors: MFAClaimValue["c"];
-        req: MFARequirement;
-        payload: any;
-
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => {
-        id: string;
-        isValid: boolean;
-        message?: string;
-    };
+    }) => Promise<{ status: "OK"; factors: MFAFactorInfo }>;
 };
 
 export type MFARequirement =

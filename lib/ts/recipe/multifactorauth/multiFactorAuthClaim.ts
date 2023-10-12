@@ -1,5 +1,6 @@
 import { SessionClaimValidator, SessionClaim } from "../session";
 import { MFAClaimValue, MFARequirementList, RecipeInterface } from "./types";
+import { checkFactorRequirement } from "./utils";
 
 /**
  * We include "Class" in the class name, because it makes it easier to import/use the right thing (the instance exported by the recipe) instead of this.
@@ -17,7 +18,7 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
                 id: this.id,
                 refresh: this.refresh,
                 shouldRefresh: () => {
-                    return false; // Can't automatically refresh
+                    return false;
                 },
                 validate: async (payload, userContext) => {
                     const val = this.getValueFromPayload(payload, userContext);
@@ -48,7 +49,7 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
             hasCompletedFactors: (requirements: MFARequirementList) => ({
                 id: this.id,
                 shouldRefresh: () => {
-                    return false; // Can't automatically refresh
+                    return false;
                 },
                 refresh: this.refresh,
                 validate: (payload, userContext) => {
@@ -62,19 +63,11 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
                         };
                     }
                     const completedFactors = val.c;
-                    const recipeImpl = this.getRecipeImpl();
 
                     for (const req of requirements) {
                         if (typeof req === "object" && "oneOf" in req) {
                             const res = req.oneOf
-                                .map((r) =>
-                                    recipeImpl.checkFactorRequirement({
-                                        completedFactors,
-                                        req: r,
-                                        payload,
-                                        userContext,
-                                    })
-                                )
+                                .map((r) => checkFactorRequirement(r, completedFactors))
                                 .filter((v) => v.isValid === false);
                             if (res.length === req.oneOf.length) {
                                 return {
@@ -88,14 +81,7 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
                             }
                         } else if (typeof req === "object" && "allOf" in req) {
                             const res = req.allOf
-                                .map((r) =>
-                                    recipeImpl.checkFactorRequirement({
-                                        completedFactors,
-                                        req: r,
-                                        payload,
-                                        userContext,
-                                    })
-                                )
+                                .map((r) => checkFactorRequirement(r, completedFactors))
                                 .filter((v) => v.isValid === false);
                             if (res.length !== 0) {
                                 return {
@@ -108,12 +94,7 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
                                 };
                             }
                         } else {
-                            const res = recipeImpl.checkFactorRequirement({
-                                completedFactors,
-                                req,
-                                payload,
-                                userContext,
-                            });
+                            const res = checkFactorRequirement(req, completedFactors);
                             if (res.isValid !== true) {
                                 return {
                                     isValid: false,

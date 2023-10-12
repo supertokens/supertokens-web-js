@@ -3,7 +3,7 @@ export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<"GET_MFA_INFO">;
     static getMFAInfo(userContext?: any): Promise<{
         status: "OK";
-        info: import("./types").MFAInfo;
+        factors: import("./types").MFAFactorInfo;
     }>;
     static MultiFactorAuthClaim: import("./multiFactorAuthClaim").MultiFactorAuthClaimClass;
 }
