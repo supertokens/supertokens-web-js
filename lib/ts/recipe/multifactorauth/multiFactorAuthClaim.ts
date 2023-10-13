@@ -17,8 +17,9 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
             hasCompletedDefaultFactors: () => ({
                 id: this.id,
                 refresh: this.refresh,
-                shouldRefresh: () => {
-                    return false;
+                shouldRefresh: (payload, userContext) => {
+                    const val = this.getValueFromPayload(payload, userContext);
+                    return !val;
                 },
                 validate: async (payload, userContext) => {
                     const val = this.getValueFromPayload(payload, userContext);
@@ -48,8 +49,9 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
 
             hasCompletedFactors: (requirements: MFARequirementList) => ({
                 id: this.id,
-                shouldRefresh: () => {
-                    return false;
+                shouldRefresh: (payload, userContext) => {
+                    const val = this.getValueFromPayload(payload, userContext);
+                    return !val;
                 },
                 refresh: this.refresh,
                 validate: (payload, userContext) => {
