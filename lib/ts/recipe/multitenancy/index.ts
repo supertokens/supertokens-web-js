@@ -52,6 +52,7 @@ export default class RecipeWrapper {
                 name: string;
             }[];
         };
+        firstFactors: string[];
         fetchResponse: Response;
     }> {
         return Recipe.getInstanceOrThrow().recipeImplementation.getLoginMethods({

@@ -59,6 +59,7 @@ export declare type RecipeInterface = {
                 name: string;
             }[];
         };
+        firstFactors: string[];
         fetchResponse: Response;
     }>;
 };

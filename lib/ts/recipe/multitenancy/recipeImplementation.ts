@@ -50,6 +50,7 @@ export default function getRecipeImplementation(
                         name: string;
                     }[];
                 };
+                firstFactors: string[];
             }>(
                 tenantId,
                 "/loginmethods",
