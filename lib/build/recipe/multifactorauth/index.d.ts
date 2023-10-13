@@ -4,6 +4,7 @@ export default class RecipeWrapper {
     static getMFAInfo(userContext?: any): Promise<{
         status: "OK";
         factors: import("./types").MFAFactorInfo;
+        fetchResponse: Response;
     }>;
     static MultiFactorAuthClaim: import("./multiFactorAuthClaim").MultiFactorAuthClaimClass;
 }

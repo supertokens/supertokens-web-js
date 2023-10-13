@@ -90,7 +90,7 @@ export type RecipeInterface = {
     getMFAInfo: (input: {
         options?: RecipeFunctionOptions;
         userContext: any;
-    }) => Promise<{ status: "OK"; factors: MFAFactorInfo }>;
+    }) => Promise<{ status: "OK"; factors: MFAFactorInfo; fetchResponse: Response }>;
 };
 
 export type MFARequirement =

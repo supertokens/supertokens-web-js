@@ -67,6 +67,7 @@ export declare type RecipeInterface = {
     getMFAInfo: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
         status: "OK";
         factors: MFAFactorInfo;
+        fetchResponse: Response;
     }>;
 };
 export declare type MFARequirement =
