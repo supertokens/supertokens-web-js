@@ -13,16 +13,21 @@
  * under the License.
  */
 
+import { MultiFactorAuthClaimClass } from "./multiFactorAuthClaim";
 import Recipe from "./recipe";
 import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeInterface, UserInput } from "./types";
+import { RecipeFunctionOptions } from "../recipeModule/types";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
         return Recipe.init(config);
     }
 
-    static getMFAInfo(userContext?: any) {
-        return Recipe.getInstanceOrThrow().recipeImplementation.getMFAInfo({ userContext: userContext ?? {} });
+    static getMFAInfo(input: { options?: RecipeFunctionOptions; userContext?: any }) {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getMFAInfo({
+            options: input.options,
+            userContext: input.userContext ?? {},
+        });
     }
 
     static MultiFactorAuthClaim = Recipe.MultiFactorAuthClaim;
@@ -41,4 +46,6 @@ export {
     PreAndPostAPIHookAction,
     UserInput,
     MultiFactorAuthClaim,
+    MultiFactorAuthClaimClass,
+    RecipeFunctionOptions,
 };

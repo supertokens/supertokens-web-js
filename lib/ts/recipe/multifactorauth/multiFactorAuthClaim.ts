@@ -6,17 +6,17 @@ import { checkFactorRequirement } from "./utils";
  * We include "Class" in the class name, because it makes it easier to import/use the right thing (the instance exported by the recipe) instead of this.
  * */
 export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
-    public readonly id = "st-mfa";
-    public readonly validators: {
+    public id = "st-mfa";
+    public validators: {
         hasCompletedDefaultFactors: () => SessionClaimValidator;
         hasCompletedFactors: (requirements: MFARequirementList) => SessionClaimValidator;
     };
 
-    constructor(private readonly getRecipeImpl: () => RecipeInterface) {
+    constructor(protected getRecipeImpl: () => RecipeInterface) {
         this.validators = {
             hasCompletedDefaultFactors: () => ({
                 id: this.id,
-                refresh: this.refresh,
+                refresh: (...args) => this.refresh(...args),
                 shouldRefresh: (payload, userContext) => {
                     const val = this.getValueFromPayload(payload, userContext);
                     return !val;
@@ -53,7 +53,7 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
                     const val = this.getValueFromPayload(payload, userContext);
                     return !val;
                 },
-                refresh: this.refresh,
+                refresh: (...args) => this.refresh(...args),
                 validate: (payload, userContext) => {
                     const val = this.getValueFromPayload(payload, userContext);
                     if (!val) {
@@ -122,6 +122,10 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
     }
 
     getValueFromPayload(payload: any, _userContext?: any): { c: Record<string, number>; n: string[] } | undefined {
+        if (payload[this.id] === undefined) {
+            return undefined;
+        }
+
         return {
             c: payload[this.id].c,
             n: payload[this.id].n,

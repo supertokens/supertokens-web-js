@@ -28,6 +28,8 @@ export default function getRecipeImplementation(
             const { jsonBody, fetchResponse } = await querier.get<{
                 status: "OK";
                 factors: MFAFactorInfo;
+                email?: string;
+                phoneNumber?: string;
             }>(
                 undefined,
                 "/mfa/info",

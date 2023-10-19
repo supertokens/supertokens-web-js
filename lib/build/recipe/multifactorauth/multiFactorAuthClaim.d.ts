@@ -4,9 +4,9 @@ import { MFAClaimValue, MFARequirementList, RecipeInterface } from "./types";
  * We include "Class" in the class name, because it makes it easier to import/use the right thing (the instance exported by the recipe) instead of this.
  * */
 export declare class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
-    private readonly getRecipeImpl;
-    readonly id = "st-mfa";
-    readonly validators: {
+    protected getRecipeImpl: () => RecipeInterface;
+    id: string;
+    validators: {
         hasCompletedDefaultFactors: () => SessionClaimValidator;
         hasCompletedFactors: (requirements: MFARequirementList) => SessionClaimValidator;
     };
