@@ -142,6 +142,42 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input?.userContext),
         });
     }
+
+    static getDeviceInfo<CustomDeviceInfo>(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<
+        | undefined
+        | ({
+              deviceName: string;
+              secret: string;
+              qrCodeString: string;
+          } & CustomDeviceInfo)
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.getDeviceInfo({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    static setDeviceInfo<CustomDeviceInfo>(input: {
+        deviceInfo: {
+            deviceName: string;
+            secret: string;
+            qrCodeString: string;
+        } & CustomDeviceInfo;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<void> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.setDeviceInfo({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+
+    static clearDeviceInfo(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<void> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.clearDeviceInfo({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
@@ -163,4 +199,5 @@ export {
     PostAPIHookContext,
     PreAndPostAPIHookAction,
     UserInput,
+    RecipeFunctionOptions,
 };

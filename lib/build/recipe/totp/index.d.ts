@@ -110,6 +110,24 @@ export default class RecipeWrapper {
             verified: boolean;
         }[];
     }>;
+    static getDeviceInfo<CustomDeviceInfo>(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<
+        | undefined
+        | ({
+              deviceName: string;
+              secret: string;
+              qrCodeString: string;
+          } & CustomDeviceInfo)
+    >;
+    static setDeviceInfo<CustomDeviceInfo>(input: {
+        deviceInfo: {
+            deviceName: string;
+            secret: string;
+            qrCodeString: string;
+        } & CustomDeviceInfo;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<void>;
+    static clearDeviceInfo(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<void>;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const createDevice: typeof RecipeWrapper.createDevice;
@@ -129,4 +147,5 @@ export {
     PostAPIHookContext,
     PreAndPostAPIHookAction,
     UserInput,
+    RecipeFunctionOptions,
 };

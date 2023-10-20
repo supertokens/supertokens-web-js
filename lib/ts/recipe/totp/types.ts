@@ -90,4 +90,22 @@ export type RecipeInterface = {
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<{ status: "OK"; devices: { name: string; period: number; skew: number; verified: boolean }[] }>;
+    getDeviceInfo: <CustomDeviceInfo>(input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<
+        | undefined
+        | ({
+              deviceName: string;
+              secret: string;
+              qrCodeString: string;
+          } & CustomDeviceInfo)
+    >;
+    setDeviceInfo: <CustomDeviceInfo>(input: {
+        deviceInfo: {
+            deviceName: string;
+            secret: string;
+            qrCodeString: string;
+        } & CustomDeviceInfo;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<void>;
+    clearDeviceInfo: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<void>;
 };

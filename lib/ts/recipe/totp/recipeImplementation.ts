@@ -17,6 +17,8 @@ import Querier from "../../querier";
 import { RecipeInterface } from "./types";
 import { RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
+import { WindowHandlerReference } from "supertokens-website/utils/windowHandler";
+import { TOTP_DEVICE_INFO_STORAGE_KEY } from "./constants";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -175,6 +177,50 @@ export default function getRecipeImplementation(
                 ...jsonBody,
                 fetchResponse,
             };
+        },
+        getDeviceInfo: async function <CustomDeviceInfo>(): Promise<
+            | undefined
+            | ({
+                  deviceName: string;
+                  secret: string;
+                  qrCodeString: string;
+              } & CustomDeviceInfo)
+        > {
+            const storedInfo = await WindowHandlerReference.getReferenceOrThrow().windowHandler.localStorage.getItem(
+                TOTP_DEVICE_INFO_STORAGE_KEY
+            );
+
+            if (storedInfo === null) {
+                return undefined;
+            }
+
+            try {
+                return JSON.parse(storedInfo);
+            } catch (ex) {
+                return undefined;
+            }
+        },
+        setDeviceInfo: async function <CustomDeviceInfo>(input: {
+            deviceInfo: {
+                deviceName: string;
+                secret: string;
+                qrCodeString: string;
+            } & CustomDeviceInfo;
+            userContext: any;
+        }): Promise<void> {
+            await WindowHandlerReference.getReferenceOrThrow().windowHandler.localStorage.setItem(
+                TOTP_DEVICE_INFO_STORAGE_KEY,
+                JSON.stringify({
+                    // This can make future changes/migrations a lot cleaner
+                    version: 1,
+                    ...input.deviceInfo,
+                })
+            );
+        },
+        clearDeviceInfo: async function (): Promise<void> {
+            WindowHandlerReference.getReferenceOrThrow().windowHandler.localStorage.removeItem(
+                TOTP_DEVICE_INFO_STORAGE_KEY
+            );
         },
     };
 }
