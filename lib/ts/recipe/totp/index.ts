@@ -193,6 +193,9 @@ const verifyCode = RecipeWrapper.verifyCode;
 const verifyDevice = RecipeWrapper.verifyDevice;
 const removeDevice = RecipeWrapper.removeDevice;
 const listDevices = RecipeWrapper.listDevices;
+const getDeviceInfo = RecipeWrapper.getDeviceInfo;
+const setDeviceInfo = RecipeWrapper.setDeviceInfo;
+const clearDeviceInfo = RecipeWrapper.clearDeviceInfo;
 
 export {
     init,
@@ -201,6 +204,9 @@ export {
     verifyDevice,
     removeDevice,
     listDevices,
+    getDeviceInfo,
+    setDeviceInfo,
+    clearDeviceInfo,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,

@@ -142,6 +142,9 @@ declare const verifyCode: typeof RecipeWrapper.verifyCode;
 declare const verifyDevice: typeof RecipeWrapper.verifyDevice;
 declare const removeDevice: typeof RecipeWrapper.removeDevice;
 declare const listDevices: typeof RecipeWrapper.listDevices;
+declare const getDeviceInfo: typeof RecipeWrapper.getDeviceInfo;
+declare const setDeviceInfo: typeof RecipeWrapper.setDeviceInfo;
+declare const clearDeviceInfo: typeof RecipeWrapper.clearDeviceInfo;
 export {
     init,
     createDevice,
@@ -149,6 +152,9 @@ export {
     verifyDevice,
     removeDevice,
     listDevices,
+    getDeviceInfo,
+    setDeviceInfo,
+    clearDeviceInfo,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,
