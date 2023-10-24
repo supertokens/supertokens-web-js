@@ -34,6 +34,11 @@ export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPo
         ) => RecipeInterface;
     };
 };
+export declare type DeviceInfo = {
+    deviceName: string;
+    secret: string;
+    qrCodeString: string;
+};
 export declare type RecipeInterface = {
     createDevice: (input: { deviceName?: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
@@ -88,20 +93,12 @@ export declare type RecipeInterface = {
             verified: boolean;
         }[];
     }>;
-    getDeviceInfo: <CustomDeviceInfo>(input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<
-        | undefined
-        | ({
-              deviceName: string;
-              secret: string;
-              qrCodeString: string;
-          } & CustomDeviceInfo)
-    >;
+    getDeviceInfo: <CustomDeviceInfo>(input: {
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<undefined | (DeviceInfo & CustomDeviceInfo)>;
     setDeviceInfo: <CustomDeviceInfo>(input: {
-        deviceInfo: {
-            deviceName: string;
-            secret: string;
-            qrCodeString: string;
-        } & CustomDeviceInfo;
+        deviceInfo: DeviceInfo & CustomDeviceInfo;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<void>;
