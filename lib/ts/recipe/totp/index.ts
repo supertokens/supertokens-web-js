@@ -16,7 +16,14 @@
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import Recipe from "./recipe";
-import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeInterface, UserInput } from "./types";
+import {
+    PreAndPostAPIHookAction,
+    PreAPIHookContext,
+    PostAPIHookContext,
+    RecipeInterface,
+    UserInput,
+    DeviceInfo,
+} from "./types";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -200,4 +207,5 @@ export {
     PreAndPostAPIHookAction,
     UserInput,
     RecipeFunctionOptions,
+    DeviceInfo,
 };

@@ -1,5 +1,12 @@
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeInterface, UserInput } from "./types";
+import {
+    PreAndPostAPIHookAction,
+    PreAPIHookContext,
+    PostAPIHookContext,
+    RecipeInterface,
+    UserInput,
+    DeviceInfo,
+} from "./types";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     /**
@@ -148,4 +155,5 @@ export {
     PreAndPostAPIHookAction,
     UserInput,
     RecipeFunctionOptions,
+    DeviceInfo,
 };
