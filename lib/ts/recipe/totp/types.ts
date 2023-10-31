@@ -69,41 +69,41 @@ export type RecipeInterface = {
               secret: string;
               userIdentifier?: string;
               qrCodeString: string;
+
+              fetchResponse: Response;
           }
-        | { status: "DEVICE_ALREADY_EXISTS_ERROR" }
+        | {
+              status: "DEVICE_ALREADY_EXISTS_ERROR";
+
+              fetchResponse: Response;
+          }
     >;
     verifyCode: (input: {
         totp: string;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }) => Promise<{ status: "OK" | "INVALID_TOTP_ERROR" } | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number }>;
+    }) => Promise<
+        | { status: "OK" | "INVALID_TOTP_ERROR"; fetchResponse: Response }
+        | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number; fetchResponse: Response }
+    >;
     verifyDevice: (input: {
         deviceName: string;
         totp: string;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
-        | { status: "OK"; wasAlreadyVerified: boolean }
-        | { status: "INVALID_TOTP_ERROR" | "UNKNOWN_DEVICE_ERROR" }
-        | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number }
+        | { status: "OK"; wasAlreadyVerified: boolean; fetchResponse: Response }
+        | { status: "INVALID_TOTP_ERROR" | "UNKNOWN_DEVICE_ERROR"; fetchResponse: Response }
+        | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number; fetchResponse: Response }
     >;
     removeDevice: (input: {
         deviceName: string;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }) => Promise<{ status: "OK"; didDeviceExist: boolean }>;
-    listDevices: (input: {
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => Promise<{ status: "OK"; devices: { name: string; period: number; skew: number; verified: boolean }[] }>;
-    getDeviceInfo: <CustomDeviceInfo>(input: {
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => Promise<undefined | (DeviceInfo & CustomDeviceInfo)>;
-    setDeviceInfo: <CustomDeviceInfo>(input: {
-        deviceInfo: DeviceInfo & CustomDeviceInfo;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => Promise<void>;
-    clearDeviceInfo: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<void>;
+    }) => Promise<{ status: "OK"; didDeviceExist: boolean; fetchResponse: Response }>;
+    listDevices: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
+        status: "OK";
+        devices: { name: string; period: number; skew: number; verified: boolean }[];
+        fetchResponse: Response;
+    }>;
 };

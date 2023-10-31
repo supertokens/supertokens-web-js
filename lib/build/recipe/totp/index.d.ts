@@ -28,9 +28,11 @@ export default class RecipeWrapper {
               secret: string;
               userIdentifier?: string;
               qrCodeString: string;
+              fetchResponse: Response;
           }
         | {
               status: "DEVICE_ALREADY_EXISTS_ERROR";
+              fetchResponse: Response;
           }
     >;
     /**
@@ -47,10 +49,12 @@ export default class RecipeWrapper {
     static verifyCode(input: { totp: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
         | {
               status: "OK" | "INVALID_TOTP_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "LIMIT_REACHED_ERROR";
               retryAfterMs: number;
+              fetchResponse: Response;
           }
     >;
     /**
@@ -75,13 +79,16 @@ export default class RecipeWrapper {
         | {
               status: "OK";
               wasAlreadyVerified: boolean;
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_TOTP_ERROR" | "UNKNOWN_DEVICE_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "LIMIT_REACHED_ERROR";
               retryAfterMs: number;
+              fetchResponse: Response;
           }
     >;
     /**
@@ -98,6 +105,7 @@ export default class RecipeWrapper {
     static removeDevice(input: { deviceName: string; options?: RecipeFunctionOptions; userContext: any }): Promise<{
         status: "OK";
         didDeviceExist: boolean;
+        fetchResponse: Response;
     }>;
     /**
      * Lists all TOTP devices of the current user
@@ -116,25 +124,8 @@ export default class RecipeWrapper {
             skew: number;
             verified: boolean;
         }[];
+        fetchResponse: Response;
     }>;
-    static getDeviceInfo<CustomDeviceInfo>(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<
-        | undefined
-        | ({
-              deviceName: string;
-              secret: string;
-              qrCodeString: string;
-          } & CustomDeviceInfo)
-    >;
-    static setDeviceInfo<CustomDeviceInfo>(input: {
-        deviceInfo: {
-            deviceName: string;
-            secret: string;
-            qrCodeString: string;
-        } & CustomDeviceInfo;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }): Promise<void>;
-    static clearDeviceInfo(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<void>;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const createDevice: typeof RecipeWrapper.createDevice;
@@ -142,9 +133,6 @@ declare const verifyCode: typeof RecipeWrapper.verifyCode;
 declare const verifyDevice: typeof RecipeWrapper.verifyDevice;
 declare const removeDevice: typeof RecipeWrapper.removeDevice;
 declare const listDevices: typeof RecipeWrapper.listDevices;
-declare const getDeviceInfo: typeof RecipeWrapper.getDeviceInfo;
-declare const setDeviceInfo: typeof RecipeWrapper.setDeviceInfo;
-declare const clearDeviceInfo: typeof RecipeWrapper.clearDeviceInfo;
 export {
     init,
     createDevice,
@@ -152,9 +140,6 @@ export {
     verifyDevice,
     removeDevice,
     listDevices,
-    getDeviceInfo,
-    setDeviceInfo,
-    clearDeviceInfo,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,

@@ -49,8 +49,9 @@ export default class RecipeWrapper {
               secret: string;
               userIdentifier?: string;
               qrCodeString: string;
+              fetchResponse: Response;
           }
-        | { status: "DEVICE_ALREADY_EXISTS_ERROR" }
+        | { status: "DEVICE_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.createDevice({
             ...input,
@@ -73,7 +74,10 @@ export default class RecipeWrapper {
         totp: string;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<{ status: "OK" | "INVALID_TOTP_ERROR" } | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number }> {
+    }): Promise<
+        | { status: "OK" | "INVALID_TOTP_ERROR"; fetchResponse: Response }
+        | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number; fetchResponse: Response }
+    > {
         return Recipe.getInstanceOrThrow().recipeImplementation.verifyCode({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
@@ -99,9 +103,9 @@ export default class RecipeWrapper {
         options?: RecipeFunctionOptions;
         userContext: any;
     }): Promise<
-        | { status: "OK"; wasAlreadyVerified: boolean }
-        | { status: "INVALID_TOTP_ERROR" | "UNKNOWN_DEVICE_ERROR" }
-        | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number }
+        | { status: "OK"; wasAlreadyVerified: boolean; fetchResponse: Response }
+        | { status: "INVALID_TOTP_ERROR" | "UNKNOWN_DEVICE_ERROR"; fetchResponse: Response }
+        | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number; fetchResponse: Response }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.verifyDevice({
             ...input,
@@ -124,7 +128,7 @@ export default class RecipeWrapper {
         deviceName: string;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<{ status: "OK"; didDeviceExist: boolean }> {
+    }): Promise<{ status: "OK"; didDeviceExist: boolean; fetchResponse: Response }> {
         return Recipe.getInstanceOrThrow().recipeImplementation.removeDevice({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
@@ -140,47 +144,12 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful with a list of devices in the `devices` prop
      */
-    static listDevices(input: {
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }): Promise<{ status: "OK"; devices: { name: string; period: number; skew: number; verified: boolean }[] }> {
+    static listDevices(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+        status: "OK";
+        devices: { name: string; period: number; skew: number; verified: boolean }[];
+        fetchResponse: Response;
+    }> {
         return Recipe.getInstanceOrThrow().recipeImplementation.listDevices({
-            ...input,
-            userContext: getNormalisedUserContext(input?.userContext),
-        });
-    }
-
-    static getDeviceInfo<CustomDeviceInfo>(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<
-        | undefined
-        | ({
-              deviceName: string;
-              secret: string;
-              qrCodeString: string;
-          } & CustomDeviceInfo)
-    > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.getDeviceInfo({
-            ...input,
-            userContext: getNormalisedUserContext(input?.userContext),
-        });
-    }
-
-    static setDeviceInfo<CustomDeviceInfo>(input: {
-        deviceInfo: {
-            deviceName: string;
-            secret: string;
-            qrCodeString: string;
-        } & CustomDeviceInfo;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }): Promise<void> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.setDeviceInfo({
-            ...input,
-            userContext: getNormalisedUserContext(input?.userContext),
-        });
-    }
-
-    static clearDeviceInfo(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<void> {
-        return Recipe.getInstanceOrThrow().recipeImplementation.clearDeviceInfo({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
         });
@@ -193,9 +162,6 @@ const verifyCode = RecipeWrapper.verifyCode;
 const verifyDevice = RecipeWrapper.verifyDevice;
 const removeDevice = RecipeWrapper.removeDevice;
 const listDevices = RecipeWrapper.listDevices;
-const getDeviceInfo = RecipeWrapper.getDeviceInfo;
-const setDeviceInfo = RecipeWrapper.setDeviceInfo;
-const clearDeviceInfo = RecipeWrapper.clearDeviceInfo;
 
 export {
     init,
@@ -204,9 +170,6 @@ export {
     verifyDevice,
     removeDevice,
     listDevices,
-    getDeviceInfo,
-    setDeviceInfo,
-    clearDeviceInfo,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,
