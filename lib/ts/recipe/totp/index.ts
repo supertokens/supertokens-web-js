@@ -70,12 +70,14 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful
      */
-    static verifyCode(input: {
-        totp: string;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }): Promise<
-        | { status: "OK" | "INVALID_TOTP_ERROR"; fetchResponse: Response }
+    static verifyCode(input: { totp: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+        | { status: "OK"; fetchResponse: Response }
+        | {
+              status: "INVALID_TOTP_ERROR";
+              failedTOTPAttemptCount: number;
+              maximumTOTPAttemptCount: number;
+              fetchResponse: Response;
+          }
         | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number; fetchResponse: Response }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.verifyCode({
@@ -104,7 +106,13 @@ export default class RecipeWrapper {
         userContext: any;
     }): Promise<
         | { status: "OK"; wasAlreadyVerified: boolean; fetchResponse: Response }
-        | { status: "INVALID_TOTP_ERROR" | "UNKNOWN_DEVICE_ERROR"; fetchResponse: Response }
+        | {
+              status: "INVALID_TOTP_ERROR";
+              failedTOTPAttemptCount: number;
+              maximumTOTPAttemptCount: number;
+              fetchResponse: Response;
+          }
+        | { status: "UNKNOWN_DEVICE_ERROR"; fetchResponse: Response }
         | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number; fetchResponse: Response }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.verifyDevice({

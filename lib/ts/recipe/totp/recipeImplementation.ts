@@ -37,7 +37,7 @@ export default function getRecipeImplementation(
                 | { status: "DEVICE_ALREADY_EXISTS_ERROR" }
             >(
                 undefined,
-                "/loginmethods",
+                "/totp/device",
                 {
                     body: JSON.stringify({
                         deviceName,
@@ -63,10 +63,12 @@ export default function getRecipeImplementation(
         },
         verifyCode: async function ({ totp, options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.post<
-                { status: "OK" | "INVALID_TOTP_ERROR" } | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number }
+                | { status: "OK" }
+                | { status: "INVALID_TOTP_ERROR"; failedTOTPAttemptCount: number; maximumTOTPAttemptCount: number }
+                | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number }
             >(
                 undefined,
-                "/loginmethods",
+                "/totp/verify",
                 {
                     body: JSON.stringify({
                         totp,
@@ -93,11 +95,12 @@ export default function getRecipeImplementation(
         verifyDevice: async function ({ deviceName, totp, options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.post<
                 | { status: "OK"; wasAlreadyVerified: boolean }
-                | { status: "INVALID_TOTP_ERROR" | "UNKNOWN_DEVICE_ERROR" }
+                | { status: "UNKNOWN_DEVICE_ERROR" }
+                | { status: "INVALID_TOTP_ERROR"; failedTOTPAttemptCount: number; maximumTOTPAttemptCount: number }
                 | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number }
             >(
                 undefined,
-                "/loginmethods",
+                "/totp/device/verify",
                 {
                     body: JSON.stringify({
                         deviceName,
@@ -125,7 +128,7 @@ export default function getRecipeImplementation(
         removeDevice: async function ({ deviceName, options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.post<{ status: "OK"; didDeviceExist: boolean }>(
                 undefined,
-                "/loginmethods",
+                "/totp/device/remove",
                 {
                     body: JSON.stringify({
                         deviceName,
@@ -155,7 +158,7 @@ export default function getRecipeImplementation(
                 devices: { name: string; period: number; skew: number; verified: boolean }[];
             }>(
                 undefined,
-                "/user/email/verify",
+                "/totp/device/list",
                 {},
                 undefined,
                 Querier.preparePreAPIHook({

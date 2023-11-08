@@ -78,12 +78,14 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    verifyCode: (input: {
-        totp: string;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => Promise<
-        | { status: "OK" | "INVALID_TOTP_ERROR"; fetchResponse: Response }
+    verifyCode: (input: { totp: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+        | { status: "OK"; fetchResponse: Response }
+        | {
+              status: "INVALID_TOTP_ERROR";
+              failedTOTPAttemptCount: number;
+              maximumTOTPAttemptCount: number;
+              fetchResponse: Response;
+          }
         | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number; fetchResponse: Response }
     >;
     verifyDevice: (input: {
@@ -93,7 +95,13 @@ export type RecipeInterface = {
         userContext: any;
     }) => Promise<
         | { status: "OK"; wasAlreadyVerified: boolean; fetchResponse: Response }
-        | { status: "INVALID_TOTP_ERROR" | "UNKNOWN_DEVICE_ERROR"; fetchResponse: Response }
+        | {
+              status: "INVALID_TOTP_ERROR";
+              failedTOTPAttemptCount: number;
+              maximumTOTPAttemptCount: number;
+              fetchResponse: Response;
+          }
+        | { status: "UNKNOWN_DEVICE_ERROR"; fetchResponse: Response }
         | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number; fetchResponse: Response }
     >;
     removeDevice: (input: {
