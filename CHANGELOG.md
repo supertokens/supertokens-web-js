@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.9.0] - 2023-11-21
+
+### Overview
+
+#### Introducing account-linking
+
+With this release, we are introducing MultiFactorAuthentication and TOTP, this will let you:
+
+-   require (2FA or MFA) during sign in
+-   make use of our TOTP
+
+Check our [guide](https://supertokens.com/docs/thirdpartyemailpassword/common-customizations/multi-factor-auth/overview) for more information.
+
+To use this you'll need compatible versions:
+
+-   Core>=8.0.0
+-   supertokens-node>=17.0.0 (support is pending in other backend SDKs)
+-   supertokens-website>=17.0.3
+-   supertokens-web-js>=0.9.0
+-   supertokens-auth-react>=0.36.0
+
+### Changes
+
+-   Added support for FDI 1.19 (Node SDK>= 17.0.0), but keeping support FDI version 1.17 and 1.18 (node >= 15.0.0, golang>=0.13, python>=0.15.0)
+-   Added `firstFactors` into the return type of `getLoginMethods`
+-   Added recipes `TOTP` and `MultiFactorAuth`
+
 ## [0.8.0] - 2023-09-25
 
 ### Overview

@@ -1,6 +1,6 @@
 {
     "name": "supertokens-web-js",
-    "version": "0.8.0",
+    "version": "0.9.0",
     "description": "SuperTokens SDK for vanilla JS for all recipes",
     "main": "./index.js",
     "scripts": {
@@ -100,6 +100,14 @@
         },
         {
             "path": "recipe/multitenancy/index.js",
+            "limit": "25kb"
+        },
+        {
+            "path": "recipe/multifactorauth/index.js",
+            "limit": "25kb"
+        },
+        {
+            "path": "recipe/totp/index.js",
             "limit": "25kb"
         }
     ]
