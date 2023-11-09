@@ -80,7 +80,7 @@ export type RecipeInterface = {
                 name: string;
             }[];
         };
-        firstFactors: string[];
+        firstFactors?: string[];
         fetchResponse: Response;
     }>;
 };
