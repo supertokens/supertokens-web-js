@@ -30,22 +30,6 @@ export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 
 export type UserInput = {
-    customFactorChecker?: (
-        completedFactors: MFAClaimValue["c"],
-        id: string,
-        params: any,
-        accessTokenPayload: any,
-        userContext: any
-    ) =>
-        | {
-              isValid: true;
-          }
-        | {
-              isValid: false;
-              message?: string;
-          }
-        | undefined;
-
     override?: {
         functions?: (
             originalImplementation: RecipeInterface,
@@ -57,22 +41,6 @@ export type UserInput = {
 export type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 
 export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
-    customFactorChecker: (
-        completedFactors: MFAClaimValue["c"],
-        id: string,
-        params: any,
-        accessTokenPayload: any,
-        userContext: any
-    ) =>
-        | {
-              isValid: true;
-          }
-        | {
-              isValid: false;
-              message?: string;
-          }
-        | undefined;
-
     override: {
         functions: (
             originalImplementation: RecipeInterface,
@@ -96,12 +64,7 @@ export type RecipeInterface = {
     }>;
 };
 
-export type MFARequirement =
-    | {
-          id: string;
-          params?: any;
-      }
-    | string;
+export type MFARequirement = string;
 
 export type MFARequirementList = (
     | {

@@ -24,31 +24,13 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
     return {
         ...normaliseAuthRecipe(config),
         override,
-        customFactorChecker: config.customFactorChecker ?? (() => undefined),
     };
 }
 
 export function checkFactorRequirement(req: MFARequirement, completedFactors: MFAClaimValue["c"]) {
-    if (typeof req === "string") {
-        return {
-            id: req,
-            isValid: completedFactors[req] !== undefined,
-            message: "Not completed",
-        };
-    } else {
-        // We could loop through factor validators added by other recipes here.
-        if (req.params === undefined) {
-            return {
-                id: req.id,
-                isValid: completedFactors[req.id] !== undefined,
-                message: "Not completed",
-            };
-        }
-
-        return {
-            id: req.id,
-            isValid: false,
-            message: "Factor checker not configured for " + req.id,
-        };
-    }
+    return {
+        id: req,
+        isValid: completedFactors[req] !== undefined,
+        message: "Not completed",
+    };
 }

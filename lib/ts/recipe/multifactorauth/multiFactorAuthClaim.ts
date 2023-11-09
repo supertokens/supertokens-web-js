@@ -133,6 +133,6 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
     }
 
     getLastFetchedTime(payload: any, _userContext?: any): number | undefined {
-        return payload[this.id].t;
+        return payload[this.id]?.t;
     }
 }

@@ -3,6 +3,15 @@ import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeI
 import { RecipeFunctionOptions } from "../recipeModule/types";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<"GET_MFA_INFO">;
+    /**
+     * Loads information about what factors the current session can set up/complete and updates the requirements in the session payload
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful
+     */
     static getMFAInfo(input: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
         factors: import("./types").MFAFactorInfo;
