@@ -64,7 +64,11 @@ export default function getRecipeImplementation(
         verifyCode: async function ({ totp, options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.post<
                 | { status: "OK" }
-                | { status: "INVALID_TOTP_ERROR"; failedTOTPAttemptCount: number; maximumTOTPAttemptCount: number }
+                | {
+                      status: "INVALID_TOTP_ERROR";
+                      currentNumberOfFailedAttempts: number;
+                      maxNumberOfFailedAttempts: number;
+                  }
                 | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number }
             >(
                 undefined,
@@ -96,7 +100,11 @@ export default function getRecipeImplementation(
             const { jsonBody, fetchResponse } = await querier.post<
                 | { status: "OK"; wasAlreadyVerified: boolean }
                 | { status: "UNKNOWN_DEVICE_ERROR" }
-                | { status: "INVALID_TOTP_ERROR"; failedTOTPAttemptCount: number; maximumTOTPAttemptCount: number }
+                | {
+                      status: "INVALID_TOTP_ERROR";
+                      currentNumberOfFailedAttempts: number;
+                      maxNumberOfFailedAttempts: number;
+                  }
                 | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number }
             >(
                 undefined,

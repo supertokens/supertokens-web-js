@@ -62,8 +62,8 @@ export declare type RecipeInterface = {
           }
         | {
               status: "INVALID_TOTP_ERROR";
-              failedTOTPAttemptCount: number;
-              maximumTOTPAttemptCount: number;
+              currentNumberOfFailedAttempts: number;
+              maxNumberOfFailedAttempts: number;
               fetchResponse: Response;
           }
         | {
@@ -85,8 +85,8 @@ export declare type RecipeInterface = {
           }
         | {
               status: "INVALID_TOTP_ERROR";
-              failedTOTPAttemptCount: number;
-              maximumTOTPAttemptCount: number;
+              currentNumberOfFailedAttempts: number;
+              maxNumberOfFailedAttempts: number;
               fetchResponse: Response;
           }
         | {

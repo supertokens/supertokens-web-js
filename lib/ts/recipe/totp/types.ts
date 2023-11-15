@@ -82,8 +82,8 @@ export type RecipeInterface = {
         | { status: "OK"; fetchResponse: Response }
         | {
               status: "INVALID_TOTP_ERROR";
-              failedTOTPAttemptCount: number;
-              maximumTOTPAttemptCount: number;
+              currentNumberOfFailedAttempts: number;
+              maxNumberOfFailedAttempts: number;
               fetchResponse: Response;
           }
         | { status: "LIMIT_REACHED_ERROR"; retryAfterMs: number; fetchResponse: Response }
@@ -97,8 +97,8 @@ export type RecipeInterface = {
         | { status: "OK"; wasAlreadyVerified: boolean; fetchResponse: Response }
         | {
               status: "INVALID_TOTP_ERROR";
-              failedTOTPAttemptCount: number;
-              maximumTOTPAttemptCount: number;
+              currentNumberOfFailedAttempts: number;
+              maxNumberOfFailedAttempts: number;
               fetchResponse: Response;
           }
         | { status: "UNKNOWN_DEVICE_ERROR"; fetchResponse: Response }
