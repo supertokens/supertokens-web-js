@@ -12,21 +12,21 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful
      */
-    static getMFAInfo(input: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
+    static resyncSessionAndFetchMFAInfo(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
-        factors: import("./types").MFAFactorInfo;
-        email?: string | undefined;
-        phoneNumber?: string | undefined;
+        nextFactors: string[];
+        emails: Record<string, string[] | undefined>;
+        phoneNumbers: Record<string, string[] | undefined>;
         fetchResponse: Response;
     }>;
     static MultiFactorAuthClaim: MultiFactorAuthClaimClass;
 }
 declare const init: typeof RecipeWrapper.init;
-declare const getMFAInfo: typeof RecipeWrapper.getMFAInfo;
+declare const resyncSessionAndFetchMFAInfo: typeof RecipeWrapper.resyncSessionAndFetchMFAInfo;
 declare const MultiFactorAuthClaim: MultiFactorAuthClaimClass;
 export {
     init,
-    getMFAInfo,
+    resyncSessionAndFetchMFAInfo,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,

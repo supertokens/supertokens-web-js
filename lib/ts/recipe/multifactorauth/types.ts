@@ -49,17 +49,12 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
     };
 };
 
-export type MFAFactorInfo = {
-    isAlreadySetup: string[];
-    isAllowedToSetup: string[];
-};
-
 export type RecipeInterface = {
-    getMFAInfo: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
+    resyncSessionAndFetchMFAInfo: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
         status: "OK";
-        factors: MFAFactorInfo;
-        email?: string;
-        phoneNumber?: string;
+        nextFactors: string[];
+        emails: Record<string, string[] | undefined>;
+        phoneNumbers: Record<string, string[] | undefined>;
         fetchResponse: Response;
     }>;
 };
@@ -71,12 +66,12 @@ export type MFARequirementList = (
           oneOf: MFARequirement[];
       }
     | {
-          allOf: MFARequirement[];
+          allOfInAnyOrder: MFARequirement[];
       }
     | MFARequirement
 )[];
 
 export type MFAClaimValue = {
     c: Record<string, number>;
-    n: string[];
+    v: boolean;
 };

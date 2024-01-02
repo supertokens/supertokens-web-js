@@ -18,7 +18,7 @@ export declare class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimV
     ):
         | {
               c: Record<string, number>;
-              n: string[];
+              v: boolean;
           }
         | undefined;
     getLastFetchedTime(payload: any, _userContext?: any): number | undefined;

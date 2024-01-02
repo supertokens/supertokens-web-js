@@ -17,6 +17,7 @@ import { MultiFactorAuthClaimClass } from "./multiFactorAuthClaim";
 import Recipe from "./recipe";
 import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeInterface, UserInput } from "./types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
+import { getNormalisedUserContext } from "../../utils";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -32,10 +33,10 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful
      */
-    static getMFAInfo(input: { options?: RecipeFunctionOptions; userContext?: any }) {
-        return Recipe.getInstanceOrThrow().recipeImplementation.getMFAInfo({
-            options: input.options,
-            userContext: input.userContext ?? {},
+    static resyncSessionAndFetchMFAInfo(input?: { options?: RecipeFunctionOptions; userContext?: any }) {
+        return Recipe.getInstanceOrThrow().recipeImplementation.resyncSessionAndFetchMFAInfo({
+            options: input?.options ?? {},
+            userContext: getNormalisedUserContext(input?.userContext),
         });
     }
 
@@ -43,12 +44,12 @@ export default class RecipeWrapper {
 }
 
 const init = RecipeWrapper.init;
-const getMFAInfo = RecipeWrapper.getMFAInfo;
+const resyncSessionAndFetchMFAInfo = RecipeWrapper.resyncSessionAndFetchMFAInfo;
 const MultiFactorAuthClaim = RecipeWrapper.MultiFactorAuthClaim;
 
 export {
     init,
-    getMFAInfo,
+    resyncSessionAndFetchMFAInfo,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,

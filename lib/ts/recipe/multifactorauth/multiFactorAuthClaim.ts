@@ -31,7 +31,8 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
                             },
                         };
                     }
-                    if (val.n.length === 0) {
+
+                    if (val.v) {
                         return {
                             isValid: true,
                         };
@@ -41,7 +42,6 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
                         isValid: false,
                         reason: {
                             message: "not all required factors have been completed",
-                            nextFactorOptions: val?.n,
                         },
                     };
                 },
@@ -81,8 +81,8 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
                                     },
                                 };
                             }
-                        } else if (typeof req === "object" && "allOf" in req) {
-                            const res = req.allOf
+                        } else if (typeof req === "object" && "allOfInAnyOrder" in req) {
+                            const res = req.allOfInAnyOrder
                                 .map((r) => checkFactorRequirement(r, completedFactors))
                                 .filter((v) => v.isValid === false);
                             if (res.length !== 0) {
@@ -90,7 +90,7 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
                                     isValid: false,
                                     reason: {
                                         message: "Some factor checkers failed in the list",
-                                        allOf: req.allOf,
+                                        allOfInAnyOrder: req.allOfInAnyOrder,
                                         failures: res,
                                     },
                                 };
@@ -118,17 +118,17 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
     }
 
     async refresh(userContext: any): Promise<void> {
-        await this.getRecipeImpl().getMFAInfo(userContext);
+        await this.getRecipeImpl().resyncSessionAndFetchMFAInfo(userContext);
     }
 
-    getValueFromPayload(payload: any, _userContext?: any): { c: Record<string, number>; n: string[] } | undefined {
+    getValueFromPayload(payload: any, _userContext?: any): { c: Record<string, number>; v: boolean } | undefined {
         if (payload[this.id] === undefined) {
             return undefined;
         }
 
         return {
             c: payload[this.id].c,
-            n: payload[this.id].n,
+            v: payload[this.id].v,
         };
     }
 
