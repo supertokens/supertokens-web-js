@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Overview
 
-#### Introducing account-linking
+#### Introducing multi-factor authentication
 
 With this release, we are introducing MultiFactorAuthentication and TOTP, this will let you:
 
