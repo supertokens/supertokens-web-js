@@ -100,7 +100,7 @@
         },
         {
             "path": "recipe/multitenancy/index.js",
-            "limit": "25kb"
+            "limit": "26kb"
         },
         {
             "path": "recipe/multifactorauth/index.js",
