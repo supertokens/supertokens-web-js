@@ -64,6 +64,16 @@ var config = {
             filename: "multitenancy.js",
             dependOn: "supertokensWebsite",
         },
+        supertokensMultiFactorAuth: {
+            import: APP_DIR + "/lib/build/recipe/multifactorauth/index.js",
+            filename: "multifactorauth.js",
+            dependOn: "supertokensWebsite",
+        },
+        supertokensTOTP: {
+            import: APP_DIR + "/lib/build/recipe/totp/index.js",
+            filename: "totp.js",
+            dependOn: "supertokensWebsite",
+        },
         /**
          * Without this webpack will bundle supertokens-website as independent references
          * within each recipe bundle. Any shared resources (WindowHandler for example) will no
