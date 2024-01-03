@@ -14,7 +14,7 @@
  */
 
 import Querier from "../../querier";
-import { RecipeInterface } from "./types";
+import { MFAFactorInfo, RecipeInterface } from "./types";
 import { RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
 
@@ -27,6 +27,7 @@ export default function getRecipeImplementation(
         resyncSessionAndFetchMFAInfo: async function ({ options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.put<{
                 status: "OK";
+                factors: MFAFactorInfo;
                 nextFactors: string[];
                 emails: Record<string, string[] | undefined>;
                 phoneNumbers: Record<string, string[] | undefined>;

@@ -49,9 +49,15 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
     };
 };
 
+export type MFAFactorInfo = {
+    isAlreadySetup: string[];
+    isAllowedToSetup: string[];
+};
+
 export type RecipeInterface = {
     resyncSessionAndFetchMFAInfo: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
         status: "OK";
+        factors: MFAFactorInfo;
         nextFactors: string[];
         emails: Record<string, string[] | undefined>;
         phoneNumbers: Record<string, string[] | undefined>;
