@@ -28,7 +28,6 @@ export default function getRecipeImplementation(
             const { jsonBody, fetchResponse } = await querier.put<{
                 status: "OK";
                 factors: MFAFactorInfo;
-                nextFactors: string[];
                 emails: Record<string, string[] | undefined>;
                 phoneNumbers: Record<string, string[] | undefined>;
             }>(

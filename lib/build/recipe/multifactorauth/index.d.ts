@@ -15,7 +15,6 @@ export default class RecipeWrapper {
     static resyncSessionAndFetchMFAInfo(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
         factors: import("./types").MFAFactorInfo;
-        nextFactors: string[];
         emails: Record<string, string[] | undefined>;
         phoneNumbers: Record<string, string[] | undefined>;
         fetchResponse: Response;
