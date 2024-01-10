@@ -17,7 +17,7 @@ export declare class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimV
         _userContext?: any
     ):
         | {
-              c: Record<string, number>;
+              c: Record<string, number | undefined>;
               v: boolean;
           }
         | undefined;

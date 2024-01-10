@@ -121,7 +121,10 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
         await this.getRecipeImpl().resyncSessionAndFetchMFAInfo(userContext);
     }
 
-    getValueFromPayload(payload: any, _userContext?: any): { c: Record<string, number>; v: boolean } | undefined {
+    getValueFromPayload(
+        payload: any,
+        _userContext?: any
+    ): { c: Record<string, number | undefined>; v: boolean } | undefined {
         if (payload[this.id] === undefined) {
             return undefined;
         }
