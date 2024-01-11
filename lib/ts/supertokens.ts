@@ -20,6 +20,7 @@ import { CookieHandlerReference } from "./cookieHandler";
 import { WindowHandlerReference } from "./windowHandler";
 import { PostSuperTokensInitCallbacks } from "./postSuperTokensInitCallbacks";
 import { Recipe as MultitenancyRecipe } from "./recipe/multitenancy/recipe";
+import { DateProviderReference } from "./DateProvider";
 
 export default class SuperTokens {
     /*
@@ -71,6 +72,7 @@ export default class SuperTokens {
     static init(config: SuperTokensConfig): void {
         CookieHandlerReference.init(config.cookieHandler);
         WindowHandlerReference.init(config.windowHandler);
+        DateProviderReference.init(config.dateProvider);
 
         if (SuperTokens.instance !== undefined) {
             console.warn("SuperTokens was already initialized");

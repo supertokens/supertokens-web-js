@@ -835,6 +835,9 @@ function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInt
         shouldDoInterceptionBasedOnUrl: function (...input) {
             return original.shouldDoInterceptionBasedOnUrl(...input);
         },
+        getClockSkewInMillis: function (input) {
+            return original.getClockSkewInMillis(input);
+        },
     };
 }
 

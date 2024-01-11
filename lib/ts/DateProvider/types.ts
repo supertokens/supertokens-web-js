@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.supported_fdi = exports.package_version = void 0;
-/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
+/* Copyright (c) 2024, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
  * "License") as published by the Apache Software Foundation.
@@ -15,5 +12,5 @@ exports.supported_fdi = exports.package_version = void 0;
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-exports.package_version = "0.8.1";
-exports.supported_fdi = ["1.17", "1.18"];
+
+export { DateProviderInput, DateProviderInterface } from "supertokens-website/utils/dateProvider/types";

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.8.1] - 2024-01-11
+
+### Changes
+
+-   `EmailVerificationClaim` now uses `DateProvider` to account for clock skew.
+
 ## [0.8.0] - 2023-09-25
 
 ### Overview
