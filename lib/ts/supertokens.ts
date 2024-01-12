@@ -20,7 +20,7 @@ import { CookieHandlerReference } from "./cookieHandler";
 import { WindowHandlerReference } from "./windowHandler";
 import { PostSuperTokensInitCallbacks } from "./postSuperTokensInitCallbacks";
 import { Recipe as MultitenancyRecipe } from "./recipe/multitenancy/recipe";
-import { DateProviderReference } from "./DateProvider";
+import { DateProviderReference } from "./dateProvider";
 
 export default class SuperTokens {
     /*

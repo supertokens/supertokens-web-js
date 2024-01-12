@@ -4,7 +4,7 @@ import NormalisedURLDomain from "./normalisedURLDomain";
 import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
 import { CookieHandlerInput } from "./cookieHandler/types";
 import { WindowHandlerInput } from "./windowHandler/types";
-import { DateProviderInput } from "./DateProvider/types";
+import { DateProviderInput } from "./dateProvider/types";
 /**
  * The configuration object to be passed when calling SuperTokens.init
  */
