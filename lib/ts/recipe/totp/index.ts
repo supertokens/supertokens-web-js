@@ -41,7 +41,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the created device (secret, etc.)
      */
-    static createDevice(input: { deviceName?: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static createDevice(input?: { deviceName?: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<
         | {
               status: "OK";
               issuerName: string;
@@ -70,7 +70,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful
      */
-    static verifyCode(input: { totp: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static verifyCode(input: { totp: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<
         | { status: "OK"; fetchResponse: Response }
         | {
               status: "INVALID_TOTP_ERROR";
@@ -103,7 +103,7 @@ export default class RecipeWrapper {
         deviceName: string;
         totp: string;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<
         | { status: "OK"; wasAlreadyVerified: boolean; fetchResponse: Response }
         | {
@@ -135,7 +135,7 @@ export default class RecipeWrapper {
     static removeDevice(input: {
         deviceName: string;
         options?: RecipeFunctionOptions;
-        userContext: any;
+        userContext?: any;
     }): Promise<{ status: "OK"; didDeviceExist: boolean; fetchResponse: Response }> {
         return Recipe.getInstanceOrThrow().recipeImplementation.removeDevice({
             ...input,
@@ -152,7 +152,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful with a list of devices in the `devices` prop
      */
-    static listDevices(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<{
+    static listDevices(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
         status: "OK";
         devices: { name: string; period: number; skew: number; verified: boolean }[];
         fetchResponse: Response;

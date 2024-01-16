@@ -8,18 +8,18 @@ import { checkFactorRequirement } from "./utils";
 export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
     public id = "st-mfa";
     public validators: {
-        hasCompletedDefaultFactors: () => SessionClaimValidator;
+        hasCompletedMFARequirementsForAuth: () => SessionClaimValidator;
         hasCompletedFactors: (requirements: MFARequirementList) => SessionClaimValidator;
     };
 
     constructor(protected getRecipeImpl: () => RecipeInterface) {
         this.validators = {
-            hasCompletedDefaultFactors: () => ({
+            hasCompletedMFARequirementsForAuth: () => ({
                 id: this.id,
                 refresh: (...args) => this.refresh(...args),
                 shouldRefresh: (payload, userContext) => {
                     const val = this.getValueFromPayload(payload, userContext);
-                    return !val;
+                    return val === undefined;
                 },
                 validate: async (payload, userContext) => {
                     const val = this.getValueFromPayload(payload, userContext);
@@ -51,12 +51,12 @@ export class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimValue> {
                 id: this.id,
                 shouldRefresh: (payload, userContext) => {
                     const val = this.getValueFromPayload(payload, userContext);
-                    return !val;
+                    return val === undefined;
                 },
                 refresh: (...args) => this.refresh(...args),
                 validate: (payload, userContext) => {
                     const val = this.getValueFromPayload(payload, userContext);
-                    if (!val) {
+                    if (val === undefined) {
                         return {
                             isValid: false,
                             reason: {

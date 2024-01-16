@@ -48,7 +48,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
 
         PostSuperTokensInitCallbacks.addPostInitCallback(() => {
             SessionClaimValidatorStore.addClaimValidatorFromOtherRecipe(
-                Recipe.MultiFactorAuthClaim.validators.hasCompletedDefaultFactors()
+                Recipe.MultiFactorAuthClaim.validators.hasCompletedMFARequirementsForAuth()
             );
         });
     }
@@ -68,7 +68,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
 
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
-            let error = "No instance of Multitenancy found. Make sure to call the Multitenancy.init method.";
+            let error = "No instance of MultiFactorAuth found. Make sure to call the MultiFactorAuth.init method.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);

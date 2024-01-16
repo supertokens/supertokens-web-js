@@ -7,7 +7,7 @@ export declare class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimV
     protected getRecipeImpl: () => RecipeInterface;
     id: string;
     validators: {
-        hasCompletedDefaultFactors: () => SessionClaimValidator;
+        hasCompletedMFARequirementsForAuth: () => SessionClaimValidator;
         hasCompletedFactors: (requirements: MFARequirementList) => SessionClaimValidator;
     };
     constructor(getRecipeImpl: () => RecipeInterface);
