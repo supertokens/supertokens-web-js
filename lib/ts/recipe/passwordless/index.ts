@@ -293,8 +293,9 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<void> {
         const userContext = getNormalisedUserContext(input.userContext);
+        const recipe = Recipe.getInstanceOrThrow();
         const tenantId = await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext });
-        return Recipe.getInstanceOrThrow().recipeImplementation.setLoginAttemptInfo({
+        return recipe.recipeImplementation.setLoginAttemptInfo({
             attemptInfo: {
                 tenantId,
                 ...input.attemptInfo,

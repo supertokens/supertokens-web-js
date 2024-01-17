@@ -59,6 +59,17 @@ describe("Window handlers test", function () {
                 }
             }
         });
+
+        it("Throws correct error when calling recipe methods if SuperTokens is not initialized", async function () {
+            try {
+                await ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
+                    thirdPartyId: "google",
+                    frontendRedirectURI: "http://localhost:3000/auth/callback/google",
+                });
+            } catch (err) {
+                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+            }
+        });
     });
 
     describe("Session storage tests", function () {
