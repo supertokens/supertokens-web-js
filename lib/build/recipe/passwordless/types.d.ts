@@ -58,11 +58,13 @@ export declare type RecipeInterface = {
             | {
                   email: string;
                   userContext: any;
+                  factorIds?: string[];
                   options?: RecipeFunctionOptions;
               }
             | {
                   phoneNumber: string;
                   userContext: any;
+                  factorIds?: string[];
                   options?: RecipeFunctionOptions;
               }
     ) => Promise<

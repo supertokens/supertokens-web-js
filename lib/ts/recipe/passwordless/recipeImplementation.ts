@@ -30,8 +30,8 @@ export default function getRecipeImplementation(
     return {
         createCode: async function (
             input:
-                | { email: string; userContext: any; options?: RecipeFunctionOptions }
-                | { phoneNumber: string; userContext: any; options?: RecipeFunctionOptions }
+                | { email: string; factorIds?: string[]; userContext: any; options?: RecipeFunctionOptions }
+                | { phoneNumber: string; factorIds?: string[]; userContext: any; options?: RecipeFunctionOptions }
         ): Promise<
             | {
                   status: "OK";
@@ -51,12 +51,14 @@ export default function getRecipeImplementation(
             if ("email" in input) {
                 bodyObj = {
                     email: input.email,
+                    factorIds: input.factorIds,
                 };
             }
 
             if ("phoneNumber" in input) {
                 bodyObj = {
                     phoneNumber: input.phoneNumber,
+                    factorIds: input.factorIds,
                 };
             }
 

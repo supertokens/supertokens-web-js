@@ -30,8 +30,8 @@ export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPo
     };
 };
 export declare type MFAFactorInfo = {
-    isAlreadySetup: string[];
-    isAllowedToSetup: string[];
+    alreadySetup: string[];
+    allowedToSetup: string[];
     next: string[];
 };
 export declare type RecipeInterface = {

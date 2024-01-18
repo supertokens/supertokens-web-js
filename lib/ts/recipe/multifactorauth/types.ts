@@ -50,8 +50,8 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
 };
 
 export type MFAFactorInfo = {
-    isAlreadySetup: string[];
-    isAllowedToSetup: string[];
+    alreadySetup: string[];
+    allowedToSetup: string[];
     next: string[];
 };
 

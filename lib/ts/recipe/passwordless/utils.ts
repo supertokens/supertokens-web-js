@@ -39,9 +39,16 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
 
 export async function createCode(
     input:
-        | { email: string; userContext?: any; options?: RecipeFunctionOptions; recipeImplementation: RecipeInterface }
+        | {
+              email: string;
+              factorIds?: string[];
+              userContext?: any;
+              options?: RecipeFunctionOptions;
+              recipeImplementation: RecipeInterface;
+          }
         | {
               phoneNumber: string;
+              factorIds?: string[];
               userContext?: any;
               options?: RecipeFunctionOptions;
               recipeImplementation: RecipeInterface;
