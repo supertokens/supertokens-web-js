@@ -24,7 +24,7 @@ import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { UserInput } from "./types";
 import { EmailVerificationClaimClass } from "./emailVerificationClaim";
 import { PostSuperTokensInitCallbacks } from "../../postSuperTokensInitCallbacks";
-import SuperTokens from "../../supertokens";
+import { checkIfSuperTokensInitCalledElseThrowError } from "../../superTokensInitChecker";
 
 export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -72,7 +72,7 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
     static getInstanceOrThrow(): Recipe {
         // Ensure that SuperTokens.init is called before
         // checking for the EmailPassword instance
-        SuperTokens.getInstanceOrThrow();
+        checkIfSuperTokensInitCalledElseThrowError();
         if (Recipe.instance === undefined) {
             let error = "No instance of EmailVerification found. Make sure to call the EmailVerification.init method.";
             error = checkForSSRErrorAndAppendIfNeeded(error);

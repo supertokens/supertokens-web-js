@@ -24,7 +24,7 @@ import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import DerivedThirdPartyRecipeImplementation from "./recipeImplementation/thirdparty";
 import DerivedPasswordlessRecipeImplementation from "./recipeImplementation/passwordless";
 import AuthRecipe from "../authRecipe";
-import SuperTokens from "../../supertokens";
+import { checkIfSuperTokensInitCalledElseThrowError } from "../../superTokensInitChecker";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -92,7 +92,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     static getInstanceOrThrow(): Recipe {
         // Ensure that SuperTokens.init is called before
         // checking for the EmailPassword instance
-        SuperTokens.getInstanceOrThrow();
+        checkIfSuperTokensInitCalledElseThrowError();
         if (Recipe.instance === undefined) {
             let error =
                 "No instance of ThirdPartyPasswordless found. Make sure to call the ThirdPartyPasswordless.init method.";

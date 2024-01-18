@@ -23,7 +23,7 @@ import DerivedThirdPartyRecipeImplementation from "./recipeImplementation/thirdp
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import AuthRecipe from "../authRecipe";
-import SuperTokens from "../../supertokens";
+import { checkIfSuperTokensInitCalledElseThrowError } from "../../superTokensInitChecker";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -98,7 +98,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     static getInstanceOrThrow(): Recipe {
         // Ensure that SuperTokens.init is called before
         // checking for the EmailPassword instance
-        SuperTokens.getInstanceOrThrow();
+        checkIfSuperTokensInitCalledElseThrowError();
         if (Recipe.instance === undefined) {
             let error =
                 "No instance of ThirdPartyEmailPassword found. Make sure to call the ThirdPartyEmailPassword.init method.";

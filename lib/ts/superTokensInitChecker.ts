@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.supported_fdi = exports.package_version = void 0;
 /* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
@@ -15,5 +12,24 @@ exports.supported_fdi = exports.package_version = void 0;
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-exports.package_version = "0.8.1";
-exports.supported_fdi = ["1.17", "1.18"];
+
+import { checkForSSRErrorAndAppendIfNeeded } from "./utils";
+
+let _hasSuperTokensInitBeenCalled = false;
+
+export function superTokensInitCalled() {
+    _hasSuperTokensInitBeenCalled = true;
+}
+
+export function superTokensInitReset() {
+    _hasSuperTokensInitBeenCalled = false;
+}
+
+export function checkIfSuperTokensInitCalledElseThrowError() {
+    if (!_hasSuperTokensInitBeenCalled) {
+        let error = "SuperTokens must be initialized before calling this method.";
+        error = checkForSSRErrorAndAppendIfNeeded(error);
+
+        throw new Error(error);
+    }
+}

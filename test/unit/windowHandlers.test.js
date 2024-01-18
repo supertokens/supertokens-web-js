@@ -14,6 +14,7 @@
  */
 
 import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
+import EmailPassword from "../../recipe/emailpassword";
 import Session from "../../recipe/session";
 import SuperTokens from "../../lib/build/supertokens";
 import assert from "assert";
@@ -59,8 +60,10 @@ describe("Window handlers test", function () {
                 }
             }
         });
+    });
 
-        it("Throws correct error when calling recipe methods if SuperTokens is not initialized", async function () {
+    describe("Init tests", function () {
+        it("Throws correct error when calling ThirdPartyPasswordless methods if SuperTokens is not initialized", async function () {
             try {
                 await ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
                     thirdPartyId: "google",
@@ -68,6 +71,39 @@ describe("Window handlers test", function () {
                 });
             } catch (err) {
                 assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+            }
+        });
+
+        it("Throws correct error when calling ThirdPartyPasswordless methods if recipe is not initialized but SuperTokens is initialized", async function () {
+            SuperTokens.init({
+                appInfo: {
+                    appName: "SuperTokens",
+                    apiDomain: "api.supertokens.io",
+                },
+                windowHandler: function (original) {
+                    return {
+                        ...original,
+                        location: {
+                            ...original.location,
+                            getHostName: () => {
+                                return "http://localhost:3000";
+                            },
+                        },
+                    };
+                },
+                recipeList: [EmailPassword.init()],
+            });
+            try {
+                await ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
+                    thirdPartyId: "google",
+                    frontendRedirectURI: "http://localhost:3000/auth/callback/google",
+                });
+            } catch (err) {
+                assert(
+                    err.message.startsWith(
+                        "No instance of ThirdPartyPasswordless found. Make sure to call the ThirdPartyPasswordless.init method"
+                    )
+                );
             }
         });
     });
