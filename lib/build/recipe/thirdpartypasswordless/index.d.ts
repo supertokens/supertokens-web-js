@@ -92,11 +92,13 @@ export default class RecipeWrapper {
         input:
             | {
                   email: string;
+                  factorIds?: string[];
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
             | {
                   phoneNumber: string;
+                  factorIds?: string[];
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }

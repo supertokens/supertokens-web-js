@@ -114,8 +114,8 @@ export default function getRecipeImplementation(
 
         createPasswordlessCode: async function (
             input:
-                | { email: string; userContext: any; options?: RecipeFunctionOptions }
-                | { phoneNumber: string; userContext: any; options?: RecipeFunctionOptions }
+                | { email: string; factorIds?: string[]; userContext: any; options?: RecipeFunctionOptions }
+                | { phoneNumber: string; factorIds?: string[]; userContext: any; options?: RecipeFunctionOptions }
         ): Promise<
             | {
                   status: "OK";

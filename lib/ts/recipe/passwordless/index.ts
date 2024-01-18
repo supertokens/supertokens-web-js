@@ -49,8 +49,8 @@ export default class RecipeWrapper {
      */
     static async createCode(
         input:
-            | { email: string; userContext?: any; factorIds?: string[]; options?: RecipeFunctionOptions }
-            | { phoneNumber: string; userContext?: any; factorIds?: string[]; options?: RecipeFunctionOptions }
+            | { email: string; factorIds?: string[]; userContext?: any; options?: RecipeFunctionOptions }
+            | { phoneNumber: string; factorIds?: string[]; userContext?: any; options?: RecipeFunctionOptions }
     ): Promise<
         | {
               status: "OK";
