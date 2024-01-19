@@ -79,8 +79,9 @@ export default class RecipeWrapper {
         options?: RecipeFunctionOptions;
     }): Promise<string> {
         const userContext = getNormalisedUserContext(input.userContext);
+        const recipe = Recipe.getInstanceOrThrow();
         const tenantId = await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext });
-        return Recipe.getInstanceOrThrow().recipeImplementation.getAuthorisationURLWithQueryParamsAndSetState({
+        return recipe.recipeImplementation.getAuthorisationURLWithQueryParamsAndSetState({
             tenantId,
             ...input,
             userContext,

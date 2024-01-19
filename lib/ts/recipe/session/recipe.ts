@@ -123,7 +123,8 @@ export default class Recipe extends RecipeModule<unknown, any> {
 
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
-            let error = "No instance of Session found. Make sure to call the Session.init method.";
+            let error =
+                "No instance of Session found. Ensure that the 'Session.init' method is called within the 'SuperTokens.init' recipeList.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);

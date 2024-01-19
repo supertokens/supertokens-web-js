@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Fixes
+
+-   Fix "MultiTenancy not initialized" error being thrown instead of "SuperTokens not initialized" when calling recipe methods directly without initializing SuperTokens first.
+
 ## [0.9.0] - 2024-01-18
 
 ## Breaking Changes
