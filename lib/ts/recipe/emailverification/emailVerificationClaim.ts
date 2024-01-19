@@ -1,3 +1,4 @@
+import { DateProviderReference } from "supertokens-website/utils/dateProvider";
 import { SessionClaimValidator, BooleanClaim } from "../session";
 import { RecipeInterface } from "./types";
 
@@ -21,13 +22,14 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                 id: this.id,
                 refresh: this.refresh,
                 shouldRefresh: (payload, userContext) => {
+                    const DateProvider = DateProviderReference.getReferenceOrThrow().dateProvider;
                     const value = this.getValueFromPayload(payload, userContext);
                     return (
                         value === undefined ||
-                        this.getLastFetchedTime(payload, userContext)! < Date.now() - maxAgeInSeconds * 1000 ||
+                        this.getLastFetchedTime(payload, userContext)! < DateProvider.now() - maxAgeInSeconds * 1000 ||
                         (value === false &&
                             this.getLastFetchedTime(payload, userContext)! <
-                                Date.now() - refetchTimeOnFalseInSeconds * 1000)
+                                DateProvider.now() - refetchTimeOnFalseInSeconds * 1000)
                     );
                 },
                 validate: async (payload, userContext) => {

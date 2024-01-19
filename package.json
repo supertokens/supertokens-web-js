@@ -1,6 +1,6 @@
 {
     "name": "supertokens-web-js",
-    "version": "0.8.0",
+    "version": "0.9.0",
     "description": "SuperTokens SDK for vanilla JS for all recipes",
     "main": "./index.js",
     "scripts": {
@@ -50,6 +50,7 @@
         "@size-limit/preset-small-lib": "^8.1.0",
         "madge": "^5.0.1",
         "mocha": "^9.2.2",
+        "mocha-jsdom": "^2.0.0",
         "npm-run-all": "^4.1.5",
         "prettier": "^2.5.1",
         "pretty-quick": "^3.1.3",
