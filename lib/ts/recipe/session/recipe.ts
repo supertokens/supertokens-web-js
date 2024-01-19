@@ -17,7 +17,6 @@ import SuperTokensWebsite, { ClaimValidationError, SessionClaimValidator, Sessio
 import { InputType, UserInput } from "./types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
-import { checkIfSuperTokensInitCalledElseThrowError } from "../../superTokensInitChecker";
 
 export default class Recipe extends RecipeModule<unknown, any> {
     static instance?: Recipe;
@@ -123,11 +122,9 @@ export default class Recipe extends RecipeModule<unknown, any> {
     }
 
     static getInstanceOrThrow(): Recipe {
-        // Ensure that SuperTokens.init is called before
-        // checking for the Session instance
-        checkIfSuperTokensInitCalledElseThrowError();
         if (Recipe.instance === undefined) {
-            let error = "No instance of Session found. Make sure to call the Session.init method.";
+            let error =
+                "No instance of Session found. Ensure that the 'Session.init' method is called within the 'SuperTokens.init' recipeList.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);

@@ -20,7 +20,6 @@ import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterfac
 import { normaliseUserInput } from "./utils";
 import RecipeImplementation from "./recipeImplementation";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
-import { checkIfSuperTokensInitCalledElseThrowError } from "../../superTokensInitChecker";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -58,11 +57,9 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     }
 
     static getInstanceOrThrow(): Recipe {
-        // Ensure that SuperTokens.init is called before
-        // checking for the Passwordless instance
-        checkIfSuperTokensInitCalledElseThrowError();
         if (Recipe.instance === undefined) {
-            let error = "No instance of Passwordless found. Make sure to call the Passwordless.init method.";
+            let error =
+                "No instance of Passwordless found. Ensure that the 'Passwordless.init' method is called within the 'SuperTokens.init' recipeList.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);

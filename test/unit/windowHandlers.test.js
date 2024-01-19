@@ -93,7 +93,11 @@ describe("Window handlers test", function () {
                     frontendRedirectURI: "http://localhost:3000/auth/callback/google",
                 });
             } catch (err) {
-                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+                assert(
+                    err.message.startsWith(
+                        "No instance of ThirdPartyPasswordless found. Ensure that the 'ThirdPartyPasswordless.init' method is called within the 'SuperTokens.init' recipeList."
+                    )
+                );
             }
         });
 
@@ -117,14 +121,14 @@ describe("Window handlers test", function () {
                 recipeList: [EmailPassword.init()],
             });
             try {
-                ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
+                await ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
                     thirdPartyId: "google",
                     frontendRedirectURI: "http://localhost:3000/auth/callback/google",
                 });
             } catch (err) {
                 assert(
                     err.message.startsWith(
-                        "No instance of ThirdPartyPasswordless found. Make sure to call the ThirdPartyPasswordless.init method"
+                        "No instance of ThirdPartyPasswordless found. Ensure that the 'ThirdPartyPasswordless.init' method is called within the 'SuperTokens.init' recipeList."
                     )
                 );
             }
@@ -132,9 +136,13 @@ describe("Window handlers test", function () {
 
         it("Throws correct error when calling EmailPassword methods if SuperTokens is not initialized", async function () {
             try {
-                await EmailPassword.submitNewPassword();
+                await EmailPassword.doesEmailExist({ email: "test@supertokens.com" });
             } catch (err) {
-                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+                assert(
+                    err.message.startsWith(
+                        "No instance of EmailPassword found. Ensure that the 'EmailPassword.init' method is called within the 'SuperTokens.init' recipeList."
+                    )
+                );
             }
         });
 
@@ -160,9 +168,10 @@ describe("Window handlers test", function () {
             try {
                 await EmailPassword.doesEmailExist({ email: "test@supertokens.com" });
             } catch (err) {
+                console.log(err.message);
                 assert(
                     err.message.startsWith(
-                        "No instance of EmailPassword found. Make sure to call the EmailPassword.init method"
+                        "No instance of EmailPassword found. Ensure that the 'EmailPassword.init' method is called within the 'SuperTokens.init' recipeList."
                     )
                 );
             }
@@ -170,9 +179,16 @@ describe("Window handlers test", function () {
 
         it("Throws correct error when calling ThirdParty methods if SuperTokens is not initialized", async function () {
             try {
-                await ThirdParty.getStateAndOtherInfoFromStorage();
+                await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
+                    thirdPartyId: "google",
+                    frontendRedirectURI: "http://localhost:3000/auth/callback/google",
+                });
             } catch (err) {
-                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+                assert(
+                    err.message.startsWith(
+                        "No instance of ThirdParty found. Ensure that the 'ThirdParty.init' method is called within the 'SuperTokens.init' recipeList."
+                    )
+                );
             }
         });
 
@@ -196,11 +212,14 @@ describe("Window handlers test", function () {
                 recipeList: [EmailPassword.init()],
             });
             try {
-                await ThirdParty.getStateAndOtherInfoFromStorage();
+                await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
+                    thirdPartyId: "google",
+                    frontendRedirectURI: "http://localhost:3000/auth/callback/google",
+                });
             } catch (err) {
                 assert(
                     err.message.startsWith(
-                        "No instance of ThirdParty found. Make sure to call the ThirdParty.init method"
+                        "No instance of ThirdParty found. Ensure that the 'ThirdParty.init' method is called within the 'SuperTokens.init' recipeList."
                     )
                 );
             }
@@ -208,9 +227,16 @@ describe("Window handlers test", function () {
 
         it("Throws correct error when calling ThirdPartyEmailPassword methods if SuperTokens is not initialized", async function () {
             try {
-                ThirdPartyEmailPassword.getResetPasswordTokenFromURL();
+                await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+                    thirdPartyId: "google",
+                    frontendRedirectURI: "http://localhost:3000/auth/callback/google",
+                });
             } catch (err) {
-                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+                assert(
+                    err.message.startsWith(
+                        "No instance of ThirdPartyEmailPassword found. Ensure that the 'ThirdPartyEmailPassword.init' method is called within the 'SuperTokens.init' recipeList."
+                    )
+                );
             }
         });
 
@@ -234,11 +260,14 @@ describe("Window handlers test", function () {
                 recipeList: [EmailPassword.init()],
             });
             try {
-                ThirdPartyEmailPassword.getResetPasswordTokenFromURL();
+                await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+                    thirdPartyId: "google",
+                    frontendRedirectURI: "http://localhost:3000/auth/callback/google",
+                });
             } catch (err) {
                 assert(
                     err.message.startsWith(
-                        "No instance of ThirdPartyEmailPassword found. Make sure to call the ThirdPartyEmailPassword.init method"
+                        "No instance of ThirdPartyEmailPassword found. Ensure that the 'ThirdPartyEmailPassword.init' method is called within the 'SuperTokens.init' recipeList."
                     )
                 );
             }
@@ -248,7 +277,11 @@ describe("Window handlers test", function () {
             try {
                 await EmailVerification.isEmailVerified();
             } catch (err) {
-                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+                assert(
+                    err.message.startsWith(
+                        "No instance of EmailVerification found. Ensure that the 'EmailVerification.init' method is called within the 'SuperTokens.init' recipeList."
+                    )
+                );
             }
         });
 
@@ -276,7 +309,7 @@ describe("Window handlers test", function () {
             } catch (err) {
                 assert(
                     err.message.startsWith(
-                        "No instance of EmailVerification found. Make sure to call the EmailVerification.init method"
+                        "No instance of EmailVerification found. Ensure that the 'EmailVerification.init' method is called within the 'SuperTokens.init' recipeList."
                     )
                 );
             }
@@ -286,7 +319,11 @@ describe("Window handlers test", function () {
             try {
                 Passwordless.getLinkCodeFromURL();
             } catch (err) {
-                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+                assert(
+                    err.message.startsWith(
+                        "No instance of Passwordless found. Ensure that the 'Passwordless.init' method is called within the 'SuperTokens.init' recipeList."
+                    )
+                );
             }
         });
 
@@ -314,7 +351,7 @@ describe("Window handlers test", function () {
             } catch (err) {
                 assert(
                     err.message.startsWith(
-                        "No instance of Passwordless found. Make sure to call the Passwordless.init method"
+                        "No instance of Passwordless found. Ensure that the 'Passwordless.init' method is called within the 'SuperTokens.init' recipeList."
                     )
                 );
             }
@@ -324,7 +361,11 @@ describe("Window handlers test", function () {
             try {
                 await Session.getUserId();
             } catch (err) {
-                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+                assert(
+                    err.message.startsWith(
+                        "No instance of Session found. Ensure that the 'Session.init' method is called within the 'SuperTokens.init' recipeList."
+                    )
+                );
             }
         });
 
@@ -351,7 +392,9 @@ describe("Window handlers test", function () {
                 await Session.getUserId();
             } catch (err) {
                 assert(
-                    err.message.startsWith("No instance of Session found. Make sure to call the Session.init method")
+                    err.message.startsWith(
+                        "No instance of Session found. Ensure that the 'Session.init' method is called within the 'SuperTokens.init' recipeList."
+                    )
                 );
             }
         });
@@ -360,7 +403,11 @@ describe("Window handlers test", function () {
             try {
                 await Multitenancy.getTenantId();
             } catch (err) {
-                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+                assert(
+                    err.message.startsWith(
+                        "No instance of Multitenancy found. Ensure that 'SuperTokens.init' method has been called."
+                    )
+                );
             }
         });
     });

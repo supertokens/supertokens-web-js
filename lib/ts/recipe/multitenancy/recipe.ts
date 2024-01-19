@@ -20,7 +20,6 @@ import RecipeImplementation from "./recipeImplementation";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import AuthRecipe from "../authRecipe";
-import { checkIfSuperTokensInitCalledElseThrowError } from "../../superTokensInitChecker";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -57,11 +56,8 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     }
 
     static getInstanceOrThrow(): Recipe {
-        // Ensure that SuperTokens.init is called before
-        // checking for the Multitenancy instance
-        checkIfSuperTokensInitCalledElseThrowError();
         if (Recipe.instance === undefined) {
-            let error = "No instance of Multitenancy found. Make sure to call the Multitenancy.init method.";
+            let error = "No instance of Multitenancy found. Ensure that 'SuperTokens.init' method has been called.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);

@@ -20,7 +20,6 @@ import { CookieHandlerReference } from "./cookieHandler";
 import { WindowHandlerReference } from "./windowHandler";
 import { PostSuperTokensInitCallbacks } from "./postSuperTokensInitCallbacks";
 import { Recipe as MultitenancyRecipe } from "./recipe/multitenancy/recipe";
-import { superTokensInitCalled, superTokensInitReset } from "./superTokensInitChecker";
 
 export default class SuperTokens {
     /*
@@ -79,7 +78,6 @@ export default class SuperTokens {
         }
 
         SuperTokens.instance = new SuperTokens(config);
-        superTokensInitCalled();
         PostSuperTokensInitCallbacks.runPostInitCallbacks();
     }
 
@@ -108,7 +106,6 @@ export default class SuperTokens {
         }
 
         SuperTokens.instance = undefined;
-        superTokensInitReset();
         return;
     }
 }

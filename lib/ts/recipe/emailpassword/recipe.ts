@@ -20,7 +20,6 @@ import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import AuthRecipe from "../authRecipe";
-import { checkIfSuperTokensInitCalledElseThrowError } from "../../superTokensInitChecker";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
@@ -57,11 +56,9 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     }
 
     static getInstanceOrThrow(): Recipe {
-        // Ensure that SuperTokens.init is called before
-        // checking for the EmailPassword instance
-        checkIfSuperTokensInitCalledElseThrowError();
         if (Recipe.instance === undefined) {
-            let error = "No instance of EmailPassword found. Make sure to call the EmailPassword.init method.";
+            let error =
+                "No instance of EmailPassword found. Ensure that the 'EmailPassword.init' method is called within the 'SuperTokens.init' recipeList.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);
