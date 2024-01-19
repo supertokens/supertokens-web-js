@@ -20,6 +20,7 @@ import ThirdPartyEmailPassword from "../../recipe/thirdpartyemailpassword";
 import EmailVerification from "../../recipe/emailverification";
 import Passwordless from "../../recipe/passwordless";
 import Session from "../../recipe/session";
+import Multitenancy from "../../recipe/multitenancy";
 
 import EmailPasswordRecipeCore from "../../recipe/emailpassword/recipe";
 import ThirdPartyPasswordlessRecipeCore from "../../recipe/thirdpartypasswordless/recipe";
@@ -84,7 +85,7 @@ describe("Window handlers test", function () {
         });
     });
 
-    describe("Init tests", function () {
+    describe("Init tests for recipes", function () {
         it("Throws correct error when calling ThirdPartyPasswordless methods if SuperTokens is not initialized", async function () {
             try {
                 await ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
@@ -159,7 +160,6 @@ describe("Window handlers test", function () {
             try {
                 await EmailPassword.doesEmailExist({ email: "test@supertokens.com" });
             } catch (err) {
-                console.log(err.message);
                 assert(
                     err.message.startsWith(
                         "No instance of EmailPassword found. Make sure to call the EmailPassword.init method"
@@ -203,6 +203,164 @@ describe("Window handlers test", function () {
                         "No instance of ThirdParty found. Make sure to call the ThirdParty.init method"
                     )
                 );
+            }
+        });
+
+        it("Throws correct error when calling ThirdPartyEmailPassword methods if SuperTokens is not initialized", async function () {
+            try {
+                ThirdPartyEmailPassword.getResetPasswordTokenFromURL();
+            } catch (err) {
+                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+            }
+        });
+
+        it("Throws correct error when calling ThirdPartyEmailPassword methods if recipe is not initialized but SuperTokens is initialized", async function () {
+            SuperTokens.init({
+                appInfo: {
+                    appName: "SuperTokens",
+                    apiDomain: "api.supertokens.io",
+                },
+                windowHandler: function (original) {
+                    return {
+                        ...original,
+                        location: {
+                            ...original.location,
+                            getHostName: () => {
+                                return "http://localhost:3000";
+                            },
+                        },
+                    };
+                },
+                recipeList: [EmailPassword.init()],
+            });
+            try {
+                ThirdPartyEmailPassword.getResetPasswordTokenFromURL();
+            } catch (err) {
+                assert(
+                    err.message.startsWith(
+                        "No instance of ThirdPartyEmailPassword found. Make sure to call the ThirdPartyEmailPassword.init method"
+                    )
+                );
+            }
+        });
+
+        it("Throws correct error when calling EmailVerification methods if SuperTokens is not initialized", async function () {
+            try {
+                await EmailVerification.isEmailVerified();
+            } catch (err) {
+                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+            }
+        });
+
+        it("Throws correct error when calling EmailVerification methods if recipe is not initialized but SuperTokens is initialized", async function () {
+            SuperTokens.init({
+                appInfo: {
+                    appName: "SuperTokens",
+                    apiDomain: "api.supertokens.io",
+                },
+                windowHandler: function (original) {
+                    return {
+                        ...original,
+                        location: {
+                            ...original.location,
+                            getHostName: () => {
+                                return "http://localhost:3000";
+                            },
+                        },
+                    };
+                },
+                recipeList: [EmailPassword.init()],
+            });
+            try {
+                await EmailVerification.isEmailVerified();
+            } catch (err) {
+                assert(
+                    err.message.startsWith(
+                        "No instance of EmailVerification found. Make sure to call the EmailVerification.init method"
+                    )
+                );
+            }
+        });
+
+        it("Throws correct error when calling Passwordless methods if SuperTokens is not initialized", async function () {
+            try {
+                Passwordless.getLinkCodeFromURL();
+            } catch (err) {
+                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+            }
+        });
+
+        it("Throws correct error when calling Passwordless methods if recipe is not initialized but SuperTokens is initialized", async function () {
+            SuperTokens.init({
+                appInfo: {
+                    appName: "SuperTokens",
+                    apiDomain: "api.supertokens.io",
+                },
+                windowHandler: function (original) {
+                    return {
+                        ...original,
+                        location: {
+                            ...original.location,
+                            getHostName: () => {
+                                return "http://localhost:3000";
+                            },
+                        },
+                    };
+                },
+                recipeList: [EmailPassword.init()],
+            });
+            try {
+                Passwordless.getLinkCodeFromURL();
+            } catch (err) {
+                assert(
+                    err.message.startsWith(
+                        "No instance of Passwordless found. Make sure to call the Passwordless.init method"
+                    )
+                );
+            }
+        });
+
+        it("Throws correct error when calling Session methods if SuperTokens is not initialized", async function () {
+            try {
+                await Session.getUserId();
+            } catch (err) {
+                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+            }
+        });
+
+        it("Throws correct error when calling Session methods if recipe is not initialized but SuperTokens is initialized", async function () {
+            SuperTokens.init({
+                appInfo: {
+                    appName: "SuperTokens",
+                    apiDomain: "api.supertokens.io",
+                },
+                windowHandler: function (original) {
+                    return {
+                        ...original,
+                        location: {
+                            ...original.location,
+                            getHostName: () => {
+                                return "http://localhost:3000";
+                            },
+                        },
+                    };
+                },
+                recipeList: [EmailPassword.init()],
+            });
+            try {
+                await Session.getUserId();
+            } catch (err) {
+                assert(
+                    err.message.startsWith("No instance of Session found. Make sure to call the Session.init method")
+                );
+            }
+        });
+
+        it("Throws correct error when calling Multitenancy methods if SuperTokens is not initialized", async function () {
+            try {
+                await Multitenancy.getTenantId();
+            } catch (err) {
+                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
             }
         });
     });
