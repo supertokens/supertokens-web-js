@@ -12,9 +12,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+
 import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
 import Session from "../../recipe/session";
-
 import SuperTokens from "../../lib/build/supertokens";
 import assert from "assert";
 import { CookieHandlerReference } from "../../utils/cookieHandler";
