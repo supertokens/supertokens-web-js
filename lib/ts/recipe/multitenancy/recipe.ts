@@ -58,7 +58,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
 
     static getInstanceOrThrow(): Recipe {
         // Ensure that SuperTokens.init is called before
-        // checking for the MlutiTenancy instance
+        // checking for the Multitenancy instance
         checkIfSuperTokensInitCalledElseThrowError();
         if (Recipe.instance === undefined) {
             let error = "No instance of Multitenancy found. Make sure to call the Multitenancy.init method.";

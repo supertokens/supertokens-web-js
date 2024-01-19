@@ -13,9 +13,22 @@
  * under the License.
  */
 
-import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
 import EmailPassword from "../../recipe/emailpassword";
+import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
+import ThirdParty from "../../recipe/thirdparty";
+import ThirdPartyEmailPassword from "../../recipe/thirdpartyemailpassword";
+import EmailVerification from "../../recipe/emailverification";
+import Passwordless from "../../recipe/passwordless";
 import Session from "../../recipe/session";
+
+import EmailPasswordRecipeCore from "../../recipe/emailpassword/recipe";
+import ThirdPartyPasswordlessRecipeCore from "../../recipe/thirdpartypasswordless/recipe";
+import ThirdPartyRecipeCore from "../../recipe/thirdparty/recipe";
+import ThirdPartyEmailPasswordRecipeCore from "../../recipe/thirdpartyemailpassword/recipe";
+import EmailVerificationRecipeCore from "../../recipe/emailverification/recipe";
+import PasswordlessRecipeCore from "../../recipe/passwordless/recipe";
+import SessionRecipeCore from "../../recipe/session/recipe";
+
 import SuperTokens from "../../lib/build/supertokens";
 import assert from "assert";
 import { CookieHandlerReference } from "../../utils/cookieHandler";
@@ -29,6 +42,15 @@ describe("Window handlers test", function () {
         CookieHandlerReference.instance = undefined;
         WindowHandlerReference.instance = undefined;
         storageLogs = [];
+
+        // Reset all the recipes
+        EmailPasswordRecipeCore.reset();
+        ThirdPartyPasswordlessRecipeCore.reset();
+        ThirdPartyRecipeCore.reset();
+        ThirdPartyEmailPasswordRecipeCore.reset();
+        EmailVerificationRecipeCore.reset();
+        PasswordlessRecipeCore.reset();
+        SessionRecipeCore.reset();
     });
 
     describe("General tests", function () {
@@ -94,7 +116,7 @@ describe("Window handlers test", function () {
                 recipeList: [EmailPassword.init()],
             });
             try {
-                await ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
+                ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
                     thirdPartyId: "google",
                     frontendRedirectURI: "http://localhost:3000/auth/callback/google",
                 });
@@ -102,6 +124,83 @@ describe("Window handlers test", function () {
                 assert(
                     err.message.startsWith(
                         "No instance of ThirdPartyPasswordless found. Make sure to call the ThirdPartyPasswordless.init method"
+                    )
+                );
+            }
+        });
+
+        it("Throws correct error when calling EmailPassword methods if SuperTokens is not initialized", async function () {
+            try {
+                await EmailPassword.submitNewPassword();
+            } catch (err) {
+                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+            }
+        });
+
+        it("Throws correct error when calling EmailPassword methods if recipe is not initialized but SuperTokens is initialized", async function () {
+            SuperTokens.init({
+                appInfo: {
+                    appName: "SuperTokens",
+                    apiDomain: "api.supertokens.io",
+                },
+                windowHandler: function (original) {
+                    return {
+                        ...original,
+                        location: {
+                            ...original.location,
+                            getHostName: () => {
+                                return "http://localhost:3000";
+                            },
+                        },
+                    };
+                },
+                recipeList: [ThirdPartyPasswordless.init()],
+            });
+            try {
+                await EmailPassword.doesEmailExist({ email: "test@supertokens.com" });
+            } catch (err) {
+                console.log(err.message);
+                assert(
+                    err.message.startsWith(
+                        "No instance of EmailPassword found. Make sure to call the EmailPassword.init method"
+                    )
+                );
+            }
+        });
+
+        it("Throws correct error when calling ThirdParty methods if SuperTokens is not initialized", async function () {
+            try {
+                await ThirdParty.getStateAndOtherInfoFromStorage();
+            } catch (err) {
+                assert(err.message.startsWith("SuperTokens must be initialized before calling this method"));
+            }
+        });
+
+        it("Throws correct error when calling ThirdParty methods if recipe is not initialized but SuperTokens is initialized", async function () {
+            SuperTokens.init({
+                appInfo: {
+                    appName: "SuperTokens",
+                    apiDomain: "api.supertokens.io",
+                },
+                windowHandler: function (original) {
+                    return {
+                        ...original,
+                        location: {
+                            ...original.location,
+                            getHostName: () => {
+                                return "http://localhost:3000";
+                            },
+                        },
+                    };
+                },
+                recipeList: [EmailPassword.init()],
+            });
+            try {
+                await ThirdParty.getStateAndOtherInfoFromStorage();
+            } catch (err) {
+                assert(
+                    err.message.startsWith(
+                        "No instance of ThirdParty found. Make sure to call the ThirdParty.init method"
                     )
                 );
             }

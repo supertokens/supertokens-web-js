@@ -58,7 +58,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
 
     static getInstanceOrThrow(): Recipe {
         // Ensure that SuperTokens.init is called before
-        // checking for the EmailPassword instance
+        // checking for the ThirdParty instance
         checkIfSuperTokensInitCalledElseThrowError();
         if (Recipe.instance === undefined) {
             let error = "No instance of ThirdParty found. Make sure to call the ThirdParty.init method.";

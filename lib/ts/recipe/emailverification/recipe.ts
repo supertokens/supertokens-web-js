@@ -71,7 +71,7 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
 
     static getInstanceOrThrow(): Recipe {
         // Ensure that SuperTokens.init is called before
-        // checking for the EmailPassword instance
+        // checking for the EmailVerification instance
         checkIfSuperTokensInitCalledElseThrowError();
         if (Recipe.instance === undefined) {
             let error = "No instance of EmailVerification found. Make sure to call the EmailVerification.init method.";
