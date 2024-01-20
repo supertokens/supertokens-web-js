@@ -34,12 +34,15 @@ describe("Date Provider test", function () {
                 appName: "SuperTokens",
                 apiDomain: "api.supertokens.io",
             },
-            dateProvider: function (original) {
+            dateProvider: function () {
                 return {
-                    ...original,
+                    getThresholdInSeconds: function () {
+                        storageLogs.push("ST_LOGS DATE_PROVIDER_GET_THRESHOLD");
+                        return 7;
+                    },
                     now: function () {
                         storageLogs.push("ST_LOGS DATE_PROVIDER_NOW");
-                        return original.now();
+                        return Date.now();
                     },
                 };
             },
@@ -51,6 +54,6 @@ describe("Date Provider test", function () {
         const validator = claim.validators.isTrue();
         await validator.shouldRefresh({ "test-claim": { v: true, t: Date.now() } });
 
-        assert.deepEqual(storageLogs, ["ST_LOGS DATE_PROVIDER_NOW"]);
+        assert.deepEqual(storageLogs, ["ST_LOGS DATE_PROVIDER_GET_THRESHOLD", "ST_LOGS DATE_PROVIDER_NOW"]);
     });
 });

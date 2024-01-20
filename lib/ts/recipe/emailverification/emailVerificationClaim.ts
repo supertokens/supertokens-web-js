@@ -23,6 +23,19 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                 refresh: this.refresh,
                 shouldRefresh: (payload, userContext) => {
                     const DateProvider = DateProviderReference.getReferenceOrThrow().dateProvider;
+
+                    if (maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
+                        throw new Error(
+                            `maxAgeInSeconds must be greater than the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
+                        );
+                    }
+
+                    if (refetchTimeOnFalseInSeconds < DateProvider.getThresholdInSeconds()) {
+                        throw new Error(
+                            `refetchTimeOnFalseInSeconds must be greater than the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
+                        );
+                    }
+
                     const value = this.getValueFromPayload(payload, userContext);
                     return (
                         value === undefined ||

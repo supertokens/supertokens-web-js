@@ -7,10 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-### Fixes
-
--   Fix "MultiTenancy not initialized" error being thrown instead of "SuperTokens not initialized" when calling recipe methods directly without initializing SuperTokens first.
-
 ## [0.9.0] - 2024-01-18
 
 ## Breaking Changes
@@ -23,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Exporting the `DateProvider` from supertokens-website, that both built-in and custom validators can use instead of `Date.now` to get an estimate of the server clock.
 -   Added the `dateProvider` prop to the configuration that can be used to customize the built-in `DateProvider`.
 -   Added `getClockSkewInMillis` as an overrideable function to the Session recipe that estimates the time difference between the backend and the client.
+-   Fix "MultiTenancy not initialized" error being thrown instead of "SuperTokens not initialized" when calling recipe methods directly without initializing SuperTokens first.
 
 ## [0.8.0] - 2023-09-25
 

@@ -1071,6 +1071,7 @@ const cookieHandlerInput: CookieHandlerInput = (original: CookieHandlerInterface
 };
 
 const dateProviderImplementation: DateProviderInterface = {
+    getThresholdInSeconds: () => 0,
     getClientClockSkewInMillis: () => 0,
     setClientClockSkewInMillis: () => {},
     now: () => Date.now(),
