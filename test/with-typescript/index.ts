@@ -837,8 +837,8 @@ function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInt
         shouldDoInterceptionBasedOnUrl: function (...input) {
             return original.shouldDoInterceptionBasedOnUrl(...input);
         },
-        getClockSkewInMillis: function (input) {
-            return original.getClockSkewInMillis(input);
+        calculateClockSkewInMillis: function (input) {
+            return original.calculateClockSkewInMillis(input);
         },
     };
 }
@@ -1072,6 +1072,7 @@ const cookieHandlerInput: CookieHandlerInput = (original: CookieHandlerInterface
 
 const dateProviderImplementation: DateProviderInterface = {
     getThresholdInSeconds: () => 0,
+    setThresholdInSeconds: () => {},
     getClientClockSkewInMillis: () => 0,
     setClientClockSkewInMillis: () => {},
     now: () => Date.now(),

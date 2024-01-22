@@ -18,43 +18,46 @@ export class EmailVerificationClaimClass extends BooleanClaim {
 
         this.validators = {
             ...this.validators,
-            isVerified: (refetchTimeOnFalseInSeconds = 10, maxAgeInSeconds = 300) => ({
-                id: this.id,
-                refresh: this.refresh,
-                shouldRefresh: (payload, userContext) => {
-                    const DateProvider = DateProviderReference.getReferenceOrThrow().dateProvider;
+            isVerified: (refetchTimeOnFalseInSeconds = 10, maxAgeInSeconds = 300) => {
+                const DateProvider = DateProviderReference.getReferenceOrThrow().dateProvider;
 
-                    if (maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
-                        throw new Error(
-                            `maxAgeInSeconds must be greater than the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
-                        );
-                    }
-
-                    if (refetchTimeOnFalseInSeconds < DateProvider.getThresholdInSeconds()) {
-                        throw new Error(
-                            `refetchTimeOnFalseInSeconds must be greater than the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
-                        );
-                    }
-
-                    const value = this.getValueFromPayload(payload, userContext);
-                    return (
-                        value === undefined ||
-                        this.getLastFetchedTime(payload, userContext)! < DateProvider.now() - maxAgeInSeconds * 1000 ||
-                        (value === false &&
-                            this.getLastFetchedTime(payload, userContext)! <
-                                DateProvider.now() - refetchTimeOnFalseInSeconds * 1000)
+                if (maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
+                    throw new Error(
+                        `maxAgeInSeconds must be greater than the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
                     );
-                },
-                validate: async (payload, userContext) => {
-                    const value = this.getValueFromPayload(payload, userContext);
-                    return value === true
-                        ? { isValid: true }
-                        : {
-                              isValid: false,
-                              reason: { message: "wrong value", expectedValue: true, actualValue: value },
-                          };
-                },
-            }),
+                }
+
+                if (refetchTimeOnFalseInSeconds < DateProvider.getThresholdInSeconds()) {
+                    throw new Error(
+                        `refetchTimeOnFalseInSeconds must be greater than the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
+                    );
+                }
+
+                return {
+                    id: this.id,
+                    refresh: this.refresh,
+                    shouldRefresh: (payload, userContext) => {
+                        const value = this.getValueFromPayload(payload, userContext);
+                        return (
+                            value === undefined ||
+                            this.getLastFetchedTime(payload, userContext)! <
+                                DateProvider.now() - maxAgeInSeconds * 1000 ||
+                            (value === false &&
+                                this.getLastFetchedTime(payload, userContext)! <
+                                    DateProvider.now() - refetchTimeOnFalseInSeconds * 1000)
+                        );
+                    },
+                    validate: async (payload, userContext) => {
+                        const value = this.getValueFromPayload(payload, userContext);
+                        return value === true
+                            ? { isValid: true }
+                            : {
+                                  isValid: false,
+                                  reason: { message: "wrong value", expectedValue: true, actualValue: value },
+                              };
+                    },
+                };
+            },
         };
     }
 
