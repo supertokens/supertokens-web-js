@@ -33,13 +33,13 @@ export class EmailVerificationClaimClass extends BooleanClaim {
 
                     if (maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
                         throw new Error(
-                            `maxAgeInSeconds must be greater than the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
+                            `maxAgeInSeconds must be greater than or equal to the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
                         );
                     }
 
                     if (refetchTimeOnFalseInSeconds < DateProvider.getThresholdInSeconds()) {
                         throw new Error(
-                            `refetchTimeOnFalseInSeconds must be greater than the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
+                            `refetchTimeOnFalseInSeconds must be greater than or equal to the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
                         );
                     }
 
