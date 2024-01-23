@@ -2,6 +2,10 @@ import { DateProviderReference } from "supertokens-website/utils/dateProvider";
 import { SessionClaimValidator, BooleanClaim } from "../session";
 import { RecipeInterface } from "./types";
 
+function getThresholdAwareDefaultValue(defaultVal: number) {
+    return Math.max(defaultVal, DateProviderReference.getReferenceOrThrow().dateProvider.getThresholdInSeconds());
+}
+
 /**
  * We include "Class" in the class name, because it makes it easier to import/use the right thing (the instance exported by the recipe) instead of this.
  * */
@@ -18,7 +22,10 @@ export class EmailVerificationClaimClass extends BooleanClaim {
 
         this.validators = {
             ...this.validators,
-            isVerified: (refetchTimeOnFalseInSeconds = 10, maxAgeInSeconds = 300) => {
+            isVerified: (
+                refetchTimeOnFalseInSeconds = getThresholdAwareDefaultValue(0),
+                maxAgeInSeconds = getThresholdAwareDefaultValue(300)
+            ) => {
                 const DateProvider = DateProviderReference.getReferenceOrThrow().dateProvider;
 
                 if (maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
