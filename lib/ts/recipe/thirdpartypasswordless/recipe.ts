@@ -91,7 +91,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
             let error =
-                "No instance of ThirdPartyPasswordless found. Make sure to call the ThirdPartyPasswordless.init method.";
+                "No instance of ThirdPartyPasswordless found. Ensure that the 'ThirdPartyPasswordless.init' method is called within the 'SuperTokens.init' recipeList.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);

@@ -36,6 +36,9 @@ jobs:
             - attach_workspace:
                   at: /
             - run:
+                  name: Do Unit Tests
+                  command: npm run test-unit
+            - run:
                   name: Do Test
                   no_output_timeout: 30m
                   command: (cd .circleci && ./doTests.sh << parameters.fdi-version >>)

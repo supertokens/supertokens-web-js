@@ -104,6 +104,8 @@ import { BooleanClaim, PrimitiveClaim, SessionClaimValidator } from "../../recip
 import { PermissionClaim, UserRoleClaim } from "../../recipe/userroles";
 import { CookieHandlerReference } from "../../utils/cookieHandler";
 import { WindowHandlerReference } from "../../utils/windowHandler";
+import { DateProviderReference } from "../../utils/dateProvider";
+import { DateProviderInput, DateProviderInterface } from "../../utils/dateProvider/types";
 
 // Email verification init
 function getEmailVerificationFunctions(original: EmailVerificationRecipeInterface): EmailVerificationRecipeInterface {
@@ -835,6 +837,9 @@ function getSessionFunctions(original: SessionRecipeInterface): SessionRecipeInt
         shouldDoInterceptionBasedOnUrl: function (...input) {
             return original.shouldDoInterceptionBasedOnUrl(...input);
         },
+        calculateClockSkewInMillis: function (input) {
+            return original.calculateClockSkewInMillis(input);
+        },
     };
 }
 
@@ -1065,11 +1070,22 @@ const cookieHandlerInput: CookieHandlerInput = (original: CookieHandlerInterface
     };
 };
 
+const dateProviderImplementation: DateProviderInterface = {
+    getThresholdInSeconds: () => 0,
+    setThresholdInSeconds: () => {},
+    getClientClockSkewInMillis: () => 0,
+    setClientClockSkewInMillis: () => {},
+    now: () => Date.now(),
+};
+
+const dateProviderInput: DateProviderInput = () => dateProviderImplementation;
+
 SuperTokens.init({
     appInfo,
     recipeList,
     windowHandler: windowHandlerInput,
     cookieHandler: cookieHandlerInput,
+    dateProvider: dateProviderInput,
 });
 
 SuperTokens.init({
@@ -2007,4 +2023,5 @@ Session.addAxiosInterceptors({});
 function reexportedHandlers() {
     CookieHandlerReference.getReferenceOrThrow();
     WindowHandlerReference.getReferenceOrThrow();
+    DateProviderReference.getReferenceOrThrow();
 }
