@@ -69,19 +69,17 @@ workflows:
                   context:
                       - slack-notification
                   filters:
-                      tags:
-                          only: /dev-v[0-9]+(\.[0-9]+)*/
                       branches:
-                          ignore: /.*/
+                          only:
+                              - ci/test-unit-tests-failure
 
             - test:
                   requires:
                       - build
                   filters:
-                      tags:
-                          only: /dev-v[0-9]+(\.[0-9]+)*/
                       branches:
-                          ignore: /.*/
+                          only:
+                              - ci/test-unit-tests-failure
                   matrix:
                       parameters:
                           fdi-version: placeholder
@@ -90,9 +88,8 @@ workflows:
                   context:
                       - slack-notification
                   filters:
-                      tags:
-                          only: /dev-v[0-9]+(\.[0-9]+)*/
                       branches:
-                          ignore: /.*/
+                          only:
+                              - ci/test-unit-tests-failure
                   requires:
                       - test
