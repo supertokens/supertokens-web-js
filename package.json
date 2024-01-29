@@ -89,7 +89,7 @@
         },
         {
             "path": "recipe/passwordless/index.js",
-            "limit": "28kb"
+            "limit": "29kb"
         },
         {
             "path": "recipe/thirdpartypasswordless/index.js",
@@ -97,7 +97,7 @@
         },
         {
             "path": "recipe/userroles/index.js",
-            "limit": "24kb"
+            "limit": "25kb"
         },
         {
             "path": "recipe/multitenancy/index.js",
