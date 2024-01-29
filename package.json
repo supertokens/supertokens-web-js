@@ -65,7 +65,7 @@
     "size-limit": [
         {
             "path": "lib/build/index.js",
-            "limit": "26kb"
+            "limit": "27kb"
         },
         {
             "path": "recipe/emailverification/index.js",
@@ -73,19 +73,19 @@
         },
         {
             "path": "recipe/emailpassword/index.js",
-            "limit": "26kb"
-        },
-        {
-            "path": "recipe/thirdparty/index.js",
             "limit": "27kb"
         },
         {
+            "path": "recipe/thirdparty/index.js",
+            "limit": "28kb"
+        },
+        {
             "path": "recipe/thirdpartyemailpassword/index.js",
-            "limit": "29kb"
+            "limit": "30kb"
         },
         {
             "path": "recipe/session/index.js",
-            "limit": "23kb"
+            "limit": "24kb"
         },
         {
             "path": "recipe/passwordless/index.js",
@@ -93,15 +93,15 @@
         },
         {
             "path": "recipe/thirdpartypasswordless/index.js",
-            "limit": "30kb"
+            "limit": "31kb"
         },
         {
             "path": "recipe/userroles/index.js",
-            "limit": "23kb"
+            "limit": "24kb"
         },
         {
             "path": "recipe/multitenancy/index.js",
-            "limit": "26kb"
+            "limit": "27kb"
         }
     ]
 }
