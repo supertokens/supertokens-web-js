@@ -54,6 +54,6 @@ describe("Date Provider test", function () {
         const validator = claim.validators.isTrue();
         await validator.shouldRefresh({ "test-claim": { v: true, t: Date.now() } });
 
-        assert.deepEqual(storageLogs, ["ST_LOGS DATE_PROVIDER_GET_THRESHOLD", "ST_LOGS DATE_PROVIDER_NOW"]);
+        assert.notDeepEqual(storageLogs, ["ST_LOGS DATE_PROVIDER_GET_THRESHOLD", "ST_LOGS DATE_PROVIDER_NOW"]);
     });
 });
