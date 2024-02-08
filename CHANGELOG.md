@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.9.1] - 2024-02-07
+
+### Changes
+
+-   Added `dateprovider.js` bundle file to enable importing `DateProvider` via a script tag
+
 ## [0.9.0] - 2024-01-18
 
 ## Breaking Changes
