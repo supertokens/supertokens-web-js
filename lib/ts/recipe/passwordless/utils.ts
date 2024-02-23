@@ -41,14 +41,12 @@ export async function createCode(
     input:
         | {
               email: string;
-              factorIds?: string[];
               userContext?: any;
               options?: RecipeFunctionOptions;
               recipeImplementation: RecipeInterface;
           }
         | {
               phoneNumber: string;
-              factorIds?: string[];
               userContext?: any;
               options?: RecipeFunctionOptions;
               recipeImplementation: RecipeInterface;

@@ -1,4 +1,5 @@
 import { SessionClaimValidator, BooleanClaim } from "../session";
+import { EMAILVERIFICATION_CLAIM_ID } from "./constants";
 import { RecipeInterface } from "./types";
 
 /**
@@ -7,7 +8,7 @@ import { RecipeInterface } from "./types";
 export class EmailVerificationClaimClass extends BooleanClaim {
     constructor(getRecipeImpl: () => RecipeInterface) {
         super({
-            id: "st-ev",
+            id: EMAILVERIFICATION_CLAIM_ID,
             refresh: async (userContext) => {
                 await getRecipeImpl().isEmailVerified({
                     userContext,

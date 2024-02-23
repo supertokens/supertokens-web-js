@@ -142,8 +142,8 @@ export default class RecipeWrapper {
      */
     static async createPasswordlessCode(
         input:
-            | { email: string; factorIds?: string[]; userContext?: any; options?: RecipeFunctionOptions }
-            | { phoneNumber: string; factorIds?: string[]; userContext?: any; options?: RecipeFunctionOptions }
+            | { email: string; userContext?: any; options?: RecipeFunctionOptions }
+            | { phoneNumber: string; userContext?: any; options?: RecipeFunctionOptions }
     ): Promise<
         | {
               status: "OK";

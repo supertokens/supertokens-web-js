@@ -77,8 +77,8 @@ export type RecipeInterface = {
      */
     createCode: (
         input:
-            | { email: string; userContext: any; factorIds?: string[]; options?: RecipeFunctionOptions }
-            | { phoneNumber: string; userContext: any; factorIds?: string[]; options?: RecipeFunctionOptions }
+            | { email: string; userContext: any; options?: RecipeFunctionOptions }
+            | { phoneNumber: string; userContext: any; options?: RecipeFunctionOptions }
     ) => Promise<
         | {
               status: "OK";
