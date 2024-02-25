@@ -68,9 +68,31 @@ export default function getRecipeImplementation(
                     userContext: userContext,
                 })
             );
+            let firstFactors: string[];
+            if (jsonBody.firstFactors === undefined) {
+                firstFactors = [];
+                if (jsonBody.emailPassword.enabled) {
+                    firstFactors.push("emailpassword");
+                }
+                if (jsonBody.thirdParty.enabled) {
+                    firstFactors.push("thirdparty");
+                }
+                if (jsonBody.passwordless.enabled) {
+                    firstFactors.push("otp-email");
+                    firstFactors.push("otp-phone");
+                    firstFactors.push("link-email");
+                    firstFactors.push("link-phone");
+                }
+            } else {
+                firstFactors = jsonBody.firstFactors;
+            }
 
             return {
-                ...jsonBody,
+                status: "OK",
+                thirdParty: {
+                    providers: jsonBody.thirdParty.providers,
+                },
+                firstFactors,
                 fetchResponse,
             };
         },
