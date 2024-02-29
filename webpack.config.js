@@ -75,6 +75,16 @@ var config = {
             dependOn: "supertokensWebsite",
         },
         /**
+         * The import path is /utils/dateProvider/index.js instead of /lib/build/dateProvider/index.js because the supertokens.js also imports
+         * the dateProvider from the build folder and that creates a dependency requiring us to load dateprovider.js bundle before supertokens.js.
+         * However, this issue doesn't happen if we use the /utils/dateProvider/index.js file as import path.
+         */
+        supertokensDateProvider: {
+            import: APP_DIR + "/utils/dateProvider/index.js",
+            filename: "dateprovider.js",
+            dependOn: "supertokensWebsite",
+        },
+        /**
          * Without this webpack will bundle supertokens-website as independent references
          * within each recipe bundle. Any shared resources (WindowHandler for example) will no
          * longer be initialised in this case

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-## [0.9.0] - 2023-11-21
+## [0.10.0] - 2024-03-03
 
 ### Overview
 
@@ -31,8 +31,29 @@ To use this you'll need compatible versions:
 ### Changes
 
 -   Added support for FDI 1.19 (Node SDK>= 17.0.0), but keeping support FDI version 1.17 and 1.18 (node >= 15.0.0, golang>=0.13, python>=0.15.0)
--   Added `firstFactors` into the return type of `getLoginMethods`
+-   Added `firstFactors` into the return type of `getLoginMethods` and removed the enabled flags of different login methods.
+    -   For older FDI versions, the firstFactors array will be calculated based on those enabled flags.
 -   Added recipes `TOTP` and `MultiFactorAuth`
+
+## [0.9.1] - 2024-02-07
+
+### Changes
+
+-   Added `dateprovider.js` bundle file to enable importing `DateProvider` via a script tag
+
+## [0.9.0] - 2024-01-18
+
+## Breaking Changes
+
+-   The default `DateProvider` implementation relies on `localStorage`. If your environment lacks support for `localStorage`, you must provide custom implementations for either the `DateProvider` or `localStorage`.
+
+### Changes
+
+-   `EmailVerificationClaim` now uses `DateProvider` to account for clock skew.
+-   Exporting the `DateProvider` from supertokens-website, that both built-in and custom validators can use instead of `Date.now` to get an estimate of the server clock.
+-   Added the `dateProvider` prop to the configuration that can be used to customize the built-in `DateProvider`.
+-   Added `calculateClockSkewInMillis` as an overrideable function to the Session recipe that estimates the time difference between the backend and the client.
+-   Fix "MultiTenancy not initialized" error being thrown instead of "SuperTokens not initialized" when calling recipe methods directly without initializing SuperTokens first.
 
 ## [0.8.0] - 2023-09-25
 

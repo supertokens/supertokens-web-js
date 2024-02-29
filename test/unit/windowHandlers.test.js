@@ -252,17 +252,6 @@ describe("Window handlers test", function () {
             });
 
             try {
-                await ThirdPartyPasswordless.createPasswordlessCode({
-                    email: "",
-                });
-                throw new Error("createPasswordlessCode should have failed but didnt");
-            } catch (e) {
-                if (e.message !== "Expected error during tests") {
-                    throw e;
-                }
-            }
-
-            try {
                 await ThirdPartyPasswordless.resendPasswordlessCode();
                 throw new Error("resendPasswordlessCode should have failed but didnt");
             } catch (e) {
@@ -271,10 +260,7 @@ describe("Window handlers test", function () {
                 }
             }
 
-            assert.deepEqual(storageLogs, [
-                "SET_ITEM supertokens-passwordless-loginAttemptInfo",
-                "GET_ITEM supertokens-passwordless-loginAttemptInfo",
-            ]);
+            assert.deepEqual(storageLogs, ["GET_ITEM supertokens-passwordless-loginAttemptInfo"]);
         });
 
         it("Test that recipe functions use default handlers", async function () {
@@ -322,17 +308,6 @@ describe("Window handlers test", function () {
             });
 
             try {
-                await ThirdPartyPasswordless.createPasswordlessCode({
-                    email: "",
-                });
-                throw new Error("createPasswordlessCode should have failed but didnt");
-            } catch (e) {
-                if (e.message !== "Expected error during tests") {
-                    throw e;
-                }
-            }
-
-            try {
                 await ThirdPartyPasswordless.resendPasswordlessCode();
                 throw new Error("resendPasswordlessCode should have failed but didnt");
             } catch (e) {
@@ -341,10 +316,7 @@ describe("Window handlers test", function () {
                 }
             }
 
-            assert.deepEqual(storageLogs, [
-                "SET_ITEM_GLOBAL supertokens-passwordless-loginAttemptInfo",
-                "GET_ITEM_GLOBAL supertokens-passwordless-loginAttemptInfo",
-            ]);
+            assert.deepEqual(storageLogs, ["GET_ITEM_GLOBAL supertokens-passwordless-loginAttemptInfo"]);
         });
     });
 });

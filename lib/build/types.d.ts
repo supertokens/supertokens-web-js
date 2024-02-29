@@ -4,6 +4,7 @@ import NormalisedURLDomain from "./normalisedURLDomain";
 import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
 import { CookieHandlerInput } from "./cookieHandler/types";
 import { WindowHandlerInput } from "./windowHandler/types";
+import { DateProviderInput } from "./dateProvider/types";
 /**
  * The configuration object to be passed when calling SuperTokens.init
  */
@@ -44,6 +45,15 @@ export declare type SuperTokensConfig = {
      * of the SDK may rely on using the sync versions instead.
      */
     windowHandler?: WindowHandlerInput;
+    /**
+     * Custom provider for SDK timing calculations relative to server time.
+     *
+     * The default implementation automatically adjusts for client-server time deviation.
+     *
+     * Typically, you won't need to provide these. If provided, the SDK uses
+     * your implementation instead of the default one.
+     */
+    dateProvider?: DateProviderInput;
     /**
      * Enabled logging for the SuperTokens SDK. The SDK will log information in different stages.
      */
