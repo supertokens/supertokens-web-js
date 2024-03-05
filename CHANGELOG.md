@@ -23,7 +23,7 @@ Check our [guide](https://supertokens.com/docs/thirdpartyemailpassword/common-cu
 To use this you'll need compatible versions:
 
 -   Core>=8.0.0
--   supertokens-node>=17.0.0 (support is pending in other backend SDKs)
+-   supertokens-node>=17.0.0
 -   supertokens-website>=17.0.3
 -   supertokens-web-js>=0.9.0
 -   supertokens-auth-react>=0.36.0
@@ -31,9 +31,58 @@ To use this you'll need compatible versions:
 ### Changes
 
 -   Added support for FDI 1.19 (Node SDK>= 17.0.0), but keeping support FDI version 1.17 and 1.18 (node >= 15.0.0, golang>=0.13, python>=0.15.0)
+-   Added recipes `TOTP` and `MultiFactorAuth`
+
+### Breaking changes
+
 -   Added `firstFactors` into the return type of `getLoginMethods` and removed the enabled flags of different login methods.
     -   For older FDI versions, the firstFactors array will be calculated based on those enabled flags.
--   Added recipes `TOTP` and `MultiFactorAuth`
+
+### Migration guide
+
+#### getLoginMethods interface change
+
+If you used to use the enabled flags in getLoginMethods:
+
+Before:
+
+```ts
+async function checkLoginMethods() {
+    const loginMethods = await Multitenancy.getLoginMethods();
+    if (loginMethods.thirdParty.enabled) {
+        // custom logic
+    }
+    if (loginMethods.emailPassword.enabled) {
+        // custom logic
+    }
+    if (loginMethods.passwordless.enabled) {
+        // custom logic
+    }
+}
+```
+
+After:
+
+```ts
+async function checkLoginMethods() {
+    const loginMethods = await Multitenancy.getLoginMethods();
+    if (loginMethods.firstFactors.includes("thirdparty")) {
+        // custom logic
+    }
+    if (loginMethods.firstFactors.includes("emailpassword")) {
+        // custom logic
+    }
+
+    if (
+        loginMethods.firstFactors.includes("otp-email") ||
+        loginMethods.firstFactors.includes("otp-phone") ||
+        loginMethods.firstFactors.includes("link-email") ||
+        loginMethods.firstFactors.includes("link-phone")
+    ) {
+        // custom logic
+    }
+}
+```
 
 ## [0.9.1] - 2024-02-07
 
