@@ -23,12 +23,12 @@ Check our [guide](https://supertokens.com/docs/thirdpartyemailpassword/common-cu
 ### Changes
 
 -   Added support for FDI 1.19 (Node SDK>= 17.0.0), but keeping support FDI version 1.17 and 1.18 (node >= 15.0.0, golang>=0.13, python>=0.15.0)
--   Added recipes `TOTP` and `MultiFactorAuth`, to use these recipes, you'll need compatible versions:
+-   Added the `MultiFactorAuth` and `TOTP` recipes. To start using them you'll need compatible versions:
     -   Core>=8.0.0
     -   supertokens-node>=17.0.0
-    -   supertokens-website>=17.0.3
-    -   supertokens-web-js>=0.9.0
-    -   supertokens-auth-react>=0.36.0
+    -   supertokens-website>=18.0.0
+    -   supertokens-web-js>=0.10.0
+    -   supertokens-auth-react>=0.39.0
 
 ### Breaking changes
 
