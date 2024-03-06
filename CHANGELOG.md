@@ -20,18 +20,15 @@ With this release, we are introducing MultiFactorAuthentication and TOTP, this w
 
 Check our [guide](https://supertokens.com/docs/thirdpartyemailpassword/common-customizations/multi-factor-auth/overview) for more information.
 
-To use this you'll need compatible versions:
-
--   Core>=8.0.0
--   supertokens-node>=17.0.0
--   supertokens-website>=17.0.3
--   supertokens-web-js>=0.9.0
--   supertokens-auth-react>=0.36.0
-
 ### Changes
 
 -   Added support for FDI 1.19 (Node SDK>= 17.0.0), but keeping support FDI version 1.17 and 1.18 (node >= 15.0.0, golang>=0.13, python>=0.15.0)
--   Added recipes `TOTP` and `MultiFactorAuth`
+-   Added recipes `TOTP` and `MultiFactorAuth`, to use these recipes, you'll need compatible versions:
+    -   Core>=8.0.0
+    -   supertokens-node>=17.0.0
+    -   supertokens-website>=17.0.3
+    -   supertokens-web-js>=0.9.0
+    -   supertokens-auth-react>=0.36.0
 
 ### Breaking changes
 
