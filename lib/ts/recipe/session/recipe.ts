@@ -34,7 +34,7 @@ export default class Recipe extends RecipeModule<unknown, any> {
                 functions: (originalImpl, builder) => {
                     builder!.override((oI) => ({
                         ...oI,
-                        getGlobalClaimValidators: (input) => {
+                        getGlobalClaimValidators: function (input) {
                             const res = oI.getGlobalClaimValidators(input);
 
                             return [
