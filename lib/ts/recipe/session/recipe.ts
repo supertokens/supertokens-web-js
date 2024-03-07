@@ -17,6 +17,9 @@ import SuperTokensWebsite, { ClaimValidationError, SessionClaimValidator, Sessio
 import { InputType, UserInput } from "./types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
+import { EMAILVERIFICATION_CLAIM_ID } from "../emailverification/constants";
+
+const priorityValidatorIds = [EMAILVERIFICATION_CLAIM_ID];
 
 export default class Recipe extends RecipeModule<unknown, any> {
     static instance?: Recipe;
@@ -27,6 +30,25 @@ export default class Recipe extends RecipeModule<unknown, any> {
 
         SuperTokensWebsite.init({
             ...config,
+            override: {
+                functions: (originalImpl, builder) => {
+                    builder!.override((oI) => ({
+                        ...oI,
+                        getGlobalClaimValidators: function (input) {
+                            const res = oI.getGlobalClaimValidators(input);
+
+                            return [
+                                ...res.filter((x) => priorityValidatorIds.includes(x.id)),
+                                ...res.filter((x) => !priorityValidatorIds.includes(x.id)),
+                            ];
+                        },
+                    }));
+                    if (config.override?.functions) {
+                        builder!.override(config.override.functions);
+                    }
+                    return originalImpl;
+                },
+            },
             preAPIHook: async (context) => {
                 const headers = new Headers(context.requestInit.headers);
                 headers.set("rid", config.recipeId);

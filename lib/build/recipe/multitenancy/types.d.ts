@@ -46,19 +46,13 @@ export declare type RecipeInterface = {
      */
     getLoginMethods: (input: { tenantId?: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<{
         status: "OK";
-        emailPassword: {
-            enabled: boolean;
-        };
-        passwordless: {
-            enabled: boolean;
-        };
         thirdParty: {
-            enabled: boolean;
             providers: {
                 id: string;
                 name: string;
             }[];
         };
+        firstFactors: string[];
         fetchResponse: Response;
     }>;
 };

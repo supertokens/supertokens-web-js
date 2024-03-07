@@ -69,23 +69,23 @@
         },
         {
             "path": "recipe/emailverification/index.js",
-            "limit": "27kb"
-        },
-        {
-            "path": "recipe/emailpassword/index.js",
-            "limit": "27kb"
-        },
-        {
-            "path": "recipe/thirdparty/index.js",
             "limit": "28kb"
         },
         {
+            "path": "recipe/emailpassword/index.js",
+            "limit": "28kb"
+        },
+        {
+            "path": "recipe/thirdparty/index.js",
+            "limit": "29kb"
+        },
+        {
             "path": "recipe/thirdpartyemailpassword/index.js",
-            "limit": "30kb"
+            "limit": "31kb"
         },
         {
             "path": "recipe/session/index.js",
-            "limit": "24kb"
+            "limit": "25kb"
         },
         {
             "path": "recipe/passwordless/index.js",
@@ -101,6 +101,14 @@
         },
         {
             "path": "recipe/multitenancy/index.js",
+            "limit": "27kb"
+        },
+        {
+            "path": "recipe/multifactorauth/index.js",
+            "limit": "27kb"
+        },
+        {
+            "path": "recipe/totp/index.js",
             "limit": "27kb"
         }
     ]
