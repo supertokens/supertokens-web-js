@@ -53,23 +53,24 @@ export default class RecipeWrapper {
         }[];
         options?: RecipeFunctionOptions;
         userContext?: any;
+        passwordToken?: string;
     }): Promise<
         | {
-              status: "OK";
-              fetchResponse: Response;
-          }
+            status: "OK";
+            fetchResponse: Response;
+        }
         | {
-              status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-              fetchResponse: Response;
-          }
+            status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+            fetchResponse: Response;
+        }
         | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
+            status: "FIELD_ERROR";
+            formFields: {
+                id: string;
+                error: string;
+            }[];
+            fetchResponse: Response;
+        }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.submitNewPassword({
             ...input,
@@ -101,22 +102,22 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<
         | {
-              status: "OK";
-              fetchResponse: Response;
-          }
+            status: "OK";
+            fetchResponse: Response;
+        }
         | {
-              status: "PASSWORD_RESET_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
+            status: "PASSWORD_RESET_NOT_ALLOWED";
+            reason: string;
+            fetchResponse: Response;
+        }
         | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
+            status: "FIELD_ERROR";
+            formFields: {
+                id: string;
+                error: string;
+            }[];
+            fetchResponse: Response;
+        }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.sendPasswordResetEmail({
             ...input,
@@ -150,23 +151,23 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<
         | {
-              status: "OK";
-              user: User;
-              fetchResponse: Response;
-          }
+            status: "OK";
+            user: User;
+            fetchResponse: Response;
+        }
         | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
+            status: "FIELD_ERROR";
+            formFields: {
+                id: string;
+                error: string;
+            }[];
+            fetchResponse: Response;
+        }
         | {
-              status: "SIGN_UP_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
+            status: "SIGN_UP_NOT_ALLOWED";
+            reason: string;
+            fetchResponse: Response;
+        }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.signUp({
             ...input,
@@ -202,27 +203,27 @@ export default class RecipeWrapper {
         userContext?: any;
     }): Promise<
         | {
-              status: "OK";
-              user: User;
-              fetchResponse: Response;
-          }
+            status: "OK";
+            user: User;
+            fetchResponse: Response;
+        }
         | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
+            status: "FIELD_ERROR";
+            formFields: {
+                id: string;
+                error: string;
+            }[];
+            fetchResponse: Response;
+        }
         | {
-              status: "WRONG_CREDENTIALS_ERROR";
-              fetchResponse: Response;
-          }
+            status: "WRONG_CREDENTIALS_ERROR";
+            fetchResponse: Response;
+        }
         | {
-              status: "SIGN_IN_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
+            status: "SIGN_IN_NOT_ALLOWED";
+            reason: string;
+            fetchResponse: Response;
+        }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.signIn({
             ...input,
