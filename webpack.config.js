@@ -64,6 +64,16 @@ var config = {
             filename: "multitenancy.js",
             dependOn: "supertokensWebsite",
         },
+        supertokensMultiFactorAuth: {
+            import: APP_DIR + "/lib/build/recipe/multifactorauth/index.js",
+            filename: "multifactorauth.js",
+            dependOn: "supertokensWebsite",
+        },
+        supertokensTOTP: {
+            import: APP_DIR + "/lib/build/recipe/totp/index.js",
+            filename: "totp.js",
+            dependOn: "supertokensWebsite",
+        },
         /**
          * The import path is /utils/dateProvider/index.js instead of /lib/build/dateProvider/index.js because the supertokens.js also imports
          * the dateProvider from the build folder and that creates a dependency requiring us to load dateprovider.js bundle before supertokens.js.

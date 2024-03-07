@@ -7,6 +7,80 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.10.0] - 2024-03-03
+
+### Overview
+
+#### Introducing multi-factor authentication
+
+With this release, we are introducing MultiFactorAuthentication and TOTP, this will let you:
+
+-   require (2FA or MFA) during sign in
+-   make use of our TOTP
+
+Check our [guide](https://supertokens.com/docs/thirdpartyemailpassword/common-customizations/multi-factor-auth/overview) for more information.
+
+### Changes
+
+-   Added support for FDI 1.19 (Node SDK>= 17.0.0), but keeping support FDI version 1.17 and 1.18 (node >= 15.0.0, golang>=0.13, python>=0.15.0)
+-   Added the `MultiFactorAuth` and `TOTP` recipes. To start using them you'll need compatible versions:
+    -   Core>=8.0.0
+    -   supertokens-node>=17.0.0
+    -   supertokens-website>=18.0.0
+    -   supertokens-web-js>=0.10.0
+    -   supertokens-auth-react>=0.39.0
+
+### Breaking changes
+
+-   Added `firstFactors` into the return type of `getLoginMethods` and removed the enabled flags of different login methods.
+    -   For older FDI versions, the firstFactors array will be calculated based on those enabled flags.
+
+### Migration guide
+
+#### getLoginMethods interface change
+
+If you used to use the enabled flags in getLoginMethods:
+
+Before:
+
+```ts
+async function checkLoginMethods() {
+    const loginMethods = await Multitenancy.getLoginMethods();
+    if (loginMethods.thirdParty.enabled) {
+        // custom logic
+    }
+    if (loginMethods.emailPassword.enabled) {
+        // custom logic
+    }
+    if (loginMethods.passwordless.enabled) {
+        // custom logic
+    }
+}
+```
+
+After:
+
+```ts
+async function checkLoginMethods() {
+    const loginMethods = await Multitenancy.getLoginMethods();
+    if (loginMethods.firstFactors.includes("thirdparty")) {
+        // custom logic
+    }
+    if (loginMethods.firstFactors.includes("emailpassword")) {
+        // custom logic
+    }
+
+    if (
+        loginMethods.firstFactors.includes("otp-email") ||
+        loginMethods.firstFactors.includes("otp-phone") ||
+        loginMethods.firstFactors.includes("link-email") ||
+        loginMethods.firstFactors.includes("link-phone")
+    ) {
+        // custom logic
+    }
+}
+```
+
 ## [0.9.1] - 2024-02-07
 
 ### Changes

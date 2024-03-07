@@ -1,5 +1,6 @@
 import { DateProviderReference } from "supertokens-website/utils/dateProvider";
 import { SessionClaimValidator, BooleanClaim } from "../session";
+import { EMAILVERIFICATION_CLAIM_ID } from "./constants";
 import { RecipeInterface } from "./types";
 
 function getThresholdAwareDefaultValue(defaultVal: number) {
@@ -12,7 +13,7 @@ function getThresholdAwareDefaultValue(defaultVal: number) {
 export class EmailVerificationClaimClass extends BooleanClaim {
     constructor(getRecipeImpl: () => RecipeInterface) {
         super({
-            id: "st-ev",
+            id: EMAILVERIFICATION_CLAIM_ID,
             refresh: async (userContext) => {
                 await getRecipeImpl().isEmailVerified({
                     userContext,
