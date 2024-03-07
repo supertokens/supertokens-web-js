@@ -29,6 +29,7 @@ export default function getRecipeImplementation(
             formFields,
             options,
             userContext,
+            passwordToken
         }: {
             formFields: {
                 id: string;
@@ -36,43 +37,44 @@ export default function getRecipeImplementation(
             }[];
             options?: RecipeFunctionOptions;
             userContext: any;
+            passwordToken?: string
         }): Promise<
             | {
-                  status: "OK";
-                  fetchResponse: Response;
-              }
+                status: "OK";
+                fetchResponse: Response;
+            }
             | {
-                  status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-                  fetchResponse: Response;
-              }
+                status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+                fetchResponse: Response;
+            }
             | {
-                  status: "FIELD_ERROR";
-                  formFields: {
-                      id: string;
-                      error: string;
-                  }[];
-                  fetchResponse: Response;
-              }
+                status: "FIELD_ERROR";
+                formFields: {
+                    id: string;
+                    error: string;
+                }[];
+                fetchResponse: Response;
+            }
         > {
             const tenantId = this.getTenantIdFromURL({ userContext });
-            const token = this.getResetPasswordTokenFromURL({
+            const token = passwordToken || this.getResetPasswordTokenFromURL({
                 userContext,
             });
 
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
-                      status: "OK";
-                  }
+                    status: "OK";
+                }
                 | {
-                      status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-                  }
+                    status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+                }
                 | {
-                      status: "FIELD_ERROR";
-                      formFields: {
-                          id: string;
-                          error: string;
-                      }[];
-                  }
+                    status: "FIELD_ERROR";
+                    formFields: {
+                        id: string;
+                        error: string;
+                    }[];
+                }
             >(
                 tenantId,
                 "/user/password/reset",
@@ -123,38 +125,38 @@ export default function getRecipeImplementation(
             userContext: any;
         }): Promise<
             | {
-                  status: "OK";
-                  fetchResponse: Response;
-              }
+                status: "OK";
+                fetchResponse: Response;
+            }
             | {
-                  status: "PASSWORD_RESET_NOT_ALLOWED";
-                  reason: string;
-                  fetchResponse: Response;
-              }
+                status: "PASSWORD_RESET_NOT_ALLOWED";
+                reason: string;
+                fetchResponse: Response;
+            }
             | {
-                  status: "FIELD_ERROR";
-                  formFields: {
-                      id: string;
-                      error: string;
-                  }[];
-                  fetchResponse: Response;
-              }
+                status: "FIELD_ERROR";
+                formFields: {
+                    id: string;
+                    error: string;
+                }[];
+                fetchResponse: Response;
+            }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
-                      status: "OK";
-                  }
+                    status: "OK";
+                }
                 | {
-                      status: "PASSWORD_RESET_NOT_ALLOWED";
-                      reason: string;
-                  }
+                    status: "PASSWORD_RESET_NOT_ALLOWED";
+                    reason: string;
+                }
                 | {
-                      status: "FIELD_ERROR";
-                      formFields: {
-                          id: string;
-                          error: string;
-                      }[];
-                  }
+                    status: "FIELD_ERROR";
+                    formFields: {
+                        id: string;
+                        error: string;
+                    }[];
+                }
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/user/password/reset/token",
@@ -207,40 +209,40 @@ export default function getRecipeImplementation(
             userContext: any;
         }): Promise<
             | {
-                  status: "OK";
-                  user: User;
-                  fetchResponse: Response;
-              }
+                status: "OK";
+                user: User;
+                fetchResponse: Response;
+            }
             | {
-                  status: "FIELD_ERROR";
-                  formFields: {
-                      id: string;
-                      error: string;
-                  }[];
-                  fetchResponse: Response;
-              }
+                status: "FIELD_ERROR";
+                formFields: {
+                    id: string;
+                    error: string;
+                }[];
+                fetchResponse: Response;
+            }
             | {
-                  status: "SIGN_UP_NOT_ALLOWED";
-                  reason: string;
-                  fetchResponse: Response;
-              }
+                status: "SIGN_UP_NOT_ALLOWED";
+                reason: string;
+                fetchResponse: Response;
+            }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
-                      status: "OK";
-                      user: User;
-                  }
+                    status: "OK";
+                    user: User;
+                }
                 | {
-                      status: "FIELD_ERROR";
-                      formFields: {
-                          id: string;
-                          error: string;
-                      }[];
-                  }
+                    status: "FIELD_ERROR";
+                    formFields: {
+                        id: string;
+                        error: string;
+                    }[];
+                }
                 | {
-                      status: "SIGN_UP_NOT_ALLOWED";
-                      reason: string;
-                  }
+                    status: "SIGN_UP_NOT_ALLOWED";
+                    reason: string;
+                }
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/signup",
@@ -293,47 +295,47 @@ export default function getRecipeImplementation(
             userContext: any;
         }): Promise<
             | {
-                  status: "OK";
-                  user: User;
-                  fetchResponse: Response;
-              }
+                status: "OK";
+                user: User;
+                fetchResponse: Response;
+            }
             | {
-                  status: "FIELD_ERROR";
-                  formFields: {
-                      id: string;
-                      error: string;
-                  }[];
-                  fetchResponse: Response;
-              }
+                status: "FIELD_ERROR";
+                formFields: {
+                    id: string;
+                    error: string;
+                }[];
+                fetchResponse: Response;
+            }
             | {
-                  status: "WRONG_CREDENTIALS_ERROR";
-                  fetchResponse: Response;
-              }
+                status: "WRONG_CREDENTIALS_ERROR";
+                fetchResponse: Response;
+            }
             | {
-                  status: "SIGN_IN_NOT_ALLOWED";
-                  reason: string;
-                  fetchResponse: Response;
-              }
+                status: "SIGN_IN_NOT_ALLOWED";
+                reason: string;
+                fetchResponse: Response;
+            }
         > {
             let { jsonBody, fetchResponse } = await querier.post<
                 | {
-                      status: "OK";
-                      user: User;
-                  }
+                    status: "OK";
+                    user: User;
+                }
                 | {
-                      status: "FIELD_ERROR";
-                      formFields: {
-                          id: string;
-                          error: string;
-                      }[];
-                  }
+                    status: "FIELD_ERROR";
+                    formFields: {
+                        id: string;
+                        error: string;
+                    }[];
+                }
                 | {
-                      status: "WRONG_CREDENTIALS_ERROR";
-                  }
+                    status: "WRONG_CREDENTIALS_ERROR";
+                }
                 | {
-                      status: "SIGN_IN_NOT_ALLOWED";
-                      reason: string;
-                  }
+                    status: "SIGN_IN_NOT_ALLOWED";
+                    reason: string;
+                }
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/signin",
