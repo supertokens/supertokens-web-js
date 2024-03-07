@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.9.2] - 2024-03-07
+
+- Added support to pass password reset token while calling the submitNewPassword function
+
+
+
+
 ## [0.9.1] - 2024-02-07
 
 ### Changes
@@ -357,3 +364,5 @@ SuperTokens.init({
 ## [0.0.1] - 2022-06-02
 
 -   Initial Release
+
+
