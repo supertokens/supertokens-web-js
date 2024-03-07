@@ -84,7 +84,7 @@ export type RecipeInterface = {
         }[];
         options?: RecipeFunctionOptions;
         userContext: any;
-        passwordToken?: string
+        passwordToken?: string;
     }) => Promise<
         | {
               status: "OK";
