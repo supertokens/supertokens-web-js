@@ -28,10 +28,8 @@ export default function getRecipeImplementation(
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
-                      issuerName: string;
                       deviceName: string;
                       secret: string;
-                      userIdentifier?: string;
                       qrCodeString: string;
                   }
                 | { status: "DEVICE_ALREADY_EXISTS_ERROR" }
