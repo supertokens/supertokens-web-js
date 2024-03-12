@@ -64,10 +64,8 @@ export type RecipeInterface = {
     createDevice: (input: { deviceName?: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
               status: "OK";
-              issuerName: string;
               deviceName: string;
               secret: string;
-              userIdentifier?: string;
               qrCodeString: string;
 
               fetchResponse: Response;
