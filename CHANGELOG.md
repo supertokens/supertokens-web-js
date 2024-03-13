@@ -34,6 +34,7 @@ Check our [guide](https://supertokens.com/docs/thirdpartyemailpassword/common-cu
 
 -   Added `firstFactors` into the return type of `getLoginMethods` and removed the enabled flags of different login methods.
     -   For older FDI versions, the firstFactors array will be calculated based on those enabled flags.
+-   Renamed `validatorId` in claim validation errors to `id` to match the backend SDKs
 
 ### Migration guide
 
