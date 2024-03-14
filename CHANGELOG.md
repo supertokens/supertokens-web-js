@@ -34,6 +34,7 @@ Check our [guide](https://supertokens.com/docs/thirdpartyemailpassword/common-cu
 
 -   Added `firstFactors` into the return type of `getLoginMethods` and removed the enabled flags of different login methods.
     -   For older FDI versions, the firstFactors array will be calculated based on those enabled flags.
+-   Renamed `validatorId` in claim validation errors to `id` to match the backend SDKs
 
 ### Migration guide
 
@@ -77,6 +78,32 @@ async function checkLoginMethods() {
         loginMethods.firstFactors.includes("link-phone")
     ) {
         // custom logic
+    }
+}
+```
+
+#### Renamed validatorId
+
+If you used to use the `validatorId` prop of validationErrors, you should now use `id` instead.
+
+Before:
+
+```ts
+async function checkValidators() {
+    const validationErrors = await Session.validateClaims();
+    for (const error of validationErrors) {
+        console.log(error.validatorId, error.reason);
+    }
+}
+```
+
+After:
+
+```ts
+async function checkValidators() {
+    const validationErrors = await Session.validateClaims();
+    for (const error of validationErrors) {
+        console.log(error.id, error.reason);
     }
 }
 ```
