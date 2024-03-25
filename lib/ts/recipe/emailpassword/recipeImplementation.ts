@@ -29,6 +29,7 @@ export default function getRecipeImplementation(
             formFields,
             options,
             userContext,
+            passwordToken,
         }: {
             formFields: {
                 id: string;
@@ -36,6 +37,7 @@ export default function getRecipeImplementation(
             }[];
             options?: RecipeFunctionOptions;
             userContext: any;
+            passwordToken?: string;
         }): Promise<
             | {
                   status: "OK";
@@ -55,9 +57,11 @@ export default function getRecipeImplementation(
               }
         > {
             const tenantId = this.getTenantIdFromURL({ userContext });
-            const token = this.getResetPasswordTokenFromURL({
-                userContext,
-            });
+            const token =
+                passwordToken ||
+                this.getResetPasswordTokenFromURL({
+                    userContext,
+                });
 
             const { jsonBody, fetchResponse } = await querier.post<
                 | {

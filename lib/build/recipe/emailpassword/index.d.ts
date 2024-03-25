@@ -30,6 +30,7 @@ export default class RecipeWrapper {
         }[];
         options?: RecipeFunctionOptions;
         userContext?: any;
+        passwordToken?: string;
     }): Promise<
         | {
               status: "OK";
