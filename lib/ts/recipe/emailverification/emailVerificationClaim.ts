@@ -29,8 +29,8 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                 shouldRefresh: (payload, userContext) => {
                     const DateProvider = DateProviderReference.getReferenceOrThrow().dateProvider;
 
-                    maxAgeInSeconds = maxAgeInSeconds ?? getThresholdAwareDefaultValue(10);
-                    refetchTimeOnFalseInSeconds = refetchTimeOnFalseInSeconds ?? getThresholdAwareDefaultValue(300);
+                    maxAgeInSeconds = maxAgeInSeconds ?? getThresholdAwareDefaultValue(300);
+                    refetchTimeOnFalseInSeconds = refetchTimeOnFalseInSeconds ?? getThresholdAwareDefaultValue(10);
 
                     if (maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
                         throw new Error(
