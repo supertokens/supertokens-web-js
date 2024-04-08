@@ -40,7 +40,7 @@
     "homepage": "https://github.com/supertokens/supertokens-web-js#readme",
     "dependencies": {
         "supertokens-js-override": "0.0.4",
-        "supertokens-website": "^18.0.0"
+        "supertokens-website": "^18.0.2"
     },
     "devDependencies": {
         "@babel/core": "^7.17.8",
