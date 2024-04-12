@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Removed ThirdPartyEmailPassword and ThirdPartyPasswordless recipes
 -   Dropped support for FDI version 1.X
 -   Added support for FDI version 2.0 and 3.0
+-   Removed `createCode`, `resendCode` and `consumeCode` from the exports of `recipe/passwordless/utils`
 
 ## [0.10.1] - 2024-04-08
 

@@ -912,21 +912,6 @@ const passwordlessRecipeImplementation = PasswordlessRecipeImplementation({
     recipeId: passwordlessId,
 });
 
-PasswordlessUtils.consumeCode({
-    userInputCode: "",
-    recipeImplementation: passwordlessRecipeImplementation,
-});
-
-PasswordlessUtils.createCode({
-    email: "",
-    recipeImplementation: passwordlessRecipeImplementation,
-    phoneNumber: "",
-});
-
-PasswordlessUtils.resendCode({
-    recipeImplementation: passwordlessRecipeImplementation,
-});
-
 /**
  * Calling recipe functions exported from recipe/index files
  */
