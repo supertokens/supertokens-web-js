@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import Session from "supertokens-web-js/recipe/session";
-import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
 
 const apiPort = import.meta.env.VUE_APP_API_PORT || 3001;
 const apiDomain = import.meta.env.VUE_APP_API_URL || `http://localhost:${apiPort}`;
@@ -17,7 +16,7 @@ export default defineComponent({
     },
     methods: {
         signOut: async function () {
-            await ThirdPartyEmailPassword.signOut();
+            await Session.signOut();
             window.location.assign("/auth");
         },
 

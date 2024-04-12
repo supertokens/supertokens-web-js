@@ -1,7 +1,8 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import SuperTokens from "supertokens-web-js";
-import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import ThirdParty from "supertokens-web-js/recipe/thirdparty";
+import EmailPassword from "supertokens-web-js/recipe/emailpassword";
 import Session from "supertokens-web-js/recipe/session";
 
 import App from "./App.vue";
@@ -15,7 +16,7 @@ SuperTokens.init({
         appName: "SuperTokens Vue ThirdPartyEmailPassword Example",
         apiDomain,
     },
-    recipeList: [ThirdPartyEmailPassword.init(), Session.init()],
+    recipeList: [EmailPassword.init(), ThirdParty.init(), Session.init()],
 });
 
 const app = createApp(App);

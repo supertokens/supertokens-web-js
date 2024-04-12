@@ -34,7 +34,10 @@ export function normaliseUserInput(config: InputType): NormalisedInputType {
 
 /**
  * These functions are helper functions so that the logic can be exposed from both
- * passwordless and thirdpartypasswordless recipes without having to duplicate code
+ * passwordless and thirdpartypasswordless recipes without having to duplicate code.
+ * After removing the combination recipes these could be moved into the index file,
+ * but it is not necessary
+ * TODO
  */
 
 export async function createCode(

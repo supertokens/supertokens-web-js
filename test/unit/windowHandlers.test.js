@@ -13,7 +13,8 @@
  * under the License.
  */
 
-import ThirdPartyPasswordless from "../../recipe/thirdpartypasswordless";
+import ThirdParty from "../../recipe/thirdparty";
+import Passwordless from "../../recipe/passwordless";
 import Session from "../../recipe/session";
 import SuperTokens from "../../lib/build/supertokens";
 import assert from "assert";
@@ -90,12 +91,12 @@ describe("Window handlers test", function () {
                     };
                 },
                 recipeList: [
-                    ThirdPartyPasswordless.init({
+                    ThirdParty.init({
                         override: {
                             functions: function (original) {
                                 return {
                                     ...original,
-                                    generateThirdPartyStateToSendToOAuthProvider: () => "state",
+                                    generateStateToSendToOAuthProvider: () => "state",
                                     getAuthorisationURLFromBackend: () => ({
                                         status: "OK",
                                         url: "https://test.provider.com/authorize",
@@ -108,11 +109,11 @@ describe("Window handlers test", function () {
             });
 
             try {
-                await ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
+                await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
                     providerId: "",
                     authorisationURL: "",
                 });
-                throw new Error("getThirdPartyAuthorisationURLWithQueryParamsAndSetState should have failed but didnt");
+                throw new Error("getAuthorisationURLWithQueryParamsAndSetState should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -120,8 +121,8 @@ describe("Window handlers test", function () {
             }
 
             try {
-                await ThirdPartyPasswordless.thirdPartySignInAndUp();
-                throw new Error("thirdPartySignInAndUp should have failed but didnt");
+                await ThirdParty.signInAndUp();
+                throw new Error("signInAndUp should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -167,12 +168,12 @@ describe("Window handlers test", function () {
                     apiDomain: "api.supertokens.io",
                 },
                 recipeList: [
-                    ThirdPartyPasswordless.init({
+                    ThirdParty.init({
                         override: {
                             functions: function (original) {
                                 return {
                                     ...original,
-                                    generateThirdPartyStateToSendToOAuthProvider: () => "state",
+                                    generateStateToSendToOAuthProvider: () => "state",
                                     getAuthorisationURLFromBackend: () => ({
                                         status: "OK",
                                         url: "https://test.provider.com/authorize",
@@ -185,11 +186,11 @@ describe("Window handlers test", function () {
             });
 
             try {
-                await ThirdPartyPasswordless.getThirdPartyAuthorisationURLWithQueryParamsAndSetState({
+                await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
                     providerId: "",
                     authorisationURL: "",
                 });
-                throw new Error("getThirdPartyAuthorisationURLWithQueryParamsAndSetState should have failed but didnt");
+                throw new Error("getAuthorisationURLWithQueryParamsAndSetState should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -197,8 +198,8 @@ describe("Window handlers test", function () {
             }
 
             try {
-                await ThirdPartyPasswordless.thirdPartySignInAndUp();
-                throw new Error("thirdPartySignInAndUp should have failed but didnt");
+                await ThirdParty.signInAndUp();
+                throw new Error("signInAndUp should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -236,12 +237,12 @@ describe("Window handlers test", function () {
                     };
                 },
                 recipeList: [
-                    ThirdPartyPasswordless.init({
+                    Passwordless.init({
                         override: {
                             functions: function (original) {
                                 return {
                                     ...original,
-                                    createPasswordlessCode: () => {
+                                    createCode: () => {
                                         return {};
                                     },
                                 };
@@ -252,8 +253,8 @@ describe("Window handlers test", function () {
             });
 
             try {
-                await ThirdPartyPasswordless.resendPasswordlessCode();
-                throw new Error("resendPasswordlessCode should have failed but didnt");
+                await Passwordless.resendCode();
+                throw new Error("resendCode should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;
@@ -292,7 +293,7 @@ describe("Window handlers test", function () {
                     apiDomain: "api.supertokens.io",
                 },
                 recipeList: [
-                    ThirdPartyPasswordless.init({
+                    ThirdParty.init({
                         override: {
                             functions: function (original) {
                                 return {
@@ -308,8 +309,8 @@ describe("Window handlers test", function () {
             });
 
             try {
-                await ThirdPartyPasswordless.resendPasswordlessCode();
-                throw new Error("resendPasswordlessCode should have failed but didnt");
+                await Passwordless.resendCode();
+                throw new Error("resendCode should have failed but didnt");
             } catch (e) {
                 if (e.message !== "Expected error during tests") {
                     throw e;

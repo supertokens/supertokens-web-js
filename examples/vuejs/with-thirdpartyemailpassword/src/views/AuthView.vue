@@ -1,5 +1,6 @@
 <script lang="ts">
-import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import ThirdParty from "supertokens-web-js/recipe/thirdparty";
+import EmailPassword from "supertokens-web-js/recipe/emailpassword";
 import Session from "supertokens-web-js/recipe/session";
 import { defineComponent } from "vue";
 import { apiDomain } from "../main";
@@ -51,7 +52,7 @@ export default defineComponent({
             this.isSignIn = true;
         },
         signIn: async function (_: Event) {
-            const response = await ThirdPartyEmailPassword.emailPasswordSignIn({
+            const response = await EmailPassword.signIn({
                 formFields: [
                     {
                         id: "email",
@@ -98,7 +99,7 @@ export default defineComponent({
                 );
         },
         signUp: async function (_: Event) {
-            const response = await ThirdPartyEmailPassword.emailPasswordSignUp({
+            const response = await EmailPassword.signUp({
                 formFields: [
                     {
                         id: "email",
@@ -145,7 +146,7 @@ export default defineComponent({
             }
         },
         onGithubPressed: async function () {
-            const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+            const authUrl = await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
                 thirdPartyId: "github",
 
                 // This is where github should redirect the user back after login or error.
@@ -156,7 +157,7 @@ export default defineComponent({
             window.location.assign(authUrl);
         },
         onGooglePressed: async function () {
-            const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+            const authUrl = await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
                 thirdPartyId: "google",
 
                 // This is where google should redirect the user back after login or error.
@@ -167,7 +168,7 @@ export default defineComponent({
             window.location.assign(authUrl);
         },
         onApplePressed: async function () {
-            const authUrl = await ThirdPartyEmailPassword.getAuthorisationURLWithQueryParamsAndSetState({
+            const authUrl = await ThirdParty.getAuthorisationURLWithQueryParamsAndSetState({
                 thirdPartyId: "apple",
 
                 // This is where apple should redirect the user back after login or error.

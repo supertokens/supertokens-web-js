@@ -1,6 +1,6 @@
 {
     "name": "supertokens-web-js",
-    "version": "0.10.1",
+    "version": "0.11.0",
     "description": "SuperTokens SDK for vanilla JS for all recipes",
     "main": "./index.js",
     "scripts": {
@@ -80,20 +80,12 @@
             "limit": "29kb"
         },
         {
-            "path": "recipe/thirdpartyemailpassword/index.js",
-            "limit": "31kb"
-        },
-        {
             "path": "recipe/session/index.js",
             "limit": "25kb"
         },
         {
             "path": "recipe/passwordless/index.js",
             "limit": "29kb"
-        },
-        {
-            "path": "recipe/thirdpartypasswordless/index.js",
-            "limit": "31kb"
         },
         {
             "path": "recipe/userroles/index.js",

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.11.0] - UNRELEASED
+
+### Breaking Changes
+
+-   Removed ThirdPartyEmailPassword and ThirdPartyPasswordless recipes
+-   Dropped support for FDI version 1.X
+-   Added support for FDI version 2.0 and 3.0
+
 ## [0.10.1] - 2024-04-08
 
 #### Fixes
