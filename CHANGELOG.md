@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-## [0.11.0] - UNRELEASED
+## [0.12.0] - UNRELEASED
 
 ### Breaking Changes
 
@@ -15,6 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Dropped support for FDI version 1.X
 -   Added support for FDI version 2.0 and 3.0
 -   Removed `createCode`, `resendCode` and `consumeCode` from the exports of `recipe/passwordless/utils`
+
+## [0.11.0] - 2024-05-09
+
+### Breaking changes
+
+The `shouldDoInterceptionBasedOnUrl` function now returns true:
+
+-   If sessionTokenBackendDomain is a valid subdomain of the URL's domain. This aligns with the behavior of browsers when sending cookies to subdomains.
+-   Even if the ports of the URL you are querying are different compared to the apiDomain's port ot the sessionTokenBackendDomain port (as long as the hostname is the same, or a subdomain of the sessionTokenBackendDomain): #217
 
 ## [0.10.1] - 2024-04-08
 
