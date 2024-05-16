@@ -93,5 +93,6 @@ export {
     PreAPIHookContext,
     PostAPIHookContext,
     PreAndPostAPIHookAction,
+    RecipeFunctionOptions,
     UserInput,
 };
