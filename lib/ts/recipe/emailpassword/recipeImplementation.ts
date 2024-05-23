@@ -398,7 +398,7 @@ export default function getRecipeImplementation(
                 exists: boolean;
             }>(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
-                "/signup/email/exists",
+                "/emailpassword/email/exists",
                 {},
                 { email },
                 Querier.preparePreAPIHook({

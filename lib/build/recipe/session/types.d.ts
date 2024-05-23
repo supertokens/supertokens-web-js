@@ -6,7 +6,12 @@ import {
 import { NormalisedAppInfo } from "../../types";
 export declare type RecipeEvent =
     | {
-          action: "SIGN_OUT" | "REFRESH_SESSION" | "SESSION_CREATED" | "ACCESS_TOKEN_PAYLOAD_UPDATED";
+          action:
+              | "SIGN_OUT"
+              | "REFRESH_SESSION"
+              | "SESSION_CREATED"
+              | "ACCESS_TOKEN_PAYLOAD_UPDATED"
+              | "SESSION_ALREADY_EXISTS";
           userContext: any;
       }
     | {

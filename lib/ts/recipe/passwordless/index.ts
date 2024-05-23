@@ -26,7 +26,7 @@ import {
     PreAndPostAPIHookAction,
     UserInput,
 } from "./types";
-import * as UtilFunctions from "./utils";
+
 export default class RecipeWrapper {
     static init(config?: UserInput) {
         return Recipe.init(config);
@@ -66,11 +66,31 @@ export default class RecipeWrapper {
           }
     > {
         const recipe: Recipe = Recipe.getInstanceOrThrow();
+        const recipeImplementation = recipe.recipeImplementation;
 
-        return UtilFunctions.createCode({
-            ...input,
-            recipeImplementation: recipe.recipeImplementation,
+        const normalisedUserContext = getNormalisedUserContext(input.userContext);
+
+        const tenantId = await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+            userContext: input.userContext,
         });
+        const createCodeResponse = await recipeImplementation.createCode({
+            ...input,
+            userContext: normalisedUserContext,
+        });
+
+        if (createCodeResponse.status === "OK") {
+            await recipeImplementation.setLoginAttemptInfo({
+                attemptInfo: {
+                    tenantId,
+                    deviceId: createCodeResponse.deviceId,
+                    preAuthSessionId: createCodeResponse.preAuthSessionId,
+                    flowType: createCodeResponse.flowType,
+                },
+                userContext: normalisedUserContext,
+            });
+        }
+
+        return createCodeResponse;
     }
 
     /**
@@ -95,10 +115,25 @@ export default class RecipeWrapper {
         fetchResponse: Response;
     }> {
         const recipe: Recipe = Recipe.getInstanceOrThrow();
+        const recipeImplementation = recipe.recipeImplementation;
 
-        return UtilFunctions.resendCode({
+        const normalisedUserContext = getNormalisedUserContext(input?.userContext);
+
+        const previousAttemptInfo = await recipeImplementation.getLoginAttemptInfo({
+            userContext: normalisedUserContext,
+        });
+
+        /**
+         * If previousAttemptInfo is undefined then local storage was probably cleared by another tab.
+         * In this case we use empty strings when calling the API because we want to
+         * return "RESTART_FLOW_ERROR"
+         */
+        return recipeImplementation.resendCode({
             ...input,
-            recipeImplementation: recipe.recipeImplementation,
+            tenantId: previousAttemptInfo?.tenantId,
+            userContext: normalisedUserContext,
+            deviceId: previousAttemptInfo === undefined ? "" : previousAttemptInfo.deviceId,
+            preAuthSessionId: previousAttemptInfo === undefined ? "" : previousAttemptInfo.preAuthSessionId,
         });
     }
 
@@ -156,10 +191,65 @@ export default class RecipeWrapper {
         | { status: "SIGN_IN_UP_NOT_ALLOWED"; reason: string; fetchResponse: Response }
     > {
         const recipe: Recipe = Recipe.getInstanceOrThrow();
+        const recipeImplementation = recipe.recipeImplementation;
+        const userContext = getNormalisedUserContext(input?.userContext);
 
-        return UtilFunctions.consumeCode({
-            ...input,
-            recipeImplementation: recipe.recipeImplementation,
+        let additionalParams:
+            | {
+                  tenantId: string | undefined;
+                  userInputCode: string;
+                  deviceId: string;
+                  preAuthSessionId: string;
+              }
+            | {
+                  tenantId: string | undefined;
+                  linkCode: string;
+                  preAuthSessionId: string;
+              };
+
+        if (input !== undefined && "userInputCode" in input) {
+            const attemptInfoFromStorage = await recipeImplementation.getLoginAttemptInfo({
+                userContext: userContext,
+            });
+
+            /**
+             * If attemptInfoFromStorage is undefined then local storage was probably cleared by another tab.
+             * In this case we use empty strings when calling the API because we want to
+             * return "RESTART_FLOW_ERROR"
+             *
+             * Note: We dont do this for the linkCode flow because that does not depend on local storage.
+             */
+
+            additionalParams = {
+                userInputCode: input.userInputCode,
+                deviceId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.deviceId,
+                preAuthSessionId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.preAuthSessionId,
+                tenantId: attemptInfoFromStorage?.tenantId,
+            };
+        } else {
+            const linkCode = recipeImplementation.getLinkCodeFromURL({
+                userContext,
+            });
+
+            const tenantId = recipeImplementation.getTenantIdFromURL({
+                userContext,
+            });
+
+            const preAuthSessionId = recipeImplementation.getPreAuthSessionIdFromURL({
+                userContext: userContext,
+            });
+
+            additionalParams = {
+                tenantId,
+                linkCode,
+                preAuthSessionId,
+            };
+        }
+
+        return recipeImplementation.consumeCode({
+            userContext: userContext,
+            options: input?.options,
+            ...additionalParams,
         });
     }
 

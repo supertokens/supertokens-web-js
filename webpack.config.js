@@ -39,19 +39,9 @@ var config = {
             filename: "thirdparty.js",
             dependOn: "supertokensWebsite",
         },
-        supertokensThirdPartyEmailPassword: {
-            import: APP_DIR + "/lib/build/recipe/thirdpartyemailpassword/index.js",
-            filename: "thirdpartyemailpassword.js",
-            dependOn: "supertokensWebsite",
-        },
         supertokensPasswordless: {
             import: APP_DIR + "/lib/build/recipe/passwordless/index.js",
             filename: "passwordless.js",
-            dependOn: "supertokensWebsite",
-        },
-        supertokensThirdPartyPasswordless: {
-            import: APP_DIR + "/lib/build/recipe/thirdpartypasswordless/index.js",
-            filename: "thirdpartypasswordless.js",
             dependOn: "supertokensWebsite",
         },
         supertokensUserRoles: {

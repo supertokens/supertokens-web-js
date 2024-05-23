@@ -1,5 +1,5 @@
 <script lang="ts">
-import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import EmailPassword from "supertokens-web-js/recipe/emailpassword";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -28,7 +28,7 @@ export default defineComponent({
             if (this.tokenPresent) {
                 // we try and change the user's password now by consuming the token
                 try {
-                    const response = await ThirdPartyEmailPassword.submitNewPassword({
+                    const response = await EmailPassword.submitNewPassword({
                         formFields: [
                             {
                                 id: "password",
@@ -58,7 +58,7 @@ export default defineComponent({
                 // the user has entered an email for whom the password reset link
                 // will be sent.
                 try {
-                    const response = await ThirdPartyEmailPassword.sendPasswordResetEmail({
+                    const response = await EmailPassword.sendPasswordResetEmail({
                         formFields: [
                             {
                                 id: "email",

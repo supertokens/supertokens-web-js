@@ -1,5 +1,5 @@
 <script lang="ts">
-import ThirdPartyEmailPassword from "supertokens-web-js/recipe/thirdpartyemailpassword";
+import ThirdParty from "supertokens-web-js/recipe/thirdparty";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -9,7 +9,7 @@ export default defineComponent({
             // this knows which third party provider has sent the user back because
             // we store that in localstorage when the user clicks on the provider's button
             // on the sign in / up screen
-            const response = await ThirdPartyEmailPassword.thirdPartySignInAndUp({});
+            const response = await ThirdParty.signInAndUp({});
             if (response.status !== "OK") {
                 // this means that the third party provider does not have an email associated
                 // with this user. In this case, we disallow the sign in and show a message

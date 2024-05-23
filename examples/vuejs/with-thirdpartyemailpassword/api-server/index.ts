@@ -4,7 +4,8 @@ import supertokens from "supertokens-node";
 import Session from "supertokens-node/recipe/session";
 import { verifySession } from "supertokens-node/recipe/session/framework/express";
 import { middleware, errorHandler, SessionRequest } from "supertokens-node/framework/express";
-import ThirdPartyEmailPassword from "supertokens-node/recipe/thirdpartyemailpassword";
+import ThirdParty from "supertokens-node/recipe/thirdparty";
+import EmailPassword from "supertokens-node/recipe/emailpassword";
 import Dashboard from "supertokens-node/recipe/dashboard";
 require("dotenv").config();
 
@@ -26,7 +27,7 @@ supertokens.init({
         websiteDomain, // TODO: Change to your app's website domain
     },
     recipeList: [
-        ThirdPartyEmailPassword.init({
+        ThirdParty.init({
             providers: [
                 // We have provided you with development keys which you can use for testing.
                 // IMPORTANT: Please replace them with your own OAuth keys for production use.
@@ -70,6 +71,7 @@ supertokens.init({
                 },
             ],
         }),
+        EmailPassword.init(),
         Session.init(),
         Dashboard.init(),
     ],
