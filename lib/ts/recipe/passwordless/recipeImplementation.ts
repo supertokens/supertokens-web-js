@@ -288,7 +288,7 @@ export default function getRecipeImplementation(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
                     userContext: input.userContext,
                 }),
-                "/passwordless/phoneNumber/exists",
+                "/passwordless/phonenumber/exists",
                 {},
                 { phoneNumber: input.phoneNumber },
                 Querier.preparePreAPIHook({
