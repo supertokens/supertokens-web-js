@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   Dropped support for FDI version 1.X
 -   Added support for FDI version 2.0 and 3.0
 -   Removed `createCode`, `resendCode` and `consumeCode` from the exports of `recipe/passwordless/utils`
+-   Added the `SESSION_ALREADY_EXISTS` event to the session recipe. This is used by our pre-built UI.
+
+### Migration guide
+
+-   If you were using `ThirdPartyEmailPassword`, you should now init `ThirdParty` and `EmailPassword` recipes separately. The config for the individual recipes are mostly the same, except the syntax may be different. Check our recipe guides for [ThirdParty](https://supertokens.com/docs/thirdparty/introduction) and [EmailPassword](https://supertokens.com/docs/emailpassword/introduction) for more information.
+
+-   If you were using `ThirdPartyPasswordless`, you should now init `ThirdParty` and `Passwordless` recipes separately. The config for the individual recipes are mostly the same, except the syntax may be different. Check our recipe guides for [ThirdParty](https://supertokens.com/docs/thirdparty/introduction) and [Passwordless](https://supertokens.com/docs/passwordless/introduction) for more information.
 
 ## [0.11.0] - 2024-05-09
 
