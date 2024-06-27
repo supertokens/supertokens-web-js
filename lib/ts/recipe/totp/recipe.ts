@@ -57,7 +57,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
 
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
-            let error = "No instance of Multitenancy found. Make sure to call the Multitenancy.init method.";
+            let error = "No instance of TOTP found. Make sure to call the TOTP.init method.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);

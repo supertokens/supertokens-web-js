@@ -20,10 +20,11 @@ import {
     RecipePostAPIHookContext,
     RecipePreAPIHookContext,
     UserInput as RecipeModuleUserInput,
+    RecipeFunctionOptions,
 } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 
-export type PreAndPostAPIHookAction = never;
+export type PreAndPostAPIHookAction = "GET_LOGIN_CHALLENGE_INFO";
 
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
@@ -48,4 +49,23 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
     };
 };
 
-export type RecipeInterface = {};
+export type RecipeInterface = {
+    getLoginChallengeInfo: (input: {
+        loginChallenge: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<{ status: "OK"; info: LoginInfo; fetchResponse: Response }>;
+};
+
+export type LoginInfo = {
+    // The name of the client.
+    clientName: string;
+    // The URI of the client's terms of service.
+    tosUri: string;
+    // The URI of the client's privacy policy.
+    policyUri: string;
+    // The URI of the client's logo.
+    logoUri: string;
+    // The metadata associated with the client.
+    metadata?: Record<string, any> | null;
+};

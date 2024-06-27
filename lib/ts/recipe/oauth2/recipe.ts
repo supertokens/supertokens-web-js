@@ -23,7 +23,7 @@ import AuthRecipe from "../authRecipe";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
-    static RECIPE_ID = "multitenancy";
+    static RECIPE_ID = "oauth2";
 
     recipeImplementation: RecipeInterface;
 

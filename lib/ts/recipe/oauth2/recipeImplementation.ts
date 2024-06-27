@@ -13,17 +13,51 @@
  * under the License.
  */
 
-// import Querier from "../../querier";
-import { RecipeInterface } from "./types";
+import Querier from "../../querier";
+import Multitenancy from "../multitenancy/recipe";
+import { LoginInfo, RecipeInterface } from "./types";
 import { RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
 
 export default function getRecipeImplementation(
-    _recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
+    recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
 ): RecipeInterface {
-    // const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
+    const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
-    return {};
+    return {
+        async getLoginChallengeInfo({ loginChallenge, options, userContext }) {
+            const queryParams: Record<string, string> = {
+                loginChallenge,
+            };
+
+            const { jsonBody, fetchResponse } = await querier.get<{
+                status: "OK";
+                info: LoginInfo;
+            }>(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
+                "/oauth2/login/info",
+                {},
+                queryParams,
+                Querier.preparePreAPIHook({
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
+                    action: "GET_LOGIN_CHALLENGE_INFO",
+                    options: options,
+                    userContext: userContext,
+                }),
+                Querier.preparePostAPIHook({
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
+                    action: "GET_LOGIN_CHALLENGE_INFO",
+                    userContext: userContext,
+                })
+            );
+
+            return {
+                status: "OK",
+                info: jsonBody.info,
+                fetchResponse,
+            };
+        },
+    };
 }
 
 export { getRecipeImplementation };
