@@ -70,4 +70,6 @@ export {
     PostAPIHookContext,
     PreAndPostAPIHookAction,
     UserInput,
+    LoginInfo,
+    RecipeFunctionOptions,
 };
