@@ -10,7 +10,7 @@ import {
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<"GET_LOGIN_CHALLENGE_INFO">;
     /**
-     * Check if an email exists
+     * Returns information about an OAuth login in progress
      *
      * @param loginChallenge The login challenge from the url
      *

@@ -1,4 +1,4 @@
-/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
+/* Copyright (c) 2024, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
  * "License") as published by the Apache Software Foundation.
@@ -57,7 +57,8 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
 
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
-            let error = "No instance of Multitenancy found. Ensure that 'SuperTokens.init' method has been called.";
+            let error =
+                "No instance of OAuth2 found. Ensure that the 'OAuth2.init' method is called within the 'SuperTokens.init' recipeList.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);
