@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.13.0] - 2024-07-10
+
+### Breaking Changes
+
+-   Removes the default `maxAgeInSeconds` value (previously 300 seconds) in EmailVerification Claim. If the claim value is true and `maxAgeInSeconds` is not provided, it will not be refreshed.
+
 ## [0.12.0] - 2024-05-24
 
 ### Breaking Changes
