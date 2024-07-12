@@ -97,7 +97,7 @@
         },
         {
             "path": "recipe/multifactorauth/index.js",
-            "limit": "27kb"
+            "limit": "27.5kb"
         },
         {
             "path": "recipe/totp/index.js",
