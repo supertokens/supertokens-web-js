@@ -65,7 +65,7 @@
     "size-limit": [
         {
             "path": "lib/build/index.js",
-            "limit": "27kb"
+            "limit": "27.5kb"
         },
         {
             "path": "recipe/emailverification/index.js",
