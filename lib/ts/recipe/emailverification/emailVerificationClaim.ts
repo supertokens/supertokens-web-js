@@ -29,10 +29,9 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                 shouldRefresh: (payload, userContext) => {
                     const DateProvider = DateProviderReference.getReferenceOrThrow().dateProvider;
 
-                    maxAgeInSeconds = maxAgeInSeconds ?? getThresholdAwareDefaultValue(300);
                     refetchTimeOnFalseInSeconds = refetchTimeOnFalseInSeconds ?? getThresholdAwareDefaultValue(10);
 
-                    if (maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
+                    if (maxAgeInSeconds !== undefined && maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
                         throw new Error(
                             `maxAgeInSeconds must be greater than or equal to the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
                         );
@@ -45,13 +44,27 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                     }
 
                     const value = this.getValueFromPayload(payload, userContext);
-                    return (
-                        value === undefined ||
-                        this.getLastFetchedTime(payload, userContext)! < DateProvider.now() - maxAgeInSeconds * 1000 ||
-                        (value === false &&
-                            this.getLastFetchedTime(payload, userContext)! <
-                                DateProvider.now() - refetchTimeOnFalseInSeconds * 1000)
-                    );
+
+                    if (value === undefined) {
+                        return true;
+                    }
+
+                    const currentTime = Date.now();
+                    const lastRefetchTime = this.getLastFetchedTime(payload, userContext)!;
+
+                    if (maxAgeInSeconds !== undefined) {
+                        if (lastRefetchTime < currentTime - maxAgeInSeconds * 1000) {
+                            return true;
+                        }
+                    }
+
+                    if (value === false) {
+                        if (lastRefetchTime < currentTime - refetchTimeOnFalseInSeconds * 1000) {
+                            return true;
+                        }
+                    }
+
+                    return false;
                 },
                 validate: async (payload, userContext) => {
                     const value = this.getValueFromPayload(payload, userContext);

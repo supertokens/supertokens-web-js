@@ -1,6 +1,6 @@
 {
     "name": "supertokens-web-js",
-    "version": "0.12.0",
+    "version": "0.13.0",
     "description": "SuperTokens SDK for vanilla JS for all recipes",
     "main": "./index.js",
     "scripts": {
@@ -65,7 +65,7 @@
     "size-limit": [
         {
             "path": "lib/build/index.js",
-            "limit": "27kb"
+            "limit": "27.5kb"
         },
         {
             "path": "recipe/emailverification/index.js",
@@ -97,7 +97,7 @@
         },
         {
             "path": "recipe/multifactorauth/index.js",
-            "limit": "27kb"
+            "limit": "27.5kb"
         },
         {
             "path": "recipe/totp/index.js",
