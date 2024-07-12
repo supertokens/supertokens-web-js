@@ -31,7 +31,7 @@ export class EmailVerificationClaimClass extends BooleanClaim {
 
                     refetchTimeOnFalseInSeconds = refetchTimeOnFalseInSeconds ?? getThresholdAwareDefaultValue(10);
 
-                    if (maxAgeInSeconds && maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
+                    if (maxAgeInSeconds !== undefined && maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
                         throw new Error(
                             `maxAgeInSeconds must be greater than or equal to the DateProvider threshold value -> ${DateProvider.getThresholdInSeconds()}`
                         );
