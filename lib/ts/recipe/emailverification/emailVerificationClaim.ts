@@ -49,7 +49,7 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                         return true;
                     }
 
-                    const currentTime = Date.now();
+                    const currentTime = DateProvider.now();
                     const lastRefetchTime = this.getLastFetchedTime(payload, userContext)!;
 
                     if (maxAgeInSeconds !== undefined) {
