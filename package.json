@@ -102,6 +102,10 @@
         {
             "path": "recipe/totp/index.js",
             "limit": "27kb"
+        },
+        {
+            "path": "recipe/oauth2provider/index.js",
+            "limit": "27kb"
         }
     ]
 }

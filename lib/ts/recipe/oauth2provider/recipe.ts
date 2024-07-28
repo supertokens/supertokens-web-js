@@ -23,7 +23,7 @@ import AuthRecipe from "../authRecipe";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
-    static RECIPE_ID = "oauth2";
+    static RECIPE_ID = "oauth2provider";
 
     recipeImplementation: RecipeInterface;
 
@@ -58,7 +58,7 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     static getInstanceOrThrow(): Recipe {
         if (Recipe.instance === undefined) {
             let error =
-                "No instance of OAuth2 found. Ensure that the 'OAuth2.init' method is called within the 'SuperTokens.init' recipeList.";
+                "No instance of OAuth2Provider found. Ensure that the 'OAuth2Provider.init' method is called within the 'SuperTokens.init' recipeList.";
             error = checkForSSRErrorAndAppendIfNeeded(error);
 
             throw Error(error);

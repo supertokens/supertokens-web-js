@@ -35,7 +35,7 @@ export default function getRecipeImplementation(
                 info: LoginInfo;
             }>(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
-                "/oauth2/login/info",
+                "/oauth2provider/login/info",
                 {},
                 queryParams,
                 Querier.preparePreAPIHook({

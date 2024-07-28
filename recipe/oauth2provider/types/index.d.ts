@@ -12,6 +12,6 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-export * from "../../../lib/build/recipe/oauth2/types";
-import * as _default from "../../../lib/build/recipe/oauth2/types";
+export * from "../../../lib/build/recipe/oauth2provider/types";
+import * as _default from "../../../lib/build/recipe/oauth2provider/types";
 export default _default;
