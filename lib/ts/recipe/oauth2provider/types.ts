@@ -61,11 +61,13 @@ export type LoginInfo = {
     // The name of the client.
     clientName: string;
     // The URI of the client's terms of service.
-    tosUri: string;
+    tosUri?: string;
     // The URI of the client's privacy policy.
-    policyUri: string;
+    policyUri?: string;
     // The URI of the client's logo.
-    logoUri: string;
+    logoUri?: string;
+    // The URI of the client.
+    clientUri?: string;
     // The metadata associated with the client.
     metadata?: Record<string, any> | null;
 };

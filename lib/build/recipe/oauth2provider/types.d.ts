@@ -42,8 +42,9 @@ export declare type RecipeInterface = {
 };
 export declare type LoginInfo = {
     clientName: string;
-    tosUri: string;
-    policyUri: string;
-    logoUri: string;
+    tosUri?: string;
+    policyUri?: string;
+    logoUri?: string;
+    clientUri?: string;
     metadata?: Record<string, any> | null;
 };
