@@ -194,18 +194,7 @@ export default function getRecipeImplementation(
             };
         },
 
-        signUp: async function ({
-            formFields,
-            options,
-            userContext,
-        }: {
-            formFields: {
-                id: string;
-                value: string;
-            }[];
-            options?: RecipeFunctionOptions;
-            userContext: any;
-        }): Promise<
+        signUp: async function ({ formFields, tryLinkingWithSessionUser, options, userContext }): Promise<
             | {
                   status: "OK";
                   user: User;
@@ -244,7 +233,7 @@ export default function getRecipeImplementation(
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/signup",
-                { body: JSON.stringify({ formFields }) },
+                { body: JSON.stringify({ formFields, tryLinkingWithSessionUser }) },
                 Querier.preparePreAPIHook({
                     recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_UP",
@@ -280,18 +269,7 @@ export default function getRecipeImplementation(
             };
         },
 
-        signIn: async function ({
-            formFields,
-            options,
-            userContext,
-        }: {
-            formFields: {
-                id: string;
-                value: string;
-            }[];
-            options?: RecipeFunctionOptions;
-            userContext: any;
-        }): Promise<
+        signIn: async function ({ formFields, tryLinkingWithSessionUser, options, userContext }): Promise<
             | {
                   status: "OK";
                   user: User;
@@ -337,7 +315,7 @@ export default function getRecipeImplementation(
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/signin",
-                { body: JSON.stringify({ formFields }) },
+                { body: JSON.stringify({ formFields, tryLinkingWithSessionUser }) },
                 Querier.preparePreAPIHook({
                     recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_IN",

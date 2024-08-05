@@ -29,11 +29,13 @@ export default class RecipeWrapper {
         input:
             | {
                   email: string;
+                  tryLinkingWithSessionUser?: boolean;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
             | {
                   phoneNumber: string;
+                  tryLinkingWithSessionUser?: boolean;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
@@ -221,6 +223,7 @@ export default class RecipeWrapper {
         attemptInfo: {
             deviceId: string;
             preAuthSessionId: string;
+            tryLinkingWithSessionUser?: boolean;
             flowType: PasswordlessFlowType;
         } & CustomStateProperties;
         userContext?: any;
