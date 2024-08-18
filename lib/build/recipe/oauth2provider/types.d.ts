@@ -41,6 +41,7 @@ export declare type RecipeInterface = {
     }>;
 };
 export declare type LoginInfo = {
+    clientId: string;
     clientName: string;
     tosUri?: string;
     policyUri?: string;

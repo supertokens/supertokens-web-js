@@ -58,6 +58,7 @@ export type RecipeInterface = {
 };
 
 export type LoginInfo = {
+    clientId: string;
     // The name of the client.
     clientName: string;
     // The URI of the client's terms of service.
