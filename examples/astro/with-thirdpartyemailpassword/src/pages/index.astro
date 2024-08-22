@@ -1,0 +1,81 @@
+---
+import Root from "../layouts/Root.astro";
+
+import { getSessionForSSR } from "../auth/superTokensHelper";
+
+const { hasToken } = await getSessionForSSR(Astro.request);
+
+if (hasToken) {
+  return Astro.redirect("/dashboard");
+}
+---
+
+<Root>
+  <h1>Astro + SuperTokens</h1>
+  <div class="form-container">
+    <form>
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <div class="button-group">
+        <button type="button" class="primary-button">Sign Up</button>
+        <button type="button" class="secondary-button">Sign In</button>
+      </div>
+      <hr />
+      <div class="social-signin">
+        <a href="#" class="social-button google">Sign in with Google</a>
+        <a href="#" class="social-button github">Sign in with Github</a>
+      </div>
+    </form>
+  </div>
+</Root>
+
+<script>
+  import {
+    githubSignInClicked,
+    googleSignInClicked,
+    signInClicked,
+    signUpClicked,
+  } from "../auth/Auth";
+
+  (document.querySelector(".primary-button") as HTMLElement).addEventListener(
+    "click",
+    async () => {
+      const email = (
+        document.querySelector("input[name='email']") as HTMLInputElement
+      ).value;
+      const password = (
+        document.querySelector("input[name='password']") as HTMLInputElement
+      ).value;
+
+      signUpClicked(email, password);
+    },
+  );
+
+  (document.querySelector(".secondary-button") as HTMLElement).addEventListener(
+    "click",
+    () => {
+      const email = (
+        document.querySelector("input[name='email']") as HTMLInputElement
+      ).value;
+      const password = (
+        document.querySelector("input[name='password']") as HTMLInputElement
+      ).value;
+
+      signInClicked(email, password);
+    },
+  );
+
+  (document.querySelector(".google") as HTMLElement).addEventListener(
+    "click",
+    () => {
+      googleSignInClicked();
+    },
+  );
+
+  (document.querySelector(".github") as HTMLElement).addEventListener(
+    "click",
+    () => {
+      githubSignInClicked();
+    },
+  );
+</script>

@@ -1,0 +1,24 @@
+{
+  "name": "e005-solid-supertokens",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.13.6",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "solid-js": "^1.8.17",
+    "supertokens-node": "^18.0.1",
+    "supertokens-web-js": "^0.12.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.3.1",
+    "vite-plugin-solid": "^2.10.2"
+  }
+}
