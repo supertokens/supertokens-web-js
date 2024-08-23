@@ -1,0 +1,142 @@
+---
+
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  html {
+    box-sizing: border-box;
+  }
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
+
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .form-container {
+    font-family: sans-serif;
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  input {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+
+  .button-group {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .primary-button {
+    padding: 0.75rem;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .secondary-button {
+    padding: 0.75rem;
+    border: 1px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .primary-button:hover,
+  .secondary-button:hover {
+    opacity: 0.9;
+  }
+
+  hr {
+    width: 100%;
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 1.5rem 0;
+  }
+
+  .social-signin {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .social-button {
+    padding: 0.75rem;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 1rem;
+    text-decoration: none;
+    color: white;
+  }
+
+  .google {
+    background-color: #db4437;
+  }
+
+  .github {
+    background-color: #333;
+  }
+
+  .social-button:hover {
+    opacity: 0.9;
+  }
+</style>
+
+<script>
+  import { initFE } from "../auth/STFEConfig";
+  import SuperTokensWebJs from "supertokens-web-js";
+
+  SuperTokensWebJs.init(initFE());
+</script>

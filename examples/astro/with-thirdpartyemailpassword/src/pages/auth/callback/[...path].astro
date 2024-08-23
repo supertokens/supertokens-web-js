@@ -1,0 +1,15 @@
+---
+import Root from "../../../layouts/Root.astro";
+---
+
+<Root> Redirecting... </Root>
+
+<script>
+  import { handleCallback } from "../../../auth/Auth";
+  import { initFE } from "../../../auth/STFEConfig";
+  import SuperTokensWebJs from "supertokens-web-js";
+
+  SuperTokensWebJs.init(initFE());
+
+  handleCallback();
+</script>
