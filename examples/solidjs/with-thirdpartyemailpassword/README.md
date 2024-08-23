@@ -28,6 +28,7 @@ The app will start on `http://localhost:3000`
 ## Author
 
 Created with :heart: by the folks at supertokens.com.
+Built live on [Hacking with SuperTokens 005 and 006](https://www.youtube.com/watch?v=ovjTQ-20fk0).
 
 ## License
 

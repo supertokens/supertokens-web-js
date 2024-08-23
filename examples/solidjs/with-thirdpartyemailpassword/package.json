@@ -4,7 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently --kill-others \"npm run dev-server\" \"npm run dev-client\"",
+    "dev-client": "vite",
+    "dev-server": "tsx server.ts",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
@@ -17,6 +19,8 @@
     "supertokens-web-js": "^0.12.0"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
+    "tsx": "^4.17.0",
     "typescript": "^5.2.2",
     "vite": "^5.3.1",
     "vite-plugin-solid": "^2.10.2"
