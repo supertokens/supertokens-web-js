@@ -1,6 +1,6 @@
 {
-  "appName": "Astro-ST-demo",
-  "apiDomain": "http://localhost:4321",
-  "apiBasePath": "/auth",
-  "websiteDomain": "http://localhost:4321"
+    "appName": "Astro-ST-demo",
+    "apiDomain": "http://localhost:4321",
+    "apiBasePath": "/auth",
+    "websiteDomain": "http://localhost:4321"
 }

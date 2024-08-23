@@ -6,14 +6,14 @@ import { handleAuthAPIRequest } from "../../auth/superTokensHelper";
 const handleCall = handleAuthAPIRequest(Response);
 
 export const ALL: APIRoute = async ({ params, request }) => {
-  SuperTokens.init(initBE());
+    SuperTokens.init(initBE());
 
-  try {
-    return await handleCall(request);
-  } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ error: "Internal server error" }), {
-      status: 500,
-    });
-  }
+    try {
+        return await handleCall(request);
+    } catch (error) {
+        console.error(error);
+        return new Response(JSON.stringify({ error: "Internal server error" }), {
+            status: 500,
+        });
+    }
 };
