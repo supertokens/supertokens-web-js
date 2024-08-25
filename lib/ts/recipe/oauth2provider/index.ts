@@ -57,14 +57,40 @@ export default class RecipeWrapper {
             userContext: getNormalisedUserContext(input.userContext),
         });
     }
+
+    /**
+     * Accepts the OAuth2 Logout request, clears the SuperTokens session and returns post logout redirect URL.
+     *
+     * @param logoutChallenge The logout challenge from the url
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{status: "OK", frontendRedirectTo: string}`
+     *
+     * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
+     */
+    static logOut(input: { logoutChallenge: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
+        status: "OK";
+        frontendRedirectTo: string;
+        fetchResponse: Response;
+    }> {
+        return Recipe.getInstanceOrThrow().recipeImplementation.logOut({
+            ...input,
+            userContext: getNormalisedUserContext(input.userContext),
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
 const getLoginChallengeInfo = RecipeWrapper.getLoginChallengeInfo;
+const logOut = RecipeWrapper.logOut;
 
 export {
     init,
     getLoginChallengeInfo,
+    logOut,
     RecipeInterface,
     PreAPIHookContext,
     PostAPIHookContext,

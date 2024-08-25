@@ -57,6 +57,35 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
+        async logOut({ logoutChallenge, options, userContext }) {
+            const { jsonBody, fetchResponse } = await querier.post<{
+                status: "OK";
+                frontendRedirectTo: string;
+            }>(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
+                "/oauth/logout",
+                {
+                    body: JSON.stringify({ logoutChallenge }),
+                },
+                Querier.preparePreAPIHook({
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
+                    action: "LOG_OUT",
+                    options: options,
+                    userContext: userContext,
+                }),
+                Querier.preparePostAPIHook({
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
+                    action: "LOG_OUT",
+                    userContext: userContext,
+                })
+            );
+
+            return {
+                status: "OK",
+                frontendRedirectTo: jsonBody.frontendRedirectTo,
+                fetchResponse,
+            };
+        },
     };
 }
 
