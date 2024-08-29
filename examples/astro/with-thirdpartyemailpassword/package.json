@@ -16,8 +16,8 @@
         "jsonwebtoken": "^9.0.2",
         "jwks-rsa": "^3.1.0",
         "micromatch": "^4.0.7",
-        "supertokens-node": "^20.0.2",
-        "supertokens-web-js": "^0.13.0",
+        "supertokens-node": "latest",
+        "supertokens-web-js": "latest",
         "typescript": "^5.5.4"
     },
     "devDependencies": {
