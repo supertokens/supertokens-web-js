@@ -57,6 +57,37 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
+        async getRedirectURLToContinueOAuthFlow({ loginChallenge, options, userContext }) {
+            const { jsonBody, fetchResponse } = await querier.get<{
+                status: "OK";
+                frontendRedirectTo: string;
+            }>(
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
+                "/oauth/login",
+                {},
+                {
+                    loginChallenge,
+                },
+                Querier.preparePreAPIHook({
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
+                    action: "GET_REDIRECT_URL_TO_CONTINUE_OAUTH_FLOW",
+                    options: options,
+                    userContext: userContext,
+                }),
+                Querier.preparePostAPIHook({
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
+                    action: "GET_REDIRECT_URL_TO_CONTINUE_OAUTH_FLOW",
+                    userContext: userContext,
+                })
+            );
+
+            return {
+                status: "OK",
+                frontendRedirectTo: jsonBody.frontendRedirectTo,
+                fetchResponse,
+            };
+        },
+
         async logOut({ logoutChallenge, options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.post<{
                 status: "OK";

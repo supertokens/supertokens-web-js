@@ -24,7 +24,10 @@ import {
 } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 
-export type PreAndPostAPIHookAction = "GET_LOGIN_CHALLENGE_INFO" | "LOG_OUT";
+export type PreAndPostAPIHookAction =
+    | "GET_LOGIN_CHALLENGE_INFO"
+    | "GET_REDIRECT_URL_TO_CONTINUE_OAUTH_FLOW"
+    | "LOG_OUT";
 
 export type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
@@ -55,6 +58,11 @@ export type RecipeInterface = {
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<{ status: "OK"; info: LoginInfo; fetchResponse: Response }>;
+    getRedirectURLToContinueOAuthFlow: (input: {
+        loginChallenge: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<{ status: "OK"; frontendRedirectTo: string; fetchResponse: Response }>;
     logOut: (input: {
         logoutChallenge: string;
         options?: RecipeFunctionOptions;
