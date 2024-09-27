@@ -17,6 +17,7 @@ import Querier from "../../querier";
 import { RecipeInterface } from "./types";
 import { RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
+import { getQueryParams } from "../../utils";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -25,7 +26,7 @@ export default function getRecipeImplementation(
 
     return {
         getTenantId() {
-            return undefined; // This defaults to the "public" tenant
+            return getQueryParams("tenantId"); // This defaults to the "public" tenant
         },
 
         getLoginMethods: async function ({ tenantId, options, userContext }) {
