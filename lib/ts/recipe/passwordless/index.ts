@@ -39,6 +39,8 @@ export default class RecipeWrapper {
      *
      * @param phoneNumber Phone number of the user
      *
+     * @param shouldTryLinkingWithSessionUser (OPTIONAL) Whether the backend should try to link the user to the session user
+     *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
@@ -75,6 +77,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     > {
+        console.log("createCode", JSON.stringify(input));
         const recipe: Recipe = Recipe.getInstanceOrThrow();
         const recipeImplementation = recipe.recipeImplementation;
 
@@ -85,7 +88,7 @@ export default class RecipeWrapper {
         });
         const createCodeResponse = await recipeImplementation.createCode({
             ...input,
-            shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser,
+            shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser ?? false,
             userContext: normalisedUserContext,
         });
 
@@ -95,7 +98,7 @@ export default class RecipeWrapper {
                     tenantId,
                     deviceId: createCodeResponse.deviceId,
                     preAuthSessionId: createCodeResponse.preAuthSessionId,
-                    shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser,
+                    shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser ?? false,
                     flowType: createCodeResponse.flowType,
                 },
                 userContext: normalisedUserContext,
@@ -226,23 +229,33 @@ export default class RecipeWrapper {
             const attemptInfoFromStorage = await recipeImplementation.getLoginAttemptInfo({
                 userContext: userContext,
             });
+            console.log("attemptInfoFromStorage", JSON.stringify(attemptInfoFromStorage));
 
             /**
              * If attemptInfoFromStorage is undefined then local storage was probably cleared by another tab.
              * In this case we use empty strings when calling the API because we want to
              * return "RESTART_FLOW_ERROR"
              *
-             * Note: We dont do this for the linkCode flow because that does not depend on local storage.
+             * Note: We dont do this for the linkCode flow because that does not always depend on local storage.
              */
+
+            const shouldTryLinkingWithSessionUser = attemptInfoFromStorage?.shouldTryLinkingWithSessionUser ?? false;
+            console.log("shouldTryLinkingWithSessionUser", shouldTryLinkingWithSessionUser);
 
             additionalParams = {
                 userInputCode: input.userInputCode,
                 deviceId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.deviceId,
                 preAuthSessionId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.preAuthSessionId,
-                shouldTryLinkingWithSessionUser: attemptInfoFromStorage?.shouldTryLinkingWithSessionUser,
+                shouldTryLinkingWithSessionUser,
                 tenantId: attemptInfoFromStorage?.tenantId,
             };
         } else {
+            // We can default to false because the linkCode flow does not work well with MFA (session based account linking).
+            // With this we explicitly disable MFA for the linkCode flow instead of having it
+            // sometimes work (if opened on the same device) and sometimes not (if opened on a different device).
+            // Devs can override this by setting the flag in a function override.
+            const shouldTryLinkingWithSessionUser = false;
+
             const linkCode = recipeImplementation.getLinkCodeFromURL({
                 userContext,
             });
@@ -259,7 +272,7 @@ export default class RecipeWrapper {
                 tenantId,
                 linkCode,
                 preAuthSessionId,
-                shouldTryLinkingWithSessionUser: undefined, // TODO: verify
+                shouldTryLinkingWithSessionUser,
             };
         }
 

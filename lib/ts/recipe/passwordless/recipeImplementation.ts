@@ -129,24 +129,7 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        consumeCode: async function (
-            input:
-                | {
-                      tenantId: string | undefined;
-                      userInputCode: string;
-                      deviceId: string;
-                      preAuthSessionId: string;
-                      userContext: any;
-                      options?: RecipeFunctionOptions;
-                  }
-                | {
-                      tenantId: string | undefined;
-                      preAuthSessionId: string;
-                      linkCode: string;
-                      userContext: any;
-                      options?: RecipeFunctionOptions;
-                  }
-        ): Promise<
+        consumeCode: async function (input): Promise<
             | {
                   status: "OK";
                   createdNewRecipeUser: boolean;
@@ -168,11 +151,13 @@ export default function getRecipeImplementation(
                     userInputCode: input.userInputCode,
                     deviceId: input.deviceId,
                     preAuthSessionId: input.preAuthSessionId,
+                    shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser,
                 };
             } else {
                 bodyObj = {
                     linkCode: input.linkCode,
                     preAuthSessionId: input.preAuthSessionId,
+                    shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser,
                 };
             }
 

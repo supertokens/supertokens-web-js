@@ -17,6 +17,8 @@ export default class RecipeWrapper {
      *
      * @param phoneNumber Phone number of the user
      *
+     * @param shouldTryLinkingWithSessionUser (OPTIONAL) Whether the backend should try to link the user to the session user
+     *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
