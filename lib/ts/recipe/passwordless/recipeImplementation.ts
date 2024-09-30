@@ -28,11 +28,7 @@ export default function getRecipeImplementation(
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
     return {
-        createCode: async function (
-            input:
-                | { email: string; userContext: any; options?: RecipeFunctionOptions }
-                | { phoneNumber: string; userContext: any; options?: RecipeFunctionOptions }
-        ): Promise<
+        createCode: async function (input): Promise<
             | {
                   status: "OK";
                   deviceId: string;
@@ -51,12 +47,14 @@ export default function getRecipeImplementation(
             if ("email" in input) {
                 bodyObj = {
                     email: input.email,
+                    shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser,
                 };
             }
 
             if ("phoneNumber" in input) {
                 bodyObj = {
                     phoneNumber: input.phoneNumber,
+                    shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser,
                 };
             }
 
@@ -103,6 +101,7 @@ export default function getRecipeImplementation(
             const bodyObj = {
                 deviceId: input.deviceId,
                 preAuthSessionId: input.preAuthSessionId,
+                shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser,
             };
 
             const { jsonBody, fetchResponse } = await querier.post<{
