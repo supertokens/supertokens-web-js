@@ -67,7 +67,7 @@ export type RecipeInterface = {
      *
      * @param phoneNumber Phone number of the user
      *
-     * @param tryLinkingWithSessionUser Whether the backend should try to link the user to the session user
+     * @param shouldTryLinkingWithSessionUser Whether the backend should try to link the user to the session user
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *
@@ -81,13 +81,13 @@ export type RecipeInterface = {
         input:
             | {
                   email: string;
-                  tryLinkingWithSessionUser: boolean | undefined;
+                  shouldTryLinkingWithSessionUser: boolean | undefined;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
             | {
                   phoneNumber: string;
-                  tryLinkingWithSessionUser: boolean | undefined;
+                  shouldTryLinkingWithSessionUser: boolean | undefined;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
@@ -127,7 +127,7 @@ export type RecipeInterface = {
         userContext: any;
         deviceId: string;
         preAuthSessionId: string;
-        tryLinkingWithSessionUser: boolean | undefined;
+        shouldTryLinkingWithSessionUser: boolean | undefined;
         tenantId: string | undefined;
         options?: RecipeFunctionOptions;
     }) => Promise<{
@@ -144,7 +144,7 @@ export type RecipeInterface = {
      *
      * @param preAuthSessionId The id from the response of `createCode`.
      *
-     * @param tryLinkingWithSessionUser Whether the backend should try to link the user to the session user
+     * @param shouldTryLinkingWithSessionUser Whether the backend should try to link the user to the session user
      *
      * @param linkCode The code from the URL to use when logging the user in. Ignored if `userInputCode` is provided
      *
@@ -170,14 +170,14 @@ export type RecipeInterface = {
                   deviceId: string;
                   tenantId: string | undefined;
                   preAuthSessionId: string;
-                  tryLinkingWithSessionUser: boolean | undefined;
+                  shouldTryLinkingWithSessionUser: boolean | undefined;
                   userContext: any;
                   options?: RecipeFunctionOptions;
               }
             | {
                   tenantId: string | undefined;
                   preAuthSessionId: string;
-                  tryLinkingWithSessionUser: boolean | undefined;
+                  shouldTryLinkingWithSessionUser: boolean | undefined;
                   linkCode: string;
                   userContext: any;
                   options?: RecipeFunctionOptions;
@@ -281,7 +281,7 @@ export type RecipeInterface = {
               tenantId?: string;
               deviceId: string;
               preAuthSessionId: string;
-              tryLinkingWithSessionUser?: boolean;
+              shouldTryLinkingWithSessionUser?: boolean;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
     >;
@@ -296,7 +296,7 @@ export type RecipeInterface = {
             tenantId?: string;
             deviceId: string;
             preAuthSessionId: string;
-            tryLinkingWithSessionUser: boolean | undefined;
+            shouldTryLinkingWithSessionUser: boolean | undefined;
             flowType: PasswordlessFlowType;
         } & CustomStateProperties;
         userContext: any;

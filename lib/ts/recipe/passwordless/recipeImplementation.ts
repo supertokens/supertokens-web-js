@@ -93,7 +93,7 @@ export default function getRecipeImplementation(
             tenantId: string | undefined;
             deviceId: string;
             preAuthSessionId: string;
-            tryLinkingWithSessionUser: boolean | undefined;
+            shouldTryLinkingWithSessionUser: boolean | undefined;
             userContext: any;
             options?: RecipeFunctionOptions;
         }): Promise<{
@@ -318,7 +318,7 @@ export default function getRecipeImplementation(
                   tenantId?: string;
                   preAuthSessionId: string;
                   flowType: PasswordlessFlowType;
-                  tryLinkingWithSessionUser?: boolean;
+                  shouldTryLinkingWithSessionUser?: boolean;
               } & CustomLoginAttemptInfoProperties)
         > {
             const storedInfo = await WindowHandlerReference.getReferenceOrThrow().windowHandler.localStorage.getItem(

@@ -63,7 +63,7 @@ export default class RecipeWrapper {
      *
      * @param redirectURIOnProviderDashboard (OPTIONAL) The redirect URL that is configured on the provider dashboard. Not required if the value is same as frontendRedirectURI
      *
-     * @param tryLinkingWithSessionUser (OPTIONAL) Whether the backend should try to link the user to the session user
+     * @param shouldTryLinkingWithSessionUser (OPTIONAL) Whether the backend should try to link the user to the session user
      *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
@@ -77,7 +77,7 @@ export default class RecipeWrapper {
         thirdPartyId: string;
         frontendRedirectURI: string;
         redirectURIOnProviderDashboard?: string;
-        tryLinkingWithSessionUser?: boolean;
+        shouldTryLinkingWithSessionUser?: boolean;
         userContext?: any;
         options?: RecipeFunctionOptions;
     }): Promise<string> {
@@ -87,7 +87,7 @@ export default class RecipeWrapper {
         return recipe.recipeImplementation.getAuthorisationURLWithQueryParamsAndSetState({
             tenantId,
             ...input,
-            tryLinkingWithSessionUser: input?.tryLinkingWithSessionUser,
+            shouldTryLinkingWithSessionUser: input?.shouldTryLinkingWithSessionUser,
             userContext,
         });
     }

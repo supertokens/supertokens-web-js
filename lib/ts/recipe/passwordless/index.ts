@@ -49,10 +49,15 @@ export default class RecipeWrapper {
      */
     static async createCode(
         input:
-            | { email: string; tryLinkingWithSessionUser?: boolean; userContext?: any; options?: RecipeFunctionOptions }
+            | {
+                  email: string;
+                  shouldTryLinkingWithSessionUser?: boolean;
+                  userContext?: any;
+                  options?: RecipeFunctionOptions;
+              }
             | {
                   phoneNumber: string;
-                  tryLinkingWithSessionUser?: boolean;
+                  shouldTryLinkingWithSessionUser?: boolean;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
@@ -80,7 +85,7 @@ export default class RecipeWrapper {
         });
         const createCodeResponse = await recipeImplementation.createCode({
             ...input,
-            tryLinkingWithSessionUser: input.tryLinkingWithSessionUser,
+            shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser,
             userContext: normalisedUserContext,
         });
 
@@ -90,7 +95,7 @@ export default class RecipeWrapper {
                     tenantId,
                     deviceId: createCodeResponse.deviceId,
                     preAuthSessionId: createCodeResponse.preAuthSessionId,
-                    tryLinkingWithSessionUser: input.tryLinkingWithSessionUser,
+                    shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser,
                     flowType: createCodeResponse.flowType,
                 },
                 userContext: normalisedUserContext,
@@ -141,7 +146,7 @@ export default class RecipeWrapper {
             userContext: normalisedUserContext,
             deviceId: previousAttemptInfo === undefined ? "" : previousAttemptInfo.deviceId,
             preAuthSessionId: previousAttemptInfo === undefined ? "" : previousAttemptInfo.preAuthSessionId,
-            tryLinkingWithSessionUser: previousAttemptInfo?.tryLinkingWithSessionUser,
+            shouldTryLinkingWithSessionUser: previousAttemptInfo?.shouldTryLinkingWithSessionUser,
         });
     }
 
@@ -208,13 +213,13 @@ export default class RecipeWrapper {
                   userInputCode: string;
                   deviceId: string;
                   preAuthSessionId: string;
-                  tryLinkingWithSessionUser: boolean | undefined;
+                  shouldTryLinkingWithSessionUser: boolean | undefined;
               }
             | {
                   tenantId: string | undefined;
                   linkCode: string;
                   preAuthSessionId: string;
-                  tryLinkingWithSessionUser: boolean | undefined;
+                  shouldTryLinkingWithSessionUser: boolean | undefined;
               };
 
         if (input !== undefined && "userInputCode" in input) {
@@ -234,7 +239,7 @@ export default class RecipeWrapper {
                 userInputCode: input.userInputCode,
                 deviceId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.deviceId,
                 preAuthSessionId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.preAuthSessionId,
-                tryLinkingWithSessionUser: attemptInfoFromStorage?.tryLinkingWithSessionUser,
+                shouldTryLinkingWithSessionUser: attemptInfoFromStorage?.shouldTryLinkingWithSessionUser,
                 tenantId: attemptInfoFromStorage?.tenantId,
             };
         } else {
@@ -254,7 +259,7 @@ export default class RecipeWrapper {
                 tenantId,
                 linkCode,
                 preAuthSessionId,
-                tryLinkingWithSessionUser: undefined, // TODO: verify
+                shouldTryLinkingWithSessionUser: undefined, // TODO: verify
             };
         }
 
@@ -390,7 +395,7 @@ export default class RecipeWrapper {
         attemptInfo: {
             deviceId: string;
             preAuthSessionId: string;
-            tryLinkingWithSessionUser?: boolean;
+            shouldTryLinkingWithSessionUser?: boolean;
             flowType: PasswordlessFlowType;
         } & CustomStateProperties;
         userContext?: any;
@@ -401,7 +406,7 @@ export default class RecipeWrapper {
         return recipe.recipeImplementation.setLoginAttemptInfo({
             attemptInfo: {
                 tenantId,
-                tryLinkingWithSessionUser: input.attemptInfo.tryLinkingWithSessionUser,
+                shouldTryLinkingWithSessionUser: input.attemptInfo.shouldTryLinkingWithSessionUser,
                 ...input.attemptInfo,
             },
             userContext,

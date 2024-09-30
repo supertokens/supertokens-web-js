@@ -194,7 +194,7 @@ export default function getRecipeImplementation(
             };
         },
 
-        signUp: async function ({ formFields, tryLinkingWithSessionUser, options, userContext }): Promise<
+        signUp: async function ({ formFields, shouldTryLinkingWithSessionUser, options, userContext }): Promise<
             | {
                   status: "OK";
                   user: User;
@@ -233,7 +233,7 @@ export default function getRecipeImplementation(
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/signup",
-                { body: JSON.stringify({ formFields, tryLinkingWithSessionUser }) },
+                { body: JSON.stringify({ formFields, shouldTryLinkingWithSessionUser }) },
                 Querier.preparePreAPIHook({
                     recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_UP",
@@ -269,7 +269,7 @@ export default function getRecipeImplementation(
             };
         },
 
-        signIn: async function ({ formFields, tryLinkingWithSessionUser, options, userContext }): Promise<
+        signIn: async function ({ formFields, shouldTryLinkingWithSessionUser, options, userContext }): Promise<
             | {
                   status: "OK";
                   user: User;
@@ -315,7 +315,7 @@ export default function getRecipeImplementation(
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({ userContext }),
                 "/signin",
-                { body: JSON.stringify({ formFields, tryLinkingWithSessionUser }) },
+                { body: JSON.stringify({ formFields, shouldTryLinkingWithSessionUser }) },
                 Querier.preparePreAPIHook({
                     recipePreAPIHook: recipeImplInput.preAPIHook,
                     action: "EMAIL_PASSWORD_SIGN_IN",

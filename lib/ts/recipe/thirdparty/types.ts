@@ -59,7 +59,7 @@ export type StateObject = {
     tenantId?: string;
     expiresAt: number;
     redirectURIOnProviderDashboard: string;
-    tryLinkingWithSessionUser?: boolean;
+    shouldTryLinkingWithSessionUser?: boolean;
     pkceCodeVerifier?: string;
 };
 
@@ -110,7 +110,7 @@ export type RecipeInterface = {
         thirdPartyId: string;
         frontendRedirectURI: string;
         tenantId: string | undefined;
-        tryLinkingWithSessionUser: boolean | undefined;
+        shouldTryLinkingWithSessionUser: boolean | undefined;
         redirectURIOnProviderDashboard?: string;
         userContext: any;
         options?: RecipeFunctionOptions;
@@ -149,7 +149,7 @@ export type RecipeInterface = {
     /**
      * Sign up/Sign in the user, this method uses the login attempt information from storage
      *
-     * @param tryLinkingWithSessionUser Whether the backend should try to link the user to the session user
+     * @param shouldTryLinkingWithSessionUser Whether the backend should try to link the user to the session user
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
