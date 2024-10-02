@@ -105,6 +105,50 @@ response=`curl -s -X GET \
 response=`echo $response | jq .isLatest`
 
 
+# all files in the bundle directory have the same hash
+# so we can just take the first one and extract the hash
+
+# List files in the ./bundle directory
+files=$(ls ./bundle)
+
+# Get the first file name
+first_file=$(echo "$files" | head -n 1)
+
+# Extract the hash from the file name
+if [[ $first_file =~ \.([a-zA-Z0-9]+)\.js$ ]]; then
+    hash="${BASH_REMATCH[1]}"
+else
+    RED='\033[0;31m'
+    NC='\033[0m'
+    printf "${RED}Unable to extract hash from file name${NC}\n"
+    exit 1
+fi
+
+responseStatus=`curl -s -o /dev/null -w "%{http_code}" -X PUT \
+    https://api.supertokens.io/0/frontend/web-js \
+    -H 'Content-Type: application/json' \
+    -H 'api-version: 0' \
+    -d "{
+        \"password\": \"$releasePassword\",
+        \"uri_dateprovider\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/dateprovider.${hash}.js\",
+        \"uri_emailpassword\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/emailpassword.${hash}.js\",
+        \"uri_emailverification\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/emailverification.${hash}.js\",
+        \"uri_multifactorauth\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/multifactorauth.${hash}.js\",
+        \"uri_multitenancy\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/multitenancy.${hash}.js\",
+        \"uri_passwordless\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/passwordless.${hash}.js\",
+        \"uri_session\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/session.${hash}.js\",
+        \"uri_supertokens\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/supertokens.${hash}.js\",
+        \"uri_thirdparty\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/thirdparty.${hash}.js\",
+        \"uri_totp\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/totp.${hash}.js\",
+        \"uri_userroles\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/userroles.${hash}.js\",
+        \"uri_website\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/website.${hash}.js\",
+    }"`
+if [ "$responseStatus" -ne 200 ]
+then
+    echo "failed PUT API to update js deliver uri on server with status code: $responseStatus. You need to manually call this API with the right url!"
+    exit 1
+fi
+
 if [[ $response == "null"  ]]
 then
   RED='\033[0;31m'

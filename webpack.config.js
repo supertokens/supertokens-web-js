@@ -16,52 +16,52 @@ var config = {
     entry: {
         supertokens: {
             import: APP_DIR + "/lib/build/bundleEntry.js",
-            filename: "supertokens.js",
+            filename: "supertokens.[hash].js",
             dependOn: "supertokensWebsite",
         },
         supertokensSession: {
             import: APP_DIR + "/lib/build/recipe/session/index.js",
-            filename: "session.js",
+            filename: "session.[hash].js",
             dependOn: "supertokensWebsite",
         },
         supertokensEmailVerification: {
             import: APP_DIR + "/lib/build/recipe/emailverification/index.js",
-            filename: "emailverification.js",
+            filename: "emailverification.[hash].js",
             dependOn: "supertokensWebsite",
         },
         supertokensEmailPassword: {
             import: APP_DIR + "/lib/build/recipe/emailpassword/index.js",
-            filename: "emailpassword.js",
+            filename: "emailpassword.[hash].js",
             dependOn: "supertokensWebsite",
         },
         supertokensThirdParty: {
             import: APP_DIR + "/lib/build/recipe/thirdparty/index.js",
-            filename: "thirdparty.js",
+            filename: "thirdparty.[hash].js",
             dependOn: "supertokensWebsite",
         },
         supertokensPasswordless: {
             import: APP_DIR + "/lib/build/recipe/passwordless/index.js",
-            filename: "passwordless.js",
+            filename: "passwordless.[hash].js",
             dependOn: "supertokensWebsite",
         },
         supertokensUserRoles: {
             import: APP_DIR + "/lib/build/recipe/userroles/index.js",
-            filename: "userroles.js",
+            filename: "userroles.[hash].js",
             dependOn: "supertokensWebsite",
         },
         supertokensMultitenancy: {
             import: APP_DIR + "/lib/build/recipe/multitenancy/index.js",
-            filename: "multitenancy.js",
+            filename: "multitenancy.[hash].js",
             dependOn: "supertokensWebsite",
         },
         supertokensMultiFactorAuth: {
             import: APP_DIR + "/lib/build/recipe/multifactorauth/index.js",
-            filename: "multifactorauth.js",
+            filename: "multifactorauth.[hash].js",
             dependOn: "supertokensWebsite",
         },
         supertokensTOTP: {
             import: APP_DIR + "/lib/build/recipe/totp/index.js",
-            filename: "totp.js",
+            filename: "totp.[hash].js",
             dependOn: "supertokensWebsite",
         },
         /**
@@ -71,7 +71,7 @@ var config = {
          */
         supertokensDateProvider: {
             import: APP_DIR + "/utils/dateProvider/index.js",
-            filename: "dateprovider.js",
+            filename: "dateprovider.[hash].js",
             dependOn: "supertokensWebsite",
         },
         /**
@@ -84,7 +84,7 @@ var config = {
          */
         supertokensWebsite: {
             import: "supertokens-website",
-            filename: "website.js",
+            filename: "website.[hash].js",
         },
     },
     output: {
