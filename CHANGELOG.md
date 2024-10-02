@@ -11,6 +11,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Added the OAuth2Provider recipe
 
+### Breaking changes
+
+-   Added a new `shouldTryLinkingToSessionUser` flag to sign in/up related function inputs:
+
+    -   `EmailPassword.signIn`, `EmailPassword.signUp`,
+    -   `ThirdParty.getAuthorisationURLWithQueryParamsAndSetState`
+    -   `Passwordless`:
+        -   Functions overrides: `consumeCode`, `resendCode`, `createCode`, `setLoginAttemptInfo`, `getLoginAttemptInfo`
+        -   `createCode` also requires this flag when called
+
+-   Changed the default implementation of `getTenantId` to default to the `tenantId` query parameter instead of to the public tenant
+-   We now disable session based account linking in the magic link based flow in passwordless by default
+    -   This is to make it function more consistently instead of only working if the link was opened on the same device
+
+### Migration guide
+
+#### Session based account linking for magic link based flows
+
+You can re-enable linking by overriding the `consumeCode` function in the passwordless recipe and setting `shouldTryLinkingToSessionUser` to `true`.
+
+```ts
+Passwordless.init({
+    override: {
+        functions: (original) => {
+            return {
+                ...original,
+                consumeCode: async (input) => {
+                    // Please note that this is means that the session is required and will cause an error if it is not present
+                    return original.consumeCode({ ...input, shouldTryLinkingWithSessionUser: true });
+                },
+            };
+        },
+    },
+});
+```
+
 ## [0.12.0] - 2024-05-24
 
 ### Breaking Changes

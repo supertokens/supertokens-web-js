@@ -1339,3 +1339,16 @@ function reexportedHandlers() {
     WindowHandlerReference.getReferenceOrThrow();
     DateProviderReference.getReferenceOrThrow();
 }
+
+Passwordless.init({
+    override: {
+        functions: (original) => {
+            return {
+                ...original,
+                consumeCode: async (input) => {
+                    return original.consumeCode({ ...input, shouldTryLinkingWithSessionUser: true });
+                },
+            };
+        },
+    },
+});

@@ -67,7 +67,7 @@ export type RecipeInterface = {
      *
      * @param phoneNumber Phone number of the user
      *
-     * @param shouldTryLinkingWithSessionUser Whether the backend should try to link the user to the session user
+     * @param shouldTryLinkingWithSessionUser Whether the backend should try to link the user to the session user when the code is consumed
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *
@@ -112,6 +112,8 @@ export type RecipeInterface = {
      * @param deviceId The device if from the reponse of `createCode`
      *
      * @param preAuthSessionId The id from the response of `createCode`
+     *
+     * @param shouldTryLinkingWithSessionUser Whether the backend should try to link the user to the session user when the code is consumed
      *
      * @param userContext Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *

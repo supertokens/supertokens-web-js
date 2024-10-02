@@ -77,7 +77,6 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     > {
-        console.log("createCode", JSON.stringify(input));
         const recipe: Recipe = Recipe.getInstanceOrThrow();
         const recipeImplementation = recipe.recipeImplementation;
 
@@ -229,18 +228,16 @@ export default class RecipeWrapper {
             const attemptInfoFromStorage = await recipeImplementation.getLoginAttemptInfo({
                 userContext: userContext,
             });
-            console.log("attemptInfoFromStorage", JSON.stringify(attemptInfoFromStorage));
 
             /**
              * If attemptInfoFromStorage is undefined then local storage was probably cleared by another tab.
              * In this case we use empty strings when calling the API because we want to
              * return "RESTART_FLOW_ERROR"
              *
-             * Note: We dont do this for the linkCode flow because that does not always depend on local storage.
+             * Note: We dont do this for the linkCode flow because that does not depend on local storage.
              */
 
             const shouldTryLinkingWithSessionUser = attemptInfoFromStorage?.shouldTryLinkingWithSessionUser ?? false;
-            console.log("shouldTryLinkingWithSessionUser", shouldTryLinkingWithSessionUser);
 
             additionalParams = {
                 userInputCode: input.userInputCode,
@@ -389,6 +386,7 @@ export default class RecipeWrapper {
         | ({
               deviceId: string;
               tenantId?: string | string;
+              shouldTryLinkingWithSessionUser?: boolean;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)

@@ -212,6 +212,7 @@ export default class RecipeWrapper {
         | ({
               deviceId: string;
               tenantId?: string | string;
+              shouldTryLinkingWithSessionUser?: boolean;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
