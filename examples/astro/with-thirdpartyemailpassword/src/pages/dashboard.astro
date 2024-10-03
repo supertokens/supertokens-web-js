@@ -1,0 +1,39 @@
+---
+import Root from "../layouts/Root.astro";
+
+import { getSessionForSSR } from "../auth/superTokensHelper";
+
+const { hasToken } = await getSessionForSSR(Astro.request);
+
+if (!hasToken) {
+  return Astro.redirect("/");
+}
+---
+
+<Root>
+  <h1>Astro + SuperTokens | Dashboard</h1>
+  <form>
+    <div class="button-group">
+      <button type="button" class="primary-button">Session Info</button>
+      <button type="button" class="secondary-button">Sign Out</button>
+    </div>
+  </form>
+</Root>
+
+<script>
+  import { signOutClicked, getSessionInfo } from "../auth/Auth";
+
+  (document.querySelector(".primary-button") as HTMLElement).addEventListener(
+    "click",
+    async () => {
+      alert(JSON.stringify(await getSessionInfo()));
+    },
+  );
+
+  (document.querySelector(".secondary-button") as HTMLElement).addEventListener(
+    "click",
+    () => {
+      signOutClicked();
+    },
+  );
+</script>

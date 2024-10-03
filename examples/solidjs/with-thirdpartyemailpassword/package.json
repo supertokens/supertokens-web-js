@@ -1,0 +1,28 @@
+{
+    "name": "e005-solid-supertokens",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "concurrently --kill-others \"npm run dev-server\" \"npm run dev-client\"",
+        "dev-client": "vite",
+        "dev-server": "tsx server.ts",
+        "build": "tsc -b && vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "@solidjs/router": "^0.13.6",
+        "cors": "^2.8.5",
+        "express": "^4.19.2",
+        "solid-js": "^1.8.17",
+        "supertokens-node": "latest",
+        "supertokens-web-js": "latest"
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2",
+        "tsx": "^4.17.0",
+        "typescript": "^5.2.2",
+        "vite": "^5.3.1",
+        "vite-plugin-solid": "^2.10.2"
+    }
+}
