@@ -1,6 +1,6 @@
 {
     "name": "supertokens-web-js",
-    "version": "0.13.0",
+    "version": "0.15.0",
     "description": "SuperTokens SDK for vanilla JS for all recipes",
     "main": "./index.js",
     "scripts": {
@@ -40,7 +40,7 @@
     "homepage": "https://github.com/supertokens/supertokens-web-js#readme",
     "dependencies": {
         "supertokens-js-override": "0.0.4",
-        "supertokens-website": "^20.0.1"
+        "supertokens-website": "github:supertokens/supertokens-website#20.1"
     },
     "devDependencies": {
         "@babel/core": "^7.17.8",
@@ -65,15 +65,15 @@
     "size-limit": [
         {
             "path": "lib/build/index.js",
-            "limit": "27.5kb"
+            "limit": "28kb"
         },
         {
             "path": "recipe/emailverification/index.js",
-            "limit": "28kb"
+            "limit": "29kb"
         },
         {
             "path": "recipe/emailpassword/index.js",
-            "limit": "28kb"
+            "limit": "29kb"
         },
         {
             "path": "recipe/thirdparty/index.js",
@@ -85,23 +85,27 @@
         },
         {
             "path": "recipe/passwordless/index.js",
-            "limit": "29kb"
+            "limit": "30kb"
         },
         {
             "path": "recipe/userroles/index.js",
-            "limit": "25kb"
+            "limit": "26kb"
         },
         {
             "path": "recipe/multitenancy/index.js",
-            "limit": "27kb"
+            "limit": "28kb"
         },
         {
             "path": "recipe/multifactorauth/index.js",
-            "limit": "27.5kb"
+            "limit": "28kb"
         },
         {
             "path": "recipe/totp/index.js",
-            "limit": "27kb"
+            "limit": "28kb"
+        },
+        {
+            "path": "recipe/oauth2provider/index.js",
+            "limit": "28kb"
         }
     ]
 }

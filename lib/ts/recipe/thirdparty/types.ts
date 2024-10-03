@@ -59,6 +59,7 @@ export type StateObject = {
     tenantId?: string;
     expiresAt: number;
     redirectURIOnProviderDashboard: string;
+    shouldTryLinkingWithSessionUser?: boolean;
     pkceCodeVerifier?: string;
 };
 
@@ -97,6 +98,8 @@ export type RecipeInterface = {
      *
      * @param tenantId (OPTIONAL) The identifier for the tenant, in case you are using multi-tenancy
      *
+     * @param shouldTryLinkingWithSessionUser Whether the backend should try to link the user to the session user
+     *
      * @param userContext Refer to {@link https://supertokens.com/docs/thirdparty/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
@@ -109,6 +112,7 @@ export type RecipeInterface = {
         thirdPartyId: string;
         frontendRedirectURI: string;
         tenantId: string | undefined;
+        shouldTryLinkingWithSessionUser: boolean | undefined;
         redirectURIOnProviderDashboard?: string;
         userContext: any;
         options?: RecipeFunctionOptions;

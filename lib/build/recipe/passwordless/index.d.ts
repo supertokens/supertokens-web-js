@@ -17,6 +17,8 @@ export default class RecipeWrapper {
      *
      * @param phoneNumber Phone number of the user
      *
+     * @param shouldTryLinkingWithSessionUser (OPTIONAL) Whether the backend should try to link the user to the session user
+     *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
@@ -29,11 +31,13 @@ export default class RecipeWrapper {
         input:
             | {
                   email: string;
+                  shouldTryLinkingWithSessionUser?: boolean;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
             | {
                   phoneNumber: string;
+                  shouldTryLinkingWithSessionUser?: boolean;
                   userContext?: any;
                   options?: RecipeFunctionOptions;
               }
@@ -208,6 +212,7 @@ export default class RecipeWrapper {
         | ({
               deviceId: string;
               tenantId?: string | string;
+              shouldTryLinkingWithSessionUser?: boolean;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
@@ -221,6 +226,7 @@ export default class RecipeWrapper {
         attemptInfo: {
             deviceId: string;
             preAuthSessionId: string;
+            shouldTryLinkingWithSessionUser?: boolean;
             flowType: PasswordlessFlowType;
         } & CustomStateProperties;
         userContext?: any;

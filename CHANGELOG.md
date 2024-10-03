@@ -7,6 +7,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.15.0] - 2024-10-07
+
+-   Added the OAuth2Provider recipe
+
+### Breaking changes
+
+-   Added a new `shouldTryLinkingToSessionUser` flag to sign in/up related function inputs:
+    -   No action is needed if you are not using MFA/session based account linking.
+    -   If you are implementing MFA:
+        -   Plase set this flag to `false` (or leave as undefined) during first factor sign-ins
+        -   Please set this flag to `true` for secondary factors.
+        -   Please forward this flag to the original implementation in any of your overrides.
+    -   Changed functions:
+        -   `EmailPassword.signIn`, `EmailPassword.signUp`: both override and callable functions
+        -   `ThirdParty.getAuthorisationURLWithQueryParamsAndSetState`: both override and callable function
+        -   `Passwordless`:
+            -   Functions overrides: `consumeCode`, `resendCode`, `createCode`, `setLoginAttemptInfo`, `getLoginAttemptInfo`
+            -   Calling `createCode` and `setLoginAttemptInfo` take this flag as an optional input (it defaults to false)
+-   Changed the default implementation of `getTenantId` to default to the `tenantId` query parameter (if present) then falling back to the public tenant instead of always defaulting to the public tenant
+-   We now disable session based account linking in the magic link based flow in passwordless by default
+    -   This is to make it function more consistently instead of only working if the link was opened on the same device
+    -   You can override by overriding the `consumeCode` function in the Passwordless Recipe (see in the Migration guide section below for more information)
+
+### Migration guide
+
+#### Session based account linking for magic link based flows
+
+You can re-enable linking by overriding the `consumeCode` function in the passwordless recipe and setting `shouldTryLinkingToSessionUser` to `true`.
+
+```ts
+Passwordless.init({
+    override: {
+        functions: (original) => {
+            return {
+                ...original,
+                consumeCode: async (input) => {
+                    // Please note that this is means that the session is required and will cause an error if it is not present
+                    return original.consumeCode({ ...input, shouldTryLinkingWithSessionUser: true });
+                },
+            };
+        },
+    },
+});
+```
+
 ## [0.13.0] - 2024-07-10
 
 ### Breaking Changes

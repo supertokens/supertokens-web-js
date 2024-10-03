@@ -127,6 +127,8 @@ export declare type RecipeInterface = {
      *
      * @param formFields List of fields to send to the API exposed by the backend SDK (Refer to the {@link https://supertokens.com/docs/fdi API spec} to know more). Note that the form fields must match the ones configured in the backend SDKs
      *
+     * @param shouldTryLinkingWithSessionUser Whether the backend should try to link the user to the session user
+     *
      * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
@@ -142,6 +144,7 @@ export declare type RecipeInterface = {
             id: string;
             value: string;
         }[];
+        shouldTryLinkingWithSessionUser: boolean | undefined;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
@@ -169,6 +172,8 @@ export declare type RecipeInterface = {
      *
      * @param formFields List of fields to send to the API exposed by the backend SDK (Refer to the {@link https://supertokens.com/docs/fdi API spec} to know more). Note that the form fields must match the ones configured in the backend SDKs
      *
+     * @param shouldTryLinkingWithSessionUser Whether the backend should try to link the user to the session user
+     *
      * @param userContext Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
      *
      * @param options Use this to configure additional properties (for example pre api hooks)
@@ -186,6 +191,7 @@ export declare type RecipeInterface = {
             id: string;
             value: string;
         }[];
+        shouldTryLinkingWithSessionUser: boolean | undefined;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<

@@ -64,6 +64,11 @@ var config = {
             filename: "totp.js",
             dependOn: "supertokensWebsite",
         },
+        supertokensOAuth2Provider: {
+            import: APP_DIR + "/lib/build/recipe/oauth2provider/index.js",
+            filename: "oauth2provider.js",
+            dependOn: "supertokensWebsite",
+        },
         /**
          * The import path is /utils/dateProvider/index.js instead of /lib/build/dateProvider/index.js because the supertokens.js also imports
          * the dateProvider from the build folder and that creates a dependency requiring us to load dateprovider.js bundle before supertokens.js.

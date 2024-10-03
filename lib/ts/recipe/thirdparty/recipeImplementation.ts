@@ -72,6 +72,7 @@ export default function getRecipeImplementation(
                 tenantId: string | undefined;
                 frontendRedirectURI: string;
                 redirectURIOnProviderDashboard?: string;
+                shouldTryLinkingWithSessionUser?: boolean;
                 userContext: any;
                 options?: RecipeFunctionOptions;
             }
@@ -105,6 +106,7 @@ export default function getRecipeImplementation(
                     tenantId: input.tenantId,
                     expiresAt: stateExpiry,
                     redirectURIOnProviderDashboard: input.redirectURIOnProviderDashboard || input.frontendRedirectURI,
+                    shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser,
                     pkceCodeVerifier: urlResponse.pkceCodeVerifier,
                 },
                 userContext: input.userContext,
@@ -170,7 +172,7 @@ export default function getRecipeImplementation(
 
         signInAndUp: async function (
             this: RecipeInterface,
-            input: { userContext: any; options?: RecipeFunctionOptions }
+            input
         ): Promise<
             | {
                   status: "OK";
@@ -251,6 +253,7 @@ export default function getRecipeImplementation(
                             redirectURIQueryParams: queryParamsObj,
                             pkceCodeVerifier: verifiedState.pkceCodeVerifier,
                         },
+                        shouldTryLinkingWithSessionUser: verifiedState.shouldTryLinkingWithSessionUser,
                     }),
                 },
                 Querier.preparePreAPIHook({

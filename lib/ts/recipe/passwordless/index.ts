@@ -39,6 +39,8 @@ export default class RecipeWrapper {
      *
      * @param phoneNumber Phone number of the user
      *
+     * @param shouldTryLinkingWithSessionUser (OPTIONAL) Whether the backend should try to link the user to the session user
+     *
      * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/passwordless/advanced-customizations/user-context the documentation}
      *
      * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
@@ -49,8 +51,18 @@ export default class RecipeWrapper {
      */
     static async createCode(
         input:
-            | { email: string; userContext?: any; options?: RecipeFunctionOptions }
-            | { phoneNumber: string; userContext?: any; options?: RecipeFunctionOptions }
+            | {
+                  email: string;
+                  shouldTryLinkingWithSessionUser?: boolean;
+                  userContext?: any;
+                  options?: RecipeFunctionOptions;
+              }
+            | {
+                  phoneNumber: string;
+                  shouldTryLinkingWithSessionUser?: boolean;
+                  userContext?: any;
+                  options?: RecipeFunctionOptions;
+              }
     ): Promise<
         | {
               status: "OK";
@@ -75,6 +87,7 @@ export default class RecipeWrapper {
         });
         const createCodeResponse = await recipeImplementation.createCode({
             ...input,
+            shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser ?? false,
             userContext: normalisedUserContext,
         });
 
@@ -84,6 +97,7 @@ export default class RecipeWrapper {
                     tenantId,
                     deviceId: createCodeResponse.deviceId,
                     preAuthSessionId: createCodeResponse.preAuthSessionId,
+                    shouldTryLinkingWithSessionUser: input.shouldTryLinkingWithSessionUser ?? false,
                     flowType: createCodeResponse.flowType,
                 },
                 userContext: normalisedUserContext,
@@ -134,6 +148,7 @@ export default class RecipeWrapper {
             userContext: normalisedUserContext,
             deviceId: previousAttemptInfo === undefined ? "" : previousAttemptInfo.deviceId,
             preAuthSessionId: previousAttemptInfo === undefined ? "" : previousAttemptInfo.preAuthSessionId,
+            shouldTryLinkingWithSessionUser: previousAttemptInfo?.shouldTryLinkingWithSessionUser,
         });
     }
 
@@ -200,11 +215,13 @@ export default class RecipeWrapper {
                   userInputCode: string;
                   deviceId: string;
                   preAuthSessionId: string;
+                  shouldTryLinkingWithSessionUser: boolean | undefined;
               }
             | {
                   tenantId: string | undefined;
                   linkCode: string;
                   preAuthSessionId: string;
+                  shouldTryLinkingWithSessionUser: boolean | undefined;
               };
 
         if (input !== undefined && "userInputCode" in input) {
@@ -220,13 +237,22 @@ export default class RecipeWrapper {
              * Note: We dont do this for the linkCode flow because that does not depend on local storage.
              */
 
+            const shouldTryLinkingWithSessionUser = attemptInfoFromStorage?.shouldTryLinkingWithSessionUser ?? false;
+
             additionalParams = {
                 userInputCode: input.userInputCode,
                 deviceId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.deviceId,
                 preAuthSessionId: attemptInfoFromStorage === undefined ? "" : attemptInfoFromStorage.preAuthSessionId,
+                shouldTryLinkingWithSessionUser,
                 tenantId: attemptInfoFromStorage?.tenantId,
             };
         } else {
+            // We can default to false because the linkCode flow does not work well with MFA (session based account linking).
+            // With this we explicitly disable MFA for the linkCode flow instead of having it
+            // sometimes work (if opened on the same device) and sometimes not (if opened on a different device).
+            // Devs can override this by setting the flag in a function override.
+            const shouldTryLinkingWithSessionUser = false;
+
             const linkCode = recipeImplementation.getLinkCodeFromURL({
                 userContext,
             });
@@ -243,6 +269,7 @@ export default class RecipeWrapper {
                 tenantId,
                 linkCode,
                 preAuthSessionId,
+                shouldTryLinkingWithSessionUser,
             };
         }
 
@@ -359,6 +386,7 @@ export default class RecipeWrapper {
         | ({
               deviceId: string;
               tenantId?: string | string;
+              shouldTryLinkingWithSessionUser?: boolean;
               preAuthSessionId: string;
               flowType: PasswordlessFlowType;
           } & CustomLoginAttemptInfoProperties)
@@ -378,6 +406,7 @@ export default class RecipeWrapper {
         attemptInfo: {
             deviceId: string;
             preAuthSessionId: string;
+            shouldTryLinkingWithSessionUser?: boolean;
             flowType: PasswordlessFlowType;
         } & CustomStateProperties;
         userContext?: any;
@@ -388,6 +417,7 @@ export default class RecipeWrapper {
         return recipe.recipeImplementation.setLoginAttemptInfo({
             attemptInfo: {
                 tenantId,
+                shouldTryLinkingWithSessionUser: input.attemptInfo.shouldTryLinkingWithSessionUser,
                 ...input.attemptInfo,
             },
             userContext,
