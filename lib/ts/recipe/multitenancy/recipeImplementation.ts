@@ -26,7 +26,11 @@ export default function getRecipeImplementation(
 
     return {
         getTenantId() {
-            return getQueryParams("tenantId"); // This defaults to the "public" tenant
+            const queryParam = getQueryParams("tenantId");
+            if (queryParam?.trim() === "") {
+                return undefined; // This defaults to the "public" tenant
+            }
+            return queryParam;
         },
 
         getLoginMethods: async function ({ tenantId, options, userContext }) {

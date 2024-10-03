@@ -14,16 +14,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Breaking changes
 
 -   Added a new `shouldTryLinkingToSessionUser` flag to sign in/up related function inputs:
-
-    -   `EmailPassword.signIn`, `EmailPassword.signUp`,
-    -   `ThirdParty.getAuthorisationURLWithQueryParamsAndSetState`
-    -   `Passwordless`:
-        -   Functions overrides: `consumeCode`, `resendCode`, `createCode`, `setLoginAttemptInfo`, `getLoginAttemptInfo`
-        -   `createCode` also requires this flag when called
-
--   Changed the default implementation of `getTenantId` to default to the `tenantId` query parameter instead of to the public tenant
+    -   No action is needed if you are not using MFA/session based account linking.
+    -   If you are implementing MFA:
+        -   Plase set this flag to `false` (or leave as undefined) during first factor sign-ins
+        -   Please set this flag to `true` for secondary factors.
+        -   Please forward this flag to the original implementation in any of your overrides.
+    -   Changed functions:
+        -   `EmailPassword.signIn`, `EmailPassword.signUp`: both override and callable functions
+        -   `ThirdParty.getAuthorisationURLWithQueryParamsAndSetState`: both override and callable function
+        -   `Passwordless`:
+            -   Functions overrides: `consumeCode`, `resendCode`, `createCode`, `setLoginAttemptInfo`, `getLoginAttemptInfo`
+            -   Calling `createCode` and `setLoginAttemptInfo` take this flag as an optional input (it defaults to false)
+-   Changed the default implementation of `getTenantId` to default to the `tenantId` query parameter (if present) then falling back to the public tenant instead of always defaulting to the public tenant
 -   We now disable session based account linking in the magic link based flow in passwordless by default
     -   This is to make it function more consistently instead of only working if the link was opened on the same device
+    -   You can override by overriding the `consumeCode` function in the Passwordless Recipe (see in the Migration guide section below for more information)
 
 ### Migration guide
 
