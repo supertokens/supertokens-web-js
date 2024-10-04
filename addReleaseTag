@@ -141,7 +141,7 @@ responseStatus=`curl -s -o /dev/null -w "%{http_code}" -X PUT \
         \"uri_thirdparty\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/thirdparty.${hash}.js\",
         \"uri_totp\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/totp.${hash}.js\",
         \"uri_userroles\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/userroles.${hash}.js\",
-        \"uri_website\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/website.${hash}.js\",
+        \"uri_website\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/website.${hash}.js\"
     }"`
 if [ "$responseStatus" -ne 200 ]
 then
