@@ -72,6 +72,10 @@ describe("Window handlers test", function () {
                 windowHandler: function (original) {
                     return {
                         ...original,
+                        location: {
+                            ...original.location,
+                            getSearch: () => "",
+                        },
                         sessionStorage: {
                             ...original.sessionStorage,
                             getItemSync: function (key) {
@@ -166,6 +170,15 @@ describe("Window handlers test", function () {
                 appInfo: {
                     appName: "SuperTokens",
                     apiDomain: "api.supertokens.io",
+                },
+                windowHandler: function (original) {
+                    return {
+                        ...original,
+                        location: {
+                            ...original.location,
+                            getSearch: () => "",
+                        },
+                    };
                 },
                 recipeList: [
                     ThirdParty.init({

@@ -107,6 +107,10 @@ export default class SuperTokens {
             return;
         }
 
+        // We reset the multitenancy recipe here because we are auto-initializing it
+        // and we should always be resetting it when we reset the SDK
+        MultitenancyRecipe.reset();
+
         SuperTokens.instance = undefined;
         return;
     }
