@@ -130,18 +130,18 @@ responseStatus=`curl -s -o /dev/null -w "%{http_code}" -X PUT \
     -H 'api-version: 0' \
     -d "{
         \"password\": \"$releasePassword\",
-        \"uri_dateprovider\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/dateprovider.${hash}.js\",
-        \"uri_emailpassword\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/emailpassword.${hash}.js\",
-        \"uri_emailverification\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/emailverification.${hash}.js\",
-        \"uri_multifactorauth\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/multifactorauth.${hash}.js\",
-        \"uri_multitenancy\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/multitenancy.${hash}.js\",
-        \"uri_passwordless\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/passwordless.${hash}.js\",
-        \"uri_session\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/session.${hash}.js\",
-        \"uri_supertokens\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/supertokens.${hash}.js\",
-        \"uri_thirdparty\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/thirdparty.${hash}.js\",
-        \"uri_totp\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/totp.${hash}.js\",
-        \"uri_userroles\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/userroles.${hash}.js\",
-        \"uri_website\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/website.${hash}.js\"
+        \"dateprovider\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/dateprovider.${hash}.js\",
+        \"emailpassword\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/emailpassword.${hash}.js\",
+        \"emailverification\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/emailverification.${hash}.js\",
+        \"multifactorauth\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/multifactorauth.${hash}.js\",
+        \"multitenancy\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/multitenancy.${hash}.js\",
+        \"passwordless\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/passwordless.${hash}.js\",
+        \"session\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/session.${hash}.js\",
+        \"supertokens\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/supertokens.${hash}.js\",
+        \"thirdparty\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/thirdparty.${hash}.js\",
+        \"totp\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/totp.${hash}.js\",
+        \"userroles\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/userroles.${hash}.js\",
+        \"website\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/website.${hash}.js\"
     }"`
 if [ "$responseStatus" -ne 200 ]
 then
