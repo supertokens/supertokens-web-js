@@ -98,51 +98,36 @@ git push --delete origin $currTag
 git tag v$version
 git push --tags
 
-
 response=`curl -s -X GET \
 "https://api.supertokens.io/0/frontend/latest/check?password=$password&version=$version&name=web-js" \
 -H 'api-version: 0'`
 response=`echo $response | jq .isLatest`
 
 
-# all files in the bundle directory have the same hash
-# so we can just take the first one and extract the hash
-
-# List files in the ./bundle directory
-files=$(ls ./bundle)
-
-# Get the first file name
-first_file=$(echo "$files" | head -n 1)
-
-# Extract the hash from the file name
-if [[ $first_file =~ \.([a-zA-Z0-9]+)\.js$ ]]; then
-    hash="${BASH_REMATCH[1]}"
-else
-    RED='\033[0;31m'
-    NC='\033[0m'
-    printf "${RED}Unable to extract hash from file name${NC}\n"
-    exit 1
-fi
+# Initialize an empty JSON object string
+jsonPayload="{\"password\": \"$releasePassword\""
+# Iterate through all files in the ./bundle directory
+for file in ./bundle/*; do
+    # Extract the filename without the path
+    filename=$(basename "$file")
+    
+    # Extract the name part (before the first dot)
+    name="${filename%%.*}"
+    
+    # Add the key-value pair to the JSON object string
+    if [ -n "$jsonPayload" ] && [ "$jsonPayload" != "{" ]; then
+        jsonPayload+=","
+    fi
+    jsonPayload+="\"$name\":\"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/$filename\""
+done
+# Close the JSON object
+jsonPayload+="}"
 
 responseStatus=`curl -s -o /dev/null -w "%{http_code}" -X PUT \
-    https://api.supertokens.io/0/frontend/web-js \
+    http://localhost:9000/0/frontend/web-js \
     -H 'Content-Type: application/json' \
     -H 'api-version: 0' \
-    -d "{
-        \"password\": \"$releasePassword\",
-        \"dateprovider\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/dateprovider.${hash}.js\",
-        \"emailpassword\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/emailpassword.${hash}.js\",
-        \"emailverification\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/emailverification.${hash}.js\",
-        \"multifactorauth\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/multifactorauth.${hash}.js\",
-        \"multitenancy\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/multitenancy.${hash}.js\",
-        \"passwordless\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/passwordless.${hash}.js\",
-        \"session\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/session.${hash}.js\",
-        \"supertokens\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/supertokens.${hash}.js\",
-        \"thirdparty\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/thirdparty.${hash}.js\",
-        \"totp\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/totp.${hash}.js\",
-        \"userroles\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/userroles.${hash}.js\",
-        \"website\": \"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/website.${hash}.js\"
-    }"`
+    -d "${jsonPayload}"`
 if [ "$responseStatus" -ne 200 ]
 then
     echo "failed PUT API to update js deliver uri on server with status code: $responseStatus. You need to manually call this API with the right url!"
