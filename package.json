@@ -1,12 +1,12 @@
 {
     "name": "supertokens-web-js",
-    "version": "0.13.0",
+    "version": "0.13.1",
     "description": "SuperTokens SDK for vanilla JS for all recipes",
     "main": "./index.js",
     "scripts": {
         "build-check": "cd lib && npx tsc -p tsconfig.json --noEmit && cd ../test/with-typescript && npm run build",
         "check-circular-dependencies": "npx madge --circular --extensions js ./lib/build/",
-        "build": "cd lib && rm -rf build && npx tsc -p tsconfig.json && npm run pack",
+        "build": "rm -rf bundle && cd lib && rm -rf build && npx tsc -p tsconfig.json && npm run pack",
         "pretty-check": "npx pretty-quick --check .",
         "pretty": "npx pretty-quick .",
         "build-pretty": "npm run build && npm run pretty && npm run pretty",
