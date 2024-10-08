@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-## [0.15.0] - 2024-10-07
+## [0.14.0] - 2024-10-07
 
 -   Added the OAuth2Provider recipe
 
@@ -51,6 +51,10 @@ Passwordless.init({
     },
 });
 ```
+
+## [0.13.1] - 2024-10-08
+
+-   Changes bundle file names to include a hash.
 
 ## [0.13.0] - 2024-07-10
 

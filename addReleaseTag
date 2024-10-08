@@ -98,12 +98,41 @@ git push --delete origin $currTag
 git tag v$version
 git push --tags
 
-
 response=`curl -s -X GET \
 "https://api.supertokens.io/0/frontend/latest/check?password=$password&version=$version&name=web-js" \
 -H 'api-version: 0'`
 response=`echo $response | jq .isLatest`
 
+
+# Initialize an empty JSON object string
+jsonPayload="{\"password\": \"$releasePassword\""
+# Iterate through all files in the ./bundle directory
+for file in ./bundle/*; do
+    # Extract the filename without the path
+    filename=$(basename "$file")
+    
+    # Extract the name part (before the first dot)
+    name="${filename%%.*}"
+    
+    # Add the key-value pair to the JSON object string
+    if [ -n "$jsonPayload" ] && [ "$jsonPayload" != "{" ]; then
+        jsonPayload+=","
+    fi
+    jsonPayload+="\"$name\":\"https://cdn.jsdelivr.net/gh/supertokens/supertokens-web-js@v${version}/bundle/$filename\""
+done
+# Close the JSON object
+jsonPayload+="}"
+
+responseStatus=`curl -s -o /dev/null -w "%{http_code}" -X PUT \
+    https://api.supertokens.io/0/frontend/web-js \
+    -H 'Content-Type: application/json' \
+    -H 'api-version: 0' \
+    -d "${jsonPayload}"`
+if [ "$responseStatus" -ne 200 ]
+then
+    echo "failed PUT API to update js deliver uri on server with status code: $responseStatus. You need to manually call this API with the right url!"
+    exit 1
+fi
 
 if [[ $response == "null"  ]]
 then
