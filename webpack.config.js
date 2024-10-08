@@ -66,7 +66,7 @@ var config = {
         },
         supertokensOAuth2Provider: {
             import: APP_DIR + "/lib/build/recipe/oauth2provider/index.js",
-            filename: "oauth2provider.js",
+            filename: "oauth2provider.[contenthash].js",
             dependOn: "supertokensWebsite",
         },
         /**
