@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Breaking changes
 
+-   Now only supporting FDI 3.1 and 4.0 (Node >= 21.0.0)
 -   Added a new `shouldTryLinkingToSessionUser` flag to sign in/up related function inputs:
     -   No action is needed if you are not using MFA/session based account linking.
     -   If you are implementing MFA:
