@@ -228,6 +228,34 @@ export default class RecipeWrapper {
             userContext: input?.userContext,
         });
     }
+
+    /**
+     * Generate and send a recover account token.
+     *
+     * @param email Email to send the recover account token to.
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful
+     */
+    static generateRecoverAccountToken(input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
+        | {
+              status: "OK";
+          }
+        | { status: "RECOVER_ACCOUNT_NOT_ALLOWED"; reason: string }
+        | GeneralErrorResponse
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.generateRecoverAccountToken({
+            ...input,
+            userContext: input?.userContext,
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
@@ -236,5 +264,6 @@ const signInOptions = RecipeWrapper.signInOptions;
 const signUp = RecipeWrapper.signUp;
 const signIn = RecipeWrapper.signIn;
 const emailExists = RecipeWrapper.emailExists;
+const generateRecoverAccountToken = RecipeWrapper.generateRecoverAccountToken;
 
-export { init, registerOptions, signInOptions, signUp, signIn, emailExists };
+export { init, registerOptions, signInOptions, signUp, signIn, emailExists, generateRecoverAccountToken };
