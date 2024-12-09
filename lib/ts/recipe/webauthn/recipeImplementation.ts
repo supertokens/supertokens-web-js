@@ -259,5 +259,79 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
+        generateRecoverAccountToken: async function ({ email, options, userContext }) {
+            const { jsonBody, fetchResponse } = await querier.post<
+                | {
+                      status: "OK";
+                  }
+                | { status: "RECOVER_ACCOUNT_NOT_ALLOWED"; reason: string }
+                | GeneralErrorResponse
+            >(
+                undefined,
+                "/user/webauthn/reset/token",
+                {
+                    body: JSON.stringify({
+                        email,
+                    }),
+                },
+                Querier.preparePreAPIHook({
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
+                    action: "GENERATE_RECOVER_ACCOUNT_TOKEN",
+                    options: options,
+                    userContext: userContext,
+                }),
+                Querier.preparePostAPIHook({
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
+                    action: "GENERATE_RECOVER_ACCOUNT_TOKEN",
+                    userContext: userContext,
+                })
+            );
+
+            return {
+                ...jsonBody,
+                fetchResponse,
+            };
+        },
+        recoverAccount: async function ({ token, webauthnGeneratedOptionsId, credential, options, userContext }) {
+            const { jsonBody, fetchResponse } = await querier.post<
+                | {
+                      status: "OK";
+                      user: User;
+                      email: string;
+                  }
+                | GeneralErrorResponse
+                | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR" }
+                | { status: "INVALID_CREDENTIALS_ERROR" }
+                | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR" }
+                | { status: "INVALID_GENERATED_OPTIONS_ERROR" }
+                | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
+            >(
+                undefined,
+                "/user/webauthn/reset",
+                {
+                    body: JSON.stringify({
+                        token,
+                        webauthnGeneratedOptionsId,
+                        credential,
+                    }),
+                },
+                Querier.preparePreAPIHook({
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
+                    action: "RECOVER_ACCOUNT",
+                    options: options,
+                    userContext: userContext,
+                }),
+                Querier.preparePostAPIHook({
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
+                    action: "RECOVER_ACCOUNT",
+                    userContext: userContext,
+                })
+            );
+
+            return {
+                ...jsonBody,
+                fetchResponse,
+            };
+        },
     };
 }
