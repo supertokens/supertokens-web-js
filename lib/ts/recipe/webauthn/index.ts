@@ -96,7 +96,8 @@ export default class RecipeWrapper {
     }
 
     /**
-     * TODO: Add description once Victor shares the difference between registerOptions and this.
+     * Returns details about how the authenticator to should verify that a signin
+     * is correct.
      *
      * @param email Email to add signin options against.
      *
