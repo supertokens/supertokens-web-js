@@ -17,6 +17,7 @@ import Querier from "../../querier";
 import { RecipeInterface, ResidentKey, UserVerification } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
+import { GeneralErrorResponse } from "../../types";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -96,6 +97,47 @@ export default function getRecipeImplementation(
                 Querier.preparePostAPIHook({
                     recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "REGISTER_OPTIONS",
+                    userContext: userContext,
+                })
+            );
+
+            return {
+                ...jsonBody,
+                fetchResponse,
+            };
+        },
+        signInOptions: async function ({ email, options, userContext }) {
+            const { jsonBody, fetchResponse } = await querier.post<
+                | {
+                      status: "OK";
+                      webauthnGeneratedOptionsId: string;
+                      challenge: string;
+                      timeout: number;
+                      userVerification: UserVerification;
+                      fetchResponse: Response;
+                  }
+                | {
+                      status: "INVALID_GENERATED_OPTIONS_ERROR";
+                      fetchResponse: Response;
+                  }
+                | GeneralErrorResponse
+            >(
+                undefined,
+                "/webauthn/options/signin",
+                {
+                    body: JSON.stringify({
+                        email,
+                    }),
+                },
+                Querier.preparePreAPIHook({
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
+                    action: "SIGN_IN_OPTIONS",
+                    options: options,
+                    userContext: userContext,
+                }),
+                Querier.preparePostAPIHook({
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
+                    action: "SIGN_IN_OPTIONS",
                     userContext: userContext,
                 })
             );
