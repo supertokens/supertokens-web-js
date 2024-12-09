@@ -13,4 +13,89 @@
  * under the License.
  */
 
-// TODO: Define the code
+import { getNormalisedUserContext } from "../../utils";
+import { RecipeFunctionOptions } from "../emailpassword";
+import Recipe from "./recipe";
+import { ResidentKey, UserInput, UserVerification } from "./types";
+
+export default class RecipeWrapper {
+    static init(config?: UserInput) {
+        return Recipe.init(config);
+    }
+
+    /**
+     * Registers a new device based on the passed options and returns the
+     * challenge to be fulfilled in order for successful addition of the identity.
+     *
+     * @param email (OPTIONAL) Email to register the options against. This cannot be passed along with recoverAccountToken.
+     *
+     * @param recoverAccountToken (OPTIONAL) Recover account token in case this is being generated in that context. This cannot be passed along with email.
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful along a description of the created device (secret, etc.)
+     */
+    static registerOptions(
+        input: { options?: RecipeFunctionOptions; userContext: any } & (
+            | { email: string }
+            | { recoverAccountToken: string }
+        )
+    ): Promise<
+        | {
+              status: "OK";
+              webauthnGeneratedOptionsId: string;
+              rp: {
+                  id: string;
+                  name: string;
+              };
+              user: {
+                  id: string;
+                  name: string;
+                  displayName: string;
+              };
+              challenge: string;
+              timeout: number;
+              excludeCredentials: {
+                  id: string;
+                  type: "public-key";
+                  transports: ("ble" | "hybrid" | "internal" | "nfc" | "usb")[];
+              }[];
+              attestation: "none" | "indirect" | "direct" | "enterprise";
+              pubKeyCredParams: {
+                  alg: number;
+                  type: "public-key";
+              }[];
+              authenticatorSelection: {
+                  requireResidentKey: boolean;
+                  residentKey: ResidentKey;
+                  userVerification: UserVerification;
+              };
+              fetchResponse: Response;
+          }
+        | {
+              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_EMAIL_ERROR";
+              err: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.registerOptions({
+            ...input,
+            userContext: getNormalisedUserContext(input?.userContext),
+        });
+    }
+}
+
+const init = RecipeWrapper.init;
+const registerOptions = RecipeWrapper.registerOptions;
+
+export { init, registerOptions };
