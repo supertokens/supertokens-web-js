@@ -229,5 +229,35 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
+        emailExists: async function ({ email, options, userContext }) {
+            const { jsonBody, fetchResponse } = await querier.get<
+                | {
+                      status: "OK";
+                      exists: boolean;
+                  }
+                | GeneralErrorResponse
+            >(
+                undefined,
+                "/webauthn/email/exists",
+                {},
+                { email: email },
+                Querier.preparePreAPIHook({
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
+                    action: "EMAIL_EXISTS",
+                    options: options,
+                    userContext: userContext,
+                }),
+                Querier.preparePostAPIHook({
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
+                    action: "EMAIL_EXISTS",
+                    userContext: userContext,
+                })
+            );
+
+            return {
+                ...jsonBody,
+                fetchResponse,
+            };
+        },
     };
 }
