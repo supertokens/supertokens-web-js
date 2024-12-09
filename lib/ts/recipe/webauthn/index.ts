@@ -204,6 +204,30 @@ export default class RecipeWrapper {
             userContext: input?.userContext,
         });
     }
+
+    /**
+     * Checks whether there is an webauthn user with the passed email.
+     *
+     * @param email Email to check for existence
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful along with a boolean indicating existence
+     */
+    static emailExists(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+        | {
+              status: "OK";
+              exists: boolean;
+          }
+        | GeneralErrorResponse
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.emailExists({
+            ...input,
+            userContext: input?.userContext,
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
@@ -211,5 +235,6 @@ const registerOptions = RecipeWrapper.registerOptions;
 const signInOptions = RecipeWrapper.signInOptions;
 const signUp = RecipeWrapper.signUp;
 const signIn = RecipeWrapper.signIn;
+const emailExists = RecipeWrapper.emailExists;
 
-export { init, registerOptions, signInOptions, signUp, signIn };
+export { init, registerOptions, signInOptions, signUp, signIn, emailExists };
