@@ -17,7 +17,7 @@ import Querier from "../../querier";
 import { RecipeInterface, ResidentKey, UserVerification } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
-import { GeneralErrorResponse } from "../../types";
+import { GeneralErrorResponse, User } from "../../types";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -138,6 +138,88 @@ export default function getRecipeImplementation(
                 Querier.preparePostAPIHook({
                     recipePostAPIHook: recipeImplInput.postAPIHook,
                     action: "SIGN_IN_OPTIONS",
+                    userContext: userContext,
+                })
+            );
+
+            return {
+                ...jsonBody,
+                fetchResponse,
+            };
+        },
+        signUp: async function ({ webauthnGeneratedOptionsId, credential, options, userContext }) {
+            const { jsonBody, fetchResponse } = await querier.post<
+                | {
+                      status: "OK";
+                      user: User;
+                  }
+                | GeneralErrorResponse
+                | {
+                      status: "SIGN_UP_NOT_ALLOWED";
+                      reason: string;
+                  }
+                | { status: "INVALID_CREDENTIALS_ERROR" }
+                | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR" }
+                | { status: "INVALID_GENERATED_OPTIONS_ERROR" }
+                | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
+                | { status: "EMAIL_ALREADY_EXISTS_ERROR" }
+            >(
+                undefined,
+                "/webauthn/signup",
+                {
+                    body: JSON.stringify({
+                        webauthnGeneratedOptionsId,
+                        credential,
+                    }),
+                },
+                Querier.preparePreAPIHook({
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
+                    action: "SIGN_UP",
+                    options: options,
+                    userContext: userContext,
+                }),
+                Querier.preparePostAPIHook({
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
+                    action: "SIGN_UP",
+                    userContext: userContext,
+                })
+            );
+
+            return {
+                ...jsonBody,
+                fetchResponse,
+            };
+        },
+        signIn: async function ({ webauthnGeneratedOptionsId, credential, options, userContext }) {
+            const { jsonBody, fetchResponse } = await querier.post<
+                | {
+                      status: "OK";
+                      user: User;
+                  }
+                | { status: "INVALID_CREDENTIALS_ERROR" }
+                | {
+                      status: "SIGN_IN_NOT_ALLOWED";
+                      reason: string;
+                  }
+                | GeneralErrorResponse
+            >(
+                undefined,
+                "/webauthn/signin",
+                {
+                    body: JSON.stringify({
+                        webauthnGeneratedOptionsId,
+                        credential,
+                    }),
+                },
+                Querier.preparePreAPIHook({
+                    recipePreAPIHook: recipeImplInput.preAPIHook,
+                    action: "SIGN_IN",
+                    options: options,
+                    userContext: userContext,
+                }),
+                Querier.preparePostAPIHook({
+                    recipePostAPIHook: recipeImplInput.postAPIHook,
+                    action: "SIGN_IN",
                     userContext: userContext,
                 })
             );
