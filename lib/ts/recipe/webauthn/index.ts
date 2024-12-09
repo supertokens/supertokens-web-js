@@ -168,11 +168,48 @@ export default class RecipeWrapper {
             userContext: input?.userContext,
         });
     }
+
+    /**
+     * Sign in with the credential and the generated options ID.
+     *
+     * @param webauthnGeneratedOptionsId ID of the stored options
+     *
+     * @param credential Details of the credential
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.)
+     */
+    static signIn(input: {
+        webauthnGeneratedOptionsId: string;
+        credential: CredentialPayload;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
+        | {
+              status: "OK";
+              user: User;
+          }
+        | { status: "INVALID_CREDENTIALS_ERROR" }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
+          }
+        | GeneralErrorResponse
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.signIn({
+            ...input,
+            userContext: input?.userContext,
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
 const registerOptions = RecipeWrapper.registerOptions;
 const signInOptions = RecipeWrapper.signInOptions;
 const signUp = RecipeWrapper.signUp;
+const signIn = RecipeWrapper.signIn;
 
-export { init, registerOptions, signInOptions, signUp };
+export { init, registerOptions, signInOptions, signUp, signIn };
