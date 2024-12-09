@@ -256,6 +256,46 @@ export default class RecipeWrapper {
             userContext: input?.userContext,
         });
     }
+
+    /**
+     * Recover the account using the token received in email.
+     *
+     * @param token Recovery token received in email
+     *
+     * @param webauthnGeneratedOptionsId Stored options ID for webauthn
+     *
+     * @param credential Details of the credential
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
+     */
+    static recoverAccount(input: {
+        token: string;
+        webauthnGeneratedOptionsId: string;
+        credential: CredentialPayload;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
+        | {
+              status: "OK";
+              user: User;
+              email: string;
+          }
+        | GeneralErrorResponse
+        | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR" }
+        | { status: "INVALID_CREDENTIALS_ERROR" }
+        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR" }
+        | { status: "INVALID_GENERATED_OPTIONS_ERROR" }
+        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.recoverAccount({
+            ...input,
+            userContext: input?.userContext,
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
@@ -265,5 +305,15 @@ const signUp = RecipeWrapper.signUp;
 const signIn = RecipeWrapper.signIn;
 const emailExists = RecipeWrapper.emailExists;
 const generateRecoverAccountToken = RecipeWrapper.generateRecoverAccountToken;
+const recoverAccount = RecipeWrapper.recoverAccount;
 
-export { init, registerOptions, signInOptions, signUp, signIn, emailExists, generateRecoverAccountToken };
+export {
+    init,
+    registerOptions,
+    signInOptions,
+    signUp,
+    signIn,
+    emailExists,
+    generateRecoverAccountToken,
+    recoverAccount,
+};
