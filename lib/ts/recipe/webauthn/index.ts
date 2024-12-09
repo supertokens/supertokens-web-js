@@ -107,7 +107,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the webauthn options (challenge, etc.)
      */
-    static signinOptions(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static signInOptions(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
         | {
               status: "OK";
               webauthnGeneratedOptionsId: string;
@@ -172,5 +172,7 @@ export default class RecipeWrapper {
 
 const init = RecipeWrapper.init;
 const registerOptions = RecipeWrapper.registerOptions;
+const signInOptions = RecipeWrapper.signInOptions;
+const signUp = RecipeWrapper.signUp;
 
-export { init, registerOptions };
+export { init, registerOptions, signInOptions, signUp };
