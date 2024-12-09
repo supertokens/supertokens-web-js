@@ -187,4 +187,34 @@ export type RecipeInterface = {
           }
         | GeneralErrorResponse
     >;
+    generateRecoverAccountToken: (input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
+        | {
+              status: "OK";
+          }
+        | { status: "RECOVER_ACCOUNT_NOT_ALLOWED"; reason: string }
+        | GeneralErrorResponse
+    >;
+    recoverAccount: (input: {
+        token: string;
+        webauthnGeneratedOptionsId: string;
+        credential: CredentialPayload;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
+        | {
+              status: "OK";
+              user: User;
+              email: string;
+          }
+        | GeneralErrorResponse
+        | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR" }
+        | { status: "INVALID_CREDENTIALS_ERROR" }
+        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR" }
+        | { status: "INVALID_GENERATED_OPTIONS_ERROR" }
+        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
+    >;
 };
