@@ -1,4 +1,4 @@
-/* Copyright (c) 2024, VRAI Labs and/or its affiliates. All rights reserved.
+/* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
  * "License") as published by the Apache Software Foundation.
@@ -12,7 +12,17 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
+import { normaliseAuthRecipe } from "../authRecipe/utils";
+import { InputType, NormalisedInputType, RecipeInterface } from "./types";
 
-import AuthRecipe from "../authRecipe";
-import { PreAndPostAPIHookAction } from "../multitenancy";
-import { NormalisedInputType, RecipeInterface, InputType } from "./types";
+export function normaliseUserInput(config: InputType): NormalisedInputType {
+    const override: any = {
+        functions: (originalImplementation: RecipeInterface) => originalImplementation,
+        ...config.override,
+    };
+
+    return {
+        ...normaliseAuthRecipe(config),
+        override,
+    };
+}
