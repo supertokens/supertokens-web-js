@@ -13,6 +13,7 @@
  * under the License.
  */
 
+import { GeneralErrorResponse, User } from "../../types";
 import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
     InputType as AuthRecipeInputType,
@@ -58,6 +59,20 @@ export type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHoo
             builder: OverrideableBuilder<RecipeInterface>
         ) => RecipeInterface;
     };
+};
+
+export type CredentialPayload = {
+    id: string;
+    rawId: string;
+    response: {
+        clientDataJSON: string;
+        attestationObject: string;
+        transports?: ("ble" | "cable" | "hybrid" | "internal" | "nfc" | "smart-card" | "usb")[];
+        userHandle: string;
+    };
+    authenticatorAttachment: "platform" | "cross-platform";
+    clientExtensionResults: Record<string, unknown>;
+    type: "public-key";
 };
 
 export type RecipeInterface = {
@@ -111,5 +126,65 @@ export type RecipeInterface = {
               status: "INVALID_GENERATED_OPTIONS_ERROR";
               fetchResponse: Response;
           }
+    >;
+    signInOptions: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+        | {
+              status: "OK";
+              webauthnGeneratedOptionsId: string;
+              challenge: string;
+              timeout: number;
+              userVerification: UserVerification;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+    >;
+    signUp: (input: {
+        webauthnGeneratedOptionsId: string;
+        credential: CredentialPayload;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
+        | {
+              status: "OK";
+              user: User;
+          }
+        | GeneralErrorResponse
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
+          }
+        | { status: "INVALID_CREDENTIALS_ERROR" }
+        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR" }
+        | { status: "INVALID_GENERATED_OPTIONS_ERROR" }
+        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
+        | { status: "EMAIL_ALREADY_EXISTS_ERROR" }
+    >;
+    signIn: (input: {
+        webauthnGeneratedOptionsId: string;
+        credential: CredentialPayload;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
+        | {
+              status: "OK";
+              user: User;
+          }
+        | { status: "INVALID_CREDENTIALS_ERROR" }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
+          }
+        | GeneralErrorResponse
+    >;
+    emailExists: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+        | {
+              status: "OK";
+              exists: boolean;
+          }
+        | GeneralErrorResponse
     >;
 };

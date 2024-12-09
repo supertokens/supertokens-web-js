@@ -171,3 +171,9 @@ export type User = {
         };
     }[];
 };
+
+export declare type GeneralErrorResponse = {
+    status: "GENERAL_ERROR";
+    message: string;
+    fetchResponse: Response;
+};
