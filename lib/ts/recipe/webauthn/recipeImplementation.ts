@@ -18,6 +18,7 @@ import { RecipeInterface, ResidentKey, UserVerification } from "./types";
 import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModule/types";
 import { PreAndPostAPIHookAction } from "./types";
 import { GeneralErrorResponse, User } from "../../types";
+import Multitenancy from "../multitenancy/recipe";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -80,7 +81,9 @@ export default function getRecipeImplementation(
                       fetchResponse: Response;
                   }
             >(
-                undefined,
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+                    userContext: userContext,
+                }),
                 "/webauthn/options/register",
                 {
                     body: JSON.stringify({
@@ -122,7 +125,9 @@ export default function getRecipeImplementation(
                   }
                 | GeneralErrorResponse
             >(
-                undefined,
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+                    userContext: userContext,
+                }),
                 "/webauthn/options/signin",
                 {
                     body: JSON.stringify({
@@ -164,7 +169,9 @@ export default function getRecipeImplementation(
                 | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
                 | { status: "EMAIL_ALREADY_EXISTS_ERROR" }
             >(
-                undefined,
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+                    userContext: userContext,
+                }),
                 "/webauthn/signup",
                 {
                     body: JSON.stringify({
@@ -203,7 +210,9 @@ export default function getRecipeImplementation(
                   }
                 | GeneralErrorResponse
             >(
-                undefined,
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+                    userContext: userContext,
+                }),
                 "/webauthn/signin",
                 {
                     body: JSON.stringify({
@@ -237,7 +246,9 @@ export default function getRecipeImplementation(
                   }
                 | GeneralErrorResponse
             >(
-                undefined,
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+                    userContext: userContext,
+                }),
                 "/webauthn/email/exists",
                 {},
                 { email: email },
@@ -267,7 +278,9 @@ export default function getRecipeImplementation(
                 | { status: "RECOVER_ACCOUNT_NOT_ALLOWED"; reason: string }
                 | GeneralErrorResponse
             >(
-                undefined,
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+                    userContext: userContext,
+                }),
                 "/user/webauthn/reset/token",
                 {
                     body: JSON.stringify({
@@ -306,7 +319,9 @@ export default function getRecipeImplementation(
                 | { status: "INVALID_GENERATED_OPTIONS_ERROR" }
                 | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
             >(
-                undefined,
+                await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({
+                    userContext: userContext,
+                }),
                 "/user/webauthn/reset",
                 {
                     body: JSON.stringify({
