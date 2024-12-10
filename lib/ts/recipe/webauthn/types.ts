@@ -224,4 +224,75 @@ export type RecipeInterface = {
         | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
     >;
+    registerAndSignUp: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+        | {
+              status: "OK";
+              user: User;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_EMAIL_ERROR";
+              err: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
+        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
+        | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
+    >;
+    authenticateAndSignIn: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+        | {
+              status: "OK";
+              user: User;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+    >;
+    registerAndRecoverAccount: (input: {
+        recoverAccountToken: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
+        | {
+              status: "OK";
+              user: User;
+              email: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+        | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
+        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
+    >;
 };
