@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.15.0] - 2024-12-10
+
+-   Added webauthn support for various functionalities
+
 ## [0.14.0] - 2024-10-07
 
 -   Added the OAuth2Provider recipe
