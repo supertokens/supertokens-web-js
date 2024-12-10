@@ -39,6 +39,7 @@
     },
     "homepage": "https://github.com/supertokens/supertokens-web-js#readme",
     "dependencies": {
+        "@simplewebauthn/browser": "^13.0.0",
         "supertokens-js-override": "0.0.4",
         "supertokens-website": "^20.1.5"
     },

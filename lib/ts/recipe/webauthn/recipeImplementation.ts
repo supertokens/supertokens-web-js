@@ -19,6 +19,7 @@ import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModul
 import { PreAndPostAPIHookAction } from "./types";
 import { GeneralErrorResponse, User } from "../../types";
 import Multitenancy from "../multitenancy/recipe";
+import { RegistrationResponseJSON, startRegistration } from "@simplewebauthn/browser";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -353,11 +354,49 @@ export default function getRecipeImplementation(
             const registrationOptions = await this.registerOptions({ options, userContext, email });
             if (registrationOptions?.status !== "OK") {
                 // If we did not get an OK status, we need to return the error as is.
+
+                // If the `status` is `RECOVER_ACCOUNT_TOKEN_INVALID_ERROR`, we need to throw an
+                // error since that should never happen as we are registering with an email
+                // and not a token.
+                if (registrationOptions?.status === "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR") {
+                    throw new Error("Got `RECOVER_ACCOUNT_TOKEN_INVALID_ERROR` status that should never happen");
+                }
+
                 return registrationOptions;
             }
 
             // We should have received a valid registration options response.
-            // TODO: Pass the registration options to simplewebauthn
+            let registrationResponse: RegistrationResponseJSON;
+            try {
+                registrationResponse = await startRegistration({ optionsJSON: registrationOptions });
+            } catch (error: any) {
+                if (error.name === "InvalidStateError") {
+                    return { status: "AUTHENTICATOR_ALREADY_REGISTERED" };
+                }
+
+                throw error;
+            }
+
+            // We should have a valid registration response for the passed credentials
+            // and we are good to go ahead and verify them.
+            return await this.signUp({
+                webauthnGeneratedOptionsId: registrationOptions.webauthnGeneratedOptionsId,
+                credential: {
+                    id: registrationResponse.id,
+                    rawId: registrationResponse.rawId,
+                    response: {
+                        clientDataJSON: registrationResponse.response.clientDataJSON,
+                        attestationObject: registrationResponse.response.attestationObject,
+                        transports: registrationResponse.response.transports,
+                        userHandle: "TBD", // TODO: Fetch from the response
+                    },
+                    authenticatorAttachment: registrationResponse.authenticatorAttachment || "platform", // TODO: Fix acc to what Victor suggests
+                    type: registrationResponse.type,
+                    clientExtensionResults: {}, // TODO: Fetch from the response.
+                },
+                options,
+                userContext,
+            });
         },
     };
 }
