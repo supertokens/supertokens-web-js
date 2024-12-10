@@ -135,27 +135,34 @@ export declare type RecipeInterface = {
         | {
               status: "OK";
               user: User;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
         | {
               status: "SIGN_UP_NOT_ALLOWED";
               reason: string;
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_AUTHENTICATOR_ERROR";
               reason: string;
+              fetchResponse: Response;
           }
         | {
               status: "EMAIL_ALREADY_EXISTS_ERROR";
+              fetchResponse: Response;
           }
     >;
     signIn: (input: {
@@ -167,13 +174,16 @@ export declare type RecipeInterface = {
         | {
               status: "OK";
               user: User;
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "SIGN_IN_NOT_ALLOWED";
               reason: string;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
     >;
@@ -181,6 +191,7 @@ export declare type RecipeInterface = {
         | {
               status: "OK";
               exists: boolean;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
     >;
@@ -191,10 +202,12 @@ export declare type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
+              fetchResponse: Response;
           }
         | {
               status: "RECOVER_ACCOUNT_NOT_ALLOWED";
               reason: string;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
     >;
@@ -209,23 +222,29 @@ export declare type RecipeInterface = {
               status: "OK";
               user: User;
               email: string;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
         | {
               status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_AUTHENTICATOR_ERROR";
               reason: string;
+              fetchResponse: Response;
           }
     >;
 };

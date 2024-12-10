@@ -151,17 +151,19 @@ export type RecipeInterface = {
         | {
               status: "OK";
               user: User;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
         | {
               status: "SIGN_UP_NOT_ALLOWED";
               reason: string;
+              fetchResponse: Response;
           }
-        | { status: "INVALID_CREDENTIALS_ERROR" }
-        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR" }
-        | { status: "INVALID_GENERATED_OPTIONS_ERROR" }
-        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
-        | { status: "EMAIL_ALREADY_EXISTS_ERROR" }
+        | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
+        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
+        | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
     >;
     signIn: (input: {
         webauthnGeneratedOptionsId: string;
@@ -172,11 +174,13 @@ export type RecipeInterface = {
         | {
               status: "OK";
               user: User;
+              fetchResponse: Response;
           }
-        | { status: "INVALID_CREDENTIALS_ERROR" }
+        | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
         | {
               status: "SIGN_IN_NOT_ALLOWED";
               reason: string;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
     >;
@@ -184,6 +188,7 @@ export type RecipeInterface = {
         | {
               status: "OK";
               exists: boolean;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
     >;
@@ -194,8 +199,9 @@ export type RecipeInterface = {
     }) => Promise<
         | {
               status: "OK";
+              fetchResponse: Response;
           }
-        | { status: "RECOVER_ACCOUNT_NOT_ALLOWED"; reason: string }
+        | { status: "RECOVER_ACCOUNT_NOT_ALLOWED"; reason: string; fetchResponse: Response }
         | GeneralErrorResponse
     >;
     recoverAccount: (input: {
@@ -209,12 +215,13 @@ export type RecipeInterface = {
               status: "OK";
               user: User;
               email: string;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
-        | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR" }
-        | { status: "INVALID_CREDENTIALS_ERROR" }
-        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR" }
-        | { status: "INVALID_GENERATED_OPTIONS_ERROR" }
-        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
+        | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
+        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
     >;
 };
