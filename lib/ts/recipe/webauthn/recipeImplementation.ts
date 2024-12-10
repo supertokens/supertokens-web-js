@@ -348,6 +348,17 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
+        registerAndSignUp: async function ({ email, options, userContext }) {
+            // Get the registration options by using the passed email ID.
+            const registrationOptions = await this.registerOptions({ options, userContext, email });
+            if (registrationOptions?.status !== "OK") {
+                // If we did not get an OK status, we need to return the error as is.
+                return registrationOptions;
+            }
+
+            // We should have received a valid registration options response.
+            // TODO: Pass the registration options to simplewebauthn
+        },
     };
 }
 
