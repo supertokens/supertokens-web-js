@@ -13,6 +13,7 @@
  * under the License.
  */
 
+import { AuthenticationResponseJSON, RegistrationResponseJSON } from "@simplewebauthn/browser";
 import { GeneralErrorResponse, User } from "../../types";
 import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
@@ -71,7 +72,7 @@ export type CredentialPayload = {
         userHandle: string;
     };
     authenticatorAttachment: "platform" | "cross-platform";
-    clientExtensionResults: Record<string, unknown>;
+    clientExtensionResults: any;
     type: "public-key";
 };
 
@@ -144,7 +145,7 @@ export type RecipeInterface = {
     >;
     signUp: (input: {
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: RegistrationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
@@ -167,7 +168,7 @@ export type RecipeInterface = {
     >;
     signIn: (input: {
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: AuthenticationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<

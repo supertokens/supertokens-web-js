@@ -19,7 +19,12 @@ import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModul
 import { PreAndPostAPIHookAction } from "./types";
 import { GeneralErrorResponse, User } from "../../types";
 import Multitenancy from "../multitenancy/recipe";
-import { RegistrationResponseJSON, startRegistration } from "@simplewebauthn/browser";
+import {
+    AuthenticationResponseJSON,
+    RegistrationResponseJSON,
+    startAuthentication,
+    startRegistration,
+} from "@simplewebauthn/browser";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -381,21 +386,35 @@ export default function getRecipeImplementation(
             // and we are good to go ahead and verify them.
             return await this.signUp({
                 webauthnGeneratedOptionsId: registrationOptions.webauthnGeneratedOptionsId,
-                credential: {
-                    id: registrationResponse.id,
-                    rawId: registrationResponse.rawId,
-                    response: {
-                        clientDataJSON: registrationResponse.response.clientDataJSON,
-                        attestationObject: registrationResponse.response.attestationObject,
-                        transports: registrationResponse.response.transports,
-                        userHandle: "TBD", // TODO: Fetch from the response
-                    },
-                    authenticatorAttachment: registrationResponse.authenticatorAttachment || "platform", // TODO: Fix acc to what Victor suggests
-                    type: registrationResponse.type,
-                    clientExtensionResults: {}, // TODO: Fetch from the response.
-                },
+                credential: registrationResponse,
                 options,
                 userContext,
+            });
+        },
+        authenticateAndSignIn: async function ({ email, options, userContext }) {
+            // Make a call to get the sign in options using the entered email ID.
+            const signInOptions = await this.signInOptions({ email, options, userContext });
+            if (signInOptions?.status !== "OK") {
+                // We want to return the error as is if status was not "OK"
+                return signInOptions;
+            }
+
+            // We should have the options ready and are good to start the authentication
+            let authenticationResponse: AuthenticationResponseJSON;
+            try {
+                authenticationResponse = await startAuthentication({ optionsJSON: signInOptions });
+            } catch (error: any) {
+                // TODO: Do we need to do something with the error besides throwing it?
+                throw error;
+            }
+
+            // We should have a valid authentication response at this point so we can
+            // go ahead and sign in the user.
+            return await this.signIn({
+                webauthnGeneratedOptionsId: signInOptions.webauthnGeneratedOptionsId,
+                credential: authenticationResponse,
+                options: options,
+                userContext: userContext,
             });
         },
     };
