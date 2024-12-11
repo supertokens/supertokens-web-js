@@ -297,6 +297,54 @@ export default class RecipeWrapper {
             userContext: input?.userContext,
         });
     }
+
+    /**
+     * This function will handle getting registration options for the email ID, registering the user using
+     * webauthn and then signing up the user.
+     *
+     * It uses `@simplewebauthn/browser` to make the webauthn calls.
+     *
+     * @param email Email of the user to register and signup
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
+     */
+    static registerAndSignUp(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+        | {
+              status: "OK";
+              user: User;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_EMAIL_ERROR";
+              err: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
+        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
+        | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
+        | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.registerAndSignUp({
+            ...input,
+            userContext: input?.userContext,
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
@@ -307,6 +355,7 @@ const signIn = RecipeWrapper.signIn;
 const emailExists = RecipeWrapper.emailExists;
 const generateRecoverAccountToken = RecipeWrapper.generateRecoverAccountToken;
 const recoverAccount = RecipeWrapper.recoverAccount;
+const registerAndSignup = RecipeWrapper.registerAndSignUp;
 
 export {
     init,
@@ -317,4 +366,5 @@ export {
     emailExists,
     generateRecoverAccountToken,
     recoverAccount,
+    registerAndSignup,
 };
