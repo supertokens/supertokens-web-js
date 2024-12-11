@@ -1,3 +1,4 @@
+import { AuthenticationResponseJSON, RegistrationResponseJSON } from "@simplewebauthn/browser";
 import { GeneralErrorResponse, User } from "../../types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { CredentialPayload, ResidentKey, UserInput, UserVerification } from "./types";
@@ -120,7 +121,7 @@ export default class RecipeWrapper {
      */
     static signUp(input: {
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: RegistrationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }): Promise<
@@ -165,7 +166,7 @@ export default class RecipeWrapper {
      */
     static signIn(input: {
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: AuthenticationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }): Promise<
@@ -270,6 +271,157 @@ export default class RecipeWrapper {
               reason: string;
           }
     >;
+    /**
+     * Register the new device and signup the user with the passed email ID.
+     *
+     * It uses `@simplewebauthn/browser` to make the webauthn calls.
+     *
+     * @param email Email of the user to register and signup
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
+     */
+    static registerAndSignUp(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+        | {
+              status: "OK";
+              user: User;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_EMAIL_ERROR";
+              err: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_AUTHENTICATOR_ERROR";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "EMAIL_ALREADY_EXISTS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "AUTHENTICATOR_ALREADY_REGISTERED";
+          }
+    >;
+    /**
+     * Authenticate the user and sign them in after verifying their identity.
+     *
+     * It uses `@simplewebauthn/browser` to make the webauthn calls.
+     *
+     * @param email Email of the user to authenticate and signin
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
+     */
+    static authenticateAndSignIn(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+        | {
+              status: "OK";
+              user: User;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+    >;
+    /**
+     * Register the new device and recover the user's account with the recover token.
+     *
+     * It uses `@simplewebauthn/browser` to make the webauthn calls.
+     *
+     * @param recoverAccountToken Recovery token for the user's account
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
+     */
+    static registerAndRecoverAccount(input: {
+        recoverAccountToken: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
+        | {
+              status: "OK";
+              user: User;
+              email: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+        | {
+              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_AUTHENTICATOR_ERROR";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "AUTHENTICATOR_ALREADY_REGISTERED";
+          }
+    >;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const registerOptions: typeof RecipeWrapper.registerOptions;
@@ -279,6 +431,9 @@ declare const signIn: typeof RecipeWrapper.signIn;
 declare const emailExists: typeof RecipeWrapper.emailExists;
 declare const generateRecoverAccountToken: typeof RecipeWrapper.generateRecoverAccountToken;
 declare const recoverAccount: typeof RecipeWrapper.recoverAccount;
+declare const registerAndSignup: typeof RecipeWrapper.registerAndSignUp;
+declare const authenticateAndSignIn: typeof RecipeWrapper.authenticateAndSignIn;
+declare const registerAndRecoverAccount: typeof RecipeWrapper.registerAndRecoverAccount;
 export {
     init,
     registerOptions,
@@ -288,4 +443,7 @@ export {
     emailExists,
     generateRecoverAccountToken,
     recoverAccount,
+    registerAndSignup,
+    authenticateAndSignIn,
+    registerAndRecoverAccount,
 };
