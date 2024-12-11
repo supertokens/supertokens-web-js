@@ -208,7 +208,7 @@ export type RecipeInterface = {
     recoverAccount: (input: {
         token: string;
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: RegistrationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
@@ -296,5 +296,6 @@ export type RecipeInterface = {
         | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
         | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
+        | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
     >;
 };

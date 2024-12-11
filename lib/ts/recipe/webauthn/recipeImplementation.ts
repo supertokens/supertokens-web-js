@@ -417,6 +417,43 @@ export default function getRecipeImplementation(
                 userContext: userContext,
             });
         },
+        registerAndRecoverAccount: async function ({ recoverAccountToken, options, userContext }) {
+            // Get the registration options based on the recoverAccountToken and
+            // register the device against the user.
+            const registrationOptions = await this.registerOptions({ options, userContext, recoverAccountToken });
+            if (registrationOptions?.status !== "OK") {
+                // If we did not get an OK status, we need to return the error as is.
+
+                // If the `status` is `INVALID_EMAIL_ERROR`, we need to throw an
+                // error since that should never happen as we are registering with a recover account token
+                // and not an email ID.
+                if (registrationOptions?.status === "INVALID_EMAIL_ERROR") {
+                    throw new Error("Got `INVALID_EMAIL_ERROR` status that should never happen");
+                }
+
+                return registrationOptions;
+            }
+
+            // We should have received a valid registration options response.
+            let registrationResponse: RegistrationResponseJSON;
+            try {
+                registrationResponse = await startRegistration({ optionsJSON: registrationOptions });
+            } catch (error: any) {
+                if (error.name === "InvalidStateError") {
+                    return { status: "AUTHENTICATOR_ALREADY_REGISTERED" };
+                }
+
+                throw error;
+            }
+
+            return await this.recoverAccount({
+                token: recoverAccountToken,
+                webauthnGeneratedOptionsId: registrationOptions.webauthnGeneratedOptionsId,
+                credential: registrationResponse,
+                options,
+                userContext,
+            });
+        },
     };
 }
 

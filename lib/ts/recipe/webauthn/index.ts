@@ -13,6 +13,7 @@
  * under the License.
  */
 
+import { AuthenticationResponseJSON, RegistrationResponseJSON } from "@simplewebauthn/browser";
 import { GeneralErrorResponse, User } from "../../types";
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
@@ -144,7 +145,7 @@ export default class RecipeWrapper {
      */
     static signUp(input: {
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: RegistrationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }): Promise<
@@ -184,7 +185,7 @@ export default class RecipeWrapper {
      */
     static signIn(input: {
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: AuthenticationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }): Promise<
