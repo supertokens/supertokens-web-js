@@ -299,8 +299,7 @@ export default class RecipeWrapper {
     }
 
     /**
-     * This function will handle getting registration options for the email ID, registering the user using
-     * webauthn and then signing up the user.
+     * Register the new device and signup the user with the passed email ID.
      *
      * It uses `@simplewebauthn/browser` to make the webauthn calls.
      *
@@ -382,6 +381,52 @@ export default class RecipeWrapper {
             userContext: input?.userContext,
         });
     }
+
+    /**
+     * Register the new device and recover the user's account with the recover token.
+     *
+     * It uses `@simplewebauthn/browser` to make the webauthn calls.
+     *
+     * @param recoverAccountToken Recovery token for the user's account
+     *
+     * @param userContext (OPTIONAL) Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/user-context the documentation}
+     *
+     * @param options (OPTIONAL) Use this to configure additional properties (for example pre api hooks)
+     *
+     * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
+     */
+    static registerAndRecoverAccount(input: {
+        recoverAccountToken: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
+        | {
+              status: "OK";
+              user: User;
+              email: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+        | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
+        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
+        | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.registerAndRecoverAccount({
+            ...input,
+            userContext: input?.userContext,
+        });
+    }
 }
 
 const init = RecipeWrapper.init;
@@ -394,6 +439,7 @@ const generateRecoverAccountToken = RecipeWrapper.generateRecoverAccountToken;
 const recoverAccount = RecipeWrapper.recoverAccount;
 const registerAndSignup = RecipeWrapper.registerAndSignUp;
 const authenticateAndSignIn = RecipeWrapper.authenticateAndSignIn;
+const registerAndRecoverAccount = RecipeWrapper.registerAndRecoverAccount;
 
 export {
     init,
@@ -406,4 +452,5 @@ export {
     recoverAccount,
     registerAndSignup,
     authenticateAndSignIn,
+    registerAndRecoverAccount,
 };
