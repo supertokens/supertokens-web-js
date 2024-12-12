@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+-   Added a debounced mechanism in should refresh email verification to limit verification call to once per second.
+
 ## [0.14.0] - 2024-10-07
 
 -   Added the OAuth2Provider recipe
