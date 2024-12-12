@@ -8,4 +8,5 @@ export declare class EmailVerificationClaimClass extends BooleanClaim {
     validators: BooleanClaim["validators"] & {
         isVerified: (refetchTimeOnFalseInSeconds?: number, maxAgeInSeconds?: number) => SessionClaimValidator;
     };
+    shouldRefreshLastCalled?: number;
 }

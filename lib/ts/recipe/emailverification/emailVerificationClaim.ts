@@ -28,6 +28,13 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                 refresh: this.refresh,
                 shouldRefresh: (payload, userContext) => {
                     const DateProvider = DateProviderReference.getReferenceOrThrow().dateProvider;
+                    const currentTime = DateProvider.now();
+
+                    if (this.shouldRefreshLastCalled && this.shouldRefreshLastCalled > currentTime - 1000) {
+                        return false;
+                    }
+
+                    this.shouldRefreshLastCalled = currentTime;
 
                     refetchTimeOnFalseInSeconds = refetchTimeOnFalseInSeconds ?? getThresholdAwareDefaultValue(10);
 
@@ -49,7 +56,6 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                         return true;
                     }
 
-                    const currentTime = DateProvider.now();
                     const lastRefetchTime = this.getLastFetchedTime(payload, userContext)!;
 
                     if (maxAgeInSeconds !== undefined) {
@@ -82,4 +88,6 @@ export class EmailVerificationClaimClass extends BooleanClaim {
     validators!: BooleanClaim["validators"] & {
         isVerified: (refetchTimeOnFalseInSeconds?: number, maxAgeInSeconds?: number) => SessionClaimValidator;
     };
+
+    shouldRefreshLastCalled?: number;
 }
