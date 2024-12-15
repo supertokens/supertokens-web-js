@@ -19,7 +19,9 @@ import { getNormalisedUserContext } from "../../utils";
 import { EmailVerificationClaimClass } from "./emailVerificationClaim";
 
 export default class RecipeWrapper {
-    static EmailVerificationClaim = Recipe.EmailVerificationClaim;
+    static get EmailVerificationClaim() {
+        return Recipe.EmailVerificationClaim;
+    }
 
     static init(config?: UserInput) {
         return Recipe.init(config);

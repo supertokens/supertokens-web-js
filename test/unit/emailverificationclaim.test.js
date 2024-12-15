@@ -14,6 +14,7 @@
  */
 import jsdom from "mocha-jsdom";
 import EmailVerification from "../../recipe/emailverification";
+import EmailVerificationRecipe from "../../lib/build/recipe/emailverification/recipe";
 import SuperTokens from "../../lib/build/supertokens";
 import assert from "assert";
 
@@ -25,10 +26,27 @@ import assert from "assert";
  * Test for checking when the shouldRefresh returning false when called multiple times in 1000ms
  * is added.
  */
+let delayCounter = 0;
 const delay = async () => {
-    return new Promise((resolve) => {
-        setTimeout(resolve, 1000);
-    });
+    ++delayCounter;
+};
+
+const commonConfig = {
+    appInfo: {
+        appName: "SuperTokens",
+        apiDomain: "api.supertokens.io",
+    },
+    dateProvider: function () {
+        return {
+            getThresholdInSeconds: function () {
+                return 7;
+            },
+            now: function () {
+                return Date.now() + delayCounter * 1000;
+            },
+        };
+    },
+    recipeList: [EmailVerification.init()],
 };
 
 describe("EmailVerificationClaim test", function () {
@@ -36,108 +54,73 @@ describe("EmailVerificationClaim test", function () {
 
     beforeEach(function () {
         SuperTokens.reset();
+        EmailVerificationRecipe.reset();
+        delayCounter = 0;
     });
 
     describe("EmailVerification Claim", function () {
         it("value should be refreshed if it is undefined", async function () {
-            SuperTokens.init({
-                appInfo: {
-                    appName: "SuperTokens",
-                    apiDomain: "api.supertokens.io",
-                },
-                recipeList: [EmailVerification.init()],
-            });
+            SuperTokens.init(commonConfig);
 
             const validator = EmailVerification.EmailVerificationClaim.validators.isVerified();
-            await delay(); // Added for correct results, since shouldRefresh is debounced
             const shouldRefreshUndefined = await validator.shouldRefresh({});
             assert.strictEqual(shouldRefreshUndefined, true);
         });
 
         it("value should be refreshed as per maxAgeInSeconds if it is provided", async function () {
-            SuperTokens.init({
-                appInfo: {
-                    appName: "SuperTokens",
-                    apiDomain: "api.supertokens.io",
-                },
-                recipeList: [EmailVerification.init()],
-            });
+            SuperTokens.init(commonConfig);
 
             const validator = EmailVerification.EmailVerificationClaim.validators.isVerified(10, 200);
-            await delay(); // Added for correct results, since shouldRefresh is debounced
             const shouldRefreshValid = await validator.shouldRefresh({
-                "st-ev": { v: true, t: Date.now() - 199 * 1000 },
+                "st-ev": { v: true, t: Date.now() + delayCounter * 1000 - 199 * 1000 },
             });
-            await delay(); // Added for correct results, since shouldRefresh is debounced
             const shouldRefreshExpired = await validator.shouldRefresh({
-                "st-ev": { v: true, t: Date.now() - 201 * 1000 },
+                "st-ev": { v: true, t: Date.now() + delayCounter * 1000 - 201 * 1000 },
             });
             assert.strictEqual(shouldRefreshValid, false);
             assert.strictEqual(shouldRefreshExpired, true);
         });
 
         it("value should be refreshed as per refetchTimeOnFalseInSeconds if it is provided", async function () {
-            SuperTokens.init({
-                appInfo: {
-                    appName: "SuperTokens",
-                    apiDomain: "api.supertokens.io",
-                },
-                recipeList: [EmailVerification.init()],
-            });
+            SuperTokens.init(commonConfig);
 
             const validator = EmailVerification.EmailVerificationClaim.validators.isVerified(8);
-            await delay(); // Added for correct results, since shouldRefresh is debounced
             const shouldRefreshValid = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() - 7 * 1000 },
+                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 7 * 1000 },
             });
-            await delay(); // Added for correct results, since shouldRefresh is debounced
             const shouldRefreshExpired = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() - 9 * 1000 },
+                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 9 * 1000 },
             });
             assert.strictEqual(shouldRefreshValid, false);
             assert.strictEqual(shouldRefreshExpired, true);
         });
 
         it("value should be refreshed as per default the refetchTimeOnFalseInSeconds if it is not provided", async function () {
-            SuperTokens.init({
-                appInfo: {
-                    appName: "SuperTokens",
-                    apiDomain: "api.supertokens.io",
-                },
-                recipeList: [EmailVerification.init()],
-            });
+            SuperTokens.init(commonConfig);
 
             // NOTE: the default value of refetchTimeOnFalseInSeconds is 10 seconds
             const validator = EmailVerification.EmailVerificationClaim.validators.isVerified();
-            await delay(); // Added for correct results, since shouldRefresh is debounced
             const shouldRefreshValid = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() - 9 * 1000 },
+                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 9 * 1000 },
             });
             await delay(); // Added for correct results, since shouldRefresh is debounced
             const shouldRefreshExpired = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() - 11 * 1000 },
+                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 11 * 1000 },
             });
             assert.strictEqual(shouldRefreshValid, false);
             assert.strictEqual(shouldRefreshExpired, true);
         });
 
         it("shouldRefresh should return false if called before 1000ms", async function () {
-            SuperTokens.init({
-                appInfo: {
-                    appName: "SuperTokens",
-                    apiDomain: "api.supertokens.io",
-                },
-                recipeList: [EmailVerification.init()],
-            });
+            SuperTokens.init(commonConfig);
 
             // NOTE: the default value of refetchTimeOnFalseInSeconds is 10 seconds
             const validator = EmailVerification.EmailVerificationClaim.validators.isVerified();
-            await delay(); // Added for correct results, since shouldRefresh is debounced
             const shouldRefresh = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() - 11 * 1000 },
+                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 11 * 1000 },
             });
             const shouldRefreshAgain = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() - 11 * 1000 },
+                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 11 * 1000 },
             });
             assert.strictEqual(shouldRefresh, true);
             assert.strictEqual(shouldRefreshAgain, false);

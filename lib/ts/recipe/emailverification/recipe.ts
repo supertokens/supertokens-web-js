@@ -85,7 +85,9 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
             return;
         }
         Recipe.instance = undefined;
-        return;
+        Recipe.EmailVerificationClaim = new EmailVerificationClaimClass(
+            () => Recipe.getInstanceOrThrow().recipeImplementation
+        );
     }
 }
 

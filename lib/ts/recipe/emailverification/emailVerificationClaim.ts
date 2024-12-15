@@ -34,8 +34,6 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                         return false;
                     }
 
-                    this.shouldRefreshLastCalled = currentTime;
-
                     refetchTimeOnFalseInSeconds = refetchTimeOnFalseInSeconds ?? getThresholdAwareDefaultValue(10);
 
                     if (maxAgeInSeconds !== undefined && maxAgeInSeconds < DateProvider.getThresholdInSeconds()) {
@@ -53,6 +51,7 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                     const value = this.getValueFromPayload(payload, userContext);
 
                     if (value === undefined) {
+                        this.shouldRefreshLastCalled = currentTime;
                         return true;
                     }
 
@@ -60,12 +59,14 @@ export class EmailVerificationClaimClass extends BooleanClaim {
 
                     if (maxAgeInSeconds !== undefined) {
                         if (lastRefetchTime < currentTime - maxAgeInSeconds * 1000) {
+                            this.shouldRefreshLastCalled = currentTime;
                             return true;
                         }
                     }
 
                     if (value === false) {
                         if (lastRefetchTime < currentTime - refetchTimeOnFalseInSeconds * 1000) {
+                            this.shouldRefreshLastCalled = currentTime;
                             return true;
                         }
                     }

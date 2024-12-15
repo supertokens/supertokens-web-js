@@ -2,7 +2,7 @@ import { RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserInput } fro
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { EmailVerificationClaimClass } from "./emailVerificationClaim";
 export default class RecipeWrapper {
-    static EmailVerificationClaim: EmailVerificationClaimClass;
+    static get EmailVerificationClaim(): EmailVerificationClaimClass;
     static init(
         config?: UserInput
     ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
