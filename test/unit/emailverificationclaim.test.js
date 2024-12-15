@@ -72,10 +72,10 @@ describe("EmailVerificationClaim test", function () {
 
             const validator = EmailVerification.EmailVerificationClaim.validators.isVerified(10, 200);
             const shouldRefreshValid = await validator.shouldRefresh({
-                "st-ev": { v: true, t: Date.now() + delayCounter * 1000 - 199 * 1000 },
+                "st-ev": { v: true, t: Date.now() - 199 * 1000 },
             });
             const shouldRefreshExpired = await validator.shouldRefresh({
-                "st-ev": { v: true, t: Date.now() + delayCounter * 1000 - 201 * 1000 },
+                "st-ev": { v: true, t: Date.now() - 201 * 1000 },
             });
             assert.strictEqual(shouldRefreshValid, false);
             assert.strictEqual(shouldRefreshExpired, true);
@@ -86,10 +86,10 @@ describe("EmailVerificationClaim test", function () {
 
             const validator = EmailVerification.EmailVerificationClaim.validators.isVerified(8);
             const shouldRefreshValid = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 7 * 1000 },
+                "st-ev": { v: false, t: Date.now() - 7 * 1000 },
             });
             const shouldRefreshExpired = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 9 * 1000 },
+                "st-ev": { v: false, t: Date.now() - 9 * 1000 },
             });
             assert.strictEqual(shouldRefreshValid, false);
             assert.strictEqual(shouldRefreshExpired, true);
@@ -101,11 +101,11 @@ describe("EmailVerificationClaim test", function () {
             // NOTE: the default value of refetchTimeOnFalseInSeconds is 10 seconds
             const validator = EmailVerification.EmailVerificationClaim.validators.isVerified();
             const shouldRefreshValid = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 9 * 1000 },
+                "st-ev": { v: false, t: Date.now() - 9 * 1000 },
             });
             await delay(); // Added for correct results, since shouldRefresh is debounced
             const shouldRefreshExpired = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 11 * 1000 },
+                "st-ev": { v: false, t: Date.now() - 11 * 1000 },
             });
             assert.strictEqual(shouldRefreshValid, false);
             assert.strictEqual(shouldRefreshExpired, true);
@@ -117,10 +117,10 @@ describe("EmailVerificationClaim test", function () {
             // NOTE: the default value of refetchTimeOnFalseInSeconds is 10 seconds
             const validator = EmailVerification.EmailVerificationClaim.validators.isVerified();
             const shouldRefresh = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 11 * 1000 },
+                "st-ev": { v: false, t: Date.now() - 11 * 1000 },
             });
             const shouldRefreshAgain = await validator.shouldRefresh({
-                "st-ev": { v: false, t: Date.now() + delayCounter * 1000 - 11 * 1000 },
+                "st-ev": { v: false, t: Date.now() - 11 * 1000 },
             });
             assert.strictEqual(shouldRefresh, true);
             assert.strictEqual(shouldRefreshAgain, false);
