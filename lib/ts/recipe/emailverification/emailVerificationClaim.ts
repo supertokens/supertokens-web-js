@@ -28,6 +28,11 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                 refresh: this.refresh,
                 shouldRefresh: (payload, userContext) => {
                     const DateProvider = DateProviderReference.getReferenceOrThrow().dateProvider;
+                    const currentTime = DateProvider.now();
+
+                    if (this.shouldRefreshLastCalled && this.shouldRefreshLastCalled > currentTime - 1000) {
+                        return false;
+                    }
 
                     refetchTimeOnFalseInSeconds = refetchTimeOnFalseInSeconds ?? getThresholdAwareDefaultValue(10);
 
@@ -46,20 +51,22 @@ export class EmailVerificationClaimClass extends BooleanClaim {
                     const value = this.getValueFromPayload(payload, userContext);
 
                     if (value === undefined) {
+                        this.shouldRefreshLastCalled = currentTime;
                         return true;
                     }
 
-                    const currentTime = DateProvider.now();
                     const lastRefetchTime = this.getLastFetchedTime(payload, userContext)!;
 
                     if (maxAgeInSeconds !== undefined) {
                         if (lastRefetchTime < currentTime - maxAgeInSeconds * 1000) {
+                            this.shouldRefreshLastCalled = currentTime;
                             return true;
                         }
                     }
 
                     if (value === false) {
                         if (lastRefetchTime < currentTime - refetchTimeOnFalseInSeconds * 1000) {
+                            this.shouldRefreshLastCalled = currentTime;
                             return true;
                         }
                     }
@@ -82,4 +89,6 @@ export class EmailVerificationClaimClass extends BooleanClaim {
     validators!: BooleanClaim["validators"] & {
         isVerified: (refetchTimeOnFalseInSeconds?: number, maxAgeInSeconds?: number) => SessionClaimValidator;
     };
+
+    shouldRefreshLastCalled?: number;
 }
