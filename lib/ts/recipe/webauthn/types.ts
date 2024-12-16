@@ -248,7 +248,6 @@ export type RecipeInterface = {
           }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
         | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
-        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
@@ -294,7 +293,6 @@ export type RecipeInterface = {
         | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR"; fetchResponse: Response }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
         | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
-        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
     >;
