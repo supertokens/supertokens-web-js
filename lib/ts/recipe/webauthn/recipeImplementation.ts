@@ -354,6 +354,26 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
+        registerUser: async function ({ registrationOptions }) {
+            let registrationResponse: RegistrationResponseJSON;
+            try {
+                registrationResponse = await startRegistration({ optionsJSON: registrationOptions });
+            } catch (error: any) {
+                if (error.name === "InvalidStateError") {
+                    return { status: "AUTHENTICATOR_ALREADY_REGISTERED" };
+                }
+
+                return {
+                    status: "FAILED_TO_REGISTER_USER",
+                    error: error,
+                };
+            }
+
+            return {
+                status: "OK",
+                registrationResponse,
+            };
+        },
         registerUserWithSignUp: async function ({ email, options, userContext }) {
             // Get the registration options by using the passed email ID.
             const registrationOptions = await this.getRegisterOptions({ options, userContext, email });
@@ -371,22 +391,16 @@ export default function getRecipeImplementation(
             }
 
             // We should have received a valid registration options response.
-            let registrationResponse: RegistrationResponseJSON;
-            try {
-                registrationResponse = await startRegistration({ optionsJSON: registrationOptions });
-            } catch (error: any) {
-                if (error.name === "InvalidStateError") {
-                    return { status: "AUTHENTICATOR_ALREADY_REGISTERED" };
-                }
-
-                throw error;
+            const registerUserResponse = await this.registerUser({ registrationOptions });
+            if (registerUserResponse.status !== "OK") {
+                return registerUserResponse;
             }
 
             // We should have a valid registration response for the passed credentials
             // and we are good to go ahead and verify them.
             return await this.signUp({
                 webauthnGeneratedOptionsId: registrationOptions.webauthnGeneratedOptionsId,
-                credential: registrationResponse,
+                credential: registerUserResponse.registrationResponse,
                 options,
                 userContext,
             });
@@ -435,21 +449,15 @@ export default function getRecipeImplementation(
             }
 
             // We should have received a valid registration options response.
-            let registrationResponse: RegistrationResponseJSON;
-            try {
-                registrationResponse = await startRegistration({ optionsJSON: registrationOptions });
-            } catch (error: any) {
-                if (error.name === "InvalidStateError") {
-                    return { status: "AUTHENTICATOR_ALREADY_REGISTERED" };
-                }
-
-                throw error;
+            const registerUserResponse = await this.registerUser({ registrationOptions });
+            if (registerUserResponse.status !== "OK") {
+                return registerUserResponse;
             }
 
             return await this.recoverAccount({
                 token: recoverAccountToken,
                 webauthnGeneratedOptionsId: registrationOptions.webauthnGeneratedOptionsId,
-                credential: registrationResponse,
+                credential: registerUserResponse.registrationResponse,
                 options,
                 userContext,
             });

@@ -338,6 +338,7 @@ export default class RecipeWrapper {
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
+        | { status: "FAILED_TO_REGISTER_USER"; error: any }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.registerUserWithSignUp({
             ...input,
@@ -425,6 +426,7 @@ export default class RecipeWrapper {
         | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
+        | { status: "FAILED_TO_REGISTER_USER"; error: any }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.registerUserWithRecoverAccount({
             ...input,
