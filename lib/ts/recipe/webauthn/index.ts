@@ -18,7 +18,14 @@ import { GeneralErrorResponse, User } from "../../types";
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import Recipe from "./recipe";
-import { CredentialPayload, ResidentKey, UserInput, UserVerification, RegistrationOptions } from "./types";
+import {
+    CredentialPayload,
+    ResidentKey,
+    UserInput,
+    UserVerification,
+    RegistrationOptions,
+    AuthenticationOptions,
+} from "./types";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -319,6 +326,25 @@ export default class RecipeWrapper {
     }
 
     /**
+     * Authenticate the user with the passed options by using native webauthn functions.
+     *
+     * It uses `@simplewebauthn/browser` to make the webauthn calls.
+     *
+     * @param authenticationOptions Options to pass for the authentication.
+     *
+     * @returns `{ status: "OK", ...}` if successful along with authentication response received
+     */
+    static authenticateUser(input: { authenticationOptions: AuthenticationOptions }): Promise<
+        | {
+              status: "OK";
+              authenticationResponse: AuthenticationResponseJSON;
+          }
+        | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.authenticateUser(input);
+    }
+
+    /**
      * Register the new device and signup the user with the passed email ID.
      *
      * It uses `@simplewebauthn/browser` to make the webauthn calls.
@@ -468,6 +494,7 @@ const registerUserWithSignUp = RecipeWrapper.registerUserWithSignUp;
 const authenticateUserWithSignIn = RecipeWrapper.authenticateUserWithSignIn;
 const registerUserWithRecoverAccount = RecipeWrapper.registerUserWithRecoverAccount;
 const registerUser = RecipeWrapper.registerUser;
+const authenticateUser = RecipeWrapper.authenticateUser;
 
 export {
     init,
@@ -482,4 +509,5 @@ export {
     authenticateUserWithSignIn,
     registerUserWithRecoverAccount,
     registerUser,
+    authenticateUser,
 };
