@@ -77,7 +77,7 @@ export type CredentialPayload = {
 };
 
 export type RecipeInterface = {
-    registerOptions: (
+    getRegisterOptions: (
         input: { options?: RecipeFunctionOptions; userContext: any } & (
             | { email: string }
             | { recoverAccountToken: string }
@@ -128,7 +128,7 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    signInOptions: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+    getSignInOptions: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
               status: "OK";
               webauthnGeneratedOptionsId: string;
@@ -185,7 +185,7 @@ export type RecipeInterface = {
           }
         | GeneralErrorResponse
     >;
-    emailExists: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+    getEmailExists: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
               status: "OK";
               exists: boolean;
@@ -225,7 +225,7 @@ export type RecipeInterface = {
         | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
     >;
-    registerAndSignUp: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+    registerUserWithSignUp: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
               status: "OK";
               user: User;
@@ -252,7 +252,11 @@ export type RecipeInterface = {
         | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
     >;
-    authenticateAndSignIn: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+    authenticateUserWithSignIn: (input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
         | {
               status: "OK";
               user: User;
@@ -270,7 +274,7 @@ export type RecipeInterface = {
           }
         | GeneralErrorResponse
     >;
-    registerAndRecoverAccount: (input: {
+    registerUserWithRecoverAccount: (input: {
         recoverAccountToken: string;
         options?: RecipeFunctionOptions;
         userContext: any;

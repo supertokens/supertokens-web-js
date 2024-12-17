@@ -39,7 +39,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the created webauthn details (challenge, etc.)
      */
-    static registerOptions(
+    static getRegisterOptions(
         input: { options?: RecipeFunctionOptions; userContext: any } & (
             | { email: string }
             | { recoverAccountToken: string }
@@ -90,7 +90,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.registerOptions({
+        return Recipe.getInstanceOrThrow().recipeImplementation.getRegisterOptions({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
         });
@@ -108,7 +108,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the webauthn options (challenge, etc.)
      */
-    static signInOptions(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static getSignInOptions(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
         | {
               status: "OK";
               webauthnGeneratedOptionsId: string;
@@ -123,7 +123,7 @@ export default class RecipeWrapper {
           }
         | GeneralErrorResponse
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.signInOptions({
+        return Recipe.getInstanceOrThrow().recipeImplementation.getSignInOptions({
             ...input,
             userContext: getNormalisedUserContext(input?.userContext),
         });
@@ -217,14 +217,14 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along with a boolean indicating existence
      */
-    static emailExists(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static getEmailExists(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
         | {
               status: "OK";
               exists: boolean;
           }
         | GeneralErrorResponse
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.emailExists({
+        return Recipe.getInstanceOrThrow().recipeImplementation.getEmailExists({
             ...input,
             userContext: input?.userContext,
         });
@@ -311,7 +311,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
      */
-    static registerAndSignUp(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static registerUserWithSignUp(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
         | {
               status: "OK";
               user: User;
@@ -339,7 +339,7 @@ export default class RecipeWrapper {
         | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.registerAndSignUp({
+        return Recipe.getInstanceOrThrow().recipeImplementation.registerUserWithSignUp({
             ...input,
             userContext: input?.userContext,
         });
@@ -358,7 +358,11 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
      */
-    static authenticateAndSignIn(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static authenticateUserWithSignIn(input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
         | {
               status: "OK";
               user: User;
@@ -376,7 +380,7 @@ export default class RecipeWrapper {
           }
         | GeneralErrorResponse
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.authenticateAndSignIn({
+        return Recipe.getInstanceOrThrow().recipeImplementation.authenticateUserWithSignIn({
             ...input,
             userContext: input?.userContext,
         });
@@ -395,7 +399,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
      */
-    static registerAndRecoverAccount(input: {
+    static registerUserWithRecoverAccount(input: {
         recoverAccountToken: string;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -422,7 +426,7 @@ export default class RecipeWrapper {
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.registerAndRecoverAccount({
+        return Recipe.getInstanceOrThrow().recipeImplementation.registerUserWithRecoverAccount({
             ...input,
             userContext: input?.userContext,
         });
@@ -430,27 +434,27 @@ export default class RecipeWrapper {
 }
 
 const init = RecipeWrapper.init;
-const registerOptions = RecipeWrapper.registerOptions;
-const signInOptions = RecipeWrapper.signInOptions;
+const getRegisterOptions = RecipeWrapper.getRegisterOptions;
+const getSignInOptions = RecipeWrapper.getSignInOptions;
 const signUp = RecipeWrapper.signUp;
 const signIn = RecipeWrapper.signIn;
-const emailExists = RecipeWrapper.emailExists;
+const getEmailExists = RecipeWrapper.getEmailExists;
 const generateRecoverAccountToken = RecipeWrapper.generateRecoverAccountToken;
 const recoverAccount = RecipeWrapper.recoverAccount;
-const registerAndSignup = RecipeWrapper.registerAndSignUp;
-const authenticateAndSignIn = RecipeWrapper.authenticateAndSignIn;
-const registerAndRecoverAccount = RecipeWrapper.registerAndRecoverAccount;
+const registerUserWithSignUp = RecipeWrapper.registerUserWithSignUp;
+const authenticateUserWithSignIn = RecipeWrapper.authenticateUserWithSignIn;
+const registerUserWithRecoverAccount = RecipeWrapper.registerUserWithRecoverAccount;
 
 export {
     init,
-    registerOptions,
-    signInOptions,
+    getRegisterOptions,
+    getSignInOptions,
     signUp,
     signIn,
-    emailExists,
+    getEmailExists,
     generateRecoverAccountToken,
     recoverAccount,
-    registerAndSignup,
-    authenticateAndSignIn,
-    registerAndRecoverAccount,
+    registerUserWithSignUp,
+    authenticateUserWithSignIn,
+    registerUserWithRecoverAccount,
 };

@@ -32,7 +32,7 @@ export default function getRecipeImplementation(
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
     return {
-        registerOptions: async function ({
+        getRegisterOptions: async function ({
             options,
             userContext,
             email,
@@ -115,7 +115,7 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        signInOptions: async function ({ email, options, userContext }) {
+        getSignInOptions: async function ({ email, options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
@@ -244,7 +244,7 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        emailExists: async function ({ email, options, userContext }) {
+        getEmailExists: async function ({ email, options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.get<
                 | {
                       status: "OK";
@@ -354,9 +354,9 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        registerAndSignUp: async function ({ email, options, userContext }) {
+        registerUserWithSignUp: async function ({ email, options, userContext }) {
             // Get the registration options by using the passed email ID.
-            const registrationOptions = await this.registerOptions({ options, userContext, email });
+            const registrationOptions = await this.getRegisterOptions({ options, userContext, email });
             if (registrationOptions?.status !== "OK") {
                 // If we did not get an OK status, we need to return the error as is.
 
@@ -391,9 +391,9 @@ export default function getRecipeImplementation(
                 userContext,
             });
         },
-        authenticateAndSignIn: async function ({ email, options, userContext }) {
+        authenticateUserWithSignIn: async function ({ email, options, userContext }) {
             // Make a call to get the sign in options using the entered email ID.
-            const signInOptions = await this.signInOptions({ email, options, userContext });
+            const signInOptions = await this.getSignInOptions({ email, options, userContext });
             if (signInOptions?.status !== "OK") {
                 // We want to return the error as is if status was not "OK"
                 return signInOptions;
@@ -417,10 +417,10 @@ export default function getRecipeImplementation(
                 userContext: userContext,
             });
         },
-        registerAndRecoverAccount: async function ({ recoverAccountToken, options, userContext }) {
+        registerUserWithRecoverAccount: async function ({ recoverAccountToken, options, userContext }) {
             // Get the registration options based on the recoverAccountToken and
             // register the device against the user.
-            const registrationOptions = await this.registerOptions({ options, userContext, recoverAccountToken });
+            const registrationOptions = await this.getRegisterOptions({ options, userContext, recoverAccountToken });
             if (registrationOptions?.status !== "OK") {
                 // If we did not get an OK status, we need to return the error as is.
 
