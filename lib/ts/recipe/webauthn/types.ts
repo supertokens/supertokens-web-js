@@ -76,7 +76,7 @@ export type CredentialPayload = {
     type: "public-key";
 };
 
-export type RegisterOptions = {
+export type RegistrationOptions = {
     status: "OK";
     webauthnGeneratedOptionsId: string;
     rp: {
@@ -108,6 +108,15 @@ export type RegisterOptions = {
     fetchResponse: Response;
 };
 
+export type AuthenticationOptions = {
+    status: "OK";
+    webauthnGeneratedOptionsId: string;
+    challenge: string;
+    timeout: number;
+    userVerification: UserVerification;
+    fetchResponse: Response;
+};
+
 export type RecipeInterface = {
     getRegisterOptions: (
         input: { options?: RecipeFunctionOptions; userContext: any } & (
@@ -115,7 +124,7 @@ export type RecipeInterface = {
             | { recoverAccountToken: string }
         )
     ) => Promise<
-        | RegisterOptions
+        | RegistrationOptions
         | {
               status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
               fetchResponse: Response;
@@ -131,14 +140,7 @@ export type RecipeInterface = {
           }
     >;
     getSignInOptions: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
-        | {
-              status: "OK";
-              webauthnGeneratedOptionsId: string;
-              challenge: string;
-              timeout: number;
-              userVerification: UserVerification;
-              fetchResponse: Response;
-          }
+        | AuthenticationOptions
         | {
               status: "INVALID_GENERATED_OPTIONS_ERROR";
               fetchResponse: Response;
@@ -227,13 +229,20 @@ export type RecipeInterface = {
         | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
     >;
-    registerUser: (input: { registrationOptions: RegisterOptions }) => Promise<
+    registerUser: (input: { registrationOptions: RegistrationOptions }) => Promise<
         | {
               status: "OK";
               registrationResponse: RegistrationResponseJSON;
           }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
+    >;
+    authenticateUser: (input: { authenticationOptions: AuthenticationOptions }) => Promise<
+        | {
+              status: "OK";
+              authenticationResponse: AuthenticationResponseJSON;
+          }
+        | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
     >;
     registerUserWithSignUp: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
@@ -283,6 +292,7 @@ export type RecipeInterface = {
               reason: string;
               fetchResponse: Response;
           }
+        | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
         | GeneralErrorResponse
     >;
     registerUserWithRecoverAccount: (input: {

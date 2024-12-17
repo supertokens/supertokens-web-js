@@ -379,6 +379,7 @@ export default class RecipeWrapper {
               reason: string;
               fetchResponse: Response;
           }
+        | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
         | GeneralErrorResponse
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.authenticateUserWithSignIn({

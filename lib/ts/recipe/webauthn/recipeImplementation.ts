@@ -405,6 +405,22 @@ export default function getRecipeImplementation(
                 userContext,
             });
         },
+        authenticateUser: async function ({ authenticationOptions }) {
+            let authenticationResponse: AuthenticationResponseJSON;
+            try {
+                authenticationResponse = await startAuthentication({ optionsJSON: authenticationOptions });
+            } catch (error: any) {
+                return {
+                    status: "FAILED_TO_AUTHENTICATE_USER",
+                    error: error,
+                };
+            }
+
+            return {
+                status: "OK",
+                authenticationResponse: authenticationResponse,
+            };
+        },
         authenticateUserWithSignIn: async function ({ email, options, userContext }) {
             // Make a call to get the sign in options using the entered email ID.
             const signInOptions = await this.getSignInOptions({ email, options, userContext });
@@ -414,19 +430,16 @@ export default function getRecipeImplementation(
             }
 
             // We should have the options ready and are good to start the authentication
-            let authenticationResponse: AuthenticationResponseJSON;
-            try {
-                authenticationResponse = await startAuthentication({ optionsJSON: signInOptions });
-            } catch (error: any) {
-                // TODO: Do we need to do something with the error besides throwing it?
-                throw error;
+            const authenticateUserResponse = await this.authenticateUser({ authenticationOptions: signInOptions });
+            if (authenticateUserResponse.status !== "OK") {
+                return authenticateUserResponse;
             }
 
             // We should have a valid authentication response at this point so we can
             // go ahead and sign in the user.
             return await this.signIn({
                 webauthnGeneratedOptionsId: signInOptions.webauthnGeneratedOptionsId,
-                credential: authenticationResponse,
+                credential: authenticateUserResponse.authenticationResponse,
                 options: options,
                 userContext: userContext,
             });
