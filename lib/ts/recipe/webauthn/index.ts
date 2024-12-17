@@ -18,7 +18,7 @@ import { GeneralErrorResponse, User } from "../../types";
 import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import Recipe from "./recipe";
-import { CredentialPayload, ResidentKey, UserInput, UserVerification } from "./types";
+import { CredentialPayload, ResidentKey, UserInput, UserVerification, RegistrationOptions } from "./types";
 
 export default class RecipeWrapper {
     static init(config?: UserInput) {
@@ -299,6 +299,26 @@ export default class RecipeWrapper {
     }
 
     /**
+     * Register user with the passed options by using native webauthn functions.
+     *
+     * It uses `@simplewebauthn/browser` to make the webauthn calls.
+     *
+     * @param registrationOptions Options to pass for the registration.
+     *
+     * @returns `{ status: "OK", ...}` if successful along with registration response received
+     */
+    static registerUser(input: { registrationOptions: RegistrationOptions }): Promise<
+        | {
+              status: "OK";
+              registrationResponse: RegistrationResponseJSON;
+          }
+        | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
+        | { status: "FAILED_TO_REGISTER_USER"; error: any }
+    > {
+        return Recipe.getInstanceOrThrow().recipeImplementation.registerUser(input);
+    }
+
+    /**
      * Register the new device and signup the user with the passed email ID.
      *
      * It uses `@simplewebauthn/browser` to make the webauthn calls.
@@ -447,6 +467,7 @@ const recoverAccount = RecipeWrapper.recoverAccount;
 const registerUserWithSignUp = RecipeWrapper.registerUserWithSignUp;
 const authenticateUserWithSignIn = RecipeWrapper.authenticateUserWithSignIn;
 const registerUserWithRecoverAccount = RecipeWrapper.registerUserWithRecoverAccount;
+const registerUser = RecipeWrapper.registerUser;
 
 export {
     init,
@@ -460,4 +481,5 @@ export {
     registerUserWithSignUp,
     authenticateUserWithSignIn,
     registerUserWithRecoverAccount,
+    registerUser,
 };
