@@ -229,7 +229,7 @@ export type RecipeInterface = {
         | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
     >;
-    registerUser: (input: { registrationOptions: RegistrationOptions }) => Promise<
+    registerCredential: (input: { registrationOptions: RegistrationOptions }) => Promise<
         | {
               status: "OK";
               registrationResponse: RegistrationResponseJSON;
@@ -237,14 +237,18 @@ export type RecipeInterface = {
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
     >;
-    authenticateUser: (input: { authenticationOptions: AuthenticationOptions }) => Promise<
+    authenticateCredential: (input: { authenticationOptions: AuthenticationOptions }) => Promise<
         | {
               status: "OK";
               authenticationResponse: AuthenticationResponseJSON;
           }
         | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
     >;
-    registerUserWithSignUp: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+    registerCredentialWithSignUp: (input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
         | {
               status: "OK";
               user: User;
@@ -272,7 +276,7 @@ export type RecipeInterface = {
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
     >;
-    authenticateUserWithSignIn: (input: {
+    authenticateCredentialWithSignIn: (input: {
         email: string;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -295,7 +299,7 @@ export type RecipeInterface = {
         | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
         | GeneralErrorResponse
     >;
-    registerUserWithRecoverAccount: (input: {
+    registerCredentialWithRecoverAccount: (input: {
         recoverAccountToken: string;
         options?: RecipeFunctionOptions;
         userContext: any;

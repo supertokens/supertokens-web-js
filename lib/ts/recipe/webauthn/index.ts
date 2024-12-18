@@ -306,7 +306,7 @@ export default class RecipeWrapper {
     }
 
     /**
-     * Register user with the passed options by using native webauthn functions.
+     * Register credential with the passed options by using native webauthn functions.
      *
      * It uses `@simplewebauthn/browser` to make the webauthn calls.
      *
@@ -314,7 +314,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along with registration response received
      */
-    static registerUser(input: { registrationOptions: RegistrationOptions }): Promise<
+    static registerCredential(input: { registrationOptions: RegistrationOptions }): Promise<
         | {
               status: "OK";
               registrationResponse: RegistrationResponseJSON;
@@ -322,11 +322,11 @@ export default class RecipeWrapper {
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.registerUser(input);
+        return Recipe.getInstanceOrThrow().recipeImplementation.registerCredential(input);
     }
 
     /**
-     * Authenticate the user with the passed options by using native webauthn functions.
+     * Authenticate the credential with the passed options by using native webauthn functions.
      *
      * It uses `@simplewebauthn/browser` to make the webauthn calls.
      *
@@ -334,14 +334,14 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along with authentication response received
      */
-    static authenticateUser(input: { authenticationOptions: AuthenticationOptions }): Promise<
+    static authenticateCredential(input: { authenticationOptions: AuthenticationOptions }): Promise<
         | {
               status: "OK";
               authenticationResponse: AuthenticationResponseJSON;
           }
         | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.authenticateUser(input);
+        return Recipe.getInstanceOrThrow().recipeImplementation.authenticateCredential(input);
     }
 
     /**
@@ -357,7 +357,11 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
      */
-    static registerUserWithSignUp(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static registerCredentialWithSignUp(input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
         | {
               status: "OK";
               user: User;
@@ -386,7 +390,7 @@ export default class RecipeWrapper {
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.registerUserWithSignUp({
+        return Recipe.getInstanceOrThrow().recipeImplementation.registerCredentialWithSignUp({
             ...input,
             userContext: input?.userContext,
         });
@@ -405,7 +409,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
      */
-    static authenticateUserWithSignIn(input: {
+    static authenticateCredentialWithSignIn(input: {
         email: string;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -428,7 +432,7 @@ export default class RecipeWrapper {
         | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
         | GeneralErrorResponse
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.authenticateUserWithSignIn({
+        return Recipe.getInstanceOrThrow().recipeImplementation.authenticateCredentialWithSignIn({
             ...input,
             userContext: input?.userContext,
         });
@@ -447,7 +451,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
      */
-    static registerUserWithRecoverAccount(input: {
+    static registerCredentialWithRecoverAccount(input: {
         recoverAccountToken: string;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -475,7 +479,7 @@ export default class RecipeWrapper {
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.registerUserWithRecoverAccount({
+        return Recipe.getInstanceOrThrow().recipeImplementation.registerCredentialWithRecoverAccount({
             ...input,
             userContext: input?.userContext,
         });
@@ -490,11 +494,11 @@ const signIn = RecipeWrapper.signIn;
 const getEmailExists = RecipeWrapper.getEmailExists;
 const generateRecoverAccountToken = RecipeWrapper.generateRecoverAccountToken;
 const recoverAccount = RecipeWrapper.recoverAccount;
-const registerUserWithSignUp = RecipeWrapper.registerUserWithSignUp;
-const authenticateUserWithSignIn = RecipeWrapper.authenticateUserWithSignIn;
-const registerUserWithRecoverAccount = RecipeWrapper.registerUserWithRecoverAccount;
-const registerUser = RecipeWrapper.registerUser;
-const authenticateUser = RecipeWrapper.authenticateUser;
+const registerCredentialWithSignUp = RecipeWrapper.registerCredentialWithSignUp;
+const authenticateCredentialWithSignIn = RecipeWrapper.authenticateCredentialWithSignIn;
+const registerCredentialWithRecoverAccount = RecipeWrapper.registerCredentialWithRecoverAccount;
+const registerCredential = RecipeWrapper.registerCredential;
+const authenticateCredential = RecipeWrapper.authenticateCredential;
 
 export {
     init,
@@ -505,9 +509,9 @@ export {
     getEmailExists,
     generateRecoverAccountToken,
     recoverAccount,
-    registerUserWithSignUp,
-    authenticateUserWithSignIn,
-    registerUserWithRecoverAccount,
-    registerUser,
-    authenticateUser,
+    registerCredentialWithSignUp,
+    authenticateCredentialWithSignIn,
+    registerCredentialWithRecoverAccount,
+    registerCredential,
+    authenticateCredential,
 };
