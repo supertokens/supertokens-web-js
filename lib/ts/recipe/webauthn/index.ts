@@ -25,6 +25,7 @@ import {
     UserVerification,
     RegistrationOptions,
     AuthenticationOptions,
+    RecipeInterface,
 } from "./types";
 
 export default class RecipeWrapper {
@@ -514,4 +515,5 @@ export {
     registerCredentialWithRecoverAccount,
     registerCredential,
     authenticateCredential,
+    RecipeInterface,
 };

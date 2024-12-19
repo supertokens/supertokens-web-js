@@ -1,7 +1,15 @@
 import { AuthenticationResponseJSON, RegistrationResponseJSON } from "@simplewebauthn/browser";
 import { GeneralErrorResponse, User } from "../../types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import { CredentialPayload, ResidentKey, UserInput, UserVerification } from "./types";
+import {
+    CredentialPayload,
+    ResidentKey,
+    UserInput,
+    UserVerification,
+    RegistrationOptions,
+    AuthenticationOptions,
+    RecipeInterface,
+} from "./types";
 export default class RecipeWrapper {
     static init(
         config?: UserInput
@@ -20,7 +28,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the created webauthn details (challenge, etc.)
      */
-    static registerOptions(
+    static getRegisterOptions(
         input: {
             options?: RecipeFunctionOptions;
             userContext: any;
@@ -90,7 +98,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the webauthn options (challenge, etc.)
      */
-    static signInOptions(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static getSignInOptions(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
         | {
               status: "OK";
               webauthnGeneratedOptionsId: string;
@@ -194,7 +202,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along with a boolean indicating existence
      */
-    static emailExists(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static getEmailExists(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
         | {
               status: "OK";
               exists: boolean;
@@ -272,6 +280,47 @@ export default class RecipeWrapper {
           }
     >;
     /**
+     * Register credential with the passed options by using native webauthn functions.
+     *
+     * It uses `@simplewebauthn/browser` to make the webauthn calls.
+     *
+     * @param registrationOptions Options to pass for the registration.
+     *
+     * @returns `{ status: "OK", ...}` if successful along with registration response received
+     */
+    static registerCredential(input: { registrationOptions: RegistrationOptions }): Promise<
+        | {
+              status: "OK";
+              registrationResponse: RegistrationResponseJSON;
+          }
+        | {
+              status: "AUTHENTICATOR_ALREADY_REGISTERED";
+          }
+        | {
+              status: "FAILED_TO_REGISTER_USER";
+              error: any;
+          }
+    >;
+    /**
+     * Authenticate the credential with the passed options by using native webauthn functions.
+     *
+     * It uses `@simplewebauthn/browser` to make the webauthn calls.
+     *
+     * @param authenticationOptions Options to pass for the authentication.
+     *
+     * @returns `{ status: "OK", ...}` if successful along with authentication response received
+     */
+    static authenticateCredential(input: { authenticationOptions: AuthenticationOptions }): Promise<
+        | {
+              status: "OK";
+              authenticationResponse: AuthenticationResponseJSON;
+          }
+        | {
+              status: "FAILED_TO_AUTHENTICATE_USER";
+              error: any;
+          }
+    >;
+    /**
      * Register the new device and signup the user with the passed email ID.
      *
      * It uses `@simplewebauthn/browser` to make the webauthn calls.
@@ -284,7 +333,11 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
      */
-    static registerAndSignUp(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static registerCredentialWithSignUp(input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
         | {
               status: "OK";
               user: User;
@@ -329,6 +382,10 @@ export default class RecipeWrapper {
         | {
               status: "AUTHENTICATOR_ALREADY_REGISTERED";
           }
+        | {
+              status: "FAILED_TO_REGISTER_USER";
+              error: any;
+          }
     >;
     /**
      * Authenticate the user and sign them in after verifying their identity.
@@ -343,7 +400,11 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
      */
-    static authenticateAndSignIn(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static authenticateCredentialWithSignIn(input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<
         | {
               status: "OK";
               user: User;
@@ -362,6 +423,10 @@ export default class RecipeWrapper {
               reason: string;
               fetchResponse: Response;
           }
+        | {
+              status: "FAILED_TO_AUTHENTICATE_USER";
+              error: any;
+          }
         | GeneralErrorResponse
     >;
     /**
@@ -377,7 +442,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
      */
-    static registerAndRecoverAccount(input: {
+    static registerCredentialWithRecoverAccount(input: {
         recoverAccountToken: string;
         options?: RecipeFunctionOptions;
         userContext: any;
@@ -421,29 +486,38 @@ export default class RecipeWrapper {
         | {
               status: "AUTHENTICATOR_ALREADY_REGISTERED";
           }
+        | {
+              status: "FAILED_TO_REGISTER_USER";
+              error: any;
+          }
     >;
 }
 declare const init: typeof RecipeWrapper.init;
-declare const registerOptions: typeof RecipeWrapper.registerOptions;
-declare const signInOptions: typeof RecipeWrapper.signInOptions;
+declare const getRegisterOptions: typeof RecipeWrapper.getRegisterOptions;
+declare const getSignInOptions: typeof RecipeWrapper.getSignInOptions;
 declare const signUp: typeof RecipeWrapper.signUp;
 declare const signIn: typeof RecipeWrapper.signIn;
-declare const emailExists: typeof RecipeWrapper.emailExists;
+declare const getEmailExists: typeof RecipeWrapper.getEmailExists;
 declare const generateRecoverAccountToken: typeof RecipeWrapper.generateRecoverAccountToken;
 declare const recoverAccount: typeof RecipeWrapper.recoverAccount;
-declare const registerAndSignup: typeof RecipeWrapper.registerAndSignUp;
-declare const authenticateAndSignIn: typeof RecipeWrapper.authenticateAndSignIn;
-declare const registerAndRecoverAccount: typeof RecipeWrapper.registerAndRecoverAccount;
+declare const registerCredentialWithSignUp: typeof RecipeWrapper.registerCredentialWithSignUp;
+declare const authenticateCredentialWithSignIn: typeof RecipeWrapper.authenticateCredentialWithSignIn;
+declare const registerCredentialWithRecoverAccount: typeof RecipeWrapper.registerCredentialWithRecoverAccount;
+declare const registerCredential: typeof RecipeWrapper.registerCredential;
+declare const authenticateCredential: typeof RecipeWrapper.authenticateCredential;
 export {
     init,
-    registerOptions,
-    signInOptions,
+    getRegisterOptions,
+    getSignInOptions,
     signUp,
     signIn,
-    emailExists,
+    getEmailExists,
     generateRecoverAccountToken,
     recoverAccount,
-    registerAndSignup,
-    authenticateAndSignIn,
-    registerAndRecoverAccount,
+    registerCredentialWithSignUp,
+    authenticateCredentialWithSignIn,
+    registerCredentialWithRecoverAccount,
+    registerCredential,
+    authenticateCredential,
+    RecipeInterface,
 };
