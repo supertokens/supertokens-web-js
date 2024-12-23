@@ -136,27 +136,34 @@ export default class RecipeWrapper {
         | {
               status: "OK";
               user: User;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
         | {
               status: "SIGN_UP_NOT_ALLOWED";
               reason: string;
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_AUTHENTICATOR_ERROR";
               reason: string;
+              fetchResponse: Response;
           }
         | {
               status: "EMAIL_ALREADY_EXISTS_ERROR";
+              fetchResponse: Response;
           }
     >;
     /**
