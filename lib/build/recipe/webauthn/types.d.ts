@@ -1,3 +1,4 @@
+import { AuthenticationResponseJSON, RegistrationResponseJSON } from "@simplewebauthn/browser";
 import { GeneralErrorResponse, User } from "../../types";
 import {
     NormalisedInputType as AuthRecipeNormalisedInputType,
@@ -49,11 +50,50 @@ export declare type CredentialPayload = {
         userHandle: string;
     };
     authenticatorAttachment: "platform" | "cross-platform";
-    clientExtensionResults: Record<string, unknown>;
+    clientExtensionResults: any;
     type: "public-key";
 };
+export declare type RegistrationOptions = {
+    status: "OK";
+    webauthnGeneratedOptionsId: string;
+    rp: {
+        id: string;
+        name: string;
+    };
+    user: {
+        id: string;
+        name: string;
+        displayName: string;
+    };
+    challenge: string;
+    timeout: number;
+    excludeCredentials: {
+        id: string;
+        type: "public-key";
+        transports: ("ble" | "hybrid" | "internal" | "nfc" | "usb")[];
+    }[];
+    attestation: "none" | "indirect" | "direct" | "enterprise";
+    pubKeyCredParams: {
+        alg: number;
+        type: "public-key";
+    }[];
+    authenticatorSelection: {
+        requireResidentKey: boolean;
+        residentKey: ResidentKey;
+        userVerification: UserVerification;
+    };
+    fetchResponse: Response;
+};
+export declare type AuthenticationOptions = {
+    status: "OK";
+    webauthnGeneratedOptionsId: string;
+    challenge: string;
+    timeout: number;
+    userVerification: UserVerification;
+    fetchResponse: Response;
+};
 export declare type RecipeInterface = {
-    registerOptions: (
+    getRegisterOptions: (
         input: {
             options?: RecipeFunctionOptions;
             userContext: any;
@@ -66,37 +106,7 @@ export declare type RecipeInterface = {
               }
         )
     ) => Promise<
-        | {
-              status: "OK";
-              webauthnGeneratedOptionsId: string;
-              rp: {
-                  id: string;
-                  name: string;
-              };
-              user: {
-                  id: string;
-                  name: string;
-                  displayName: string;
-              };
-              challenge: string;
-              timeout: number;
-              excludeCredentials: {
-                  id: string;
-                  type: "public-key";
-                  transports: ("ble" | "hybrid" | "internal" | "nfc" | "usb")[];
-              }[];
-              attestation: "none" | "indirect" | "direct" | "enterprise";
-              pubKeyCredParams: {
-                  alg: number;
-                  type: "public-key";
-              }[];
-              authenticatorSelection: {
-                  requireResidentKey: boolean;
-                  residentKey: ResidentKey;
-                  userVerification: UserVerification;
-              };
-              fetchResponse: Response;
-          }
+        | RegistrationOptions
         | {
               status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
               fetchResponse: Response;
@@ -111,15 +121,8 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    signInOptions: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
-        | {
-              status: "OK";
-              webauthnGeneratedOptionsId: string;
-              challenge: string;
-              timeout: number;
-              userVerification: UserVerification;
-              fetchResponse: Response;
-          }
+    getSignInOptions: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+        | AuthenticationOptions
         | {
               status: "INVALID_GENERATED_OPTIONS_ERROR";
               fetchResponse: Response;
@@ -128,7 +131,7 @@ export declare type RecipeInterface = {
     >;
     signUp: (input: {
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: RegistrationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
@@ -167,7 +170,7 @@ export declare type RecipeInterface = {
     >;
     signIn: (input: {
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: AuthenticationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
@@ -187,7 +190,7 @@ export declare type RecipeInterface = {
           }
         | GeneralErrorResponse
     >;
-    emailExists: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+    getEmailExists: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
               status: "OK";
               exists: boolean;
@@ -214,7 +217,7 @@ export declare type RecipeInterface = {
     recoverAccount: (input: {
         token: string;
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: RegistrationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }) => Promise<
@@ -245,6 +248,153 @@ export declare type RecipeInterface = {
               status: "INVALID_AUTHENTICATOR_ERROR";
               reason: string;
               fetchResponse: Response;
+          }
+    >;
+    registerCredential: (input: { registrationOptions: RegistrationOptions }) => Promise<
+        | {
+              status: "OK";
+              registrationResponse: RegistrationResponseJSON;
+          }
+        | {
+              status: "AUTHENTICATOR_ALREADY_REGISTERED";
+          }
+        | {
+              status: "FAILED_TO_REGISTER_USER";
+              error: any;
+          }
+    >;
+    authenticateCredential: (input: { authenticationOptions: AuthenticationOptions }) => Promise<
+        | {
+              status: "OK";
+              authenticationResponse: AuthenticationResponseJSON;
+          }
+        | {
+              status: "FAILED_TO_AUTHENTICATE_USER";
+              error: any;
+          }
+    >;
+    registerCredentialWithSignUp: (input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
+        | {
+              status: "OK";
+              user: User;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_EMAIL_ERROR";
+              err: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+        | {
+              status: "SIGN_UP_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_AUTHENTICATOR_ERROR";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "EMAIL_ALREADY_EXISTS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "AUTHENTICATOR_ALREADY_REGISTERED";
+          }
+        | {
+              status: "FAILED_TO_REGISTER_USER";
+              error: any;
+          }
+    >;
+    authenticateCredentialWithSignIn: (input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
+        | {
+              status: "OK";
+              user: User;
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "SIGN_IN_NOT_ALLOWED";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "FAILED_TO_AUTHENTICATE_USER";
+              error: any;
+          }
+        | GeneralErrorResponse
+    >;
+    registerCredentialWithRecoverAccount: (input: {
+        recoverAccountToken: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<
+        | {
+              status: "OK";
+              user: User;
+              email: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
+          }
+        | GeneralErrorResponse
+        | {
+              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_AUTHENTICATOR_ERROR";
+              reason: string;
+              fetchResponse: Response;
+          }
+        | {
+              status: "AUTHENTICATOR_ALREADY_REGISTERED";
+          }
+        | {
+              status: "FAILED_TO_REGISTER_USER";
+              error: any;
           }
     >;
 };

@@ -19,6 +19,12 @@ import { RecipeFunctionOptions, RecipeImplementationInput } from "../recipeModul
 import { PreAndPostAPIHookAction } from "./types";
 import { GeneralErrorResponse, User } from "../../types";
 import Multitenancy from "../multitenancy/recipe";
+import {
+    AuthenticationResponseJSON,
+    RegistrationResponseJSON,
+    startAuthentication,
+    startRegistration,
+} from "@simplewebauthn/browser";
 
 export default function getRecipeImplementation(
     recipeImplInput: RecipeImplementationInput<PreAndPostAPIHookAction>
@@ -26,7 +32,7 @@ export default function getRecipeImplementation(
     const querier = new Querier(recipeImplInput.recipeId, recipeImplInput.appInfo);
 
     return {
-        registerOptions: async function ({
+        getRegisterOptions: async function ({
             options,
             userContext,
             email,
@@ -109,7 +115,7 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        signInOptions: async function ({ email, options, userContext }) {
+        getSignInOptions: async function ({ email, options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
@@ -238,7 +244,7 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        emailExists: async function ({ email, options, userContext }) {
+        getEmailExists: async function ({ email, options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.get<
                 | {
                       status: "OK";
@@ -347,6 +353,129 @@ export default function getRecipeImplementation(
                 ...jsonBody,
                 fetchResponse,
             };
+        },
+        registerCredential: async function ({ registrationOptions }) {
+            let registrationResponse: RegistrationResponseJSON;
+            try {
+                registrationResponse = await startRegistration({ optionsJSON: registrationOptions });
+            } catch (error: any) {
+                if (error.name === "InvalidStateError") {
+                    return { status: "AUTHENTICATOR_ALREADY_REGISTERED" };
+                }
+
+                return {
+                    status: "FAILED_TO_REGISTER_USER",
+                    error: error,
+                };
+            }
+
+            return {
+                status: "OK",
+                registrationResponse,
+            };
+        },
+        registerCredentialWithSignUp: async function ({ email, options, userContext }) {
+            // Get the registration options by using the passed email ID.
+            const registrationOptions = await this.getRegisterOptions({ options, userContext, email });
+            if (registrationOptions?.status !== "OK") {
+                // If we did not get an OK status, we need to return the error as is.
+
+                // If the `status` is `RECOVER_ACCOUNT_TOKEN_INVALID_ERROR`, we need to throw an
+                // error since that should never happen as we are registering with an email
+                // and not a token.
+                if (registrationOptions?.status === "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR") {
+                    throw new Error("Got `RECOVER_ACCOUNT_TOKEN_INVALID_ERROR` status that should never happen");
+                }
+
+                return registrationOptions;
+            }
+
+            // We should have received a valid registration options response.
+            const registerCredentialResponse = await this.registerCredential({ registrationOptions });
+            if (registerCredentialResponse.status !== "OK") {
+                return registerCredentialResponse;
+            }
+
+            // We should have a valid registration response for the passed credentials
+            // and we are good to go ahead and verify them.
+            return await this.signUp({
+                webauthnGeneratedOptionsId: registrationOptions.webauthnGeneratedOptionsId,
+                credential: registerCredentialResponse.registrationResponse,
+                options,
+                userContext,
+            });
+        },
+        authenticateCredential: async function ({ authenticationOptions }) {
+            let authenticationResponse: AuthenticationResponseJSON;
+            try {
+                authenticationResponse = await startAuthentication({ optionsJSON: authenticationOptions });
+            } catch (error: any) {
+                return {
+                    status: "FAILED_TO_AUTHENTICATE_USER",
+                    error: error,
+                };
+            }
+
+            return {
+                status: "OK",
+                authenticationResponse: authenticationResponse,
+            };
+        },
+        authenticateCredentialWithSignIn: async function ({ email, options, userContext }) {
+            // Make a call to get the sign in options using the entered email ID.
+            const signInOptions = await this.getSignInOptions({ email, options, userContext });
+            if (signInOptions?.status !== "OK") {
+                // We want to return the error as is if status was not "OK"
+                return signInOptions;
+            }
+
+            // We should have the options ready and are good to start the authentication
+            const authenticateCredentialResponse = await this.authenticateCredential({
+                authenticationOptions: signInOptions,
+            });
+            if (authenticateCredentialResponse.status !== "OK") {
+                return authenticateCredentialResponse;
+            }
+
+            // We should have a valid authentication response at this point so we can
+            // go ahead and sign in the user.
+            return await this.signIn({
+                webauthnGeneratedOptionsId: signInOptions.webauthnGeneratedOptionsId,
+                credential: authenticateCredentialResponse.authenticationResponse,
+                options: options,
+                userContext: userContext,
+            });
+        },
+        registerCredentialWithRecoverAccount: async function ({ recoverAccountToken, options, userContext }) {
+            // Get the registration options based on the recoverAccountToken and
+            // register the device against the user.
+            const registrationOptions = await this.getRegisterOptions({ options, userContext, recoverAccountToken });
+            if (registrationOptions?.status !== "OK") {
+                // If we did not get an OK status, we need to return the error as is.
+
+                // If the `status` is `INVALID_EMAIL_ERROR`, we need to throw an
+                // error since that should never happen as we are registering with a recover account token
+                // and not an email ID.
+                if (registrationOptions?.status === "INVALID_EMAIL_ERROR") {
+                    throw new Error("Got `INVALID_EMAIL_ERROR` status that should never happen");
+                }
+
+                return registrationOptions;
+            }
+
+            // We should have received a valid registration options response.
+            const registerCredentialResponse = await this.registerCredential({ registrationOptions });
+            if (registerCredentialResponse.status !== "OK") {
+                return registerCredentialResponse;
+            }
+
+            return await this.recoverAccount({
+                token: recoverAccountToken,
+                webauthnGeneratedOptionsId: registrationOptions.webauthnGeneratedOptionsId,
+                credential: registerCredentialResponse.registrationResponse,
+                options,
+                userContext,
+            });
         },
     };
 }

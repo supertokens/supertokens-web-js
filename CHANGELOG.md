@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.15.0] - 2024-12-10
 
 -   Added webauthn support for various functionalities
+-   Adds wrapper methods by using webauthn to provide ease of usage for passkeys
 
 ## [0.14.0] - 2024-10-07
 
