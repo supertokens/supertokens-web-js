@@ -170,7 +170,7 @@ export declare type SuperTokensPlugin = {
     version?: string;
     compatibleWebJSSDKVersions?: string | string[];
     dependencies?: (
-        pluginsAbove: SuperTokensPlugin[],
+        pluginsAbove: Pick<SuperTokensPlugin, "id" | "version">[],
         sdkVersion: string
     ) =>
         | {

@@ -206,7 +206,7 @@ export type SuperTokensPlugin = {
     version?: string;
     compatibleWebJSSDKVersions?: string | string[]; // match the syntax of the engines field in package.json
     dependencies?: (
-        pluginsAbove: SuperTokensPlugin[],
+        pluginsAbove: Pick<SuperTokensPlugin, "id" | "version">[],
         sdkVersion: string
     ) => { status: "OK"; pluginsToAdd?: SuperTokensPlugin[] } | { status: "ERROR"; message: string };
     overrideMap?: {
