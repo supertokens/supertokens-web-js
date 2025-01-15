@@ -13,21 +13,21 @@
  * under the License.
  */
 
-import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
+import { CreateRecipeFunction } from "../../types";
 import { SessionClaimValidatorStore } from "../../sessionClaimValidatorStore";
 import RecipeModule from "../recipeModule";
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface } from "./types";
 import { normaliseUserInput } from "./utils";
 import RecipeImplementation from "./recipeImplementation";
 import OverrideableBuilder from "supertokens-js-override";
-import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
+import { applyPlugins, checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import { UserInput } from "./types";
 import { EmailVerificationClaimClass } from "./emailVerificationClaim";
 import { PostSuperTokensInitCallbacks } from "../../postSuperTokensInitCallbacks";
 
 export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
-    static RECIPE_ID = "emailverification";
+    static RECIPE_ID = "emailverification" as const;
     static EmailVerificationClaim = new EmailVerificationClaimClass(
         () => Recipe.getInstanceOrThrow().recipeImplementation
     );
@@ -56,9 +56,9 @@ export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, Nor
     }
 
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo, clientType: string | undefined) => {
+        return (appInfo, clientType, _enableDebugLogs, overrideMaps) => {
             Recipe.instance = new Recipe({
-                ...config,
+                ...applyPlugins(Recipe.RECIPE_ID, config as any, overrideMaps ?? []),
                 appInfo,
                 clientType,
                 recipeId: Recipe.RECIPE_ID,

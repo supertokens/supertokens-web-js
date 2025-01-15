@@ -4,7 +4,7 @@ import { InputType, UserInput } from "./types";
 import { CreateRecipeFunction } from "../../types";
 export default class Recipe extends RecipeModule<unknown, any> {
     static instance?: Recipe;
-    static RECIPE_ID: string;
+    static RECIPE_ID: "session";
     constructor(config: InputType);
     static init(config?: UserInput): CreateRecipeFunction<unknown>;
     getUserId: (input: { userContext: any }) => Promise<string>;

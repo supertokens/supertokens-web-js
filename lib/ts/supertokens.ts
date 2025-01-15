@@ -14,13 +14,14 @@
  */
 
 import RecipeModule from "./recipe/recipeModule";
-import { NormalisedAppInfo, SuperTokensConfig } from "./types";
+import { NormalisedAppInfo, SuperTokensConfig, SuperTokensPlugin } from "./types";
 import { checkForSSRErrorAndAppendIfNeeded, isTest, normaliseInputAppInfoOrThrowError } from "./utils";
 import { CookieHandlerReference } from "./cookieHandler";
 import { WindowHandlerReference } from "./windowHandler";
 import { PostSuperTokensInitCallbacks } from "./postSuperTokensInitCallbacks";
 import { Recipe as MultitenancyRecipe } from "./recipe/multitenancy/recipe";
 import { DateProviderReference } from "./dateProvider";
+import { package_version } from "./version";
 
 export default class SuperTokens {
     /*
@@ -43,6 +44,33 @@ export default class SuperTokens {
             );
         }
 
+        const finalPluginList: SuperTokensPlugin[] = [];
+        if (config.plugins) {
+            for (const plugin of config.plugins) {
+                const versionContraints = Array.isArray(plugin.compatibleWebJSSDKVersions)
+                    ? plugin.compatibleWebJSSDKVersions
+                    : [plugin.compatibleWebJSSDKVersions];
+                if (!versionContraints.includes(package_version)) {
+                    // TODO: better checks
+                    throw new Error("Plugin version mismatch");
+                }
+                if (plugin.dependencies) {
+                    const result = plugin.dependencies(finalPluginList, package_version);
+                    if (result.status === "ERROR") {
+                        throw new Error(result.message);
+                    }
+                    if (result.pluginsToAdd) {
+                        finalPluginList.push(...result.pluginsToAdd);
+                    }
+                    finalPluginList.push(plugin);
+                }
+            }
+        }
+
+        const overrideMaps = finalPluginList
+            .filter((p) => p.overrideMap !== undefined)
+            .map((p) => p.overrideMap) as NonNullable<SuperTokensPlugin["overrideMap"]>[];
+
         let enableDebugLogs = false;
         if (config.enableDebugLogs !== undefined) {
             enableDebugLogs = config.enableDebugLogs;
@@ -51,7 +79,7 @@ export default class SuperTokens {
         let multitenancyFound = false;
 
         this.recipeList = config.recipeList.map((recipe) => {
-            const recipeInstance = recipe(this.appInfo, config.clientType, enableDebugLogs);
+            const recipeInstance = recipe(this.appInfo, config.clientType, enableDebugLogs, overrideMaps);
             if (recipeInstance.config.recipeId === MultitenancyRecipe.RECIPE_ID) {
                 multitenancyFound = true;
             }
@@ -59,7 +87,9 @@ export default class SuperTokens {
         });
 
         if (!multitenancyFound) {
-            this.recipeList.push(MultitenancyRecipe.init()(this.appInfo, config.clientType, enableDebugLogs));
+            this.recipeList.push(
+                MultitenancyRecipe.init()(this.appInfo, config.clientType, enableDebugLogs, overrideMaps)
+            );
         }
     }
 

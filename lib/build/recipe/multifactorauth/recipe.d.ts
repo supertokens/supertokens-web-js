@@ -4,7 +4,7 @@ import AuthRecipe from "../authRecipe";
 import { MultiFactorAuthClaimClass } from "./multiFactorAuthClaim";
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
-    static RECIPE_ID: string;
+    static RECIPE_ID: "multifactorauth";
     recipeImplementation: RecipeInterface;
     static MultiFactorAuthClaim: MultiFactorAuthClaimClass;
     constructor(config: InputType);

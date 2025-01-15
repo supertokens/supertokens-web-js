@@ -17,8 +17,8 @@ import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterfac
 import { normaliseUserInput } from "./utils";
 import OverrideableBuilder from "supertokens-js-override";
 import RecipeImplementation from "./recipeImplementation";
-import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
-import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
+import { CreateRecipeFunction } from "../../types";
+import { applyPlugins, checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import AuthRecipe from "../authRecipe";
 import { PostSuperTokensInitCallbacks } from "../../postSuperTokensInitCallbacks";
 import { SessionClaimValidatorStore } from "supertokens-website/utils/sessionClaimValidatorStore";
@@ -26,7 +26,7 @@ import { MultiFactorAuthClaimClass } from "./multiFactorAuthClaim";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
-    static RECIPE_ID = "multifactorauth";
+    static RECIPE_ID = "multifactorauth" as const;
 
     recipeImplementation: RecipeInterface;
 
@@ -54,9 +54,9 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     }
 
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo, clientType: string | undefined) => {
+        return (appInfo, clientType, _enableDebugLogs, overrideMaps) => {
             Recipe.instance = new Recipe({
-                ...config,
+                ...applyPlugins(Recipe.RECIPE_ID, config as any, overrideMaps ?? []),
                 recipeId: Recipe.RECIPE_ID,
                 appInfo,
                 clientType,

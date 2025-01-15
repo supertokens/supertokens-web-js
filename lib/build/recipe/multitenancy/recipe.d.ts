@@ -3,7 +3,7 @@ import { CreateRecipeFunction } from "../../types";
 import AuthRecipe from "../authRecipe";
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
-    static RECIPE_ID: string;
+    static RECIPE_ID: "multitenancy";
     recipeImplementation: RecipeInterface;
     constructor(config: InputType);
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction>;

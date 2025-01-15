@@ -14,16 +14,16 @@
  */
 
 import OverrideableBuilder from "supertokens-js-override";
-import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
+import { applyPlugins, checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
 import AuthRecipe from "../authRecipe";
 import { InputType, NormalisedInputType, PreAndPostAPIHookAction, RecipeInterface, UserInput } from "./types";
 import { normaliseUserInput } from "./utils";
 import RecipeImplementation from "./recipeImplementation";
-import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
+import { CreateRecipeFunction } from "../../types";
 
 export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
-    static RECIPE_ID = "passwordless";
+    static RECIPE_ID = "passwordless" as const;
 
     recipeImplementation: RecipeInterface;
 
@@ -44,9 +44,9 @@ export default class Recipe extends AuthRecipe<PreAndPostAPIHookAction, Normalis
     }
 
     static init(config?: UserInput): CreateRecipeFunction<PreAndPostAPIHookAction> {
-        return (appInfo: NormalisedAppInfo, clientType: string | undefined) => {
+        return (appInfo, clientType, _enableDebugLogs, overrideMaps) => {
             Recipe.instance = new Recipe({
-                ...config,
+                ...applyPlugins(Recipe.RECIPE_ID, config as any, overrideMaps ?? []),
                 recipeId: Recipe.RECIPE_ID,
                 appInfo,
                 clientType,

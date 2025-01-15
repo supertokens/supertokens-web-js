@@ -13,6 +13,7 @@
         "pack": "./node_modules/.bin/webpack --mode production",
         "set-up-hooks": "cp hooks/pre-commit.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit",
         "lint": "cd lib && npx tslint -c tslint.json './**/*.ts'",
+        "lint-fix": "cd lib && npx tslint -c tslint.json './**/*.ts' --fix",
         "test-unit": "TEST_MODE=testing npx mocha 'test/unit/*.test.js'",
         "test": "npm run test-unit",
         "build-docs": "rm -rf ./docs && npx typedoc --out ./docs --tsconfig ./lib/tsconfig.json ./lib/ts/index.ts ./lib/ts/**/index.ts ./lib/ts/**/*/index.ts",

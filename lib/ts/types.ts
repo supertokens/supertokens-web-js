@@ -19,6 +19,15 @@ import { NormalisedRecipeConfig } from "./recipe/recipeModule/types";
 import { CookieHandlerInput } from "./cookieHandler/types";
 import { WindowHandlerInput } from "./windowHandler/types";
 import { DateProviderInput } from "./dateProvider/types";
+import type { UserInput as EmailPasswordConfig } from "./recipe/emailpassword/types";
+import type { UserInput as EmailVerificationConfig } from "./recipe/emailverification/types";
+import type { UserInput as MultitenancyConfig } from "./recipe/multitenancy/types";
+import type { UserInput as MultiFactorAuthConfig } from "./recipe/multifactorauth/types";
+import type { UserInput as OAuth2ProviderConfig } from "./recipe/oauth2provider/types";
+import type { UserInput as PasswordlessConfig } from "./recipe/passwordless/types";
+import type { UserInput as SessionConfig } from "./recipe/session/types";
+import type { UserInput as ThirdPartyConfig } from "./recipe/thirdparty/types";
+import type { UserInput as TotpConfig } from "./recipe/totp/types";
 
 /**
  * The configuration object to be passed when calling SuperTokens.init
@@ -79,12 +88,15 @@ export type SuperTokensConfig = {
      * Enabled logging for the SuperTokens SDK. The SDK will log information in different stages.
      */
     enableDebugLogs?: boolean;
+
+    plugins?: SuperTokensPlugin[];
 };
 
 export type CreateRecipeFunction<Action> = (
     appInfo: NormalisedAppInfo,
     clientType: string | undefined,
-    enableDebugLogs: boolean
+    enableDebugLogs: boolean,
+    overrideMaps: NonNullable<SuperTokensPlugin["overrideMap"]>[]
 ) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 
 export type AppInfoUserInput = {
@@ -170,4 +182,36 @@ export type User = {
             userId: string;
         };
     }[];
+};
+
+export type AllRecipeConfigs = {
+    emailpassword: EmailPasswordConfig;
+    emailverification: EmailVerificationConfig;
+    multifactorauth: MultiFactorAuthConfig;
+    multitenancy: MultitenancyConfig;
+    oauth2provider: OAuth2ProviderConfig;
+    passwordless: PasswordlessConfig;
+    session: SessionConfig;
+    thirdparty: ThirdPartyConfig;
+    totp: TotpConfig;
+};
+
+export type RecipePluginOverride<T extends keyof AllRecipeConfigs> = {
+    functions?: NonNullable<AllRecipeConfigs[T]["override"]>["functions"];
+    config?: (config: AllRecipeConfigs[T]) => AllRecipeConfigs[T];
+};
+
+export type SuperTokensPlugin = {
+    id: string; // TODO: validate that no two plugins have the same id
+    version?: string;
+    compatibleWebJSSDKVersions?: string | string[]; // match the syntax of the engines field in package.json
+    dependencies?: (
+        pluginsAbove: SuperTokensPlugin[],
+        sdkVersion: string
+    ) => { status: "OK"; pluginsToAdd?: SuperTokensPlugin[] } | { status: "ERROR"; message: string };
+    overrideMap?: {
+        [recipeId in keyof AllRecipeConfigs]?: RecipePluginOverride<recipeId> & {
+            recipeInitRequired?: boolean | ((sdkVersion: string) => boolean);
+        };
+    };
 };

@@ -16,9 +16,10 @@ import { WindowHandlerReference } from "./windowHandler";
 import { DEFAULT_API_BASE_PATH, SSR_ERROR } from "./constants";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import NormalisedURLPath from "./normalisedURLPath";
-import { AppInfoUserInput, NormalisedAppInfo, User } from "./types";
+import { AllRecipeConfigs, AppInfoUserInput, NormalisedAppInfo, SuperTokensPlugin, User } from "./types";
 import { SessionClaimValidator } from "supertokens-website";
 import { getGlobalClaimValidators as getGlobalClaimValidatorsWebsite } from "supertokens-website/utils/globalClaimValidators";
+import OverrideableBuilder from "supertokens-js-override";
 
 export function appendQueryParamsToURL(stringUrl: string, queryParams?: Record<string, string>): string {
     if (queryParams === undefined) {
@@ -199,4 +200,36 @@ export function normaliseUser(
             },
         ],
     };
+}
+
+export function applyPlugins<T extends keyof AllRecipeConfigs>(
+    recipeId: T,
+    config: AllRecipeConfigs[T] | undefined,
+    plugins: NonNullable<SuperTokensPlugin["overrideMap"]>[]
+): AllRecipeConfigs[T] {
+    config = config ?? ({} as AllRecipeConfigs[T]);
+    let functionLayers = [config.override?.functions];
+    for (const plugin of plugins) {
+        const overrides = plugin[recipeId];
+        if (overrides) {
+            config = overrides.config ? overrides.config(config) : config;
+            if (overrides.functions !== undefined) {
+                functionLayers.push(overrides.functions as any);
+            }
+        }
+    }
+    functionLayers = functionLayers.reverse().filter((layer) => layer !== undefined);
+
+    if (functionLayers.length > 0) {
+        config.override = {
+            ...config.override,
+            functions: (oI: any, builder: OverrideableBuilder<any>) => {
+                for (const layer of functionLayers) {
+                    builder.override(layer as any);
+                }
+                return oI as any;
+            },
+        };
+    }
+    return config;
 }

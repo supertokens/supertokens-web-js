@@ -15,15 +15,15 @@
 import RecipeModule from "../recipeModule";
 import SuperTokensWebsite, { ClaimValidationError, SessionClaimValidator, SessionClaim } from "supertokens-website";
 import { InputType, UserInput } from "./types";
-import { checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
-import { CreateRecipeFunction, NormalisedAppInfo } from "../../types";
+import { applyPlugins, checkForSSRErrorAndAppendIfNeeded, isTest } from "../../utils";
+import { CreateRecipeFunction } from "../../types";
 import { EMAILVERIFICATION_CLAIM_ID } from "../emailverification/constants";
 
 const priorityValidatorIds = [EMAILVERIFICATION_CLAIM_ID];
 
 export default class Recipe extends RecipeModule<unknown, any> {
     static instance?: Recipe;
-    static RECIPE_ID = "session";
+    static RECIPE_ID = "session" as const;
 
     constructor(config: InputType) {
         super(config);
@@ -71,9 +71,9 @@ export default class Recipe extends RecipeModule<unknown, any> {
     }
 
     static init(config?: UserInput): CreateRecipeFunction<unknown> {
-        return (appInfo: NormalisedAppInfo, _: string | undefined, enableDebugLogs: boolean) => {
+        return (appInfo, _clientType, enableDebugLogs, overrideMaps) => {
             Recipe.instance = new Recipe({
-                ...config,
+                ...applyPlugins(Recipe.RECIPE_ID, config as any, overrideMaps ?? []),
                 appInfo,
                 recipeId: Recipe.RECIPE_ID,
                 enableDebugLogs,

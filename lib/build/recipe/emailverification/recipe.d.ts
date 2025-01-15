@@ -5,7 +5,7 @@ import { UserInput } from "./types";
 import { EmailVerificationClaimClass } from "./emailVerificationClaim";
 export default class Recipe implements RecipeModule<PreAndPostAPIHookAction, NormalisedInputType> {
     static instance?: Recipe;
-    static RECIPE_ID: string;
+    static RECIPE_ID: "emailverification";
     static EmailVerificationClaim: EmailVerificationClaimClass;
     config: NormalisedInputType;
     recipeImplementation: RecipeInterface;
