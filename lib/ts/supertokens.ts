@@ -47,12 +47,14 @@ export default class SuperTokens {
         const finalPluginList: SuperTokensPlugin[] = [];
         if (config.plugins) {
             for (const plugin of config.plugins) {
-                const versionContraints = Array.isArray(plugin.compatibleWebJSSDKVersions)
-                    ? plugin.compatibleWebJSSDKVersions
-                    : [plugin.compatibleWebJSSDKVersions];
-                if (!versionContraints.includes(package_version)) {
-                    // TODO: better checks
-                    throw new Error("Plugin version mismatch");
+                if (plugin.compatibleWebJSSDKVersions) {
+                    const versionContraints = Array.isArray(plugin.compatibleWebJSSDKVersions)
+                        ? plugin.compatibleWebJSSDKVersions
+                        : [plugin.compatibleWebJSSDKVersions];
+                    if (!versionContraints.includes(package_version)) {
+                        // TODO: better checks
+                        throw new Error("Plugin version mismatch");
+                    }
                 }
                 if (plugin.dependencies) {
                     const result = plugin.dependencies(finalPluginList, package_version);
