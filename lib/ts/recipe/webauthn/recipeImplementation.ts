@@ -45,6 +45,8 @@ export default function getRecipeImplementation(
                 | {
                       status: "OK";
                       webauthnGeneratedOptionsId: string;
+                      createdAt: string;
+                      expiresAt: string;
                       rp: {
                           id: string;
                           name: string;

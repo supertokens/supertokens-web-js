@@ -56,6 +56,8 @@ export declare type CredentialPayload = {
 export declare type RegistrationOptions = {
     status: "OK";
     webauthnGeneratedOptionsId: string;
+    createdAt: string;
+    expiresAt: string;
     rp: {
         id: string;
         name: string;
