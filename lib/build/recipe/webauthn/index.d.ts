@@ -44,6 +44,8 @@ export default class RecipeWrapper {
         | {
               status: "OK";
               webauthnGeneratedOptionsId: string;
+              createdAt: string;
+              expiresAt: string;
               rp: {
                   id: string;
                   name: string;
@@ -188,13 +190,16 @@ export default class RecipeWrapper {
         | {
               status: "OK";
               user: User;
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "SIGN_IN_NOT_ALLOWED";
               reason: string;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
     >;
@@ -213,6 +218,7 @@ export default class RecipeWrapper {
         | {
               status: "OK";
               exists: boolean;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
     >;
@@ -234,10 +240,12 @@ export default class RecipeWrapper {
     }): Promise<
         | {
               status: "OK";
+              fetchResponse: Response;
           }
         | {
               status: "RECOVER_ACCOUNT_NOT_ALLOWED";
               reason: string;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
     >;
@@ -267,23 +275,29 @@ export default class RecipeWrapper {
               status: "OK";
               user: User;
               email: string;
+              fetchResponse: Response;
           }
         | GeneralErrorResponse
         | {
               status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_CREDENTIALS_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_GENERATED_OPTIONS_ERROR";
+              fetchResponse: Response;
           }
         | {
               status: "INVALID_AUTHENTICATOR_ERROR";
               reason: string;
+              fetchResponse: Response;
           }
     >;
     /**

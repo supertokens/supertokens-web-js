@@ -56,6 +56,8 @@ export default class RecipeWrapper {
         | {
               status: "OK";
               webauthnGeneratedOptionsId: string;
+              createdAt: string;
+              expiresAt: string;
               rp: {
                   id: string;
                   name: string;
