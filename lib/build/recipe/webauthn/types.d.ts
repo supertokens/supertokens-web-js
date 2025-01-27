@@ -123,7 +123,7 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    getSignInOptions: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+    getSignInOptions: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | AuthenticationOptions
         | {
               status: "INVALID_GENERATED_OPTIONS_ERROR";
@@ -325,11 +325,7 @@ export declare type RecipeInterface = {
               error: any;
           }
     >;
-    authenticateCredentialWithSignIn: (input: {
-        email: string;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => Promise<
+    authenticateCredentialWithSignIn: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
               status: "OK";
               user: User;

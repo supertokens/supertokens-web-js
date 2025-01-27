@@ -141,7 +141,7 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    getSignInOptions: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<
+    getSignInOptions: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | AuthenticationOptions
         | {
               status: "INVALID_GENERATED_OPTIONS_ERROR";
@@ -278,11 +278,7 @@ export type RecipeInterface = {
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
     >;
-    authenticateCredentialWithSignIn: (input: {
-        email: string;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }) => Promise<
+    authenticateCredentialWithSignIn: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
               status: "OK";
               user: User;
