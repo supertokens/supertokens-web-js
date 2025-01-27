@@ -118,7 +118,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the webauthn options (challenge, etc.)
      */
-    static getSignInOptions(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
+    static getSignInOptions(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<
         | {
               status: "OK";
               webauthnGeneratedOptionsId: string;
@@ -419,11 +419,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the user details (id, etc.) and email
      */
-    static authenticateCredentialWithSignIn(input: {
-        email: string;
-        options?: RecipeFunctionOptions;
-        userContext: any;
-    }): Promise<
+    static authenticateCredentialWithSignIn(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<
         | {
               status: "OK";
               user: User;

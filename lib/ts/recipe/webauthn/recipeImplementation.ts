@@ -117,7 +117,7 @@ export default function getRecipeImplementation(
                 fetchResponse,
             };
         },
-        getSignInOptions: async function ({ email, options, userContext }) {
+        getSignInOptions: async function ({ options, userContext }) {
             const { jsonBody, fetchResponse } = await querier.post<
                 | {
                       status: "OK";
@@ -138,9 +138,7 @@ export default function getRecipeImplementation(
                 }),
                 "/webauthn/options/signin",
                 {
-                    body: JSON.stringify({
-                        email,
-                    }),
+                    body: JSON.stringify({}),
                 },
                 Querier.preparePreAPIHook({
                     recipePreAPIHook: recipeImplInput.preAPIHook,
@@ -423,9 +421,9 @@ export default function getRecipeImplementation(
                 authenticationResponse: authenticationResponse,
             };
         },
-        authenticateCredentialWithSignIn: async function ({ email, options, userContext }) {
+        authenticateCredentialWithSignIn: async function ({ options, userContext }) {
             // Make a call to get the sign in options using the entered email ID.
-            const signInOptions = await this.getSignInOptions({ email, options, userContext });
+            const signInOptions = await this.getSignInOptions({ options, userContext });
             if (signInOptions?.status !== "OK") {
                 // We want to return the error as is if status was not "OK"
                 return signInOptions;
