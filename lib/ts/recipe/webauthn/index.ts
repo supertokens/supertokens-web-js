@@ -19,7 +19,6 @@ import { getNormalisedUserContext } from "../../utils";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import Recipe from "./recipe";
 import {
-    CredentialPayload,
     ResidentKey,
     UserInput,
     UserVerification,
@@ -292,7 +291,7 @@ export default class RecipeWrapper {
     static recoverAccount(input: {
         token: string;
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: RegistrationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }): Promise<

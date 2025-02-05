@@ -2,7 +2,6 @@ import { AuthenticationResponseJSON, RegistrationResponseJSON } from "@simpleweb
 import { GeneralErrorResponse, User } from "../../types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import {
-    CredentialPayload,
     ResidentKey,
     UserInput,
     UserVerification,
@@ -267,7 +266,7 @@ export default class RecipeWrapper {
     static recoverAccount(input: {
         token: string;
         webauthnGeneratedOptionsId: string;
-        credential: CredentialPayload;
+        credential: RegistrationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
     }): Promise<
