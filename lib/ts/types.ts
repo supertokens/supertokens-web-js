@@ -225,4 +225,7 @@ export type SuperTokensPlugin = {
             recipeInitRequired?: boolean | ((sdkVersion: string) => boolean);
         };
     };
+    config?: (
+        config: Omit<SuperTokensConfig, "experimental" | "recipeList">
+    ) => Omit<SuperTokensConfig, "experimental" | "recipeList"> | undefined;
 };

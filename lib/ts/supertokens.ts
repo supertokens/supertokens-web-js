@@ -69,6 +69,12 @@ export default class SuperTokens {
             }
         }
 
+        for (const plugin of finalPluginList) {
+            if (plugin.config) {
+                config = { ...config, ...plugin.config(config) };
+            }
+        }
+
         const overrideMaps = finalPluginList
             .filter((p) => p.overrideMap !== undefined)
             .map((p) => p.overrideMap) as NonNullable<SuperTokensPlugin["overrideMap"]>[];
