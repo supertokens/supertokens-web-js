@@ -45,8 +45,8 @@ export default class SuperTokens {
         }
 
         const finalPluginList: SuperTokensPlugin[] = [];
-        if (config.plugins) {
-            for (const plugin of config.plugins) {
+        if (config.experimental?.plugins) {
+            for (const plugin of config.experimental.plugins) {
                 if (plugin.compatibleWebJSSDKVersions) {
                     const versionContraints = Array.isArray(plugin.compatibleWebJSSDKVersions)
                         ? plugin.compatibleWebJSSDKVersions
