@@ -95,7 +95,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
     > {
@@ -127,7 +127,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | GeneralErrorResponse
@@ -170,8 +170,8 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
-        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
-        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
     > {
@@ -304,8 +304,8 @@ export default class RecipeWrapper {
         | GeneralErrorResponse
         | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR"; fetchResponse: Response }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
-        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
-        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.recoverAccount({
@@ -392,8 +392,8 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
-        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
-        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
@@ -425,7 +425,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
@@ -478,8 +478,8 @@ export default class RecipeWrapper {
         | GeneralErrorResponse
         | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR"; fetchResponse: Response }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
-        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
-        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }

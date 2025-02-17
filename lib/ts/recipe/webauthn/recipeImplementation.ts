@@ -85,7 +85,7 @@ export default function getRecipeImplementation(
                       fetchResponse: Response;
                   }
                 | {
-                      status: "INVALID_GENERATED_OPTIONS_ERROR";
+                      status: "INVALID_OPTIONS_ERROR";
                       fetchResponse: Response;
                   }
             >(
@@ -128,7 +128,7 @@ export default function getRecipeImplementation(
                       fetchResponse: Response;
                   }
                 | {
-                      status: "INVALID_GENERATED_OPTIONS_ERROR";
+                      status: "INVALID_OPTIONS_ERROR";
                       fetchResponse: Response;
                   }
                 | GeneralErrorResponse
@@ -170,8 +170,8 @@ export default function getRecipeImplementation(
                       reason: string;
                   }
                 | { status: "INVALID_CREDENTIALS_ERROR" }
-                | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR" }
-                | { status: "INVALID_GENERATED_OPTIONS_ERROR" }
+                | { status: "OPTIONS_NOT_FOUND_ERROR" }
+                | { status: "INVALID_OPTIONS_ERROR" }
                 | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
                 | { status: "EMAIL_ALREADY_EXISTS_ERROR" }
             >(
@@ -321,8 +321,8 @@ export default function getRecipeImplementation(
                 | GeneralErrorResponse
                 | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR" }
                 | { status: "INVALID_CREDENTIALS_ERROR" }
-                | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR" }
-                | { status: "INVALID_GENERATED_OPTIONS_ERROR" }
+                | { status: "OPTIONS_NOT_FOUND_ERROR" }
+                | { status: "INVALID_OPTIONS_ERROR" }
                 | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string }
             >(
                 await Multitenancy.getInstanceOrThrow().recipeImplementation.getTenantId({

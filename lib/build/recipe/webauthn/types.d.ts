@@ -119,14 +119,14 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
     >;
     getSignInOptions: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | AuthenticationOptions
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | GeneralErrorResponse
@@ -153,11 +153,11 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
-              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              status: "OPTIONS_NOT_FOUND_ERROR";
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -239,11 +239,11 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
-              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              status: "OPTIONS_NOT_FOUND_ERROR";
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -290,10 +290,6 @@ export declare type RecipeInterface = {
               err: string;
               fetchResponse: Response;
           }
-        | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
         | GeneralErrorResponse
         | {
               status: "SIGN_UP_NOT_ALLOWED";
@@ -305,7 +301,11 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
-              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              status: "OPTIONS_NOT_FOUND_ERROR";
+              fetchResponse: Response;
+          }
+        | {
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -332,7 +332,7 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -366,7 +366,7 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | GeneralErrorResponse
@@ -379,7 +379,7 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
-              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              status: "OPTIONS_NOT_FOUND_ERROR";
               fetchResponse: Response;
           }
         | {

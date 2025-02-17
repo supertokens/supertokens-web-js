@@ -137,14 +137,14 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
     >;
     getSignInOptions: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | AuthenticationOptions
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | GeneralErrorResponse
@@ -167,8 +167,8 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
-        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
-        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
     >;
@@ -227,8 +227,8 @@ export type RecipeInterface = {
         | GeneralErrorResponse
         | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR"; fetchResponse: Response }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
-        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
-        | { status: "INVALID_GENERATED_OPTIONS_ERROR"; fetchResponse: Response }
+        | { status: "OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
     >;
     registerCredential: (input: { registrationOptions: RegistrationOptions }) => Promise<
@@ -261,10 +261,6 @@ export type RecipeInterface = {
               err: string;
               fetchResponse: Response;
           }
-        | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
         | GeneralErrorResponse
         | {
               status: "SIGN_UP_NOT_ALLOWED";
@@ -272,7 +268,8 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
-        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "INVALID_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
@@ -284,16 +281,9 @@ export type RecipeInterface = {
               user: User;
               fetchResponse: Response;
           }
-        | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
+        | { status: "INVALID_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
-        | {
-              status: "SIGN_IN_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
+        | { status: "SIGN_IN_NOT_ALLOWED"; reason: string; fetchResponse: Response }
         | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
         | GeneralErrorResponse
     >;
@@ -313,13 +303,13 @@ export type RecipeInterface = {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | GeneralErrorResponse
         | { status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR"; fetchResponse: Response }
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
-        | { status: "GENERATED_OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
+        | { status: "OPTIONS_NOT_FOUND_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }

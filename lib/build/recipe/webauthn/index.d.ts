@@ -83,7 +83,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
     >;
@@ -109,7 +109,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | GeneralErrorResponse
@@ -150,11 +150,11 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              status: "OPTIONS_NOT_FOUND_ERROR";
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -286,11 +286,11 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              status: "OPTIONS_NOT_FOUND_ERROR";
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -383,11 +383,11 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              status: "OPTIONS_NOT_FOUND_ERROR";
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -427,7 +427,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | {
@@ -487,11 +487,11 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | {
-              status: "GENERATED_OPTIONS_NOT_FOUND_ERROR";
+              status: "OPTIONS_NOT_FOUND_ERROR";
               fetchResponse: Response;
           }
         | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
+              status: "INVALID_OPTIONS_ERROR";
               fetchResponse: Response;
           }
         | {
