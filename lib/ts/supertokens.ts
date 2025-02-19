@@ -64,8 +64,8 @@ export default class SuperTokens {
                     if (result.pluginsToAdd) {
                         finalPluginList.push(...result.pluginsToAdd);
                     }
-                    finalPluginList.push(plugin);
                 }
+                finalPluginList.push(plugin);
             }
         }
 
