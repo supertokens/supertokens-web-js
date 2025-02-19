@@ -363,6 +363,13 @@ export default function getRecipeImplementation(
                     return { status: "AUTHENTICATOR_ALREADY_REGISTERED" };
                 }
 
+                if (
+                    error.name === "NotSupportedError" ||
+                    error.message === "WebAuthn is not supported in this browser"
+                ) {
+                    return { status: "WEBAUTHN_NOT_SUPPORTED", error: error };
+                }
+
                 return {
                     status: "FAILED_TO_REGISTER_USER",
                     error: error,
@@ -410,6 +417,13 @@ export default function getRecipeImplementation(
             try {
                 authenticationResponse = await startAuthentication({ optionsJSON: authenticationOptions });
             } catch (error: any) {
+                if (
+                    error.name === "NotSupportedError" ||
+                    error.message === "WebAuthn is not supported in this browser"
+                ) {
+                    return { status: "WEBAUTHN_NOT_SUPPORTED", error: error };
+                }
+
                 return {
                     status: "FAILED_TO_AUTHENTICATE_USER",
                     error: error,

@@ -238,6 +238,7 @@ export type RecipeInterface = {
           }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
+        | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
     >;
     authenticateCredential: (input: { authenticationOptions: AuthenticationOptions }) => Promise<
         | {
@@ -245,6 +246,7 @@ export type RecipeInterface = {
               authenticationResponse: AuthenticationResponseJSON;
           }
         | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
+        | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
     >;
     registerCredentialWithSignUp: (input: {
         email: string;
@@ -274,6 +276,7 @@ export type RecipeInterface = {
         | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
+        | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
     >;
     authenticateCredentialWithSignIn: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
@@ -285,6 +288,7 @@ export type RecipeInterface = {
         | { status: "INVALID_CREDENTIALS_ERROR"; fetchResponse: Response }
         | { status: "SIGN_IN_NOT_ALLOWED"; reason: string; fetchResponse: Response }
         | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
+        | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
         | GeneralErrorResponse
     >;
     registerCredentialWithRecoverAccount: (input: {
@@ -313,5 +317,6 @@ export type RecipeInterface = {
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
+        | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
     >;
 };

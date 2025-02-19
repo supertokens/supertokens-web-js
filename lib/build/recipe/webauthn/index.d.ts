@@ -320,6 +320,10 @@ export default class RecipeWrapper {
               status: "FAILED_TO_REGISTER_USER";
               error: any;
           }
+        | {
+              status: "WEBAUTHN_NOT_SUPPORTED";
+              error: any;
+          }
     >;
     /**
      * Authenticate the credential with the passed options by using native webauthn functions.
@@ -337,6 +341,10 @@ export default class RecipeWrapper {
           }
         | {
               status: "FAILED_TO_AUTHENTICATE_USER";
+              error: any;
+          }
+        | {
+              status: "WEBAUTHN_NOT_SUPPORTED";
               error: any;
           }
     >;
@@ -406,6 +414,10 @@ export default class RecipeWrapper {
               status: "FAILED_TO_REGISTER_USER";
               error: any;
           }
+        | {
+              status: "WEBAUTHN_NOT_SUPPORTED";
+              error: any;
+          }
     >;
     /**
      * Authenticate the user and sign them in after verifying their identity.
@@ -441,6 +453,10 @@ export default class RecipeWrapper {
           }
         | {
               status: "FAILED_TO_AUTHENTICATE_USER";
+              error: any;
+          }
+        | {
+              status: "WEBAUTHN_NOT_SUPPORTED";
               error: any;
           }
         | GeneralErrorResponse
@@ -504,6 +520,10 @@ export default class RecipeWrapper {
           }
         | {
               status: "FAILED_TO_REGISTER_USER";
+              error: any;
+          }
+        | {
+              status: "WEBAUTHN_NOT_SUPPORTED";
               error: any;
           }
     >;

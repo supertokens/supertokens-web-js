@@ -264,6 +264,10 @@ export declare type RecipeInterface = {
               status: "FAILED_TO_REGISTER_USER";
               error: any;
           }
+        | {
+              status: "WEBAUTHN_NOT_SUPPORTED";
+              error: any;
+          }
     >;
     authenticateCredential: (input: { authenticationOptions: AuthenticationOptions }) => Promise<
         | {
@@ -272,6 +276,10 @@ export declare type RecipeInterface = {
           }
         | {
               status: "FAILED_TO_AUTHENTICATE_USER";
+              error: any;
+          }
+        | {
+              status: "WEBAUTHN_NOT_SUPPORTED";
               error: any;
           }
     >;
@@ -324,6 +332,10 @@ export declare type RecipeInterface = {
               status: "FAILED_TO_REGISTER_USER";
               error: any;
           }
+        | {
+              status: "WEBAUTHN_NOT_SUPPORTED";
+              error: any;
+          }
     >;
     authenticateCredentialWithSignIn: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<
         | {
@@ -346,6 +358,10 @@ export declare type RecipeInterface = {
           }
         | {
               status: "FAILED_TO_AUTHENTICATE_USER";
+              error: any;
+          }
+        | {
+              status: "WEBAUTHN_NOT_SUPPORTED";
               error: any;
           }
         | GeneralErrorResponse
@@ -392,6 +408,10 @@ export declare type RecipeInterface = {
           }
         | {
               status: "FAILED_TO_REGISTER_USER";
+              error: any;
+          }
+        | {
+              status: "WEBAUTHN_NOT_SUPPORTED";
               error: any;
           }
     >;

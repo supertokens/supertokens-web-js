@@ -330,6 +330,7 @@ export default class RecipeWrapper {
           }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
+        | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.registerCredential(input);
     }
@@ -349,6 +350,7 @@ export default class RecipeWrapper {
               authenticationResponse: AuthenticationResponseJSON;
           }
         | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
+        | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.authenticateCredential(input);
     }
@@ -398,6 +400,7 @@ export default class RecipeWrapper {
         | { status: "EMAIL_ALREADY_EXISTS_ERROR"; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
+        | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.registerCredentialWithSignUp({
             ...input,
@@ -435,6 +438,7 @@ export default class RecipeWrapper {
               fetchResponse: Response;
           }
         | { status: "FAILED_TO_AUTHENTICATE_USER"; error: any }
+        | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
         | GeneralErrorResponse
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.authenticateCredentialWithSignIn({
@@ -483,6 +487,7 @@ export default class RecipeWrapper {
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
         | { status: "AUTHENTICATOR_ALREADY_REGISTERED" }
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
+        | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
     > {
         return Recipe.getInstanceOrThrow().recipeImplementation.registerCredentialWithRecoverAccount({
             ...input,
