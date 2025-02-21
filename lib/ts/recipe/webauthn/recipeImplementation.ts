@@ -21,6 +21,8 @@ import { GeneralErrorResponse, User } from "../../types";
 import Multitenancy from "../multitenancy/recipe";
 import {
     AuthenticationResponseJSON,
+    browserSupportsWebAuthn,
+    platformAuthenticatorIsAvailable,
     RegistrationResponseJSON,
     startAuthentication,
     startRegistration,
@@ -490,6 +492,21 @@ export default function getRecipeImplementation(
                 options,
                 userContext,
             });
+        },
+        doesBrowserSupportWebAuthn: async () => {
+            try {
+                const isPlatformAuthenticatorAvailable = await platformAuthenticatorIsAvailable();
+                return {
+                    status: "OK",
+                    browserSupportsWebauthn: browserSupportsWebAuthn(),
+                    platformAuthenticatorIsAvailable: isPlatformAuthenticatorAvailable,
+                };
+            } catch (error: any) {
+                return {
+                    status: "ERROR",
+                    error: error,
+                };
+            }
         },
     };
 }

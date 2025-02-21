@@ -319,4 +319,15 @@ export type RecipeInterface = {
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
         | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
     >;
+    doesBrowserSupportWebAuthn: () => Promise<
+        | {
+              status: "OK";
+              browserSupportsWebauthn: boolean;
+              platformAuthenticatorIsAvailable: boolean;
+          }
+        | {
+              status: "ERROR";
+              error: any;
+          }
+    >;
 };

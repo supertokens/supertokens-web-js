@@ -415,4 +415,15 @@ export declare type RecipeInterface = {
               error: any;
           }
     >;
+    doesBrowserSupportWebAuthn: () => Promise<
+        | {
+              status: "OK";
+              browserSupportsWebauthn: boolean;
+              platformAuthenticatorIsAvailable: boolean;
+          }
+        | {
+              status: "ERROR";
+              error: any;
+          }
+    >;
 };

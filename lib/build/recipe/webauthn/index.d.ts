@@ -527,6 +527,17 @@ export default class RecipeWrapper {
               error: any;
           }
     >;
+    static doesBrowserSupportWebAuthn(): Promise<
+        | {
+              status: "OK";
+              browserSupportsWebauthn: boolean;
+              platformAuthenticatorIsAvailable: boolean;
+          }
+        | {
+              status: "ERROR";
+              error: any;
+          }
+    >;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getRegisterOptions: typeof RecipeWrapper.getRegisterOptions;
@@ -541,6 +552,7 @@ declare const authenticateCredentialWithSignIn: typeof RecipeWrapper.authenticat
 declare const registerCredentialWithRecoverAccount: typeof RecipeWrapper.registerCredentialWithRecoverAccount;
 declare const registerCredential: typeof RecipeWrapper.registerCredential;
 declare const authenticateCredential: typeof RecipeWrapper.authenticateCredential;
+declare const doesBrowserSupportWebAuthn: typeof RecipeWrapper.doesBrowserSupportWebAuthn;
 export {
     init,
     getRegisterOptions,
@@ -555,5 +567,6 @@ export {
     registerCredentialWithRecoverAccount,
     registerCredential,
     authenticateCredential,
+    doesBrowserSupportWebAuthn,
     RecipeInterface,
 };
