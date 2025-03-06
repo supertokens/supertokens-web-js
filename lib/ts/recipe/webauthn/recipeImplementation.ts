@@ -400,7 +400,7 @@ export default function getRecipeImplementation(
             }
 
             // We should have received a valid registration options response.
-            const registerCredentialResponse = await this.registerCredential({ registrationOptions });
+            const registerCredentialResponse = await this.registerCredential({ registrationOptions, userContext });
             if (registerCredentialResponse.status !== "OK") {
                 return registerCredentialResponse;
             }
@@ -448,6 +448,7 @@ export default function getRecipeImplementation(
             // We should have the options ready and are good to start the authentication
             const authenticateCredentialResponse = await this.authenticateCredential({
                 authenticationOptions: signInOptions,
+                userContext: userContext,
             });
             if (authenticateCredentialResponse.status !== "OK") {
                 return authenticateCredentialResponse;
@@ -480,7 +481,10 @@ export default function getRecipeImplementation(
             }
 
             // We should have received a valid registration options response.
-            const registerCredentialResponse = await this.registerCredential({ registrationOptions });
+            const registerCredentialResponse = await this.registerCredential({
+                registrationOptions,
+                userContext,
+            });
             if (registerCredentialResponse.status !== "OK") {
                 return registerCredentialResponse;
             }

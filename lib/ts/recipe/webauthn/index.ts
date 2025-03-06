@@ -323,7 +323,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along with registration response received
      */
-    static registerCredential(input: { registrationOptions: RegistrationOptions }): Promise<
+    static registerCredential(input: { registrationOptions: RegistrationOptions; userContext: any }): Promise<
         | {
               status: "OK";
               registrationResponse: RegistrationResponseJSON;
@@ -344,7 +344,7 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along with authentication response received
      */
-    static authenticateCredential(input: { authenticationOptions: AuthenticationOptions }): Promise<
+    static authenticateCredential(input: { authenticationOptions: AuthenticationOptions; userContext: any }): Promise<
         | {
               status: "OK";
               authenticationResponse: AuthenticationResponseJSON;
@@ -495,7 +495,7 @@ export default class RecipeWrapper {
         });
     }
 
-    static doesBrowserSupportWebAuthn(): Promise<
+    static doesBrowserSupportWebAuthn(input: { userContext: any }): Promise<
         | {
               status: "OK";
               browserSupportsWebauthn: boolean;
@@ -506,7 +506,7 @@ export default class RecipeWrapper {
               error: any;
           }
     > {
-        return Recipe.getInstanceOrThrow().recipeImplementation.doesBrowserSupportWebAuthn();
+        return Recipe.getInstanceOrThrow().recipeImplementation.doesBrowserSupportWebAuthn(input);
     }
 }
 
