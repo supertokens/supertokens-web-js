@@ -19,7 +19,7 @@ export declare function getGlobalClaimValidators({
     userContext?: any;
 }): SessionClaimValidator[];
 export declare function normaliseUserResponse(
-    recipeId: "passwordless" | "emailpassword" | "thirdparty",
+    recipeId: "passwordless" | "emailpassword" | "thirdparty" | "webauthn",
     response:
         | {
               createdNewRecipeUser: boolean;
@@ -35,6 +35,9 @@ export declare function normaliseUserResponse(
                       id: string;
                       userId: string;
                   };
+                  webauthn?: {
+                      credentialIds: string[];
+                  };
                   tenantIds: string[];
                   timeJoined: number;
               };
@@ -44,7 +47,7 @@ export declare function normaliseUserResponse(
     user: User;
 };
 export declare function normaliseUser(
-    recipeId: "passwordless" | "emailpassword" | "thirdparty",
+    recipeId: "passwordless" | "emailpassword" | "thirdparty" | "webauthn",
     responseUser:
         | User
         | {
@@ -55,6 +58,11 @@ export declare function normaliseUser(
                   | {
                         id: string;
                         userId: string;
+                    }
+                  | undefined;
+              webauthn?:
+                  | {
+                        credentialIds: string[];
                     }
                   | undefined;
               tenantIds: string[];

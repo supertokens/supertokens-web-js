@@ -155,11 +155,14 @@ export type User = {
         id: string;
         userId: string;
     }[];
+    webauthn: {
+        credentialIds: string[];
+    };
     loginMethods: {
         tenantIds: string[];
         timeJoined: number;
 
-        recipeId: "emailpassword" | "thirdparty" | "passwordless";
+        recipeId: "emailpassword" | "thirdparty" | "passwordless" | "webauthn";
         recipeUserId: string;
 
         verified?: boolean;
