@@ -252,7 +252,7 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    registerCredential: (input: { registrationOptions: RegistrationOptions }) => Promise<
+    registerCredential: (input: { registrationOptions: RegistrationOptions; userContext: any }) => Promise<
         | {
               status: "OK";
               registrationResponse: RegistrationResponseJSON;
@@ -269,7 +269,7 @@ export declare type RecipeInterface = {
               error: any;
           }
     >;
-    authenticateCredential: (input: { authenticationOptions: AuthenticationOptions }) => Promise<
+    authenticateCredential: (input: { authenticationOptions: AuthenticationOptions; userContext: any }) => Promise<
         | {
               status: "OK";
               authenticationResponse: AuthenticationResponseJSON;
@@ -415,7 +415,7 @@ export declare type RecipeInterface = {
               error: any;
           }
     >;
-    doesBrowserSupportWebAuthn: () => Promise<
+    doesBrowserSupportWebAuthn: (input: { userContext: any }) => Promise<
         | {
               status: "OK";
               browserSupportsWebauthn: boolean;
