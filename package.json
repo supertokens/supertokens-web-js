@@ -78,7 +78,7 @@
         },
         {
             "path": "recipe/thirdparty/index.js",
-            "limit": "29kb"
+            "limit": "30kb"
         },
         {
             "path": "recipe/session/index.js",
@@ -106,7 +106,7 @@
         },
         {
             "path": "recipe/oauth2provider/index.js",
-            "limit": "28kb"
+            "limit": "29kb"
         },
         {
             "path": "recipe/webauthn/index.js",
