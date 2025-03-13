@@ -107,6 +107,10 @@
         {
             "path": "recipe/oauth2provider/index.js",
             "limit": "28kb"
+        },
+        {
+            "path": "recipe/webauthn/index.js",
+            "limit": "30kb"
         }
     ]
 }
