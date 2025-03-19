@@ -7,23 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
-## [0.15.0] - 2024-12-10
+## [0.15.0] - 2025-03-20
 
--   Added webauthn support and methods for integrating with webauthn
-    -   Adds `Webauthn` recipe
-    -   Adds `getRegisterOptions`: to get the options for registering a passkey or recovering an account
-    -   Adds `getSignInOptions`: to get the options for signing in with a passkey
-    -   Adds `signUp`: to sign up with a passkey
-    -   Adds `signIn`: to sign in with a passkey
-    -   Adds `getEmailExists`: to check if an email exists
-    -   Adds `generateRecoverAccountToken`: generates and sends a recovery token to the user's email
-    -   Adds `recoverAccount`: to recover an account using a recovery token
-    -   Adds `registerCredential`: to register a passkey
-    -   Adds `authenticateCredential`: to authenticate a passkey
-    -   Adds `registerCredentialWithSignUp`: wrapper method to handle registering a passkey and signing up a user
-    -   Adds `authenticateCredentialWithSignIn`: wrapper method to handle authenticating a passkey and signing in a user
-    -   Adds `registerCredentialWithRecoverAccount`: wrapper method to handle registering a passkey and recovering an account
-    -   Adds `doesBrowserSupportWebAuthn`: to check if the browser supports webauthn
+-   Added `Webauthn` recipe to support logins using WebAuthN (Passkeys)
+-   Updated User type to include webauthn as a possible login method.
+-   Added support for FDI 4.1
 
 ## [0.14.0] - 2024-10-07
 
