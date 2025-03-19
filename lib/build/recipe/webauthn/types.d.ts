@@ -252,7 +252,10 @@ export declare type RecipeInterface = {
               fetchResponse: Response;
           }
     >;
-    registerCredential: (input: { registrationOptions: RegistrationOptions; userContext: any }) => Promise<
+    registerCredential: (input: {
+        registrationOptions: Omit<RegistrationOptions, "fetchResponse" | "status">;
+        userContext: any;
+    }) => Promise<
         | {
               status: "OK";
               registrationResponse: RegistrationResponseJSON;
@@ -269,7 +272,10 @@ export declare type RecipeInterface = {
               error: any;
           }
     >;
-    authenticateCredential: (input: { authenticationOptions: AuthenticationOptions; userContext: any }) => Promise<
+    authenticateCredential: (input: {
+        authenticationOptions: Omit<AuthenticationOptions, "fetchResponse" | "status">;
+        userContext: any;
+    }) => Promise<
         | {
               status: "OK";
               authenticationResponse: AuthenticationResponseJSON;

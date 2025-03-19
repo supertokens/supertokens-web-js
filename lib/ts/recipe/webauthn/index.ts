@@ -323,7 +323,10 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along with registration response received
      */
-    static registerCredential(input: { registrationOptions: RegistrationOptions; userContext: any }): Promise<
+    static registerCredential(input: {
+        registrationOptions: Omit<RegistrationOptions, "fetchResponse" | "status">;
+        userContext: any;
+    }): Promise<
         | {
               status: "OK";
               registrationResponse: RegistrationResponseJSON;
@@ -344,7 +347,10 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along with authentication response received
      */
-    static authenticateCredential(input: { authenticationOptions: AuthenticationOptions; userContext: any }): Promise<
+    static authenticateCredential(input: {
+        authenticationOptions: Omit<AuthenticationOptions, "fetchResponse" | "status">;
+        userContext: any;
+    }): Promise<
         | {
               status: "OK";
               authenticationResponse: AuthenticationResponseJSON;

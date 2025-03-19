@@ -231,7 +231,10 @@ export type RecipeInterface = {
         | { status: "INVALID_OPTIONS_ERROR"; fetchResponse: Response }
         | { status: "INVALID_AUTHENTICATOR_ERROR"; reason: string; fetchResponse: Response }
     >;
-    registerCredential: (input: { registrationOptions: RegistrationOptions; userContext: any }) => Promise<
+    registerCredential: (input: {
+        registrationOptions: Omit<RegistrationOptions, "fetchResponse" | "status">;
+        userContext: any;
+    }) => Promise<
         | {
               status: "OK";
               registrationResponse: RegistrationResponseJSON;
@@ -240,7 +243,10 @@ export type RecipeInterface = {
         | { status: "FAILED_TO_REGISTER_USER"; error: any }
         | { status: "WEBAUTHN_NOT_SUPPORTED"; error: any }
     >;
-    authenticateCredential: (input: { authenticationOptions: AuthenticationOptions; userContext: any }) => Promise<
+    authenticateCredential: (input: {
+        authenticationOptions: Omit<AuthenticationOptions, "fetchResponse" | "status">;
+        userContext: any;
+    }) => Promise<
         | {
               status: "OK";
               authenticationResponse: AuthenticationResponseJSON;
