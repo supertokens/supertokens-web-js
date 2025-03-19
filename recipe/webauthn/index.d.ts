@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.supported_fdi = exports.package_version = void 0;
 /* Copyright (c) 2022, VRAI Labs and/or its affiliates. All rights reserved.
  *
  * This software is licensed under the Apache License, Version 2.0 (the
@@ -15,5 +12,6 @@ exports.supported_fdi = exports.package_version = void 0;
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-exports.package_version = "0.15.0";
-exports.supported_fdi = ["3.1", "4.0", "4.1"];
+export * from "../../lib/build/recipe/webauthn";
+import * as _default from "../../lib/build/recipe/webauthn";
+export default _default;

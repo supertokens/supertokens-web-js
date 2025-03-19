@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.15.0] - 2025-03-20
+
+-   Added `Webauthn` recipe to support logins using WebAuthN (Passkeys)
+-   Updated User type to include webauthn as a possible login method.
+-   Added support for FDI 4.1
+
 ## [0.14.0] - 2024-10-07
 
 -   Added the OAuth2Provider recipe
