@@ -7,7 +7,7 @@ orbs:
 jobs:
     build:
         docker:
-            - image: rishabhpoddar/supertokens_website_sdk_testing_node_16
+            - image: node:18
         steps:
             - run: git config --global url."https://github.com/".insteadOf ssh://git@github.com/ # This makes npm use http instead of ssh (required for node 16)
             - checkout
@@ -27,7 +27,7 @@ jobs:
                       - root/project/node_modules
     test:
         docker:
-            - image: rishabhpoddar/supertokens_website_sdk_testing_node_16
+            - image: node:18
             - image: rishabhpoddar/oauth-server-cicd
         environment:
             MOCHA_FILE: test_report/report_node-<< parameters.fdi-version >>.xml
