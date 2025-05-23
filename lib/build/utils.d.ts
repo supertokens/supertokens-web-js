@@ -1,4 +1,11 @@
-import { AllRecipeConfigs, AppInfoUserInput, NormalisedAppInfo, SuperTokensPlugin, User } from "./types";
+import {
+    AllRecipeConfigs,
+    AppInfoUserInput,
+    NormalisedAppInfo,
+    SuperTokensPlugin,
+    SuperTokensPublicPlugin,
+    User,
+} from "./types";
 import { SessionClaimValidator } from "supertokens-website";
 export declare function appendQueryParamsToURL(stringUrl: string, queryParams?: Record<string, string>): string;
 export declare function normaliseInputAppInfoOrThrowError(appInfo: AppInfoUserInput): NormalisedAppInfo;
@@ -74,3 +81,4 @@ export declare function applyPlugins<T extends keyof AllRecipeConfigs>(
     config: AllRecipeConfigs[T] | undefined,
     plugins: NonNullable<SuperTokensPlugin["overrideMap"]>[]
 ): AllRecipeConfigs[T];
+export declare function getPublicPlugin(plugin: SuperTokensPlugin): SuperTokensPublicPlugin;

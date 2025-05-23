@@ -16,7 +16,14 @@ import { WindowHandlerReference } from "./windowHandler";
 import { DEFAULT_API_BASE_PATH, SSR_ERROR } from "./constants";
 import NormalisedURLDomain from "./normalisedURLDomain";
 import NormalisedURLPath from "./normalisedURLPath";
-import { AllRecipeConfigs, AppInfoUserInput, NormalisedAppInfo, SuperTokensPlugin, User } from "./types";
+import {
+    AllRecipeConfigs,
+    AppInfoUserInput,
+    NormalisedAppInfo,
+    SuperTokensPlugin,
+    SuperTokensPublicPlugin,
+    User,
+} from "./types";
 import { SessionClaimValidator } from "supertokens-website";
 import { getGlobalClaimValidators as getGlobalClaimValidatorsWebsite } from "supertokens-website/utils/globalClaimValidators";
 import OverrideableBuilder from "supertokens-js-override";
@@ -238,4 +245,14 @@ export function applyPlugins<T extends keyof AllRecipeConfigs>(
         };
     }
     return config;
+}
+
+export function getPublicPlugin(plugin: SuperTokensPlugin): SuperTokensPublicPlugin {
+    return {
+        id: plugin.id,
+        initialized: plugin.init ? false : true, // since the init method is optional, we default to true
+        version: plugin.version,
+        exports: plugin.exports,
+        compatibleWebJSSDKVersions: plugin.compatibleWebJSSDKVersions,
+    };
 }

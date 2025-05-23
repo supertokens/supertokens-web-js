@@ -207,6 +207,17 @@ export declare type SuperTokensPlugin = {
             recipeInitRequired?: boolean | ((sdkVersion: string) => boolean);
         };
     };
-    exports?: Record<string, any> | (() => Record<string, any>);
+    init?: (
+        config: Omit<SuperTokensConfig, "recipeList">,
+        plugins: SuperTokensPlugin[],
+        sdkVersion: string
+    ) => void | Promise<void>;
+    exports?: Record<string, any>;
     config?: (config: Omit<SuperTokensConfig, "recipeList">) => Omit<SuperTokensConfig, "recipeList"> | undefined;
+};
+export declare type SuperTokensPublicPlugin = Pick<
+    SuperTokensPlugin,
+    "id" | "version" | "exports" | "compatibleWebJSSDKVersions"
+> & {
+    initialized: boolean;
 };

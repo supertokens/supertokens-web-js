@@ -1,9 +1,10 @@
 import RecipeModule from "./recipe/recipeModule";
-import { NormalisedAppInfo, SuperTokensConfig } from "./types";
+import { NormalisedAppInfo, SuperTokensConfig, SuperTokensPublicPlugin } from "./types";
 export default class SuperTokens {
     private static instance?;
     appInfo: NormalisedAppInfo;
     recipeList: RecipeModule<any, any>[];
+    pluginList: SuperTokensPublicPlugin[];
     constructor(config: SuperTokensConfig);
     /**
      * Initialise the SuperTokens SDK. Calling this function multiple times results
