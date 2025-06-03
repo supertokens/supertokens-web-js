@@ -15,7 +15,13 @@
 
 import RecipeModule from "./recipe/recipeModule";
 import { NormalisedAppInfo, SuperTokensConfig, SuperTokensPlugin, SuperTokensPublicPlugin } from "./types";
-import { checkForSSRErrorAndAppendIfNeeded, getPublicPlugin, isTest, normaliseInputAppInfoOrThrowError } from "./utils";
+import {
+    checkForSSRErrorAndAppendIfNeeded,
+    getPublicConfig,
+    getPublicPlugin,
+    isTest,
+    normaliseInputAppInfoOrThrowError,
+} from "./utils";
 import { CookieHandlerReference } from "./cookieHandler";
 import { WindowHandlerReference } from "./windowHandler";
 import { PostSuperTokensInitCallbacks } from "./postSuperTokensInitCallbacks";
@@ -58,7 +64,11 @@ export default class SuperTokens {
                     }
                 }
                 if (plugin.dependencies) {
-                    const result = plugin.dependencies(finalPluginList, package_version);
+                    const result = plugin.dependencies(
+                        getPublicConfig(config),
+                        finalPluginList.map(getPublicPlugin),
+                        package_version
+                    );
                     if (result.status === "ERROR") {
                         throw new Error(result.message);
                     }
@@ -75,7 +85,7 @@ export default class SuperTokens {
         for (let pluginIndex = 0; pluginIndex < this.pluginList.length; pluginIndex += 1) {
             const pluginConfig = finalPluginList[pluginIndex].config;
             if (pluginConfig) {
-                config = { ...config, ...pluginConfig(config) };
+                config = { ...config, ...pluginConfig(getPublicConfig(config)) };
             }
 
             const pluginInit = finalPluginList[pluginIndex].init;
