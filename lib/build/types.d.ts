@@ -212,12 +212,20 @@ export declare type SuperTokensPlugin = {
     exports?: Record<string, any>;
     config?: (config: SuperTokensPublicConfig) => Omit<SuperTokensPublicConfig, "appInfo"> | undefined;
 };
+export declare const nonPublicConfigProperties: readonly ["experimental"];
+export declare type NonPublicConfigPropertiesType = (typeof nonPublicConfigProperties)[number];
 export declare type SuperTokensPublicPlugin = Pick<
     SuperTokensPlugin,
     "id" | "version" | "exports" | "compatibleWebJSSDKVersions"
 > & {
     initialized: boolean;
 };
-export declare type SuperTokensPublicConfig = Omit<SuperTokensConfig, "experimental" | "appInfo"> & {
+export declare type SuperTokensConfigWithNormalisedAppInfo = Omit<SuperTokensConfig, "appInfo"> & {
+    appInfo: NormalisedAppInfo;
+};
+export declare type SuperTokensPublicConfig = Omit<
+    Omit<SuperTokensConfig, NonPublicConfigPropertiesType>,
+    "appInfo"
+> & {
     appInfo: NormalisedAppInfo;
 };

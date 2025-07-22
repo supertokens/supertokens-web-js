@@ -241,11 +241,19 @@ export type SuperTokensPlugin = {
     config?: (config: SuperTokensPublicConfig) => Omit<SuperTokensPublicConfig, "appInfo"> | undefined;
 };
 
+export const nonPublicConfigProperties = ["experimental"] as const;
+
+export type NonPublicConfigPropertiesType = (typeof nonPublicConfigProperties)[number];
+
 export type SuperTokensPublicPlugin = Pick<
     SuperTokensPlugin,
     "id" | "version" | "exports" | "compatibleWebJSSDKVersions"
 > & { initialized: boolean };
 
-export type SuperTokensPublicConfig = Omit<SuperTokensConfig, "experimental" | "appInfo"> & {
+export type SuperTokensConfigWithNormalisedAppInfo = Omit<SuperTokensConfig, "appInfo"> & {
+    appInfo: NormalisedAppInfo;
+};
+
+export type SuperTokensPublicConfig = Omit<Omit<SuperTokensConfig, NonPublicConfigPropertiesType>, "appInfo"> & {
     appInfo: NormalisedAppInfo;
 };

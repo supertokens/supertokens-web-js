@@ -20,11 +20,13 @@ import {
     AllRecipeConfigs,
     AppInfoUserInput,
     NormalisedAppInfo,
-    SuperTokensConfig,
+    SuperTokensConfigWithNormalisedAppInfo,
     SuperTokensPlugin,
     SuperTokensPublicConfig,
     SuperTokensPublicPlugin,
     User,
+    NonPublicConfigPropertiesType,
+    nonPublicConfigProperties,
 } from "./types";
 import { SessionClaimValidator } from "supertokens-website";
 import { getGlobalClaimValidators as getGlobalClaimValidatorsWebsite } from "supertokens-website/utils/globalClaimValidators";
@@ -260,7 +262,16 @@ export function getPublicPlugin(plugin: SuperTokensPlugin): SuperTokensPublicPlu
     };
 }
 
-export function getPublicConfig(config: SuperTokensConfig): SuperTokensPublicConfig {
-    const { experimental, ...publicConfig } = config;
-    return { ...publicConfig, appInfo: normaliseInputAppInfoOrThrowError(config.appInfo) };
+export function getPublicConfig(config: SuperTokensConfigWithNormalisedAppInfo): SuperTokensPublicConfig {
+    const configKeys = Object.keys(config) as (keyof SuperTokensConfigWithNormalisedAppInfo)[];
+
+    const publicConfig = configKeys.reduce((acc, key) => {
+        if (nonPublicConfigProperties.includes(key as NonPublicConfigPropertiesType)) {
+            return acc;
+        } else {
+            return { ...acc, [key]: config[key] };
+        }
+    }, {} as SuperTokensPublicConfig);
+
+    return publicConfig;
 }

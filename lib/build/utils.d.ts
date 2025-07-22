@@ -2,7 +2,7 @@ import {
     AllRecipeConfigs,
     AppInfoUserInput,
     NormalisedAppInfo,
-    SuperTokensConfig,
+    SuperTokensConfigWithNormalisedAppInfo,
     SuperTokensPlugin,
     SuperTokensPublicConfig,
     SuperTokensPublicPlugin,
@@ -84,4 +84,4 @@ export declare function applyPlugins<T extends keyof AllRecipeConfigs>(
     plugins: NonNullable<SuperTokensPlugin["overrideMap"]>[]
 ): AllRecipeConfigs[T];
 export declare function getPublicPlugin(plugin: SuperTokensPlugin): SuperTokensPublicPlugin;
-export declare function getPublicConfig(config: SuperTokensConfig): SuperTokensPublicConfig;
+export declare function getPublicConfig(config: SuperTokensConfigWithNormalisedAppInfo): SuperTokensPublicConfig;
