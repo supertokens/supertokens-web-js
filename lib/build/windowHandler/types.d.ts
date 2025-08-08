@@ -1,5 +1,1 @@
-export {
-    StorageHandler,
-    WindowHandlerInput,
-    WindowHandlerInterface,
-} from "supertokens-website/utils/windowHandler/types";
+export { StorageHandler, WindowHandlerInput, WindowHandlerInterface, } from "supertokens-website/utils/windowHandler/types";

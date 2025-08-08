@@ -38,7 +38,10 @@ export declare type RecipePostAPIHookContext<Action> = {
     fetchResponse: Response;
     userContext: any;
 };
-export declare type PreAPIHookFunction = (context: { requestInit: RequestInit; url: string }) => Promise<{
+export declare type PreAPIHookFunction = (context: {
+    requestInit: RequestInit;
+    url: string;
+}) => Promise<{
     url: string;
     requestInit: RequestInit;
 }>;
@@ -91,7 +94,11 @@ export declare type NormalisedRecipeConfig<Action> = {
  * API logic
  */
 export declare type RecipeFunctionOptions = {
-    preAPIHook?: (input: { url: string; requestInit: RequestInit; userContext: any }) => Promise<{
+    preAPIHook?: (input: {
+        url: string;
+        requestInit: RequestInit;
+        userContext: any;
+    }) => Promise<{
         url: string;
         requestInit: RequestInit;
     }>;

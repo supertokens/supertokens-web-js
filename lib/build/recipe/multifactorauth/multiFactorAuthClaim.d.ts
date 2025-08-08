@@ -12,14 +12,9 @@ export declare class MultiFactorAuthClaimClass implements SessionClaim<MFAClaimV
     };
     constructor(getRecipeImpl: () => RecipeInterface);
     refresh(userContext: any): Promise<void>;
-    getValueFromPayload(
-        payload: any,
-        _userContext?: any
-    ):
-        | {
-              c: Record<string, number | undefined>;
-              v: boolean;
-          }
-        | undefined;
+    getValueFromPayload(payload: any, _userContext?: any): {
+        c: Record<string, number | undefined>;
+        v: boolean;
+    } | undefined;
     getLastFetchedTime(payload: any, _userContext?: any): number | undefined;
 }

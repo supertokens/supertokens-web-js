@@ -59,11 +59,7 @@ export declare type SuperTokensConfig = {
      */
     enableDebugLogs?: boolean;
 };
-export declare type CreateRecipeFunction<Action> = (
-    appInfo: NormalisedAppInfo,
-    clientType: string | undefined,
-    enableDebugLogs: boolean
-) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
+export declare type CreateRecipeFunction<Action> = (appInfo: NormalisedAppInfo, clientType: string | undefined, enableDebugLogs: boolean) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 export declare type AppInfoUserInput = {
     /**
      * The name of your application

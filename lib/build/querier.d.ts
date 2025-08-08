@@ -1,11 +1,5 @@
 import { NormalisedAppInfo } from "./types";
-import {
-    PostAPIHookFunction,
-    PreAPIHookFunction,
-    RecipeFunctionOptions,
-    RecipePostAPIHookFunction,
-    RecipePreAPIHookFunction,
-} from "./recipe/recipeModule/types";
+import { PostAPIHookFunction, PreAPIHookFunction, RecipeFunctionOptions, RecipePostAPIHookFunction, RecipePreAPIHookFunction } from "./recipe/recipeModule/types";
 /**
  * When network calls are made the Querier calls .clone() on the response before:
  * 1. Calling the post API hook
@@ -20,75 +14,40 @@ export default class Querier {
     private readonly recipeId;
     private readonly appInfo;
     constructor(recipeId: string, appInfo: NormalisedAppInfo);
-    get: <JsonBodyType>(
-        tenantId: string | undefined,
-        path: string,
-        config: RequestInit,
-        queryParams?: Record<string, string>,
-        preAPIHook?: PreAPIHookFunction,
-        postAPIHook?: PostAPIHookFunction
-    ) => Promise<{
+    get: <JsonBodyType>(tenantId: string | undefined, path: string, config: RequestInit, queryParams?: Record<string, string>, preAPIHook?: PreAPIHookFunction, postAPIHook?: PostAPIHookFunction) => Promise<{
         jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
-    post: <JsonBodyType>(
-        tenantId: string | undefined,
-        path: string,
-        config: RequestInit,
-        preAPIHook?: PreAPIHookFunction,
-        postAPIHook?: PostAPIHookFunction
-    ) => Promise<{
+    post: <JsonBodyType>(tenantId: string | undefined, path: string, config: RequestInit, preAPIHook?: PreAPIHookFunction, postAPIHook?: PostAPIHookFunction) => Promise<{
         jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
-    delete: <JsonBodyType>(
-        tenantId: string | undefined,
-        path: string,
-        config: RequestInit,
-        preAPIHook?: PreAPIHookFunction,
-        postAPIHook?: PostAPIHookFunction
-    ) => Promise<{
+    delete: <JsonBodyType>(tenantId: string | undefined, path: string, config: RequestInit, preAPIHook?: PreAPIHookFunction, postAPIHook?: PostAPIHookFunction) => Promise<{
         jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
-    put: <JsonBodyType>(
-        tenantId: string | undefined,
-        path: string,
-        config: RequestInit,
-        preAPIHook?: PreAPIHookFunction,
-        postAPIHook?: PostAPIHookFunction
-    ) => Promise<{
+    put: <JsonBodyType>(tenantId: string | undefined, path: string, config: RequestInit, preAPIHook?: PreAPIHookFunction, postAPIHook?: PostAPIHookFunction) => Promise<{
         jsonBody: JsonBodyType;
         fetchResponse: Response;
     }>;
-    fetch: (
-        url: string,
-        config: RequestInit,
-        preAPIHook?: PreAPIHookFunction,
-        postAPIHook?: PostAPIHookFunction
-    ) => Promise<Response>;
-    callPreAPIHook: (context: { preAPIHook?: PreAPIHookFunction; requestInit: RequestInit; url: string }) => Promise<{
+    fetch: (url: string, config: RequestInit, preAPIHook?: PreAPIHookFunction, postAPIHook?: PostAPIHookFunction) => Promise<Response>;
+    callPreAPIHook: (context: {
+        preAPIHook?: PreAPIHookFunction;
+        requestInit: RequestInit;
+        url: string;
+    }) => Promise<{
         url: string;
         requestInit: RequestInit;
     }>;
     getFullUrl: (tenantId: string | undefined, pathStr: string, queryParams?: Record<string, string>) => string;
     getResponseJsonOrThrowGeneralError: (response: Response) => Promise<any>;
-    static preparePreAPIHook: <Action>({
-        recipePreAPIHook,
-        action,
-        options,
-        userContext,
-    }: {
+    static preparePreAPIHook: <Action>({ recipePreAPIHook, action, options, userContext, }: {
         recipePreAPIHook: RecipePreAPIHookFunction<Action>;
         action: Action;
         options?: RecipeFunctionOptions | undefined;
         userContext: any;
     }) => PreAPIHookFunction;
-    static preparePostAPIHook: <Action>({
-        recipePostAPIHook,
-        action,
-        userContext,
-    }: {
+    static preparePostAPIHook: <Action>({ recipePostAPIHook, action, userContext, }: {
         recipePostAPIHook: RecipePostAPIHookFunction<Action>;
         action: Action;
         userContext: any;

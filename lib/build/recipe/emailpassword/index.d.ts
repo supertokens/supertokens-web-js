@@ -2,10 +2,10 @@ import { RecipeInterface, PreAPIHookContext, PostAPIHookContext, UserInput } fro
 import { RecipeFunctionOptions } from "../recipeModule/types";
 import { User } from "../../types";
 export default class RecipeWrapper {
-    static init(
-        config?: UserInput
-    ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
-    static signOut(input?: { userContext?: any }): Promise<void>;
+    static init(config?: UserInput): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
+    static signOut(input?: {
+        userContext?: any;
+    }): Promise<void>;
     /**
      * Submit a new password for the user
      *
@@ -30,24 +30,20 @@ export default class RecipeWrapper {
         }[];
         options?: RecipeFunctionOptions;
         userContext?: any;
-    }): Promise<
-        | {
-              status: "OK";
-              fetchResponse: Response;
-          }
-        | {
-              status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        fetchResponse: Response;
+    } | {
+        status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "FIELD_ERROR";
+        formFields: {
+            id: string;
+            error: string;
+        }[];
+        fetchResponse: Response;
+    }>;
     /**
      * Send an email to the user for password reset
      *
@@ -70,25 +66,21 @@ export default class RecipeWrapper {
         }[];
         options?: RecipeFunctionOptions;
         userContext?: any;
-    }): Promise<
-        | {
-              status: "OK";
-              fetchResponse: Response;
-          }
-        | {
-              status: "PASSWORD_RESET_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        fetchResponse: Response;
+    } | {
+        status: "PASSWORD_RESET_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    } | {
+        status: "FIELD_ERROR";
+        formFields: {
+            id: string;
+            error: string;
+        }[];
+        fetchResponse: Response;
+    }>;
     /**
      * Sign up a user with email and password
      *
@@ -116,26 +108,22 @@ export default class RecipeWrapper {
         shouldTryLinkingWithSessionUser?: boolean;
         options?: RecipeFunctionOptions;
         userContext?: any;
-    }): Promise<
-        | {
-              status: "OK";
-              user: User;
-              fetchResponse: Response;
-          }
-        | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
-        | {
-              status: "SIGN_UP_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        user: User;
+        fetchResponse: Response;
+    } | {
+        status: "FIELD_ERROR";
+        formFields: {
+            id: string;
+            error: string;
+        }[];
+        fetchResponse: Response;
+    } | {
+        status: "SIGN_UP_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    }>;
     /**
      * Sign in a user with email and password
      *
@@ -165,30 +153,25 @@ export default class RecipeWrapper {
         shouldTryLinkingWithSessionUser?: boolean;
         options?: RecipeFunctionOptions;
         userContext?: any;
-    }): Promise<
-        | {
-              status: "OK";
-              user: User;
-              fetchResponse: Response;
-          }
-        | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
-        | {
-              status: "WRONG_CREDENTIALS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "SIGN_IN_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        user: User;
+        fetchResponse: Response;
+    } | {
+        status: "FIELD_ERROR";
+        formFields: {
+            id: string;
+            error: string;
+        }[];
+        fetchResponse: Response;
+    } | {
+        status: "WRONG_CREDENTIALS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "SIGN_IN_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    }>;
     /**
      * Check if an email exists
      *
@@ -202,7 +185,11 @@ export default class RecipeWrapper {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    static doesEmailExist(input: { email: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
+    static doesEmailExist(input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext?: any;
+    }): Promise<{
         status: "OK";
         doesExist: boolean;
         fetchResponse: Response;
@@ -214,7 +201,9 @@ export default class RecipeWrapper {
      *
      * @returns The "token" query parameter from the current location
      */
-    static getResetPasswordTokenFromURL(input?: { userContext?: any }): string;
+    static getResetPasswordTokenFromURL(input?: {
+        userContext?: any;
+    }): string;
     /**
      * Reads and returns the tenant id from the current URL
      *
@@ -222,7 +211,9 @@ export default class RecipeWrapper {
      *
      * @returns The "tenantId" query parameter from the current location
      */
-    static getTenantIdFromURL(input?: { userContext?: any }): string | undefined;
+    static getTenantIdFromURL(input?: {
+        userContext?: any;
+    }): string | undefined;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const submitNewPassword: typeof RecipeWrapper.submitNewPassword;
@@ -233,19 +224,4 @@ declare const doesEmailExist: typeof RecipeWrapper.doesEmailExist;
 declare const signOut: typeof RecipeWrapper.signOut;
 declare const getResetPasswordTokenFromURL: typeof RecipeWrapper.getResetPasswordTokenFromURL;
 declare const getTenantIdFromURL: typeof RecipeWrapper.getTenantIdFromURL;
-export {
-    init,
-    submitNewPassword,
-    sendPasswordResetEmail,
-    signUp,
-    signIn,
-    doesEmailExist,
-    getResetPasswordTokenFromURL,
-    getTenantIdFromURL,
-    signOut,
-    UserInput,
-    RecipeInterface,
-    RecipeFunctionOptions,
-    PreAPIHookContext,
-    PostAPIHookContext,
-};
+export { init, submitNewPassword, sendPasswordResetEmail, signUp, signIn, doesEmailExist, getResetPasswordTokenFromURL, getTenantIdFromURL, signOut, UserInput, RecipeInterface, RecipeFunctionOptions, PreAPIHookContext, PostAPIHookContext, };

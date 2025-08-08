@@ -3,9 +3,7 @@ import { RecipeFunctionOptions } from "../recipeModule/types";
 import { EmailVerificationClaimClass } from "./emailVerificationClaim";
 export default class RecipeWrapper {
     static EmailVerificationClaim: EmailVerificationClaimClass;
-    static init(
-        config?: UserInput
-    ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
+    static init(config?: UserInput): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
     /**
      * Verify an email
      *
@@ -18,7 +16,10 @@ export default class RecipeWrapper {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    static verifyEmail(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static verifyEmail(input?: {
+        userContext?: any;
+        options?: RecipeFunctionOptions;
+    }): Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
         fetchResponse: Response;
     }>;
@@ -34,7 +35,10 @@ export default class RecipeWrapper {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    static sendVerificationEmail(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static sendVerificationEmail(input?: {
+        userContext?: any;
+        options?: RecipeFunctionOptions;
+    }): Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
         fetchResponse: Response;
     }>;
@@ -49,12 +53,17 @@ export default class RecipeWrapper {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    static isEmailVerified(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<{
+    static isEmailVerified(input?: {
+        userContext?: any;
+        options?: RecipeFunctionOptions;
+    }): Promise<{
         status: "OK";
         isVerified: boolean;
         fetchResponse: Response;
     }>;
-    static getEmailVerificationTokenFromURL(input?: { userContext?: any }): string;
+    static getEmailVerificationTokenFromURL(input?: {
+        userContext?: any;
+    }): string;
     /**
      * Reads and returns the tenant id from the current URL
      *
@@ -62,7 +71,9 @@ export default class RecipeWrapper {
      *
      * @returns The "tenantId" query parameter from the current location
      */
-    static getTenantIdFromURL(input?: { userContext?: any }): string | undefined;
+    static getTenantIdFromURL(input?: {
+        userContext?: any;
+    }): string | undefined;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const verifyEmail: typeof RecipeWrapper.verifyEmail;
@@ -71,18 +82,4 @@ declare const isEmailVerified: typeof RecipeWrapper.isEmailVerified;
 declare const getEmailVerificationTokenFromURL: typeof RecipeWrapper.getEmailVerificationTokenFromURL;
 declare const getTenantIdFromURL: typeof RecipeWrapper.getTenantIdFromURL;
 declare const EmailVerificationClaim: EmailVerificationClaimClass;
-export {
-    init,
-    verifyEmail,
-    sendVerificationEmail,
-    isEmailVerified,
-    getEmailVerificationTokenFromURL,
-    getTenantIdFromURL,
-    EmailVerificationClaim,
-    UserInput,
-    RecipeInterface,
-    RecipeFunctionOptions,
-    PreAPIHookContext,
-    PostAPIHookContext,
-    EmailVerificationClaimClass,
-};
+export { init, verifyEmail, sendVerificationEmail, isEmailVerified, getEmailVerificationTokenFromURL, getTenantIdFromURL, EmailVerificationClaim, UserInput, RecipeInterface, RecipeFunctionOptions, PreAPIHookContext, PostAPIHookContext, EmailVerificationClaimClass, };

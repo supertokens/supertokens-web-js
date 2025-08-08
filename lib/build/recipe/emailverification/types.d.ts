@@ -1,19 +1,10 @@
-import {
-    NormalisedRecipeConfig,
-    RecipeConfig,
-    RecipeFunctionOptions,
-    RecipePreAPIHookContext,
-    UserInput as RecipeModuleUserInput,
-} from "../recipeModule/types";
+import { NormalisedRecipeConfig, RecipeConfig, RecipeFunctionOptions, RecipePreAPIHookContext, UserInput as RecipeModuleUserInput } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 export declare type PreAndPostAPIHookAction = "VERIFY_EMAIL" | "SEND_VERIFY_EMAIL" | "IS_EMAIL_VERIFIED";
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type InputTypeOverride = {
-    functions?: (
-        originalImplementation: RecipeInterface,
-        builder: OverrideableBuilder<RecipeInterface>
-    ) => RecipeInterface;
+    functions?: (originalImplementation: RecipeInterface, builder: OverrideableBuilder<RecipeInterface>) => RecipeInterface;
 };
 export declare type UserInput = {
     /**
@@ -24,10 +15,7 @@ export declare type UserInput = {
 export declare type InputType = RecipeConfig<PreAndPostAPIHookAction> & UserInput;
 export declare type NormalisedInputType = NormalisedRecipeConfig<PreAndPostAPIHookAction> & {
     override: {
-        functions: (
-            originalImplementation: RecipeInterface,
-            builder: OverrideableBuilder<RecipeInterface>
-        ) => RecipeInterface;
+        functions: (originalImplementation: RecipeInterface, builder: OverrideableBuilder<RecipeInterface>) => RecipeInterface;
     };
 };
 export declare type RecipeInterface = {
@@ -43,7 +31,10 @@ export declare type RecipeInterface = {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    verifyEmail: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
+    verifyEmail: (input: {
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<{
         status: "OK" | "EMAIL_VERIFICATION_INVALID_TOKEN_ERROR";
         fetchResponse: Response;
     }>;
@@ -59,7 +50,10 @@ export declare type RecipeInterface = {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    sendVerificationEmail: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
+    sendVerificationEmail: (input: {
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<{
         status: "EMAIL_ALREADY_VERIFIED_ERROR" | "OK";
         fetchResponse: Response;
     }>;
@@ -74,7 +68,10 @@ export declare type RecipeInterface = {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    isEmailVerified: (input: { options?: RecipeFunctionOptions; userContext: any }) => Promise<{
+    isEmailVerified: (input: {
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<{
         status: "OK";
         isVerified: boolean;
         fetchResponse: Response;
@@ -86,7 +83,9 @@ export declare type RecipeInterface = {
      *
      * @returns The "token" query parameter from the current location
      */
-    getEmailVerificationTokenFromURL: (input: { userContext: any }) => string;
+    getEmailVerificationTokenFromURL: (input: {
+        userContext: any;
+    }) => string;
     /**
      * Reads and returns the tenant id from the current URL
      *
@@ -94,5 +93,7 @@ export declare type RecipeInterface = {
      *
      * @returns The "tenantId" query parameter from the current location
      */
-    getTenantIdFromURL: (input: { userContext: any }) => string | undefined;
+    getTenantIdFromURL: (input: {
+        userContext: any;
+    }) => string | undefined;
 };

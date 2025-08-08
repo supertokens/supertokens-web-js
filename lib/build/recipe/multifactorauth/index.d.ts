@@ -12,7 +12,10 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful
      */
-    static resyncSessionAndFetchMFAInfo(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
+    static resyncSessionAndFetchMFAInfo(input?: {
+        options?: RecipeFunctionOptions;
+        userContext?: any;
+    }): Promise<{
         status: "OK";
         factors: import("./types").MFAFactorInfo;
         emails: Record<string, string[] | undefined>;
@@ -24,15 +27,4 @@ export default class RecipeWrapper {
 declare const init: typeof RecipeWrapper.init;
 declare const resyncSessionAndFetchMFAInfo: typeof RecipeWrapper.resyncSessionAndFetchMFAInfo;
 declare const MultiFactorAuthClaim: MultiFactorAuthClaimClass;
-export {
-    init,
-    resyncSessionAndFetchMFAInfo,
-    RecipeInterface,
-    PreAPIHookContext,
-    PostAPIHookContext,
-    PreAndPostAPIHookAction,
-    UserInput,
-    MultiFactorAuthClaim,
-    MultiFactorAuthClaimClass,
-    RecipeFunctionOptions,
-};
+export { init, resyncSessionAndFetchMFAInfo, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction, UserInput, MultiFactorAuthClaim, MultiFactorAuthClaimClass, RecipeFunctionOptions, };

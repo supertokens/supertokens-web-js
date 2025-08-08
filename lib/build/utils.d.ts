@@ -8,64 +8,44 @@ export declare function getAllQueryParams(): URLSearchParams;
 export declare function checkForSSRErrorAndAppendIfNeeded(error: string): string;
 export declare function getNormalisedUserContext(userContext?: any): any;
 export declare function getHashFromLocation(): string;
-export declare function getGlobalClaimValidators({
-    overrideGlobalClaimValidators,
-    userContext,
-}: {
-    overrideGlobalClaimValidators?: (
-        globalClaimValidators: SessionClaimValidator[],
-        userContext: any
-    ) => SessionClaimValidator[];
+export declare function getGlobalClaimValidators({ overrideGlobalClaimValidators, userContext, }: {
+    overrideGlobalClaimValidators?: (globalClaimValidators: SessionClaimValidator[], userContext: any) => SessionClaimValidator[];
     userContext?: any;
 }): SessionClaimValidator[];
-export declare function normaliseUserResponse(
-    recipeId: "passwordless" | "emailpassword" | "thirdparty" | "webauthn",
-    response:
-        | {
-              createdNewRecipeUser: boolean;
-              user: User;
-          }
-        | {
-              createdNewUser: boolean;
-              user: {
-                  id: string;
-                  email?: string;
-                  phoneNumber?: string;
-                  thirdParty?: {
-                      id: string;
-                      userId: string;
-                  };
-                  webauthn?: {
-                      credentialIds: string[];
-                  };
-                  tenantIds: string[];
-                  timeJoined: number;
-              };
-          }
-): {
+export declare function normaliseUserResponse(recipeId: "passwordless" | "emailpassword" | "thirdparty" | "webauthn", response: {
+    createdNewRecipeUser: boolean;
+    user: User;
+} | {
+    createdNewUser: boolean;
+    user: {
+        id: string;
+        email?: string;
+        phoneNumber?: string;
+        thirdParty?: {
+            id: string;
+            userId: string;
+        };
+        webauthn?: {
+            credentialIds: string[];
+        };
+        tenantIds: string[];
+        timeJoined: number;
+    };
+}): {
     createdNewRecipeUser: boolean;
     user: User;
 };
-export declare function normaliseUser(
-    recipeId: "passwordless" | "emailpassword" | "thirdparty" | "webauthn",
-    responseUser:
-        | User
-        | {
-              id: string;
-              email?: string | undefined;
-              phoneNumber?: string | undefined;
-              thirdParty?:
-                  | {
-                        id: string;
-                        userId: string;
-                    }
-                  | undefined;
-              webauthn?:
-                  | {
-                        credentialIds: string[];
-                    }
-                  | undefined;
-              tenantIds: string[];
-              timeJoined: number;
-          }
-): User;
+export declare function normaliseUser(recipeId: "passwordless" | "emailpassword" | "thirdparty" | "webauthn", responseUser: User | {
+    id: string;
+    email?: string | undefined;
+    phoneNumber?: string | undefined;
+    thirdParty?: {
+        id: string;
+        userId: string;
+    } | undefined;
+    webauthn?: {
+        credentialIds: string[];
+    } | undefined;
+    tenantIds: string[];
+    timeJoined: number;
+}): User;

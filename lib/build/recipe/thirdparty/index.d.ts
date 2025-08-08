@@ -1,16 +1,11 @@
 import { User } from "../../types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import {
-    PreAndPostAPIHookAction,
-    PreAPIHookContext,
-    PostAPIHookContext,
-    StateObject,
-    RecipeInterface,
-    UserInput,
-} from "./types";
+import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, StateObject, RecipeInterface, UserInput } from "./types";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
-    static signOut(input?: { userContext?: any }): Promise<void>;
+    static signOut(input?: {
+        userContext?: any;
+    }): Promise<void>;
     /**
      * Get the current login state from storage, this is also used when calling signInUp
      *
@@ -62,40 +57,26 @@ export default class RecipeWrapper {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    static signInAndUp(input?: { userContext?: any; options?: RecipeFunctionOptions }): Promise<
-        | {
-              status: "OK";
-              user: User;
-              createdNewRecipeUser: boolean;
-              fetchResponse: Response;
-          }
-        | {
-              status: "NO_EMAIL_GIVEN_BY_PROVIDER";
-              fetchResponse: Response;
-          }
-        | {
-              status: "SIGN_IN_UP_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-    >;
+    static signInAndUp(input?: {
+        userContext?: any;
+        options?: RecipeFunctionOptions;
+    }): Promise<{
+        status: "OK";
+        user: User;
+        createdNewRecipeUser: boolean;
+        fetchResponse: Response;
+    } | {
+        status: "NO_EMAIL_GIVEN_BY_PROVIDER";
+        fetchResponse: Response;
+    } | {
+        status: "SIGN_IN_UP_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    }>;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getAuthorisationURLWithQueryParamsAndSetState: typeof RecipeWrapper.getAuthorisationURLWithQueryParamsAndSetState;
 declare const getStateAndOtherInfoFromStorage: typeof RecipeWrapper.getStateAndOtherInfoFromStorage;
 declare const signInAndUp: typeof RecipeWrapper.signInAndUp;
 declare const signOut: typeof RecipeWrapper.signOut;
-export {
-    init,
-    getStateAndOtherInfoFromStorage,
-    getAuthorisationURLWithQueryParamsAndSetState,
-    signInAndUp,
-    signOut,
-    RecipeInterface,
-    StateObject,
-    PreAPIHookContext,
-    PostAPIHookContext,
-    PreAndPostAPIHookAction,
-    RecipeFunctionOptions,
-    UserInput,
-};
+export { init, getStateAndOtherInfoFromStorage, getAuthorisationURLWithQueryParamsAndSetState, signInAndUp, signOut, RecipeInterface, StateObject, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction, RecipeFunctionOptions, UserInput, };
