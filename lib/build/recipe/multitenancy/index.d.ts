@@ -16,7 +16,11 @@ export default class RecipeWrapper {
      *
      * @returns `{status: OK, emailpassword, passwordless, thirdParty}` if successful
      */
-    static getLoginMethods(input?: { tenantId?: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
+    static getLoginMethods(input?: {
+        tenantId?: string;
+        options?: RecipeFunctionOptions;
+        userContext?: any;
+    }): Promise<{
         status: "OK";
         thirdParty: {
             providers: {
@@ -34,20 +38,12 @@ export default class RecipeWrapper {
      *
      * @returns `Promise<string | undefined> | string | undefined`
      */
-    static getTenantId(input?: { userContext?: any }): Promise<string | undefined> | string | undefined;
+    static getTenantId(input?: {
+        userContext?: any;
+    }): Promise<string | undefined> | string | undefined;
     static AllowedDomainsClaim: import("./allowedDomainsClaim").AllowedDomainsClaimClass;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getLoginMethods: typeof RecipeWrapper.getLoginMethods;
 declare const getTenantId: typeof RecipeWrapper.getTenantId;
-export {
-    init,
-    getLoginMethods,
-    getTenantId,
-    RecipeInterface,
-    PreAPIHookContext,
-    PostAPIHookContext,
-    PreAndPostAPIHookAction,
-    UserInput,
-    AllowedDomainsClaim,
-};
+export { init, getLoginMethods, getTenantId, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction, UserInput, AllowedDomainsClaim, };

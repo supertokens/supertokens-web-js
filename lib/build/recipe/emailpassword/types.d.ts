@@ -1,21 +1,9 @@
-import {
-    RecipePostAPIHookContext,
-    RecipePreAPIHookContext,
-    UserInput as RecipeModuleUserInput,
-} from "../recipeModule/types";
+import { RecipePostAPIHookContext, RecipePreAPIHookContext, UserInput as RecipeModuleUserInput } from "../recipeModule/types";
 import OverrideableBuilder from "supertokens-js-override";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import {
-    NormalisedInputType as AuthRecipeNormalisedInputType,
-    InputType as AuthRecipeInputType,
-} from "../authRecipe/types";
+import { NormalisedInputType as AuthRecipeNormalisedInputType, InputType as AuthRecipeInputType } from "../authRecipe/types";
 import { User } from "../../types";
-export declare type PreAndPostAPIHookAction =
-    | "EMAIL_PASSWORD_SIGN_UP"
-    | "EMAIL_PASSWORD_SIGN_IN"
-    | "SEND_RESET_PASSWORD_EMAIL"
-    | "SUBMIT_NEW_PASSWORD"
-    | "EMAIL_EXISTS";
+export declare type PreAndPostAPIHookAction = "EMAIL_PASSWORD_SIGN_UP" | "EMAIL_PASSWORD_SIGN_IN" | "SEND_RESET_PASSWORD_EMAIL" | "SUBMIT_NEW_PASSWORD" | "EMAIL_EXISTS";
 export declare type PreAPIHookContext = RecipePreAPIHookContext<PreAndPostAPIHookAction>;
 export declare type PostAPIHookContext = RecipePostAPIHookContext<PreAndPostAPIHookAction>;
 export declare type UserInput = {
@@ -23,19 +11,13 @@ export declare type UserInput = {
      * Refer to {@link https://supertokens.com/docs/emailpassword/advanced-customizations/frontend-functions-override/about the documentation}
      */
     override?: {
-        functions?: (
-            originalImplementation: RecipeInterface,
-            builder: OverrideableBuilder<RecipeInterface>
-        ) => RecipeInterface;
+        functions?: (originalImplementation: RecipeInterface, builder: OverrideableBuilder<RecipeInterface>) => RecipeInterface;
     };
 } & RecipeModuleUserInput<PreAndPostAPIHookAction>;
 export declare type InputType = AuthRecipeInputType<PreAndPostAPIHookAction> & UserInput;
 export declare type NormalisedInputType = AuthRecipeNormalisedInputType<PreAndPostAPIHookAction> & {
     override: {
-        functions: (
-            originalImplementation: RecipeInterface,
-            builder: OverrideableBuilder<RecipeInterface>
-        ) => RecipeInterface;
+        functions: (originalImplementation: RecipeInterface, builder: OverrideableBuilder<RecipeInterface>) => RecipeInterface;
     };
 };
 export declare type RecipeInterface = {
@@ -63,24 +45,20 @@ export declare type RecipeInterface = {
         }[];
         options?: RecipeFunctionOptions;
         userContext: any;
-    }) => Promise<
-        | {
-              status: "OK";
-              fetchResponse: Response;
-          }
-        | {
-              status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
-    >;
+    }) => Promise<{
+        status: "OK";
+        fetchResponse: Response;
+    } | {
+        status: "RESET_PASSWORD_INVALID_TOKEN_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "FIELD_ERROR";
+        formFields: {
+            id: string;
+            error: string;
+        }[];
+        fetchResponse: Response;
+    }>;
     /**
      * Send an email to the user for password reset
      *
@@ -103,25 +81,21 @@ export declare type RecipeInterface = {
         }[];
         options?: RecipeFunctionOptions;
         userContext: any;
-    }) => Promise<
-        | {
-              status: "OK";
-              fetchResponse: Response;
-          }
-        | {
-              status: "PASSWORD_RESET_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
-    >;
+    }) => Promise<{
+        status: "OK";
+        fetchResponse: Response;
+    } | {
+        status: "PASSWORD_RESET_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    } | {
+        status: "FIELD_ERROR";
+        formFields: {
+            id: string;
+            error: string;
+        }[];
+        fetchResponse: Response;
+    }>;
     /**
      * Sign up a user with email and password
      *
@@ -147,26 +121,22 @@ export declare type RecipeInterface = {
         shouldTryLinkingWithSessionUser: boolean | undefined;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }) => Promise<
-        | {
-              status: "OK";
-              user: User;
-              fetchResponse: Response;
-          }
-        | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
-        | {
-              status: "SIGN_UP_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-    >;
+    }) => Promise<{
+        status: "OK";
+        user: User;
+        fetchResponse: Response;
+    } | {
+        status: "FIELD_ERROR";
+        formFields: {
+            id: string;
+            error: string;
+        }[];
+        fetchResponse: Response;
+    } | {
+        status: "SIGN_UP_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    }>;
     /**
      * Sign in a user with email and password
      *
@@ -194,30 +164,25 @@ export declare type RecipeInterface = {
         shouldTryLinkingWithSessionUser: boolean | undefined;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }) => Promise<
-        | {
-              status: "OK";
-              user: User;
-              fetchResponse: Response;
-          }
-        | {
-              status: "FIELD_ERROR";
-              formFields: {
-                  id: string;
-                  error: string;
-              }[];
-              fetchResponse: Response;
-          }
-        | {
-              status: "WRONG_CREDENTIALS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "SIGN_IN_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-    >;
+    }) => Promise<{
+        status: "OK";
+        user: User;
+        fetchResponse: Response;
+    } | {
+        status: "FIELD_ERROR";
+        formFields: {
+            id: string;
+            error: string;
+        }[];
+        fetchResponse: Response;
+    } | {
+        status: "WRONG_CREDENTIALS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "SIGN_IN_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    }>;
     /**
      * Check if an email exists
      *
@@ -231,7 +196,11 @@ export declare type RecipeInterface = {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    doesEmailExist: (input: { email: string; options?: RecipeFunctionOptions; userContext: any }) => Promise<{
+    doesEmailExist: (input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }) => Promise<{
         status: "OK";
         doesExist: boolean;
         fetchResponse: Response;
@@ -243,7 +212,9 @@ export declare type RecipeInterface = {
      *
      * @returns The "token" query parameter from the current location
      */
-    getResetPasswordTokenFromURL: (input: { userContext: any }) => string;
+    getResetPasswordTokenFromURL: (input: {
+        userContext: any;
+    }) => string;
     /**
      * Reads and returns the tenant id from the current URL
      *
@@ -251,5 +222,7 @@ export declare type RecipeInterface = {
      *
      * @returns The "tenantId" query parameter from the current location
      */
-    getTenantIdFromURL: (input: { userContext: any }) => string | undefined;
+    getTenantIdFromURL: (input: {
+        userContext: any;
+    }) => string | undefined;
 };

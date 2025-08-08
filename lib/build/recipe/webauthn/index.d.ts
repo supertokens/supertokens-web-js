@@ -1,18 +1,9 @@
 import { AuthenticationResponseJSON, RegistrationResponseJSON } from "@simplewebauthn/browser";
 import { GeneralErrorResponse, User } from "../../types";
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import {
-    ResidentKey,
-    UserInput,
-    UserVerification,
-    RegistrationOptions,
-    AuthenticationOptions,
-    RecipeInterface,
-} from "./types";
+import { ResidentKey, UserInput, UserVerification, RegistrationOptions, AuthenticationOptions, RecipeInterface } from "./types";
 export default class RecipeWrapper {
-    static init(
-        config?: UserInput
-    ): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
+    static init(config?: UserInput): import("../../types").CreateRecipeFunction<import("./types").PreAndPostAPIHookAction>;
     /**
      * Registers a new device based on the passed options and returns the
      * challenge to be fulfilled in order for successful addition of the identity.
@@ -27,66 +18,56 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the created webauthn details (challenge, etc.)
      */
-    static getRegisterOptions(
-        input: {
-            options?: RecipeFunctionOptions;
-            userContext: any;
-        } & (
-            | {
-                  email: string;
-              }
-            | {
-                  recoverAccountToken: string;
-              }
-        )
-    ): Promise<
-        | {
-              status: "OK";
-              webauthnGeneratedOptionsId: string;
-              createdAt: string;
-              expiresAt: string;
-              rp: {
-                  id: string;
-                  name: string;
-              };
-              user: {
-                  id: string;
-                  name: string;
-                  displayName: string;
-              };
-              challenge: string;
-              timeout: number;
-              excludeCredentials: {
-                  id: string;
-                  type: "public-key";
-                  transports: ("ble" | "hybrid" | "internal" | "nfc" | "usb")[];
-              }[];
-              attestation: "none" | "indirect" | "direct" | "enterprise";
-              pubKeyCredParams: {
-                  alg: number;
-                  type: "public-key";
-              }[];
-              authenticatorSelection: {
-                  requireResidentKey: boolean;
-                  residentKey: ResidentKey;
-                  userVerification: UserVerification;
-              };
-              fetchResponse: Response;
-          }
-        | {
-              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_EMAIL_ERROR";
-              err: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
-    >;
+    static getRegisterOptions(input: {
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    } & ({
+        email: string;
+    } | {
+        recoverAccountToken: string;
+    })): Promise<{
+        status: "OK";
+        webauthnGeneratedOptionsId: string;
+        createdAt: string;
+        expiresAt: string;
+        rp: {
+            id: string;
+            name: string;
+        };
+        user: {
+            id: string;
+            name: string;
+            displayName: string;
+        };
+        challenge: string;
+        timeout: number;
+        excludeCredentials: {
+            id: string;
+            type: "public-key";
+            transports: ("ble" | "hybrid" | "internal" | "nfc" | "usb")[];
+        }[];
+        attestation: "none" | "indirect" | "direct" | "enterprise";
+        pubKeyCredParams: {
+            alg: number;
+            type: "public-key";
+        }[];
+        authenticatorSelection: {
+            requireResidentKey: boolean;
+            residentKey: ResidentKey;
+            userVerification: UserVerification;
+        };
+        fetchResponse: Response;
+    } | {
+        status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_EMAIL_ERROR";
+        err: string;
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_OPTIONS_ERROR";
+        fetchResponse: Response;
+    }>;
     /**
      * Returns details about how the authenticator to should verify that a signin
      * is correct.
@@ -99,21 +80,20 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the webauthn options (challenge, etc.)
      */
-    static getSignInOptions(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<
-        | {
-              status: "OK";
-              webauthnGeneratedOptionsId: string;
-              challenge: string;
-              timeout: number;
-              userVerification: UserVerification;
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
-        | GeneralErrorResponse
-    >;
+    static getSignInOptions(input: {
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<{
+        status: "OK";
+        webauthnGeneratedOptionsId: string;
+        challenge: string;
+        timeout: number;
+        userVerification: UserVerification;
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_OPTIONS_ERROR";
+        fetchResponse: Response;
+    } | GeneralErrorResponse>;
     /**
      * Signup to ST with the webauthn options ID and the credential received from the
      * device.
@@ -134,40 +114,31 @@ export default class RecipeWrapper {
         shouldTryLinkingWithSessionUser?: boolean;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-              user: User;
-              fetchResponse: Response;
-          }
-        | GeneralErrorResponse
-        | {
-              status: "SIGN_UP_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_CREDENTIALS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "OPTIONS_NOT_FOUND_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_AUTHENTICATOR_ERROR";
-              reason: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "EMAIL_ALREADY_EXISTS_ERROR";
-              fetchResponse: Response;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        user: User;
+        fetchResponse: Response;
+    } | GeneralErrorResponse | {
+        status: "SIGN_UP_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_CREDENTIALS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "OPTIONS_NOT_FOUND_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_OPTIONS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_AUTHENTICATOR_ERROR";
+        reason: string;
+        fetchResponse: Response;
+    } | {
+        status: "EMAIL_ALREADY_EXISTS_ERROR";
+        fetchResponse: Response;
+    }>;
     /**
      * Sign in with the credential and the generated options ID.
      *
@@ -187,23 +158,18 @@ export default class RecipeWrapper {
         shouldTryLinkingWithSessionUser?: boolean;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-              user: User;
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_CREDENTIALS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "SIGN_IN_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-        | GeneralErrorResponse
-    >;
+    }): Promise<{
+        status: "OK";
+        user: User;
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_CREDENTIALS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "SIGN_IN_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    } | GeneralErrorResponse>;
     /**
      * Checks whether there is an webauthn user with the passed email.
      *
@@ -215,14 +181,15 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along with a boolean indicating existence
      */
-    static getEmailExists(input: { email: string; options?: RecipeFunctionOptions; userContext: any }): Promise<
-        | {
-              status: "OK";
-              exists: boolean;
-              fetchResponse: Response;
-          }
-        | GeneralErrorResponse
-    >;
+    static getEmailExists(input: {
+        email: string;
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<{
+        status: "OK";
+        exists: boolean;
+        fetchResponse: Response;
+    } | GeneralErrorResponse>;
     /**
      * Generate and send a recover account token.
      *
@@ -238,18 +205,14 @@ export default class RecipeWrapper {
         email: string;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-              fetchResponse: Response;
-          }
-        | {
-              status: "RECOVER_ACCOUNT_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-        | GeneralErrorResponse
-    >;
+    }): Promise<{
+        status: "OK";
+        fetchResponse: Response;
+    } | {
+        status: "RECOVER_ACCOUNT_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    } | GeneralErrorResponse>;
     /**
      * Recover the account using the token received in email.
      *
@@ -271,36 +234,28 @@ export default class RecipeWrapper {
         credential: RegistrationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-              user: User;
-              email: string;
-              fetchResponse: Response;
-          }
-        | GeneralErrorResponse
-        | {
-              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_CREDENTIALS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "OPTIONS_NOT_FOUND_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_AUTHENTICATOR_ERROR";
-              reason: string;
-              fetchResponse: Response;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        user: User;
+        email: string;
+        fetchResponse: Response;
+    } | GeneralErrorResponse | {
+        status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_CREDENTIALS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "OPTIONS_NOT_FOUND_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_OPTIONS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_AUTHENTICATOR_ERROR";
+        reason: string;
+        fetchResponse: Response;
+    }>;
     /**
      * Creates the credential with the passed options by using native webauthn functions.
      *
@@ -313,23 +268,18 @@ export default class RecipeWrapper {
     static createCredential(input: {
         registrationOptions: Omit<RegistrationOptions, "fetchResponse" | "status">;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-              registrationResponse: RegistrationResponseJSON;
-          }
-        | {
-              status: "AUTHENTICATOR_ALREADY_REGISTERED";
-          }
-        | {
-              status: "FAILED_TO_REGISTER_USER";
-              error: any;
-          }
-        | {
-              status: "WEBAUTHN_NOT_SUPPORTED";
-              error: any;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        registrationResponse: RegistrationResponseJSON;
+    } | {
+        status: "AUTHENTICATOR_ALREADY_REGISTERED";
+    } | {
+        status: "FAILED_TO_REGISTER_USER";
+        error: any;
+    } | {
+        status: "WEBAUTHN_NOT_SUPPORTED";
+        error: any;
+    }>;
     /**
      * Authenticate the credential with the passed options by using native webauthn functions.
      *
@@ -342,20 +292,16 @@ export default class RecipeWrapper {
     static authenticateCredential(input: {
         authenticationOptions: Omit<AuthenticationOptions, "fetchResponse" | "status">;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-              authenticationResponse: AuthenticationResponseJSON;
-          }
-        | {
-              status: "FAILED_TO_AUTHENTICATE_USER";
-              error: any;
-          }
-        | {
-              status: "WEBAUTHN_NOT_SUPPORTED";
-              error: any;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        authenticationResponse: AuthenticationResponseJSON;
+    } | {
+        status: "FAILED_TO_AUTHENTICATE_USER";
+        error: any;
+    } | {
+        status: "WEBAUTHN_NOT_SUPPORTED";
+        error: any;
+    }>;
     /**
      * Register the new device and signup the user with the passed email ID.
      *
@@ -374,60 +320,46 @@ export default class RecipeWrapper {
         shouldTryLinkingWithSessionUser?: boolean;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-              user: User;
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_EMAIL_ERROR";
-              err: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
-        | GeneralErrorResponse
-        | {
-              status: "SIGN_UP_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_CREDENTIALS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "OPTIONS_NOT_FOUND_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_AUTHENTICATOR_ERROR";
-              reason: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "EMAIL_ALREADY_EXISTS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "AUTHENTICATOR_ALREADY_REGISTERED";
-          }
-        | {
-              status: "FAILED_TO_REGISTER_USER";
-              error: any;
-          }
-        | {
-              status: "WEBAUTHN_NOT_SUPPORTED";
-              error: any;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        user: User;
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_EMAIL_ERROR";
+        err: string;
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_GENERATED_OPTIONS_ERROR";
+        fetchResponse: Response;
+    } | GeneralErrorResponse | {
+        status: "SIGN_UP_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_CREDENTIALS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "OPTIONS_NOT_FOUND_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_OPTIONS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_AUTHENTICATOR_ERROR";
+        reason: string;
+        fetchResponse: Response;
+    } | {
+        status: "EMAIL_ALREADY_EXISTS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "AUTHENTICATOR_ALREADY_REGISTERED";
+    } | {
+        status: "FAILED_TO_REGISTER_USER";
+        error: any;
+    } | {
+        status: "WEBAUTHN_NOT_SUPPORTED";
+        error: any;
+    }>;
     /**
      * Authenticate the user and sign them in after verifying their identity.
      *
@@ -445,35 +377,27 @@ export default class RecipeWrapper {
         options?: RecipeFunctionOptions;
         userContext: any;
         shouldTryLinkingWithSessionUser?: boolean;
-    }): Promise<
-        | {
-              status: "OK";
-              user: User;
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_CREDENTIALS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "SIGN_IN_NOT_ALLOWED";
-              reason: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "FAILED_TO_AUTHENTICATE_USER";
-              error: any;
-          }
-        | {
-              status: "WEBAUTHN_NOT_SUPPORTED";
-              error: any;
-          }
-        | GeneralErrorResponse
-    >;
+    }): Promise<{
+        status: "OK";
+        user: User;
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_OPTIONS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_CREDENTIALS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "SIGN_IN_NOT_ALLOWED";
+        reason: string;
+        fetchResponse: Response;
+    } | {
+        status: "FAILED_TO_AUTHENTICATE_USER";
+        error: any;
+    } | {
+        status: "WEBAUTHN_NOT_SUPPORTED";
+        error: any;
+    } | GeneralErrorResponse>;
     /**
      * Register the new device and recover the user's account with the recover token.
      *
@@ -491,55 +415,42 @@ export default class RecipeWrapper {
         recoverAccountToken: string;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-              user: User;
-              email: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_GENERATED_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
-        | GeneralErrorResponse
-        | {
-              status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_CREDENTIALS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "OPTIONS_NOT_FOUND_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_OPTIONS_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_AUTHENTICATOR_ERROR";
-              reason: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "AUTHENTICATOR_ALREADY_REGISTERED";
-          }
-        | {
-              status: "FAILED_TO_REGISTER_USER";
-              error: any;
-          }
-        | {
-              status: "WEBAUTHN_NOT_SUPPORTED";
-              error: any;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        user: User;
+        email: string;
+        fetchResponse: Response;
+    } | {
+        status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_GENERATED_OPTIONS_ERROR";
+        fetchResponse: Response;
+    } | GeneralErrorResponse | {
+        status: "RECOVER_ACCOUNT_TOKEN_INVALID_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_CREDENTIALS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "OPTIONS_NOT_FOUND_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_OPTIONS_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_AUTHENTICATOR_ERROR";
+        reason: string;
+        fetchResponse: Response;
+    } | {
+        status: "AUTHENTICATOR_ALREADY_REGISTERED";
+    } | {
+        status: "FAILED_TO_REGISTER_USER";
+        error: any;
+    } | {
+        status: "WEBAUTHN_NOT_SUPPORTED";
+        error: any;
+    }>;
     /**
      * Register the new device with the passed user details
      *
@@ -560,45 +471,33 @@ export default class RecipeWrapper {
         recipeUserId: string;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-              fetchResponse: Response;
-          }
-        | GeneralErrorResponse
-        | {
-              status: "REGISTER_CREDENTIAL_NOT_ALLOWED";
-              reason?: string;
-          }
-        | {
-              status: "INVALID_EMAIL_ERROR";
-              err: string;
-          }
-        | {
-              status: "INVALID_CREDENTIALS_ERROR";
-          }
-        | {
-              status: "OPTIONS_NOT_FOUND_ERROR";
-          }
-        | {
-              status: "INVALID_OPTIONS_ERROR";
-          }
-        | {
-              status: "INVALID_AUTHENTICATOR_ERROR";
-              reason?: string;
-          }
-        | {
-              status: "AUTHENTICATOR_ALREADY_REGISTERED";
-          }
-        | {
-              status: "FAILED_TO_REGISTER_USER";
-              error: any;
-          }
-        | {
-              status: "WEBAUTHN_NOT_SUPPORTED";
-              error: any;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        fetchResponse: Response;
+    } | GeneralErrorResponse | {
+        status: "REGISTER_CREDENTIAL_NOT_ALLOWED";
+        reason?: string;
+    } | {
+        status: "INVALID_EMAIL_ERROR";
+        err: string;
+    } | {
+        status: "INVALID_CREDENTIALS_ERROR";
+    } | {
+        status: "OPTIONS_NOT_FOUND_ERROR";
+    } | {
+        status: "INVALID_OPTIONS_ERROR";
+    } | {
+        status: "INVALID_AUTHENTICATOR_ERROR";
+        reason?: string;
+    } | {
+        status: "AUTHENTICATOR_ALREADY_REGISTERED";
+    } | {
+        status: "FAILED_TO_REGISTER_USER";
+        error: any;
+    } | {
+        status: "WEBAUTHN_NOT_SUPPORTED";
+        error: any;
+    }>;
     /**
      * List the credentials for the user
      *
@@ -606,18 +505,18 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along with a list of the user's credentials
      */
-    static listCredentials(input: { options?: RecipeFunctionOptions; userContext: any }): Promise<
-        | {
-              status: "OK";
-              credentials: {
-                  webauthnCredentialId: string;
-                  relyingPartyId: string;
-                  createdAt: number;
-                  recipeUserId: string;
-              }[];
-          }
-        | GeneralErrorResponse
-    >;
+    static listCredentials(input: {
+        options?: RecipeFunctionOptions;
+        userContext: any;
+    }): Promise<{
+        status: "OK";
+        credentials: {
+            webauthnCredentialId: string;
+            relyingPartyId: string;
+            createdAt: number;
+            recipeUserId: string;
+        }[];
+    } | GeneralErrorResponse>;
     /**
      * Remove the credential for the passed credential ID
      *
@@ -631,16 +530,12 @@ export default class RecipeWrapper {
         webauthnCredentialId: string;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-          }
-        | GeneralErrorResponse
-        | {
-              status: "CREDENTIAL_NOT_FOUND_ERROR";
-              fetchResponse: Response;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+    } | GeneralErrorResponse | {
+        status: "CREDENTIAL_NOT_FOUND_ERROR";
+        fetchResponse: Response;
+    }>;
     /**
      * Register the new device with the passed user details
      *
@@ -662,40 +557,31 @@ export default class RecipeWrapper {
         credential: RegistrationResponseJSON;
         options?: RecipeFunctionOptions;
         userContext: any;
-    }): Promise<
-        | {
-              status: "OK";
-          }
-        | GeneralErrorResponse
-        | {
-              status: "REGISTER_CREDENTIAL_NOT_ALLOWED";
-              reason?: string;
-          }
-        | {
-              status: "INVALID_CREDENTIALS_ERROR";
-          }
-        | {
-              status: "OPTIONS_NOT_FOUND_ERROR";
-          }
-        | {
-              status: "INVALID_OPTIONS_ERROR";
-          }
-        | {
-              status: "INVALID_AUTHENTICATOR_ERROR";
-              reason?: string;
-          }
-    >;
-    static doesBrowserSupportWebAuthn(input: { userContext: any }): Promise<
-        | {
-              status: "OK";
-              browserSupportsWebauthn: boolean;
-              platformAuthenticatorIsAvailable: boolean;
-          }
-        | {
-              status: "ERROR";
-              error: any;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+    } | GeneralErrorResponse | {
+        status: "REGISTER_CREDENTIAL_NOT_ALLOWED";
+        reason?: string;
+    } | {
+        status: "INVALID_CREDENTIALS_ERROR";
+    } | {
+        status: "OPTIONS_NOT_FOUND_ERROR";
+    } | {
+        status: "INVALID_OPTIONS_ERROR";
+    } | {
+        status: "INVALID_AUTHENTICATOR_ERROR";
+        reason?: string;
+    }>;
+    static doesBrowserSupportWebAuthn(input: {
+        userContext: any;
+    }): Promise<{
+        status: "OK";
+        browserSupportsWebauthn: boolean;
+        platformAuthenticatorIsAvailable: boolean;
+    } | {
+        status: "ERROR";
+        error: any;
+    }>;
 }
 declare const init: typeof RecipeWrapper.init;
 declare const getRegisterOptions: typeof RecipeWrapper.getRegisterOptions;
@@ -715,24 +601,4 @@ declare const listCredentials: typeof RecipeWrapper.listCredentials;
 declare const removeCredential: typeof RecipeWrapper.removeCredential;
 declare const registerCredential: typeof RecipeWrapper.registerCredential;
 declare const createAndRegisterCredentialForSessionUser: typeof RecipeWrapper.createAndRegisterCredentialForSessionUser;
-export {
-    init,
-    getRegisterOptions,
-    getSignInOptions,
-    signUp,
-    signIn,
-    getEmailExists,
-    generateRecoverAccountToken,
-    recoverAccount,
-    registerCredentialWithSignUp,
-    authenticateCredentialWithSignIn,
-    createCredential,
-    authenticateCredential,
-    doesBrowserSupportWebAuthn,
-    RecipeInterface,
-    listCredentials,
-    removeCredential,
-    registerCredential,
-    createAndRegisterCredentialForSessionUser,
-    registerCredentialWithRecoverAccount,
-};
+export { init, getRegisterOptions, getSignInOptions, signUp, signIn, getEmailExists, generateRecoverAccountToken, recoverAccount, registerCredentialWithSignUp, authenticateCredentialWithSignIn, createCredential, authenticateCredential, doesBrowserSupportWebAuthn, RecipeInterface, listCredentials, removeCredential, registerCredential, createAndRegisterCredentialForSessionUser, registerCredentialWithRecoverAccount, };

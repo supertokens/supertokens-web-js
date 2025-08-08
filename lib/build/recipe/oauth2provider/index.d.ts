@@ -1,12 +1,5 @@
 import { RecipeFunctionOptions } from "../emailpassword";
-import {
-    PreAndPostAPIHookAction,
-    PreAPIHookContext,
-    PostAPIHookContext,
-    RecipeInterface,
-    UserInput,
-    LoginInfo,
-} from "./types";
+import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeInterface, UserInput, LoginInfo } from "./types";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     /**
@@ -66,7 +59,11 @@ export default class RecipeWrapper {
      *
      * @throws STGeneralError if the API exposed by the backend SDKs returns `status: "GENERAL_ERROR"`
      */
-    static logOut(input: { logoutChallenge: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
+    static logOut(input: {
+        logoutChallenge: string;
+        options?: RecipeFunctionOptions;
+        userContext?: any;
+    }): Promise<{
         status: "OK";
         frontendRedirectTo: string;
         fetchResponse: Response;
@@ -76,16 +73,4 @@ declare const init: typeof RecipeWrapper.init;
 declare const getLoginChallengeInfo: typeof RecipeWrapper.getLoginChallengeInfo;
 declare const getRedirectURLToContinueOAuthFlow: typeof RecipeWrapper.getRedirectURLToContinueOAuthFlow;
 declare const logOut: typeof RecipeWrapper.logOut;
-export {
-    init,
-    getLoginChallengeInfo,
-    getRedirectURLToContinueOAuthFlow,
-    logOut,
-    RecipeInterface,
-    PreAPIHookContext,
-    PostAPIHookContext,
-    PreAndPostAPIHookAction,
-    UserInput,
-    LoginInfo,
-    RecipeFunctionOptions,
-};
+export { init, getLoginChallengeInfo, getRedirectURLToContinueOAuthFlow, logOut, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction, UserInput, LoginInfo, RecipeFunctionOptions, };

@@ -7,25 +7,34 @@ export default class Recipe extends RecipeModule<unknown, any> {
     static RECIPE_ID: "session";
     constructor(config: InputType);
     static init(config?: UserInput): CreateRecipeFunction<unknown>;
-    getUserId: (input: { userContext: any }) => Promise<string>;
-    getAccessToken: (input: { userContext: any }) => Promise<string | undefined>;
-    getAccessTokenPayloadSecurely: (input: { userContext: any }) => Promise<any>;
-    doesSessionExist: (input: { userContext: any }) => Promise<boolean>;
-    signOut: (input: { userContext: any }) => Promise<void>;
+    getUserId: (input: {
+        userContext: any;
+    }) => Promise<string>;
+    getAccessToken: (input: {
+        userContext: any;
+    }) => Promise<string | undefined>;
+    getAccessTokenPayloadSecurely: (input: {
+        userContext: any;
+    }) => Promise<any>;
+    doesSessionExist: (input: {
+        userContext: any;
+    }) => Promise<boolean>;
+    signOut: (input: {
+        userContext: any;
+    }) => Promise<void>;
     attemptRefreshingSession: () => Promise<boolean>;
-    getClaimValue<T>(input: { claim: SessionClaim<T>; userContext: any }): Promise<T | undefined>;
+    getClaimValue<T>(input: {
+        claim: SessionClaim<T>;
+        userContext: any;
+    }): Promise<T | undefined>;
     validateClaims: (input: {
-        overrideGlobalClaimValidators?:
-            | ((globalClaimValidators: SessionClaimValidator[], userContext: any) => SessionClaimValidator[])
-            | undefined;
+        overrideGlobalClaimValidators?: ((globalClaimValidators: SessionClaimValidator[], userContext: any) => SessionClaimValidator[]) | undefined;
         userContext: any;
     }) => Promise<ClaimValidationError[]> | ClaimValidationError[];
     getInvalidClaimsFromResponse(input: {
-        response:
-            | {
-                  data: any;
-              }
-            | Response;
+        response: {
+            data: any;
+        } | Response;
         userContext: any;
     }): Promise<ClaimValidationError[]>;
     static addAxiosInterceptors(axiosInstance: any, userContext: any): void;

@@ -81,12 +81,7 @@ export declare type SuperTokensConfig = {
         plugins?: SuperTokensPlugin[];
     };
 };
-export declare type CreateRecipeFunction<Action> = (
-    appInfo: NormalisedAppInfo,
-    clientType: string | undefined,
-    enableDebugLogs: boolean,
-    overrideMaps: NonNullable<SuperTokensPlugin["overrideMap"]>[]
-) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
+export declare type CreateRecipeFunction<Action> = (appInfo: NormalisedAppInfo, clientType: string | undefined, enableDebugLogs: boolean, overrideMaps: NonNullable<SuperTokensPlugin["overrideMap"]>[]) => RecipeModule<Action, NormalisedRecipeConfig<Action>>;
 export declare type AppInfoUserInput = {
     /**
      * The name of your application
@@ -190,19 +185,13 @@ export declare type SuperTokensPlugin = {
     id: string;
     version?: string;
     compatibleWebJSSDKVersions?: string | string[];
-    dependencies?: (
-        config: SuperTokensPublicConfig,
-        pluginsAbove: SuperTokensPublicPlugin[],
-        sdkVersion: string
-    ) =>
-        | {
-              status: "OK";
-              pluginsToAdd?: SuperTokensPlugin[];
-          }
-        | {
-              status: "ERROR";
-              message: string;
-          };
+    dependencies?: (config: SuperTokensPublicConfig, pluginsAbove: SuperTokensPublicPlugin[], sdkVersion: string) => {
+        status: "OK";
+        pluginsToAdd?: SuperTokensPlugin[];
+    } | {
+        status: "ERROR";
+        message: string;
+    };
     overrideMap?: {
         [recipeId in keyof AllRecipeConfigs]?: RecipePluginOverride<recipeId> & {
             recipeInitRequired?: boolean | ((sdkVersion: string) => boolean);
@@ -214,18 +203,12 @@ export declare type SuperTokensPlugin = {
 };
 export declare const nonPublicConfigProperties: readonly ["experimental"];
 export declare type NonPublicConfigPropertiesType = (typeof nonPublicConfigProperties)[number];
-export declare type SuperTokensPublicPlugin = Pick<
-    SuperTokensPlugin,
-    "id" | "version" | "exports" | "compatibleWebJSSDKVersions"
-> & {
+export declare type SuperTokensPublicPlugin = Pick<SuperTokensPlugin, "id" | "version" | "exports" | "compatibleWebJSSDKVersions"> & {
     initialized: boolean;
 };
 export declare type SuperTokensConfigWithNormalisedAppInfo = Omit<SuperTokensConfig, "appInfo"> & {
     appInfo: NormalisedAppInfo;
 };
-export declare type SuperTokensPublicConfig = Omit<
-    Omit<SuperTokensConfig, NonPublicConfigPropertiesType>,
-    "appInfo"
-> & {
+export declare type SuperTokensPublicConfig = Omit<Omit<SuperTokensConfig, NonPublicConfigPropertiesType>, "appInfo"> & {
     appInfo: NormalisedAppInfo;
 };

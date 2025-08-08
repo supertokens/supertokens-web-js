@@ -1,12 +1,5 @@
 import { RecipeFunctionOptions } from "../recipeModule/types";
-import {
-    PreAndPostAPIHookAction,
-    PreAPIHookContext,
-    PostAPIHookContext,
-    RecipeInterface,
-    UserInput,
-    DeviceInfo,
-} from "./types";
+import { PreAndPostAPIHookAction, PreAPIHookContext, PostAPIHookContext, RecipeInterface, UserInput, DeviceInfo } from "./types";
 export default class RecipeWrapper {
     static init(config?: UserInput): import("../../types").CreateRecipeFunction<PreAndPostAPIHookAction>;
     /**
@@ -20,19 +13,20 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful along a description of the created device (secret, etc.)
      */
-    static createDevice(input?: { deviceName?: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<
-        | {
-              status: "OK";
-              deviceName: string;
-              secret: string;
-              qrCodeString: string;
-              fetchResponse: Response;
-          }
-        | {
-              status: "DEVICE_ALREADY_EXISTS_ERROR";
-              fetchResponse: Response;
-          }
-    >;
+    static createDevice(input?: {
+        deviceName?: string;
+        options?: RecipeFunctionOptions;
+        userContext?: any;
+    }): Promise<{
+        status: "OK";
+        deviceName: string;
+        secret: string;
+        qrCodeString: string;
+        fetchResponse: Response;
+    } | {
+        status: "DEVICE_ALREADY_EXISTS_ERROR";
+        fetchResponse: Response;
+    }>;
     /**
      * Verifies that the totp code belongs to a verified device of the current user
      *
@@ -44,23 +38,23 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful
      */
-    static verifyCode(input: { totp: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<
-        | {
-              status: "OK";
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_TOTP_ERROR";
-              currentNumberOfFailedAttempts: number;
-              maxNumberOfFailedAttempts: number;
-              fetchResponse: Response;
-          }
-        | {
-              status: "LIMIT_REACHED_ERROR";
-              retryAfterMs: number;
-              fetchResponse: Response;
-          }
-    >;
+    static verifyCode(input: {
+        totp: string;
+        options?: RecipeFunctionOptions;
+        userContext?: any;
+    }): Promise<{
+        status: "OK";
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_TOTP_ERROR";
+        currentNumberOfFailedAttempts: number;
+        maxNumberOfFailedAttempts: number;
+        fetchResponse: Response;
+    } | {
+        status: "LIMIT_REACHED_ERROR";
+        retryAfterMs: number;
+        fetchResponse: Response;
+    }>;
     /**
      * Verifies the totp device for the current user
      *
@@ -79,28 +73,23 @@ export default class RecipeWrapper {
         totp: string;
         options?: RecipeFunctionOptions;
         userContext?: any;
-    }): Promise<
-        | {
-              status: "OK";
-              wasAlreadyVerified: boolean;
-              fetchResponse: Response;
-          }
-        | {
-              status: "INVALID_TOTP_ERROR";
-              currentNumberOfFailedAttempts: number;
-              maxNumberOfFailedAttempts: number;
-              fetchResponse: Response;
-          }
-        | {
-              status: "UNKNOWN_DEVICE_ERROR";
-              fetchResponse: Response;
-          }
-        | {
-              status: "LIMIT_REACHED_ERROR";
-              retryAfterMs: number;
-              fetchResponse: Response;
-          }
-    >;
+    }): Promise<{
+        status: "OK";
+        wasAlreadyVerified: boolean;
+        fetchResponse: Response;
+    } | {
+        status: "INVALID_TOTP_ERROR";
+        currentNumberOfFailedAttempts: number;
+        maxNumberOfFailedAttempts: number;
+        fetchResponse: Response;
+    } | {
+        status: "UNKNOWN_DEVICE_ERROR";
+        fetchResponse: Response;
+    } | {
+        status: "LIMIT_REACHED_ERROR";
+        retryAfterMs: number;
+        fetchResponse: Response;
+    }>;
     /**
      * Removes a TOTP device
      *
@@ -112,7 +101,11 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful
      */
-    static removeDevice(input: { deviceName: string; options?: RecipeFunctionOptions; userContext?: any }): Promise<{
+    static removeDevice(input: {
+        deviceName: string;
+        options?: RecipeFunctionOptions;
+        userContext?: any;
+    }): Promise<{
         status: "OK";
         didDeviceExist: boolean;
         fetchResponse: Response;
@@ -126,7 +119,10 @@ export default class RecipeWrapper {
      *
      * @returns `{ status: "OK", ...}` if successful with a list of devices in the `devices` prop
      */
-    static listDevices(input?: { options?: RecipeFunctionOptions; userContext?: any }): Promise<{
+    static listDevices(input?: {
+        options?: RecipeFunctionOptions;
+        userContext?: any;
+    }): Promise<{
         status: "OK";
         devices: {
             name: string;
@@ -143,18 +139,4 @@ declare const verifyCode: typeof RecipeWrapper.verifyCode;
 declare const verifyDevice: typeof RecipeWrapper.verifyDevice;
 declare const removeDevice: typeof RecipeWrapper.removeDevice;
 declare const listDevices: typeof RecipeWrapper.listDevices;
-export {
-    init,
-    createDevice,
-    verifyCode,
-    verifyDevice,
-    removeDevice,
-    listDevices,
-    RecipeInterface,
-    PreAPIHookContext,
-    PostAPIHookContext,
-    PreAndPostAPIHookAction,
-    UserInput,
-    RecipeFunctionOptions,
-    DeviceInfo,
-};
+export { init, createDevice, verifyCode, verifyDevice, removeDevice, listDevices, RecipeInterface, PreAPIHookContext, PostAPIHookContext, PreAndPostAPIHookAction, UserInput, RecipeFunctionOptions, DeviceInfo, };
