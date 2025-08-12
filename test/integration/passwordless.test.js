@@ -19,6 +19,7 @@ import SuperTokens from "../../lib/build/supertokens";
 import Passwordless from "../../lib/build/recipe/passwordless/index.js";
 import Session from "../../lib/build/recipe/session/index.js";
 import { getTestEmail, setupCoreApp, setupST, backendBeforeEach } from "../helpers.js";
+import { TEST_SERVER_BASE_URL } from "../constants.js";
 
 describe("Passwordless Integration Tests", function () {
     jsdom({ url: "http://localhost.org" });
@@ -106,7 +107,19 @@ describe("Passwordless Integration Tests", function () {
             }
         });
 
-        // TODO: Add test for correct code consumption
+        it("should successfully consume code", async function () {
+            // Get the code from the server by hitting the /test/getDevice endpoint
+            const getCodeResponse = await fetch(
+                `${TEST_SERVER_BASE_URL}/test/getDevice?preAuthSessionId=${codeInfo.preAuthSessionId}`
+            );
+            const device = await getCodeResponse.json();
+            const userInputCode = device.codes[0].userInputCode;
+
+            const consumeCodeResponse = await Passwordless.consumeCode({
+                userInputCode: userInputCode,
+            });
+            assert.strictEqual(consumeCodeResponse.status, "OK");
+        });
 
         it("should handle expired user input code", async function () {
             // Wait a bit or use an old code to simulate expiration
