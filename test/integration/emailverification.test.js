@@ -32,9 +32,6 @@ describe("EmailVerification Integration Tests", function () {
             enabledRecipes: ["emailpassword", "emailverification", "session"],
         });
 
-        // Set up proper cookie handling for Node.js environment
-        const cookieStore = new Map();
-
         SuperTokens.init({
             appInfo: {
                 appName: "SuperTokens",
