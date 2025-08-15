@@ -247,7 +247,7 @@ jobs:
             - name: Create JSON payload
               run: |
                   # Initialize an empty JSON object string
-                  jsonPayload="{\"password\": \"$releasePassword\""
+                  jsonPayload="{\"password\": \"${{ secrets.SUPERTOKENS_RELEASE_API_KEY }}\""
                   # Iterate through all files in the ./bundle directory
                   for file in ./bundle/*; do
                       # Extract the filename without the path
