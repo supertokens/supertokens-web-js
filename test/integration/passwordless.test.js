@@ -95,11 +95,7 @@ describe("Passwordless Integration Tests", function () {
             });
 
             // Should return incorrect code error
-            assert.ok(
-                ["INCORRECT_USER_INPUT_CODE_ERROR", "EXPIRED_USER_INPUT_CODE_ERROR", "RESTART_FLOW_ERROR"].includes(
-                    response.status
-                )
-            );
+            assert.strictEqual(response.status, "INCORRECT_USER_INPUT_CODE_ERROR");
 
             if (response.status === "INCORRECT_USER_INPUT_CODE_ERROR") {
                 assert.ok(typeof response.failedCodeInputAttemptCount === "number");
@@ -119,20 +115,6 @@ describe("Passwordless Integration Tests", function () {
                 userInputCode: userInputCode,
             });
             assert.strictEqual(consumeCodeResponse.status, "OK");
-        });
-
-        it("should handle expired user input code", async function () {
-            // Wait a bit or use an old code to simulate expiration
-            const response = await Passwordless.consumeCode({
-                userInputCode: "999999", // This will likely be expired or incorrect
-            });
-
-            // Should return an error status
-            assert.ok(
-                ["INCORRECT_USER_INPUT_CODE_ERROR", "EXPIRED_USER_INPUT_CODE_ERROR", "RESTART_FLOW_ERROR"].includes(
-                    response.status
-                )
-            );
         });
 
         it("should handle restart flow error", async function () {
@@ -180,14 +162,44 @@ describe("Passwordless Integration Tests", function () {
         let existingEmail;
         let existingPhone;
 
-        beforeEach(async function () {
+        before(async function () {
             // Create codes to establish "existing" contacts
             existingEmail = getTestEmail();
-            existingPhone = "+1234567890";
+            existingPhone = "+918765432101";
 
-            await Passwordless.createCode({
+            const codeInfo = await Passwordless.createCode({
                 email: existingEmail,
             });
+            assert.strictEqual(codeInfo.status, "OK");
+
+            // Get the code from the server by hitting the /test/getDevice endpoint
+            const getCodeResponse = await fetch(
+                `${TEST_SERVER_BASE_URL}/test/getDevice?preAuthSessionId=${codeInfo.preAuthSessionId}`
+            );
+            const device = await getCodeResponse.json();
+            const userInputCode = device.codes[0].userInputCode;
+
+            const consumeCodeResponse = await Passwordless.consumeCode({
+                userInputCode: userInputCode,
+            });
+            assert.strictEqual(consumeCodeResponse.status, "OK");
+
+            // Do the same for phone number as well to ensure the user was created
+            const codeInfoPhone = await Passwordless.createCode({
+                phoneNumber: existingPhone,
+            });
+            assert.strictEqual(codeInfoPhone.status, "OK");
+
+            // Get the code from the server by hitting the /test/getDevice endpoint
+            const getCodeResponsePhone = await fetch(
+                `${TEST_SERVER_BASE_URL}/test/getDevice?preAuthSessionId=${codeInfoPhone.preAuthSessionId}`
+            );
+            const userInputCodePhone = (await getCodeResponsePhone.json()).codes[0].userInputCode;
+
+            const consumeCodeResponsePhone = await Passwordless.consumeCode({
+                userInputCode: userInputCodePhone,
+            });
+            assert.strictEqual(consumeCodeResponsePhone.status, "OK");
         });
 
         it("should check if email exists", async function () {
@@ -196,8 +208,7 @@ describe("Passwordless Integration Tests", function () {
             });
 
             assert.strictEqual(response.status, "OK");
-            // doesExist can be true or false, both are valid
-            assert.ok(typeof response.doesExist === "boolean");
+            assert.strictEqual(response.doesExist, true);
         });
 
         it("should return false for non-existing email", async function () {
@@ -215,8 +226,7 @@ describe("Passwordless Integration Tests", function () {
             });
 
             assert.strictEqual(response.status, "OK");
-            // doesExist can be true or false, both are valid
-            assert.ok(typeof response.doesExist === "boolean");
+            assert.strictEqual(response.doesExist, true);
         });
 
         it("should return false for non-existing phone number", async function () {

@@ -96,43 +96,7 @@ if (maxVersion(nodeSDKVersion, "9.9.9") === "9.9.9") {
     generalErrorSupported = true;
 }
 
-const fullProviderList = [
-    {
-        config: {
-            thirdPartyId: "google",
-            clients: [
-                {
-                    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-                    clientId: process.env.GOOGLE_CLIENT_ID,
-                },
-            ],
-        },
-    },
-    {
-        config: {
-            thirdPartyId: "github",
-            clients: [
-                {
-                    clientSecret: process.env.GITHUB_CLIENT_SECRET,
-                    clientId: process.env.GITHUB_CLIENT_ID,
-                },
-            ],
-        },
-    },
-    {
-        config: {
-            thirdPartyId: "facebook",
-            clients: [
-                {
-                    clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-                    clientId: process.env.FACEBOOK_CLIENT_ID,
-                },
-            ],
-        },
-    },
-    customAuth0Provider(),
-    mockThirdPartyProvider,
-];
+const fullProviderList = [customAuth0Provider(), mockThirdPartyProvider];
 
 const WEB_PORT = process.env.WEB_PORT || 3031;
 const websiteDomain = `http://localhost:${WEB_PORT}`;
