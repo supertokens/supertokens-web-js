@@ -132,6 +132,7 @@ describe("Passwordless Integration Tests", function () {
     describe("Code Resend Flow", function () {
         let codeInfo;
         let testEmail;
+        let initialCode, secondCode;
 
         beforeEach(async function () {
             // Create a code for testing resend
@@ -140,12 +141,35 @@ describe("Passwordless Integration Tests", function () {
                 email: testEmail,
             });
             assert.strictEqual(codeInfo.status, "OK");
+
+            // Fetch the code
+            const getCodeResponse = await fetch(
+                `${TEST_SERVER_BASE_URL}/test/getDevice?preAuthSessionId=${codeInfo.preAuthSessionId}`
+            );
+            const device = await getCodeResponse.json();
+            initialCode = device.codes[0].userInputCode;
+
+            assert.ok(initialCode);
         });
 
         it("should successfully resend code", async function () {
             const response = await Passwordless.resendCode();
+            assert.strictEqual(response.status, "OK");
 
-            assert.ok(["OK", "RESTART_FLOW_ERROR"].includes(response.status));
+            // Fetch the new code and ensure it's different from the one
+            // initially sent.
+            const getCodeResponse = await fetch(
+                `${TEST_SERVER_BASE_URL}/test/getDevice?preAuthSessionId=${codeInfo.preAuthSessionId}`
+            );
+            const device = await getCodeResponse.json();
+
+            // There should be 2 input codes in the array now
+            assert.strictEqual(device.codes.length, 2);
+
+            secondCode = device.codes[1].userInputCode;
+
+            assert.ok(secondCode);
+            assert.notEqual(secondCode, initialCode);
         });
 
         it("should handle restart flow error when no previous attempt", async function () {
