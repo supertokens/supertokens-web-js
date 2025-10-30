@@ -94,7 +94,7 @@ jobs:
         id: core-version
         run: |
           lastCdiVersion=$(echo '${{ steps.node-cdi-versions.outputs.cdiVersions }}' | jq -r '.[-1]')
-          coreVersion=$(echo '${{ steps.core-versions.outputs.cdiVersions }}' | jq -r '.["$lastCdiVersion"]')
+          coreVersion=$(echo '${{ steps.core-versions.outputs.cdiVersions }}' | jq -r ".[\"$lastCdiVersion\"]")
           echo "coreVersion=${coreVersion}" >> $GITHUB_OUTPUT
 
       - name: Start core
