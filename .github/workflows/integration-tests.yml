@@ -114,4 +114,5 @@ jobs:
       - name: Run tests
         working-directory: supertokens-web-js
         run: |
+          npm i
           npx mocha test/integration
