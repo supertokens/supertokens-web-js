@@ -104,9 +104,10 @@ jobs:
         run: |
           docker compose up --build --wait
 
-
       - name: Setup server
         working-directory: supertokens-web-js/test/server
+        env:
+          NODE_PORT: 8082
         run: |
           npm i
           node . &
