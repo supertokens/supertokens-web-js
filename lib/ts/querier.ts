@@ -56,6 +56,12 @@ export default class Querier {
         }
 
         populated = new NormalisedURLPath(populated).getAsStringDangerous();
+
+        // If the `params` are empty, we can return the populated path
+        if (Object.keys(queryParams).length === 0) {
+            return populated;
+        }
+
         // Create a new URLSearchParams object with the query params and add it to the path
         const searchParams = new URLSearchParams(queryParams);
         populated += "?" + searchParams.toString();
